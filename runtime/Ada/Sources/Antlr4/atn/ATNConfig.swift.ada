@@ -138,7 +138,7 @@ begin
 
     public var description: String {
         --return "MyClass \(string)"
-        return toString(null, true)
+        return toString(null, True)
     end ;
     public function toString<T> (recog : Recognizer<T>?, showAlt  : Boolean) return String is
 begin
@@ -170,7 +170,7 @@ public function ==(lhs: ATNConfig, rhs: ATNConfig) return Boolean is
 begin
 
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     if l : constant := lhs as? LexerATNConfig, r : constant := rhs as? LexerATNConfig then
@@ -180,18 +180,18 @@ begin
     end ;
 
     if lhs.state.stateNumber /= rhs.state.stateNumber then
-        return false;
+        return False;
     end if;
     if lhs.alt /= rhs.alt then
-        return false;
+        return False;
     end if;
 
     if lhs.isPrecedenceFilterSuppressed() /= rhs.isPrecedenceFilterSuppressed() then
-        return false;
+        return False;
     end if;
 
     if lhs.context /= rhs.context then
-        return false;
+        return False;
     end if;
 
     return  lhs.semanticContext == rhs.semanticContext

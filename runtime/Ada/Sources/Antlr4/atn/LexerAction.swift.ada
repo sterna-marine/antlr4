@@ -38,9 +38,9 @@ begin
     -- Actions like this are position-independent, and may be stored more
     -- efficiently as part of the _org.antlr.v4.runtime.atn.LexerATNConfig#lexerActionExecutor_.
     -- 
-    -- - returns: `true` if the lexer action semantics can be affected by the
+    -- - returns: `True` if the lexer action semantics can be affected by the
     -- position of the input _org.antlr.v4.runtime.CharStream_ at the time it is executed;
-    -- otherwise, `false`.
+    -- otherwise, `False`.
     -- 
     public function isPositionDependent (This : …) return Boolean is
 begin
@@ -69,7 +69,7 @@ public function ==(lhs: LexerAction, rhs: LexerAction) return Boolean is
 begin
 
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     if (lhs is LexerChannelAction) and then (rhs is LexerChannelAction) then
@@ -93,7 +93,7 @@ begin
     end if;
 
 
-    return false
+    return False;
 
 end ;
 

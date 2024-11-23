@@ -110,10 +110,10 @@ end ;
 public function ==(lhs: ArrayPredictionContext, rhs: ArrayPredictionContext) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     if lhs.hashValue /= rhs.hashValue then
-        return false;
+        return False;
     end if;
 
     return lhs.returnStates == rhs.returnStates and then lhs.parents == rhs.parents

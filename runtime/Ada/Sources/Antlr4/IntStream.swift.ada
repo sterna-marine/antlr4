@@ -53,7 +53,7 @@ public protocol IntStream: AnyObject {
     -- `i==0`, but the specific behavior is unspecified because this
     -- method is frequently called from performance-critical code.
     -- 
-    -- This method is guaranteed to succeed if any of the following are true:
+    -- This method is guaranteed to succeed if any of the following are True:
     -- 
     -- * `i>0`
     -- * `i==-1` and _#index index()_ returns a value greater
@@ -155,7 +155,7 @@ public protocol IntStream: AnyObject {
     -- specified index lies past the end of the stream, the operation behaves as
     -- though `index` was the index of the EOF symbol. After this method
     -- returns without throwing an exception, then at least one of the following
-    -- will be true.
+    -- will be True.
     -- 
     -- * _#index index()_ will return the index of the first symbol
     -- appearing at or after the specified `index`. Specifically,

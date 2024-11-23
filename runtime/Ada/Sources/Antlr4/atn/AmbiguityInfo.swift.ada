@@ -10,7 +10,7 @@
 -- This class represents profiling event information for an ambiguity.
 -- Ambiguities are decisions where a particular input resulted in an SLL
 -- conflict, followed by LL prediction also reaching a conflict state
--- (indicating a true ambiguity in the grammar).
+-- (indicating a True ambiguity in the grammar).
 -- 
 -- 
 -- This event may be reported during SLL prediction in cases where the
@@ -55,8 +55,8 @@ public type AmbiguityInfo is new DecisionEventInfo with null record;
     -- - parameter startIndex: The start index for the current prediction
     -- - parameter stopIndex: The index at which the ambiguity was identified during
     -- prediction
-    -- - parameter fullCtx: `true` if the ambiguity was identified during LL
-    -- prediction; otherwise, `false` if the ambiguity was identified
+    -- - parameter fullCtx: `True` if the ambiguity was identified during LL
+    -- prediction; otherwise, `False` if the ambiguity was identified
     -- during SLL prediction
     -- 
     public init(decision : Integer;

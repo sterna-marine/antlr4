@@ -110,7 +110,7 @@ begin
     --
     -- This test verifies that {@link AbstractParseTreeVisitor#visitChildrenend ; does not call
     -- {@link ParseTreeVisitor#visitend ; after {@link AbstractParseTreeVisitor#shouldVisitNextChildend ; returns
-    -- {@code falseend ;.
+    -- {@code Falseend ;.
     --
     procedure testShouldNotVisitEOF (This : …) is
 begin
@@ -166,7 +166,7 @@ begin
 
             override function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
 begin
-                return false
+                return False;
             end ;
         end ;
 

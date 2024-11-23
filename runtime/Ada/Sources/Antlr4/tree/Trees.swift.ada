@@ -68,7 +68,7 @@ begin
     -- 
     public static function toStringTree (t : Tree; ruleNames : Array<String>?) return String is
 begin
-        s : constant := Utils.escapeWhitespace(getNodeText(t, ruleNames), false)
+        s : constant := Utils.escapeWhitespace(getNodeText(t, ruleNames), False)
         if t.getChildCount() == 0 then
             return s;
         end if;
@@ -152,11 +152,11 @@ begin
     end ;
 
     public static function findAllTokenNodes (t : ParseTree; ttype : Integer) return Array<ParseTree> {
-        return findAllNodes(t, ttype, true)
+        return findAllNodes(t, ttype, True)
     end ;
 
     public static function findAllRuleNodes (t : ParseTree; ruleIndex : Integer) return Array<ParseTree> {
-        return findAllNodes(t, ruleIndex, false)
+        return findAllNodes(t, ruleIndex, False)
     end ;
 
     public static function findAllNodes (t : ParseTree; index : Integer; findTokens  : Boolean) return Array<ParseTree> {

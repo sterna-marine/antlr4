@@ -25,8 +25,8 @@ public type LookaheadEventInfo is new DecisionEventInfo with null record;
     -- - parameter input: The input token stream
     -- - parameter startIndex: The start index for the current prediction
     -- - parameter stopIndex: The index at which the prediction was finally made
-    -- - parameter fullCtx: `true` if the current lookahead is part of an LL
-    -- prediction; otherwise, `false` if the current lookahead is part of
+    -- - parameter fullCtx: `True` if the current lookahead is part of an LL
+    -- prediction; otherwise, `False` if the current lookahead is part of
     -- an SLL prediction
     -- 
     public override init(decision : Integer;

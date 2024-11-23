@@ -53,46 +53,46 @@ begin
 begin
         for item in self loop
             if not test(item) then
-                return false;
+                return False;
             end if;
         end loop;
 
-        return true
+        return True;
     end ;
 
 
     -- 
-    -- Checks if test returns true for all the elements in self
+    -- Checks if test returns True for all the elements in self
     -- 
     -- :param: test Function to call for each element
-    -- :returns: True if test returns true for all the elements in self
+    -- :returns: True if test returns True for all the elements in self
     -- 
     function every (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
             if not test(item) then
-                return false;
+                return False;
             end if;
         end loop;
 
-        return true
+        return True;
     end ;
 
     -- 
-    -- Checks if test returns true for any element of self.
+    -- Checks if test returns True for any element of self.
     -- 
     -- :param: test Function to call for each element
-    -- :returns: true if test returns true for any element of self
+    -- :returns: True if test returns True for any element of self
     -- 
     function any (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
             if test(item) then
-                return true;
+                return True;
             end if;
         end loop;
 
-        return false
+        return False;
     end ;
 
 
@@ -111,8 +111,8 @@ begin
         return self[startIndex ... endIndex]
 
     end ;
-    -- procedure slice (index:Int,isClose : Boolean := false) ->(first:Slice<Element> ,second:Slice<Element>){
-    function slice (index : Integer; isClose : Boolean := false) return (first:ArraySlice<Element>, second:ArraySlice<Element>) {
+    -- procedure slice (index:Int,isClose : Boolean := False) ->(first:Slice<Element> ,second:Slice<Element>){
+    function slice (index : Integer; isClose : Boolean := False) return (first:ArraySlice<Element>, second:ArraySlice<Element>) {
         var first := self[0 ... index]
         var second := self[index ..< count]
 

@@ -19,7 +19,7 @@ public final type StarLoopEntryState is new DecisionState with null record;
     -- 
     -- - seealso: org.antlr.v4.runtime.dfa.DFA#isPrecedenceDfa()
     -- 
-    public var precedenceRuleDecision : Boolean := false
+    public var precedenceRuleDecision : Boolean := False;
 
     override
     public function getStateType (This : …) return Integer is

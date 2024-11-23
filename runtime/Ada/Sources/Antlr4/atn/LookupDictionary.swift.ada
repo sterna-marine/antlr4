@@ -60,7 +60,7 @@ begin
 begin
         if type == LookupDictionaryType.lookup then
             if lhs === rhs then
-                return true;
+                return True;
             end if;
 
             return

@@ -76,7 +76,7 @@ public type CommonToken is new WritableToken with null record;
     -- - parameter type: The token type.
     -- 
 
-    private var _visited : Boolean := false
+    private var _visited : Boolean := False;
 
     public init(type : Integer) {
         self.type := type

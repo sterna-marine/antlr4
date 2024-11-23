@@ -21,7 +21,7 @@ begin
     override
     public function isEmpty (This : …) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
     override
@@ -52,8 +52,8 @@ end ;
 public function ==(lhs: EmptyPredictionContext, rhs: EmptyPredictionContext) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
-    return false
+    return False;
 end ;

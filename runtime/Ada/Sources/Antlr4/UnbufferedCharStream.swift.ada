@@ -321,7 +321,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
     private var buffer := [UInt8](repeating: 0, count: UInt8StreamIterator.bufferSize)
     private var buffGen: IndexingIterator<ArraySlice<UInt8>>
 
-    var hasErrorOccurred := false
+    var hasErrorOccurred := False;
 
 
     init(stream : InputStream) {
@@ -344,7 +344,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
             when .atEnd =>
                 return null;
             when .error =>
-                hasErrorOccurred := true
+                hasErrorOccurred := True;
                 return null;
             when .opening, .open, .reading =>
                 null;
@@ -352,7 +352,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
 
         count : constant := stream.read(&buffer, maxLength: buffer.count)
         if count < 0 then
-            hasErrorOccurred := true
+            hasErrorOccurred := True;
             return null;
         end ;
         elsif count == 0 then
@@ -369,7 +369,7 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
     private var streamIterator: UInt8StreamIterator
     private var codec := Unicode.UTF8()
 
-    var hasErrorOccurred := false
+    var hasErrorOccurred := False;
 
     init(streamIterator : UInt8StreamIterator) {
         self.streamIterator := streamIterator
@@ -377,7 +377,7 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
 
     mutating function next () return Unicode.Scalar? {
         if streamIterator.hasErrorOccurred then
-            hasErrorOccurred := true
+            hasErrorOccurred := True;
             return null;
         end ;
 
@@ -387,7 +387,7 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
         when .emptyInput =>
             return null;
         when .error =>
-            hasErrorOccurred := true
+            hasErrorOccurred := True;
             return null;
         end ;
     end ;

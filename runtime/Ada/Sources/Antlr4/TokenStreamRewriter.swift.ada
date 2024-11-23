@@ -120,7 +120,7 @@ begin
 
         public var description: String {
             opName : constant := String(describing: type(of: self))
-            return "<\(opName)@\(try! tokens.get(index)):\"\(text!)\">"
+            return "<\(opName)@\(try! tokens.get(index)):""\(text!)"">"
         end ;
     end ;
 
@@ -172,7 +172,7 @@ begin
             token : constant := try! tokens.get(index)
             lastToken : constant := try! tokens.get(lastIndex)
             if text : constant := text then
-                return "<ReplaceOp@\(token)..\(lastToken):\"\(text)\">";
+                return "<ReplaceOp@\(token)..\(lastToken):""\(text)"">";
             end if;
             return "<DeleteOp@\(token)..\(lastToken)>"
         end ;
@@ -580,7 +580,7 @@ begin
     -- and intervals are still consistent. Includes any operations done
     -- to the first and last token in the interval. So, if you did an
     -- insertBefore on the first token, you would get that insertion.
-    -- The same is true if you do an insertAfter the stop token.
+    -- The same is True if you do an insertAfter the stop token.
     -- 
     public function getText (interval : Interval) return String is
 begin

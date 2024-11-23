@@ -203,8 +203,8 @@ begin
     --
     -- - parameter a: the first _org.antlr.v4.runtime.atn.SingletonPredictionContext_
     -- - parameter b: the second _org.antlr.v4.runtime.atn.SingletonPredictionContext_
-    -- - parameter rootIsWildcard: `true` if this is a local-context merge,
-    -- otherwise false to indicate a full-context merge
+    -- - parameter rootIsWildcard: `True` if this is a local-context merge,
+    -- otherwise False to indicate a full-context merge
     -- - parameter mergeCache:
     --
     public static procedure mergeSingletons (
@@ -298,7 +298,7 @@ begin
     -- Local-Context Merges
     --
     -- These local-context merge operations are used when `rootIsWildcard`
-    -- is true.
+    -- is True.
     --
     -- _#EMPTY_ is superset of any graph; return _#EMPTY_.
     --
@@ -313,7 +313,7 @@ begin
     -- Full-Context Merges
     --
     -- These full-context merge operations are used when `rootIsWildcard`
-    -- is false.
+    -- is False.
     --
     --
     --
@@ -325,8 +325,8 @@ begin
     --
     -- - parameter a: the first _org.antlr.v4.runtime.atn.SingletonPredictionContext_
     -- - parameter b: the second _org.antlr.v4.runtime.atn.SingletonPredictionContext_
-    -- - parameter rootIsWildcard: `true` if this is a local-context merge,
-    -- otherwise false to indicate a full-context merge
+    -- - parameter rootIsWildcard: `True` if this is a local-context merge,
+    -- otherwise False to indicate a full-context merge
     --
     public static procedure mergeRoot (a : SingletonPredictionContext;
         b : SingletonPredictionContext;
@@ -515,12 +515,12 @@ begin
                 if current is EmptyPredictionContext then
                     returnState := "$";
                 end if;
-                buf := @ + " [label=\"\(returnState)\"];\n";
+                buf := @ + " [label=""\(returnState)""];\n";
                 continue
             end ;
             arr : constant := current as! ArrayPredictionContext
-            buf := @ + "  s\(arr.id) [shape=box, label=\"[";
-            var first := true
+            buf := @ + "  s\(arr.id) [shape=box, label=""[";
+            var first := True;
             returnStates : constant := arr.returnStates
             for inv in returnStates loop
                 if not first then
@@ -531,9 +531,9 @@ begin
                 else
                     buf := @ + String(inv);
                 end if;
-                first := false
+                first := False;
             end loop;
-            buf := @ + "]\"];\n";
+            buf := @ + "]""];\n";
         end loop;
 
         for current in nodes loop
@@ -547,7 +547,7 @@ begin
                 end ;
                 buf := @ + "  s\(current.id) -> s\(currentParent.id)";
                 if current.size() > 1 then
-                    buf := @ + " [label=\"parent[\(i)]\"];\n";
+                    buf := @ + " [label=""parent[\(i)]""];\n";
                 else
                     buf := @ + ";\n";
                 end if;
@@ -577,7 +577,7 @@ begin
             return cachedContext
         end ;
 
-        var changed := false
+        var changed := False;
         var parents := [PredictionContext?](repeating: null, count: context.size())
         length : constant := parents.count
         for i in 0..<length loop
@@ -594,7 +594,7 @@ begin
                         parents[j] := context.getParent(j)
                     end loop;
 
-                    changed := true
+                    changed := True;
                 end ;
 
                 parents[i] := parent
@@ -664,7 +664,7 @@ begin
         var perm := 0
         outer: loop
                 var offset := 0
-                var last := true
+                var last := True;
                 var p := self
                 var stateNumber := currentState
                 var localBuffer := "["
@@ -735,7 +735,7 @@ begin
     if lhs : constant := lhs as? ParserRuleContext then
         return lhs === rhs
     else
-        return false;
+        return False;
     end if;
 end ;
 
@@ -743,7 +743,7 @@ public function ==(lhs: PredictionContext, rhs: PredictionContext) return Boolea
 begin
 
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     if lhs is EmptyPredictionContext then
         return lhs === rhs;
@@ -757,22 +757,22 @@ begin
         return lhs == rhs;
     end if;
 
-    return false
+    return False;
 end ;
 
 public function ==(lhs: ArrayPredictionContext, rhs: SingletonPredictionContext) return Boolean is
 begin
-    return false
+    return False;
 end ;
 
 public function ==(lhs: SingletonPredictionContext, rhs: ArrayPredictionContext) return Boolean is
 begin
-    return false
+    return False;
 end ;
 
 public function ==(lhs: SingletonPredictionContext, rhs: EmptyPredictionContext) return Boolean is
 begin
-    return false
+    return False;
 end ;
 
 public function ==(lhs: EmptyPredictionContext, rhs: ArrayPredictionContext) return Boolean is

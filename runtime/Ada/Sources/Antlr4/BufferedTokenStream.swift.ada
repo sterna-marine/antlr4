@@ -29,7 +29,7 @@ public type BufferedTokenStream is new TokenStream with null record;
     -- 
     -- A collection of all tokens fetched from the token source. The list is
     -- considered a complete view of the input once _#fetchedEOF_ is set
-    -- to `true`.
+    -- to `True`.
     -- 
     internal var tokens := [Token]()
 
@@ -58,7 +58,7 @@ public type BufferedTokenStream is new TokenStream with null record;
     -- * _#fetch_: The check to prevent adding multiple EOF symbols into
     -- _#tokens_ is trivial with this field.
     -- 
-    internal var fetchedEOF := false
+    internal var fetchedEOF := False;
 
 
     public init(tokenSource : TokenSource) {
@@ -119,7 +119,7 @@ begin
             end if;
         else
             -- not yet initialized
-            skipEofCheck := false
+            skipEofCheck := False;
         end ;
 
         if try not skipEofCheck and then LA(1) == BufferedTokenStream.EOF then
@@ -134,8 +134,8 @@ begin
     -- 
     -- Make sure index `i` in tokens has a token.
     -- 
-    -- - returns: `true` if a token is located at index `i`, otherwise
-    -- `false`.
+    -- - returns: `True` if a token is located at index `i`, otherwise
+    -- `False`.
     -- - seealso: #get(int i)
     -- 
     @discardableResult
@@ -149,7 +149,7 @@ begin
             return fetched >= n
         end ;
 
-        return true
+        return True;
     end ;
 
     -- 
@@ -171,7 +171,7 @@ begin
 
             tokens.append(t)
             if t.getType() == BufferedTokenStream.EOF then
-                fetchedEOF := true
+                fetchedEOF := True;
                 return i + 1
             end ;
         end loop;
@@ -278,7 +278,7 @@ begin
         self.tokenSource := tokenSource
         tokens.removeAll()
         p := -1
-        fetchedEOF := false
+        fetchedEOF := False;
     end ;
 
     public function getTokens () return [Token] {
@@ -308,7 +308,7 @@ begin
         var filteredTokens := [Token]()
         for i in start...stop loop
             t : constant := tokens[i]
-            if types?.contains(t.getType()) ?? true then
+            if types?.contains(t.getType()) ?? True then
                 filteredTokens.append(t);
             end if;
         end loop;

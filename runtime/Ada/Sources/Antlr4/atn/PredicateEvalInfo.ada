@@ -48,8 +48,8 @@ public type PredicateEvalInfo is new DecisionEventInfo with null record;
     -- - parameter predictedAlt: The alternative number for the decision which is
     -- guarded by the semantic context `semctx`. See _#predictedAlt_
     -- for more information.
-    -- - parameter fullCtx: `true` if the semantic context was
-    -- evaluated during LL prediction; otherwise, `false` if the semantic
+    -- - parameter fullCtx: `True` if the semantic context was
+    -- evaluated during LL prediction; otherwise, `False` if the semantic
     -- context was evaluated during SLL prediction
     -- 
     -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext(org.antlr.v4.runtime.atn.SemanticContext, org.antlr.v4.runtime.ParserRuleContext, int, boolean)

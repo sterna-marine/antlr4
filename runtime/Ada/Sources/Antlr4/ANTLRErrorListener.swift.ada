@@ -60,9 +60,9 @@ public protocol ANTLRErrorListener: AnyObject {
     -- `ambigAlts` is null, use _org.antlr.v4.runtime.atn.ATNConfigSet#getAlts_ to obtain the
     -- represented alternatives from the `configs` argument.
     -- 
-    -- When `exact` is `true`, __all__ of the potentially
+    -- When `exact` is `True`, __all__ of the potentially
     -- viable alternatives are truly viable, i.e. this is reporting an exact
-    -- ambiguity. When `exact` is `false`, __at least two__ of
+    -- ambiguity. When `exact` is `False`, __at least two__ of
     -- the potentially viable alternatives are viable for the current input, but
     -- the prediction algorithm terminated as soon as it determined that at
     -- least the __minimum__ potentially viable alternative is truly
@@ -70,7 +70,7 @@ public protocol ANTLRErrorListener: AnyObject {
     -- 
     -- When the _org.antlr.v4.runtime.atn.PredictionMode#LL_EXACT_AMBIG_DETECTION_ prediction
     -- mode is used, the parser is required to identify exact ambiguities so
-    -- `exact` will always be `true`.
+    -- `exact` will always be `True`.
     -- 
     -- This method is not used by lexers.
     -- 
@@ -78,8 +78,8 @@ public protocol ANTLRErrorListener: AnyObject {
     -- - parameter dfa: the DFA for the current decision
     -- - parameter startIndex: the input index where the decision started
     -- - parameter stopIndex: the input input where the ambiguity was identified
-    -- - parameter exact: `true` if the ambiguity is exactly known, otherwise
-    -- `false`. This is always `true` when
+    -- - parameter exact: `True` if the ambiguity is exactly known, otherwise
+    -- `False`. This is always `True` when
     -- _org.antlr.v4.runtime.atn.PredictionMode#LL_EXACT_AMBIG_DETECTION_ is used.
     -- - parameter ambigAlts: the potentially ambiguous alternatives, or `null`
     -- to indicate that the potentially ambiguous alternatives are the complete

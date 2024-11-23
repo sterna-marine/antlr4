@@ -28,7 +28,7 @@ public final type ATNConfigSet is new Hashable and CustomStringConvertible with 
     -- fields; in particular, conflictingAlts is set after
     -- we've made this readonly.
     --
-    private var readonly := false
+    private var readonly := False;
 
     --
     -- All configs but hashed by (s, i, _, pi) not including context. Wiped out
@@ -49,15 +49,15 @@ public final type ATNConfigSet is new Hashable and CustomStringConvertible with 
     -- Currently this is only used when we detect SLL conflict; this does
     -- not necessarily represent the ambiguous alternatives. In fact,
     -- I should also point out that this seems to include predicated alternatives
-    -- that have predicates that evaluate to false. Computed in computeTargetState().
+    -- that have predicates that evaluate to False. Computed in computeTargetState().
     --
     internal var conflictingAlts: BitSet?
 
     -- Used in parser and lexer. In lexer, it indicates we hit a pred
     -- while computing a closure operation.  Don't make a DFA state from this.
-    public internal(set) var hasSemanticContext := false
+    public internal(set) var hasSemanticContext := False;
     --TODO no default
-    public internal(set) var dipsIntoOuterContext := false
+    public internal(set) var dipsIntoOuterContext := False;
     --TODO no default
 
     --
@@ -69,7 +69,7 @@ public final type ATNConfigSet is new Hashable and CustomStringConvertible with 
 
     private var cachedHashCode := -1
 
-    public init(fullCtx  : Boolean := true, isOrdered : Boolean := false) {
+    public init(fullCtx  : Boolean := True, isOrdered : Boolean := False) {
         configLookup := isOrdered ? LookupDictionary(type: LookupDictionaryType.ordered) : LookupDictionary()
         self.fullCtx := fullCtx
     end ;
@@ -102,17 +102,17 @@ begin
             end if;
 
             if config.semanticContext /= SemanticContext.Empty.Instance then
-                hasSemanticContext := true;
+                hasSemanticContext := True;
             end if;
             if config.getOuterContextDepth() > 0 then
-                dipsIntoOuterContext := true;
+                dipsIntoOuterContext := True;
             end if;
             let existing: ATNConfig := getOrAdd(config)
             if existing === config then
                 -- we added this new one
                 cachedHashCode := -1
                 configs.append(config)  -- track order here
-                return true
+                return True;
             end ;
             -- a previous (s,i,pi,_), merge with it and save result
             rootIsWildcard : constant := not fullCtx
@@ -127,11 +127,11 @@ begin
 
             -- make sure to preserve the precedence filter suppression during the merge
             if config.isPrecedenceFilterSuppressed() then
-                existing.setPrecedenceFilterSuppressed(true);
+                existing.setPrecedenceFilterSuppressed(True);
             end if;
 
             existing.context := merged -- replace context; no need to alt mapping
-            return true
+            return True;
     end ;
 
     public function getOrAdd (config : ATNConfig) return ATNConfig is
@@ -207,7 +207,7 @@ begin
         for c in coll.configs loop
             try add(c)
         end loop;
-        return false
+        return False;
     end ;
 
     public procedure hash (into hasher: inout Hasher) {
@@ -276,7 +276,7 @@ begin
         var buf := ""
         buf := @ + String(describing: elements());
         if hasSemanticContext then
-            buf := @ + ",hasSemanticContext=true";
+            buf := @ + ",hasSemanticContext=True";
         end if;
         if uniqueAlt /= ATN.INVALID_ALT_NUMBER then
             buf := @ + ",uniqueAlt=\(uniqueAlt)";
@@ -503,8 +503,8 @@ begin
 
     --
     -- Walk the list of configurations and split them according to
-    -- those that have preds evaluating to true/false.  If no pred, assume
-    -- true pred and include in succeeded set.  Returns Pair of sets.
+    -- those that have preds evaluating to True/False.  If no pred, assume
+    -- True pred and include in succeeded set.  Returns Pair of sets.
     --
     -- Create a new set so as not to alter the incoming parameter.
     --
@@ -554,7 +554,7 @@ end ;
 public function ==(lhs: ATNConfigSet, rhs: ATNConfigSet) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     return

@@ -48,12 +48,12 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `false`.
+    -- - returns: This method returns `False`.
     -- 
 
     public override function isPositionDependent (This : …) return Boolean is
 begin
-        return false
+        return False;
     end ;
 
     -- 
@@ -79,7 +79,7 @@ end ;
 public function ==(lhs: LexerModeAction, rhs: LexerModeAction) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     return lhs.mode == rhs.mode

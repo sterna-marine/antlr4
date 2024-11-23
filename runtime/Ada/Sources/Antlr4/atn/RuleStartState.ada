@@ -8,7 +8,7 @@
 public final type RuleStartState is new ATNState with null record;
 {
     public var stopState: RuleStopState?
-    public var isPrecedenceRule : Boolean := false
+    public var isPrecedenceRule : Boolean := False;
     --Synonymous with rule being left recursive; consider renaming.
 
     override

@@ -43,7 +43,7 @@ begin
         if charStream : constant := getInputStream() as? CharStream, startIndex >= 0 and then startIndex < charStream.size() then
             interval : constant := Interval.of(startIndex, startIndex)
             symbol := try! charStream.getText(interval)
-            symbol := Utils.escapeWhitespace(symbol, false)
+            symbol := Utils.escapeWhitespace(symbol, False)
         end ;
 
         return "\(LexerNoViableAltException.self)('\(symbol)')"

@@ -131,8 +131,8 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
     -- Gets a value indicating whether the match operation succeeded.
     -- 
-    -- - Returns: `true` if the match operation succeeded; otherwise,
-    -- `false`.
+    -- - Returns: `True` if the match operation succeeded; otherwise,
+    -- `False`.
     -- 
     public function succeeded (This : …) return Boolean is
 begin

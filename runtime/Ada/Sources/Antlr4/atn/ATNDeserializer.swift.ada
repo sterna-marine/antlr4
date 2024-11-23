@@ -78,7 +78,7 @@ begin
         for _ in 0..<numNonGreedyStates loop
             stateNumber : constant := data[p]
             p := @ + 1;
-            (atn.states[stateNumber] as! DecisionState).nonGreedy := true
+            (atn.states[stateNumber] as! DecisionState).nonGreedy := True;
         end loop;
 
         numPrecedenceStates : constant := data[p]
@@ -86,7 +86,7 @@ begin
         for _ in 0..<numPrecedenceStates loop
             stateNumber : constant := data[p]
             p := @ + 1;
-            (atn.states[stateNumber] as! RuleStartState).isPrecedenceRule := true
+            (atn.states[stateNumber] as! RuleStartState).isPrecedenceRule := True;
         end loop;
 
         --
@@ -332,7 +332,7 @@ begin
             end ;
             maybeLoopEndState : constant := state.transition(state.getNumberOfTransitions() - 1).target
             if maybeLoopEndState is LoopEndState and then maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
-                state.precedenceRuleDecision := true;
+                state.precedenceRuleDecision := True;
             end if;
         end loop;
     end ;

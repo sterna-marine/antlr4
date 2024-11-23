@@ -44,9 +44,9 @@ begin
     -- - parameter parserCallStack:
     -- - returns: The simplified semantic context after precedence predicates are
     -- evaluated, which will be one of the following values.
-    -- * _#NONE_: if the predicate simplifies to `true` after
+    -- * _#NONE_: if the predicate simplifies to `True` after
     -- precedence predicates are evaluated.
-    -- * `null`: if the predicate simplifies to `false` after
+    -- * `null`: if the predicate simplifies to `False` after
     -- precedence predicates are evaluated.
     -- * `this`: if the semantic context is not changed as a result of
     -- precedence predicate evaluation.
@@ -69,7 +69,7 @@ begin
 {
         --
         -- The default _org.antlr.v4.runtime.atn.SemanticContext_, which is semantically equivalent to
-        -- a predicate of the form `{true?end ;.
+        -- a predicate of the form `{True?end ;.
         --
         public static let Instance: Empty := Empty()
 
@@ -78,7 +78,7 @@ begin
 
         override
         public var description: String {
-            return "{trueend ;?"
+            return "{Trueend ;?"
         end ;
     end ;
 
@@ -94,7 +94,7 @@ begin
 begin
             self.ruleIndex := -1
             self.predIndex := -1
-            self.isCtxDependent := false
+            self.isCtxDependent := False;
         end ;
 
         public init(ruleIndex : Integer; predIndex : Integer; isCtxDependent  : Boolean) {
@@ -188,8 +188,8 @@ begin
     end ;
 
     --
-    -- A semantic context which is true whenever none of the contained contexts
-    -- is false.
+    -- A semantic context which is True whenever none of the contained contexts
+    -- is False.
     --
 
     public type AND is new Operator with null record;
@@ -244,15 +244,15 @@ begin
 begin
             for opnd in opnds loop
                 if try not opnd.eval(parser, parserCallStack) then
-                    return false;
+                    return False;
                 end if;
             end loop;
-            return true
+            return True;
         end ;
 
         override
         public function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
-            var differs := false
+            var differs := False;
             var operands := [SemanticContext]()
             for context in opnds loop
                 evaluated : constant := try context.evalPrecedence(parser, parserCallStack)
@@ -261,10 +261,10 @@ begin
                 differs := differs or else (evaluated /= context)
 
                 if evaluated == null then
-                    -- The AND context is false if any element is false
+                    -- The AND context is False if any element is False;
                     return null;
                 elsif evaluated /= SemanticContext.Empty.Instance then
-                    -- Reduce the result by skipping true elements
+                    -- Reduce the result by skipping True elements
                     operands.append(evaluated!)
                 end ;
             end loop;
@@ -284,8 +284,8 @@ begin
     end ;
 
     --
-    -- A semantic context which is true whenever at least one of the contained
-    -- contexts is true.
+    -- A semantic context which is True whenever at least one of the contained
+    -- contexts is True.
     --
 
     public type OR is new Operator with null record;
@@ -339,24 +339,24 @@ begin
 begin
             for opnd in opnds loop
                 if try opnd.eval(parser, parserCallStack) then
-                    return true;
+                    return True;
                 end if;
             end loop;
-            return false
+            return False;
         end ;
 
         override
         public function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
-            var differs := false
+            var differs := False;
             var operands := [SemanticContext]()
             for context in opnds loop
                 evaluated : constant := try context.evalPrecedence(parser, parserCallStack)
                 differs := differs or else (evaluated /= context)
                 if evaluated == SemanticContext.Empty.Instance then
-                    -- The OR context is true if any element is true
+                    -- The OR context is True if any element is True;
                     return SemanticContext.Empty.Instance;
                 elsif evaluated : constant := evaluated then
-                    -- Reduce the result by skipping false elements
+                    -- Reduce the result by skipping False elements
                     operands.append(evaluated)
                 end ;
             end loop;
@@ -428,7 +428,7 @@ end ;
 public function ==(lhs: SemanticContext, rhs: SemanticContext) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     if (lhs is SemanticContext.Predicate) and then (rhs is SemanticContext.Predicate) then
@@ -448,13 +448,13 @@ begin
     end if;
 
 
-    return false
+    return False;
 end ;
 
 public function ==(lhs: SemanticContext.Predicate, rhs: SemanticContext.Predicate) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     return lhs.ruleIndex == rhs.ruleIndex and
             lhs.predIndex == rhs.predIndex and
@@ -464,7 +464,7 @@ end ;
 public function ==(lhs: SemanticContext.PrecedencePredicate, rhs: SemanticContext.PrecedencePredicate) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     return lhs.precedence == rhs.precedence
 end ;
@@ -473,7 +473,7 @@ end ;
 public function ==(lhs: SemanticContext.AND, rhs: SemanticContext.AND) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     return lhs.opnds == rhs.opnds
 end ;
@@ -481,7 +481,7 @@ end ;
 public function ==(lhs: SemanticContext.OR, rhs: SemanticContext.OR) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     return lhs.opnds == rhs.opnds
 end ;

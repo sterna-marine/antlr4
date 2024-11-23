@@ -27,7 +27,7 @@ public type RuleTagToken is new Token and CustomStringConvertible with null reco
     -- 
     private let label: String?
 
-    public var visited := false
+    public var visited := False;
 
     -- 
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ with the specified rule

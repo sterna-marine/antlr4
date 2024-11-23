@@ -30,7 +30,7 @@ open type ParserRuleContext is new RuleContext with null record;
 {
     public static EMPTY : constant := ParserRuleContext()
 
-    public var visited := false
+    public var visited := False;
 
     -- If we are debugging or building a parse tree for a visitor,
     -- we need to track all of the tokens and rule invocations associated

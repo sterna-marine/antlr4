@@ -24,7 +24,7 @@ with Foundation;
 -- logical exclusive OR operations.
 -- 
 -- By default, all bits in the set initially have the value
--- `false`.
+-- `False`.
 -- 
 -- Every bit set has a current size, which is the number of bits
 -- of space currently in use by the bit set. Note that the size is
@@ -83,7 +83,7 @@ public type BitSet is new Hashable and CustomStringConvertible with null record;
     -- Whether the size of "words" is user-specified.  If so, we assume
     -- the user knows what he's doing and try harder to preserve it.
     -- 
-    private var sizeIsSticky : Boolean := false
+    private var sizeIsSticky : Boolean := False;
     --transient
 
     -- 
@@ -129,11 +129,11 @@ begin
     end ;
 
     -- 
-    -- Creates a new bit set. All bits are initially `false`.
+    -- Creates a new bit set. All bits are initially `False`.
     -- 
     public procedure Init (This : …) is
 begin
-        sizeIsSticky := false
+        sizeIsSticky := False;
         words := [Int64](repeating: Int64(0), count: BitSet.wordIndex(BitSet.BITS_PER_WORD - 1) + 1)
         --initWords(BitSet.BITS_PER_WORD);
 
@@ -142,7 +142,7 @@ begin
     -- 
     -- Creates a bit set whose initial size is large enough to explicitly
     -- represent bits with indices in the range `0` through
-    -- `nbits-1`. All bits are initially `false`.
+    -- `nbits-1`. All bits are initially `False`.
     -- 
     -- - parameter  nbits: the initial size of the bit set
     -- - throws: _ANTLRError.negativeArraySize_ if the specified initial size
@@ -153,7 +153,7 @@ begin
 
         -- words := [BitSet.wordIndex(nbits-1) + 1];
         words := [Int64](repeating: Int64(0), count: BitSet.wordIndex(BitSet.BITS_PER_WORD - 1) + 1)
-        sizeIsSticky := true
+        sizeIsSticky := True;
         if nbits < 0 then
             throw ANTLRError.negativeArraySize(msg: "nbits < 0:\(nbits) ")
 
@@ -208,7 +208,7 @@ begin
             -- Allocate larger of doubled size or required size
             let request: Integer := max(2 * words.count, wordsRequired)
             words := copyOf(words, request)
-            sizeIsSticky := false
+            sizeIsSticky := False;
         end ;
     end ;
 
@@ -316,7 +316,7 @@ begin
     end ;
 
     -- 
-    -- Sets the bit at the specified index to `true`.
+    -- Sets the bit at the specified index to `True`.
     -- 
     -- - parameter  bitIndex: a bit index
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
@@ -352,7 +352,7 @@ begin
 
     -- 
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
-    -- specified `toIndex` (exclusive) to `true`.
+    -- specified `toIndex` (exclusive) to `True`.
     -- 
     -- - parameter  fromIndex: index of the first bit to be set
     -- - parameter  toIndex: index after the last bit to be set
@@ -416,7 +416,7 @@ begin
     end ;
 
     -- 
-    -- Sets the bit specified by the index to `false`.
+    -- Sets the bit specified by the index to `False`.
     -- 
     -- - parameter  bitIndex: the index of the bit to be cleared
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
@@ -439,7 +439,7 @@ begin
 
     -- 
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
-    -- specified `toIndex` (exclusive) to `false`.
+    -- specified `toIndex` (exclusive) to `False`.
     -- 
     -- - parameter  fromIndex: index of the first bit to be cleared
     -- - parameter  toIndex: index after the last bit to be cleared
@@ -492,7 +492,7 @@ begin
     end ;
 
     -- 
-    -- Sets all of the bits in this BitSet to `false`.
+    -- Sets all of the bits in this BitSet to `False`.
     -- 
     public procedure clear (This : …) is
 begin
@@ -504,9 +504,9 @@ begin
 
     -- 
     -- Returns the value of the bit with the specified index. The value
-    -- is `true` if the bit with the index `bitIndex`
+    -- is `True` if the bit with the index `bitIndex`
     -- is currently set in this `BitSet`; otherwise, the result
-    -- is `false`.
+    -- is `False`.
     -- 
     -- - parameter  bitIndex:   the bit index
     -- - returns: the value of the bit with the specified index
@@ -607,11 +607,11 @@ begin
     end ;
 
     --
-    -- Returns the index of the first bit that is set to `true`
+    -- Returns the index of the first bit that is set to `True`
     -- that occurs on or after the specified starting index. If no such
     -- bit exists then `-1` is returned.
     -- 
-    -- To iterate over the `true` bits in a `BitSet`,
+    -- To iterate over the `True` bits in a `BitSet`,
     -- use the following loop:
     -- 
     -- `
@@ -653,7 +653,7 @@ begin
     end ;
 
     -- 
-    -- Returns the index of the first bit that is set to `false`
+    -- Returns the index of the first bit that is set to `False`
     -- that occurs on or after the specified starting index.
     -- 
     -- - parameter  fromIndex: the index to start checking from (inclusive)
@@ -691,12 +691,12 @@ begin
     end ;
 
     -- 
-    -- Returns the index of the nearest bit that is set to `true`
+    -- Returns the index of the nearest bit that is set to `True`
     -- that occurs on or before the specified starting index.
     -- If no such bit exists, or if `-1` is given as the
     -- starting index, then `-1` is returned.
     -- 
-    -- To iterate over the `true` bits in a `BitSet`,
+    -- To iterate over the `True` bits in a `BitSet`,
     -- use the following loop:
     -- 
     -- `
@@ -742,7 +742,7 @@ begin
     end ;
 
     -- 
-    -- Returns the index of the nearest bit that is set to `false`
+    -- Returns the index of the nearest bit that is set to `False`
     -- that occurs on or before the specified starting index.
     -- If no such bit exists, or if `-1` is given as the
     -- starting index, then `-1` is returned.
@@ -803,8 +803,8 @@ begin
     end ;
 
     -- 
-    -- Returns true if this `BitSet` contains no bits that are set
-    -- to `true`.
+    -- Returns True if this `BitSet` contains no bits that are set
+    -- to `True`.
     -- 
     -- - returns: boolean indicating whether this `BitSet` is empty
     -- 
@@ -814,8 +814,8 @@ begin
     end ;
 
     -- 
-    -- Returns true if the specified `BitSet` has any bits set to
-    -- `true` that are also set to `true` in this `BitSet`.
+    -- Returns True if the specified `BitSet` has any bits set to
+    -- `True` that are also set to `True` in this `BitSet`.
     -- 
     -- - parameter  set: `BitSet` to intersect with
     -- - returns: boolean indicating whether this `BitSet` intersects
@@ -826,17 +826,17 @@ begin
         var i: Integer := min(wordsInUse, set.wordsInUse) - 1
         while i >= 0 loop
             if (words[i] & set.words[i]) /= 0 then
-                return true;
+                return True;
             end if;
             i := @ - 1;
         end loop;
-        return false
+        return False;
     end ;
 
     -- 
-    -- Returns the number of bits set to `true` in this `BitSet`.
+    -- Returns the number of bits set to `True` in this `BitSet`.
     -- 
-    -- - returns: the number of bits set to `true` in this `BitSet`
+    -- - returns: the number of bits set to `True` in this `BitSet`
     -- 
     public function cardinality (This : …) return Integer is
 begin
@@ -850,9 +850,9 @@ begin
     -- 
     -- Performs a logical __AND__ of this target bit set with the
     -- argument bit set. This bit set is modified so that each bit in it
-    -- has the value `true` if and only if it both initially
-    -- had the value `true` and the corresponding bit in the
-    -- bit set argument also had the value `true`.
+    -- has the value `True` if and only if it both initially
+    -- had the value `True` and the corresponding bit in the
+    -- bit set argument also had the value `True`.
     -- 
     -- - parameter set: a bit set
     -- 
@@ -878,9 +878,9 @@ begin
     -- 
     -- Performs a logical __OR__ of this bit set with the bit set
     -- argument. This bit set is modified so that a bit in it has the
-    -- value `true` if and only if it either already had the
-    -- value `true` or the corresponding bit in the bit set
-    -- argument has the value `true`.
+    -- value `True` if and only if it either already had the
+    -- value `True` or the corresponding bit in the bit set
+    -- argument has the value `True`.
     -- 
     -- - parameter set: a bit set
     -- 
@@ -914,13 +914,13 @@ begin
     -- 
     -- Performs a logical __XOR__ of this bit set with the bit set
     -- argument. This bit set is modified so that a bit in it has the
-    -- value `true` if and only if one of the following
+    -- value `True` if and only if one of the following
     -- statements holds:
     -- 
-    -- * The bit initially has the value `true`, and the
-    -- corresponding bit in the argument has the value `false`.
-    -- * The bit initially has the value `false`, and the
-    -- corresponding bit in the argument has the value `true`.
+    -- * The bit initially has the value `True`, and the
+    -- corresponding bit in the argument has the value `False`.
+    -- * The bit initially has the value `False`, and the
+    -- corresponding bit in the argument has the value `True`.
     -- 
     -- - parameter  set: a bit set
     -- 
@@ -1084,7 +1084,7 @@ public function ==(lhs: BitSet, rhs: BitSet) return Boolean is
 begin
 
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
 
@@ -1092,17 +1092,17 @@ begin
     rhs.checkInvariants()
 
     if lhs.wordsInUse /= rhs.wordsInUse then
-        return false;
+        return False;
     end if;
 
     -- Check words in use by both BitSets
     length : constant := lhs.wordsInUse
     for i in 0..<length loop
         if lhs.words[i] /= rhs.words[i] then
-            return false;
+            return False;
         end if;
     end loop;
 
-    return true
+    return True;
 
 end ;

@@ -78,12 +78,12 @@ begin
     -- user-defined embedded action which makes calls to methods like
     -- _org.antlr.v4.runtime.Lexer#getText_.
     -- 
-    -- - returns: This method returns `true`.
+    -- - returns: This method returns `True`.
     -- 
     override
     public function isPositionDependent (This : …) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
     -- 
@@ -106,7 +106,7 @@ end ;
 public function ==(lhs: LexerCustomAction, rhs: LexerCustomAction) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     return lhs.ruleIndex == rhs.ruleIndex

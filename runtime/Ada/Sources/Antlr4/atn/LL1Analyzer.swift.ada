@@ -8,7 +8,7 @@
 public class LL1Analyzer {
     --
     -- Special value added to the lookahead sets to indicate that we hit
-    -- a predicate during analysis if `seeThruPreds==false`.
+    -- a predicate during analysis if `seeThruPreds==False`.
     --
     public let HIT_PRED: Integer := CommonToken.INVALID_TYPE
 
@@ -38,9 +38,9 @@ public class LL1Analyzer {
         for alt in 0..<length loop
             look[alt] := IntervalSet()
             var lookBusy := Set<ATNConfig> ()
-            seeThruPreds : constant := false -- fail to get lookahead upon pred
+            seeThruPreds : constant := False -- fail to get lookahead upon pred
             _LOOK(s.transition(alt).target, null, EmptyPredictionContext.Instance,
-                    look[alt]!, &lookBusy, BitSet(), seeThruPreds, false)
+                    look[alt]!, &lookBusy, BitSet(), seeThruPreds, False)
             -- Wipe out lookahead for this alternative if we found nothing
             -- or we had a predicate when we not seeThruPreds
             if look[alt]!.size() == 0 or else look[alt]!.contains(HIT_PRED) then
@@ -93,10 +93,10 @@ begin
     public function LOOK (s : ATNState; stopState : ATNState?, ctx : RuleContext?) return IntervalSet is
 begin
         r : constant := IntervalSet()
-        seeThruPreds : constant := true -- ignore preds; get all lookahead
+        seeThruPreds : constant := True -- ignore preds; get all lookahead
         lookContext : constant := ctx /= null ? PredictionContext.fromRuleContext(s.atn!, ctx) : null;
         var config := Set<ATNConfig> ()
-        _LOOK(s, stopState, lookContext, r, &config, BitSet(), seeThruPreds, true)
+        _LOOK(s, stopState, lookContext, r, &config, BitSet(), seeThruPreds, True)
         return r
     end ;
 
@@ -107,7 +107,7 @@ begin
     -- If `ctx` is `null` and `stopState` or the end of the
     -- rule containing `s` is reached, _org.antlr.v4.runtime.Token#EPSILON_ is added to
     -- the result set. If `ctx` is not `null` and `addEOF` is
-    -- `true` and `stopState` or the end of the outermost rule is
+    -- `True` and `stopState` or the end of the outermost rule is
     -- reached, _org.antlr.v4.runtime.Token#EOF_ is added to the result set.
     --
     -- - parameter s: the ATN state.
@@ -122,8 +122,8 @@ begin
     -- - parameter calledRuleStack: A set used for preventing left recursion in the
     -- ATN from causing a stack overflow. Outside code should pass
     -- `new BitSet()` for this argument.
-    -- - parameter seeThruPreds: `true` to true semantic predicates as
-    -- implicitly `true` and "see through them", otherwise `false`
+    -- - parameter seeThruPreds: `True` to True semantic predicates as
+    -- implicitly `True` and "see through them", otherwise `False`
     -- to treat semantic predicates as opaque and add _#HIT_PRED_ to the
     -- result if one is encountered.
     -- - parameter addEOF: Add _org.antlr.v4.runtime.Token#EOF_ to the result if the end of the

@@ -111,7 +111,7 @@ public type ATNState is new Hashable and CustomStringConvertible with null recor
     public internal(set) final var ruleIndex: Int?
     -- at runtime, we don't have Rule objects
 
-    public private(set) final var epsilonOnlyTransitions : Boolean := false
+    public private(set) final var epsilonOnlyTransitions : Boolean := False;
 
     -- 
     -- Track the transitions emanating from this ATN state.
@@ -130,7 +130,7 @@ public type ATNState is new Hashable and CustomStringConvertible with null recor
 
     public function isNonGreedyExitState (This : …) return Boolean is
 begin
-        return false
+        return False;
     end ;
 
 
@@ -152,20 +152,20 @@ begin
             epsilonOnlyTransitions := e.isEpsilon();
         elsif epsilonOnlyTransitions /= e.isEpsilon() then
             print("ATN state %d has both epsilon and non-epsilon transitions.\n", String(stateNumber))
-            epsilonOnlyTransitions := false
+            epsilonOnlyTransitions := False;
         end ;
 
-        var alreadyPresent := false
+        var alreadyPresent := False;
         for t in transitions loop
             if t.target.stateNumber == e.target.stateNumber then
                 if tLabel : constant := t.labelIntervalSet(), eLabel : constant := e.labelIntervalSet(), tLabel == eLabel then
 --                    print("Repeated transition upon \(eLabel) from \(stateNumber)->\(t.target.stateNumber)")
-                    alreadyPresent := true
+                    alreadyPresent := True;
                     exit when True;
                 end ;
                 elsif t.isEpsilon() and then e.isEpsilon() then
 --                    print("Repeated epsilon transition from \(stateNumber)->\(t.target.stateNumber)")
-                    alreadyPresent := true
+                    alreadyPresent := True;
                     exit when True;
                 end ;
             end ;
@@ -209,7 +209,7 @@ end ;
 public function ==(lhs: ATNState, rhs: ATNState) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     -- are these states same object?
     return lhs.stateNumber == rhs.stateNumber

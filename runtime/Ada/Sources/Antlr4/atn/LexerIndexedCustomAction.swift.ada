@@ -30,7 +30,7 @@ public final type LexerIndexedCustomAction is new LexerAction with null record;
     -- with a _org.antlr.v4.runtime.atn.LexerAction_.
     -- 
     -- Note: This class is only required for lexer actions for which
-    -- _org.antlr.v4.runtime.atn.LexerAction#isPositionDependent_ returns `true`.
+    -- _org.antlr.v4.runtime.atn.LexerAction#isPositionDependent_ returns `True`.
     -- 
     -- - parameter offset: The offset into the input _org.antlr.v4.runtime.CharStream_, relative to
     -- the token start index, at which the specified lexer action should be
@@ -80,12 +80,12 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `true`.
+    -- - returns: This method returns `True`.
     -- 
 
     public override function isPositionDependent (This : …) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
     -- 
@@ -110,7 +110,7 @@ end ;
 public function ==(lhs: LexerIndexedCustomAction, rhs: LexerIndexedCustomAction) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
     return lhs.offset == rhs.offset

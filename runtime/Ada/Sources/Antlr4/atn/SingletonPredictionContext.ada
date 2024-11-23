@@ -68,13 +68,13 @@ end ;
 public function ==(lhs: SingletonPredictionContext, rhs: SingletonPredictionContext) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     if lhs.hashValue /= rhs.hashValue then
-        return false;
+        return False;
     end if;
     if lhs.returnState /= rhs.returnState then
-        return false;
+        return False;
     end if;
 
     return lhs.parent == rhs.parent

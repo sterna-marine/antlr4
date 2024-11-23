@@ -16,7 +16,7 @@
 -- * The parser could not figure out which path to take in the ATN (none of
 -- the available alternatives could possibly match)
 -- * The current input does not match what we were looking for
--- * A predicate evaluated to false
+-- * A predicate evaluated to False;
 -- 
 -- Implementations of this interface report syntax errors by calling
 -- _org.antlr.v4.runtime.Parser#notifyErrorListeners_.
@@ -95,8 +95,8 @@ public protocol ANTLRErrorStrategy {
     -- _Parser#createTerminalNode(ParserRuleContext, Token)_.
     -- 
     -- - parameter recognizer: the parser instance
-    -- - returns: `true` if the parser is currently recovering from a parse
-    -- error, otherwise `false`
+    -- - returns: `True` if the parser is currently recovering from a parse
+    -- error, otherwise `False`
     -- 
     function inErrorRecoveryMode (recognizer : Parser) return Boolean;
 

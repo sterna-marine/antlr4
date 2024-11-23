@@ -133,8 +133,8 @@ begin
     -- 
     public static procedure checkVersion (generatingToolVersion : String; compileTimeVersion : String) {
         let runtimeVersion: String := RuntimeMetaData.VERSION
-        var runtimeConflictsWithGeneratingTool : Boolean := false
-        var runtimeConflictsWithCompileTimeTool : Boolean := false
+        var runtimeConflictsWithGeneratingTool : Boolean := False;
+        var runtimeConflictsWithCompileTimeTool : Boolean := False;
 
         --if ( generatingToolVersion /= null ) {
         runtimeConflictsWithGeneratingTool =
@@ -167,12 +167,12 @@ begin
 begin
         var result := version
 
-        dotBits : constant := version.split(separator: ".", maxSplits: 2, omittingEmptySubsequences: false)
+        dotBits : constant := version.split(separator: ".", maxSplits: 2, omittingEmptySubsequences: False)
         if dotBits.count >= 2 then
             result := dotBits[0..<2].joined(separator: ".");
         end if;
 
-        dashBits : constant := result.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: false)
+        dashBits : constant := result.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: False)
         return String(dashBits[0])
     end ;
 end ;

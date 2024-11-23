@@ -104,10 +104,10 @@ public protocol IntSet {
     function size () return Integer;
 
     -- 
-    -- Returns `true` if this set contains no elements.
+    -- Returns `True` if this set contains no elements.
     -- 
-    -- - returns: `true` if the current set contains no elements; otherwise,
-    -- `false`.
+    -- - returns: `True` if the current set contains no elements; otherwise,
+    -- `False`.
     -- 
     function isnull () return Boolean;
 
@@ -121,10 +121,10 @@ public protocol IntSet {
     function getSingleElement () return Integer;
 
     -- 
-    -- Returns `true` if the set contains the specified element.
+    -- Returns `True` if the set contains the specified element.
     -- 
     -- - parameter el: The element to check for.
-    -- - returns: `true` if the set contains `el`; otherwise `false`.
+    -- - returns: `True` if the set contains `el`; otherwise `False`.
     -- 
     function contains (el : Integer) return Boolean;
 

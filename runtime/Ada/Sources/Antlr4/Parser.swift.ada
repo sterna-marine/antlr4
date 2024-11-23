@@ -28,7 +28,7 @@ private bypassAltsAtnCacheMutex : constant := Mutex()
 open type Parser is new Recognizer<ParserATNSimulator> with null record;
 {
     public static EOF : constant := -1
-    public static var ConsoleError := true
+    public static var ConsoleError := True;
 
     public type TraceListener is new ParseTreeListener with null record;
 {
@@ -107,17 +107,17 @@ open type Parser is new Recognizer<ParserATNSimulator> with null record;
 
     -- 
     -- Specifies whether or not the parser should construct a parse tree during
-    -- the parsing process. The default value is `true`.
+    -- the parsing process. The default value is `True`.
     -- 
     -- - SeeAlso: #getBuildParseTree
     -- - SeeAlso: #setBuildParseTree
     -- 
-    internal var _buildParseTrees : Boolean := true
+    internal var _buildParseTrees : Boolean := True;
 
     -- 
-    -- When _#setTrace_`(true)` is called, a reference to the
+    -- When _#setTrace_`(True)` is called, a reference to the
     -- _org.antlr.v4.runtime.Parser.TraceListener_ is stored here so it can be easily removed in a
-    -- later call to _#setTrace_`(false)`. The listener itself is
+    -- later call to _#setTrace_`(False)`. The listener itself is
     -- implemented as a parser listener so this field is not directly used by
     -- other parser methods.
     -- 
@@ -150,7 +150,7 @@ begin
         _errHandler.reset(self)
         _ctx := null;
         _syntaxErrors := 0
-        setTrace(false)
+        setTrace(False)
         _precedenceStack.clear()
         _precedenceStack.push(0)
 
@@ -168,7 +168,7 @@ begin
     -- If the symbol type does not match,
     -- _org.antlr.v4.runtime.ANTLRErrorStrategy#recoverInline_ is called on the current error
     -- strategy to attempt recovery. If _#getBuildParseTree_ is
-    -- `true` and the token index of the symbol returned by
+    -- `True` and the token index of the symbol returned by
     -- _org.antlr.v4.runtime.ANTLRErrorStrategy#recoverInline_ is -1, the symbol is added to
     -- the parse tree by calling _#createErrorNode(ParserRuleContext, Token)_ then
     -- _ParserRuleContext#addErrorNode(ErrorNode)_.
@@ -205,7 +205,7 @@ begin
     -- If the symbol type does not match,
     -- _org.antlr.v4.runtime.ANTLRErrorStrategy#recoverInline_ is called on the current error
     -- strategy to attempt recovery. If _#getBuildParseTree_ is
-    -- `true` and the token index of the symbol returned by
+    -- `True` and the token index of the symbol returned by
     -- _org.antlr.v4.runtime.ANTLRErrorStrategy#recoverInline_ is -1, the symbol is added to
     -- the parse tree by calling _#createErrorNode(ParserRuleContext, Token)_ then
     -- _ParserRuleContext#addErrorNode(ErrorNode)_.
@@ -255,10 +255,10 @@ begin
 
     -- 
     -- Gets whether or not a complete parse tree will be constructed while
-    -- parsing. This property is `true` for a newly constructed parser.
+    -- parsing. This property is `True` for a newly constructed parser.
     -- 
-    -- - Returns: `true` if a complete parse tree will be constructed while
-    -- parsing, otherwise `false`
+    -- - Returns: `True` if a complete parse tree will be constructed while
+    -- parsing, otherwise `False`
     -- 
     public function getBuildParseTree (This : …) return Boolean is
 begin
@@ -267,9 +267,9 @@ begin
 
     -- 
     -- Trim the internal lists of the parse tree during parsing to conserve memory.
-    -- This property is set to `false` by default for a newly constructed parser.
+    -- This property is set to `False` by default for a newly constructed parser.
     -- 
-    -- - Parameter trimParseTrees: `true` to trim the capacity of the _org.antlr.v4.runtime.ParserRuleContext#children_
+    -- - Parameter trimParseTrees: `True` to trim the capacity of the _org.antlr.v4.runtime.ParserRuleContext#children_
     -- list to its size after a rule is parsed.
     -- 
     public procedure setTrimParseTree (trimParseTrees  : Boolean) {
@@ -284,7 +284,7 @@ begin
     end ;
 
     -- 
-    -- - Returns: `true` if the _org.antlr.v4.runtime.ParserRuleContext#children_ list is trimmed
+    -- - Returns: `True` if the _org.antlr.v4.runtime.ParserRuleContext#children_ list is trimmed
     -- using the default _org.antlr.v4.runtime.Parser.TrimToSizeListener_ during the parse process.
     -- 
     public function getTrimParseTree (This : …) return Boolean is
@@ -431,7 +431,7 @@ begin
             end if;
 
             var opts := ATNDeserializationOptions()
-            opts.generateRuleBypassTransitions := true
+            opts.generateRuleBypassTransitions := True;
             result : constant := try! ATNDeserializer(opts).deserialize(serializedAtn)
             bypassAltsAtnCache := result
             return bypassAltsAtnCache!
@@ -765,7 +765,7 @@ begin
     public function inContext (context : String) return Boolean is
 begin
         -- TODO: useful in parser?
-        return false
+        return False;
     end ;
 
     -- Given an AmbiguityInfo object that contains information about an
@@ -888,8 +888,8 @@ begin
     -- 
     -- 
     -- - Parameter symbol: the symbol type to check
-    -- - Returns: `true` if `symbol` can follow the current state in
-    -- the ATN, otherwise `false`.
+    -- - Returns: `True` if `symbol` can follow the current state in
+    -- the ATN, otherwise `False`.
     -- 
     public function isExpectedToken (symbol : Integer) return Boolean is
 begin
@@ -898,11 +898,11 @@ begin
         s : constant := atn.states[getState()]!
         var following := atn.nextTokens(s)
         if following.contains(symbol) then
-            return true;
+            return True;
         end if;
 --        System.out.println("following "+s+"="+following);
         if not following.contains(CommonToken.EPSILON) then
-            return false;
+            return False;
         end if;
 
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
@@ -910,17 +910,17 @@ begin
             rt : constant := invokingState.transition(0) as! RuleTransition
             following := atn.nextTokens(rt.followState)
             if following.contains(symbol) then
-                return true;
+                return True;
             end if;
 
             ctx := ctxWrap.parent as? ParserRuleContext
         end loop;
 
         if following.contains(CommonToken.EPSILON) and then symbol == CommonToken.EOF then
-            return true;
+            return True;
         end if;
 
-        return false
+        return False;
     end ;
 
     -- 
@@ -998,7 +998,7 @@ begin
         guard _interp : constant := _interp else {
             return
         end ;
-        var seenOne := false
+        var seenOne := False;
         vocab : constant := getVocabulary()
         for dfa in _interp.decisionToDFA loop
             if not dfa.states.isEmpty then
@@ -1007,7 +1007,7 @@ begin
                 end if;
                 print("Decision \(dfa.decision):")
                 print(dfa.toString(vocab), terminator: "")
-                seenOne := true
+                seenOne := True;
             end ;
         end loop;
     end ;

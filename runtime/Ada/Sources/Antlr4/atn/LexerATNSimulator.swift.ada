@@ -12,8 +12,8 @@
 
 open type LexerATNSimulator is new ATNSimulator with null record;
 {
-    public static debug : constant := false
-    public dfa_debug : constant := false
+    public static debug : constant := False;
+    public dfa_debug : constant := False;
 
     public static MIN_DFA_EDGE : constant := 0
     public static MAX_DFA_EDGE : constant := 127  -- forces unicode to stay in ATN
@@ -151,7 +151,7 @@ begin
 
         s0_closure : constant := try computeStartState(input, startState)
         suppressEdge : constant := s0_closure.hasSemanticContext
-        s0_closure.hasSemanticContext := false
+        s0_closure.hasSemanticContext := False;
 
         next : constant := addDFAState(s0_closure)
         if not suppressEdge then
@@ -274,7 +274,7 @@ begin
 
     internal function computeTargetState (input : CharStream; s : DFAState; t : Integer) return DFAState is
 begin
-        reach : constant := ATNConfigSet(true, isOrdered: true)
+        reach : constant := ATNConfigSet(True, isOrdered: True)
 
         -- if we don't find an existing DFA state
         -- Fill reach starting from closure, following t transitions
@@ -333,7 +333,7 @@ begin
             end if;
 
             if LexerATNSimulator.debug then
-                print("testing \(getTokenName(t)) at \(c.toString(recog, true))\n")
+                print("testing \(getTokenName(t)) at \(c.toString(recog, True))\n")
 
             end ;
 
@@ -352,7 +352,7 @@ begin
                         LexerATNConfig(c, target, lexerActionExecutor),
                         reach,
                         currentAltReachedAcceptState,
-                        true,
+                        True,
                         treatEofAsEpsilon) {
                             -- any remaining configs for this alt have a lower priority than
                             -- the one that just reached an accept state.
@@ -394,12 +394,12 @@ begin
         p : ATNState) return ATNConfigSet is
 begin
             initialContext : constant := EmptyPredictionContext.Instance
-            configs : constant := ATNConfigSet(true, isOrdered: true)
+            configs : constant := ATNConfigSet(True, isOrdered: True)
             length : constant := p.getNumberOfTransitions()
             for i in 0..<length loop
                 target : constant := p.transition(i).target
                 c : constant := LexerATNConfig(target, i + 1, initialContext)
-                try closure(input, c, configs, false, false, false)
+                try closure(input, c, configs, False, False, False)
             end loop;
             return configs
     end ;
@@ -411,15 +411,15 @@ begin
     -- search from `config`, all other (potentially reachable) states for
     -- this rule would have a lower priority.
     --
-    -- - returns: `true` if an accept state is reached, otherwise
-    -- `false`.
+    -- - returns: `True` if an accept state is reached, otherwise
+    -- `False`.
     --
     @discardableResult
     final function closure (input : CharStream; config : LexerATNConfig; configs : ATNConfigSet; currentAltReachedAcceptState : Boolean; speculative : Boolean; treatEofAsEpsilon  : Boolean) return Boolean is
 begin
         var currentAltReachedAcceptState := currentAltReachedAcceptState
         if LexerATNSimulator.debug then
-            print("closure(" + config.toString(recog, true) + ")");
+            print("closure(" + config.toString(recog, True) + ")");
         end if;
 
         if config.state is RuleStopState then
@@ -431,13 +431,13 @@ begin
                 end if;
             end ;
 
-            if config.context?.hasEmptyPath() ?? true then
-                if config.context?.isEmpty() ?? true then
+            if config.context?.hasEmptyPath() ?? True then
+                if config.context?.isEmpty() ?? True then
                     try configs.add(config)
-                    return true
+                    return True;
                 else
                     try configs.add(LexerATNConfig(config, config.state, EmptyPredictionContext.Instance))
-                    currentAltReachedAcceptState := true
+                    currentAltReachedAcceptState := True;
                 end ;
             end ;
 
@@ -518,7 +518,7 @@ begin
                 if LexerATNSimulator.debug then
                     print("EVAL rule \(pt.ruleIndex):\(pt.predIndex)");
                 end if;
-                configs.hasSemanticContext := true
+                configs.hasSemanticContext := True;
                 if try evaluatePredicate(input, pt.ruleIndex, pt.predIndex, speculative) then
                     c := LexerATNConfig(config, t.target);
                 end if;
@@ -529,8 +529,8 @@ begin
                     --
                     -- TODO: if the entry rule is invoked recursively, some
                     -- actions may be executed during the recursive call. The
-                    -- problem can appear when hasEmptyPath() is true but
-                    -- isEmpty() is false. In this case, the config needs to be
+                    -- problem can appear when hasEmptyPath() is True but
+                    -- isEmpty() is False. In this case, the config needs to be
                     -- split into two contexts - one with just the empty path
                     -- and another with everything but the empty path.
                     -- Unfortunately, the current algorithm does not allow
@@ -566,7 +566,7 @@ begin
     --
     -- Evaluate a predicate specified in the lexer.
     --
-    -- If `speculative` is `true`, this method was called before
+    -- If `speculative` is `True`, this method was called before
     -- _#consume_ for the matched character. This method should call
     -- _#consume_ before evaluating the predicate to ensure position
     -- sensitive values, including _org.antlr.v4.runtime.Lexer#getText_, _org.antlr.v4.runtime.Lexer#getLine_,
@@ -578,17 +578,17 @@ begin
     -- - parameter input: The input stream.
     -- - parameter ruleIndex: The rule containing the predicate.
     -- - parameter predIndex: The index of the predicate within the rule.
-    -- - parameter speculative: `true` if the current index in `input` is
+    -- - parameter speculative: `True` if the current index in `input` is
     -- one character before the predicate's location.
     --
-    -- - returns: `true` if the specified predicate evaluates to
-    -- `true`.
+    -- - returns: `True` if the specified predicate evaluates to
+    -- `True`.
     --
     final function evaluatePredicate (input : CharStream; ruleIndex : Integer; predIndex : Integer; speculative  : Boolean) return Boolean is
 begin
-        -- assume true if no recognizer was provided
+        -- assume True if no recognizer was provided
         guard recog : constant := recog else {
-            return true
+            return True;
         end ;
         if not speculative then
             return try recog.sempred(null, ruleIndex, predIndex);
@@ -640,7 +640,7 @@ begin
             -- state, we can continue in pure DFA mode from there.
             --
             suppressEdge : constant := q.hasSemanticContext
-            q.hasSemanticContext := false
+            q.hasSemanticContext := False;
             to : constant := addDFAState(q)
 
             if suppressEdge then
@@ -688,7 +688,7 @@ begin
         proposed : constant := DFAState(configs)
 
         if rss : constant := configs.firstConfigWithRuleStopState then
-            proposed.isAcceptState := true
+            proposed.isAcceptState := True;
             proposed.lexerActionExecutor := (rss as! LexerATNConfig).getLexerActionExecutor()
             proposed.prediction := atn.ruleToTokenType[rss.state.ruleIndex!]
         end ;
@@ -702,7 +702,7 @@ begin
 
             newState : constant := proposed
             newState.stateNumber := dfa.states.count
-            configs.setReadonly(true)
+            configs.setReadonly(True)
             newState.configs := configs
             dfa.states[newState] := newState
             return newState

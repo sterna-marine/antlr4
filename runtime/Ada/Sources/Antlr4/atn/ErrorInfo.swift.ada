@@ -30,8 +30,8 @@ public type ErrorInfo is new DecisionEventInfo with null record;
     -- - parameter input: The input token stream
     -- - parameter startIndex: The start index for the current prediction
     -- - parameter stopIndex: The index at which the syntax error was identified
-    -- - parameter fullCtx: `true` if the syntax error was identified during LL
-    -- prediction; otherwise, `false` if the syntax error was identified
+    -- - parameter fullCtx: `True` if the syntax error was identified during LL
+    -- prediction; otherwise, `False` if the syntax error was identified
     -- during SLL prediction
     -- 
     public init(decision : Integer;

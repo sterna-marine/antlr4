@@ -34,7 +34,7 @@ public type CommonTokenFactory is new TokenFactory with null record;
     -- input stream implementation.
     -- 
     -- 
-    -- The default value is `false` to avoid the performance and memory
+    -- The default value is `False` to avoid the performance and memory
     -- overhead of copying text for every token unless explicitly requested.
     -- 
     internal let copyText : Boolean;
@@ -44,7 +44,7 @@ public type CommonTokenFactory is new TokenFactory with null record;
     -- _#copyText_.
     -- 
     -- 
-    -- When `copyText` is `false`, the _#DEFAULT_ instance
+    -- When `copyText` is `False`, the _#DEFAULT_ instance
     -- should be used instead of constructing a new instance.
     -- 
     -- - parameter copyText: The value for _#copyText_.
@@ -55,7 +55,7 @@ public type CommonTokenFactory is new TokenFactory with null record;
 
     -- 
     -- Constructs a _org.antlr.v4.runtime.CommonTokenFactory_ with _#copyText_ set to
-    -- `false`.
+    -- `False`.
     -- 
     -- 
     -- The _#DEFAULT_ instance should be used instead of calling this
@@ -63,7 +63,7 @@ public type CommonTokenFactory is new TokenFactory with null record;
     -- 
     public convenience procedure Init (This : …) is
 begin
-        self.init(false)
+        self.init(False)
     end ;
 
 

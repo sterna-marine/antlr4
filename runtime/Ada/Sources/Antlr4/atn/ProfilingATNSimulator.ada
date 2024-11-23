@@ -26,7 +26,7 @@ public type ProfilingATNSimulator is new ParserATNSimulator with null record;
     -- At the point of LL failover, we record how SLL would resolve the conflict so that
     -- we can determine whether or not a decision / input pair is context-sensitive.
     -- If LL gives a different result than SLL's predicted alternative, we have a
-    -- context sensitivity for sure. The converse is not necessarily true, however.
+    -- context sensitivity for sure. The converse is not necessarily True, however.
     -- It's possible that after conflict resolution chooses minimum alternatives,
     -- SLL could get the same answer as LL. Regardless of whether or not the result indicates
     -- an ambiguity, it is not treated as a context sensitivity because LL prediction
@@ -71,7 +71,7 @@ begin
         if SLL_k > decisions[decision].SLL_MaxLook then
             decisions[decision].SLL_MaxLook := SLL_k
             decisions[decision].SLL_MaxLookEvent =
-                    LookaheadEventInfo(decision, null, input, _startIndex, _sllStopIndex, false)
+                    LookaheadEventInfo(decision, null, input, _startIndex, _sllStopIndex, False)
         end ;
 
         if _llStopIndex >= 0 then
@@ -81,7 +81,7 @@ begin
             if LL_k > decisions[decision].LL_MaxLook then
                 decisions[decision].LL_MaxLook := LL_k
                 decisions[decision].LL_MaxLookEvent =
-                        LookaheadEventInfo(decision, null, input, _startIndex, _llStopIndex, true)
+                        LookaheadEventInfo(decision, null, input, _startIndex, _llStopIndex, True)
             end ;
         end ;
 
@@ -104,7 +104,7 @@ begin
             decisions[currentDecision].SLL_DFATransitions := @ + 1; -- count only if we transition over a DFA state
             if existingTargetState == ATNSimulator.ERROR then
                 decisions[currentDecision].errors.append(
-                ErrorInfo(currentDecision, previousD.configs, _input, _startIndex, _sllStopIndex, false)
+                ErrorInfo(currentDecision, previousD.configs, _input, _startIndex, _sllStopIndex, False)
                 )
             end ;
         end ;
@@ -137,7 +137,7 @@ begin
                 -- no reach on current lookahead symbol. ERROR.
                 -- TODO: does not handle delayed errors per getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule()
                 decisions[currentDecision].errors.append(
-                ErrorInfo(currentDecision, closure, _input, _startIndex, _llStopIndex, true)
+                ErrorInfo(currentDecision, closure, _input, _startIndex, _llStopIndex, True)
                 )
             end ;
         else
@@ -146,7 +146,7 @@ begin
             else
                 -- no reach on current lookahead symbol. ERROR.
                 decisions[currentDecision].errors.append(
-                ErrorInfo(currentDecision, closure, _input, _startIndex, _sllStopIndex, false)
+                ErrorInfo(currentDecision, closure, _input, _startIndex, _sllStopIndex, False)
                 )
             end ;
         end ;

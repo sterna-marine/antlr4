@@ -24,7 +24,7 @@
 -- except that it requires the identifier to be `x` and the expression to
 -- be `0`.
 -- 
--- The _#matches_ routines return `true` or `false` based
+-- The _#matches_ routines return `True` or `False` based
 -- upon a match for the tree rooted at the parameter sent in. The
 -- _#match_ routines return a _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ object that
 -- contains the parse tree, the parse tree pattern, and a map from tag name to
@@ -77,7 +77,7 @@ public class ParseTreePatternMatcher {
 
     internal var start: String := "<"
     internal var stop: String := ">"
-    internal var escape: String := "\\"
+    internal var escape: String := "\""
 
     -- 
     -- Constructs a _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ or from a _org.antlr.v4.runtime.Lexer_ and

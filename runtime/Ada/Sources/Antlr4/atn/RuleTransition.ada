@@ -44,12 +44,12 @@ begin
     override
     public function isEpsilon (This : …) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
     override
     public function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
-        return false
+        return False;
     end ;
 end ;

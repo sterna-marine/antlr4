@@ -30,7 +30,7 @@ with Foundation;
 public type DiagnosticErrorListener is new BaseErrorListener with null record;
 {
     -- 
-    -- When `true`, only exactly known ambiguities are reported.
+    -- When `True`, only exactly known ambiguities are reported.
     -- 
     internal final var exactOnly : Boolean;
 
@@ -40,15 +40,15 @@ public type DiagnosticErrorListener is new BaseErrorListener with null record;
     -- 
     public convenience override procedure Init (This : …) is
 begin
-        self.init(true)
+        self.init(True)
     end ;
 
     -- 
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_, specifying
     -- whether all ambiguities or only exact ambiguities are reported.
     -- 
-    -- - parameter exactOnly: `true` to report only exact ambiguities, otherwise
-    -- `false` to report all ambiguities.
+    -- - parameter exactOnly: `True` to report only exact ambiguities, otherwise
+    -- `False` to report all ambiguities.
     -- 
     public init(exactOnly  : Boolean) {
         self.exactOnly := exactOnly

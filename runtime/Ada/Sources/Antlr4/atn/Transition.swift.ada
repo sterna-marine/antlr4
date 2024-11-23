@@ -89,15 +89,15 @@ begin
     -- 
     -- Determines if the transition is an "epsilon" transition.
     -- 
-    -- The default implementation returns `false`.
+    -- The default implementation returns `False`.
     -- 
-    -- - returns: `true` if traversing this transition in the ATN does not
-    -- consume an input symbol; otherwise, `false` if traversing this
+    -- - returns: `True` if traversing this transition in the ATN does not
+    -- consume an input symbol; otherwise, `False` if traversing this
     -- transition consumes (matches) an input symbol.
     -- 
     public function isEpsilon (This : …) return Boolean is
 begin
-        return false
+        return False;
     end ;
 
 

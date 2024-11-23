@@ -187,12 +187,12 @@ begin
     -- that the ATN interp needs to execute
     open function sempred (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
     open function precpred (localctx : RuleContext?, precedence : Integer) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
     open procedure action (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) {

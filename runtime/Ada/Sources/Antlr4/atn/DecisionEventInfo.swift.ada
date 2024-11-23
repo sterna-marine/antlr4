@@ -54,8 +54,8 @@ public class DecisionEventInfo {
     public let stopIndex : Integer;
 
     -- 
-    -- `true` if the current event occurred during LL prediction;
-    -- otherwise, `false` if the input occurred during SLL prediction.
+    -- `True` if the current event occurred during LL prediction;
+    -- otherwise, `False` if the input occurred during SLL prediction.
     -- 
     public let fullCtx : Boolean;
 

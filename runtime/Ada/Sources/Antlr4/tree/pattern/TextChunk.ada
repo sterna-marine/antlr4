@@ -50,7 +50,7 @@ begin
     override public function isEqual (other : Chunk) return Boolean is
 begin
         guard other : constant := other as? TextChunk else {
-            return false
+            return False;
         end ;
         return text == other.text
     end ;

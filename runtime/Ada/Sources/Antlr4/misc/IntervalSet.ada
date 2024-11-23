@@ -39,7 +39,7 @@ public type IntervalSet is new IntSet and Hashable and CustomStringConvertible w
     -- 
     internal var intervals: [Interval]
 
-    internal var readonly := false
+    internal var readonly := False;
 
     public init(intervals : [Interval]) {
         self.intervals := intervals
@@ -413,10 +413,10 @@ begin
             exit when el < a; -- list is sorted and el is before this interval; not here
 
             if el >= a and then el <= b then
-                return true;  -- found in this interval
+                return True;  -- found in this interval
             end if;
         end loop;
-        return false
+        return False;
     end ;
 
     -- 
@@ -498,14 +498,14 @@ begin
     -- public function equals (obj : AnyObject) return Boolean is
 begin
     -- if ( obj==null or else !(obj is IntervalSet) ) then
-    -- return false;
+    -- return False;
     -- end ;
     -- var other : IntervalSet := obj as! IntervalSet;
     -- return self.intervals.equals(other.intervals);
     -- 
 
     public var description: String {
-        return toString(false)
+        return toString(False)
     end ;
 
     public function toString (elemAreChar  : Boolean) return String is
@@ -521,12 +521,12 @@ begin
         if selfSize > 1 then
             buf := @ + "{";
         end if;
-        var first := true
+        var first := True;
         for interval in intervals loop
             if not first then
                 buf := @ + ", ";
             end if;
-            first := false
+            first := False;
 
             a : constant := interval.a
             b : constant := interval.b
@@ -567,12 +567,12 @@ begin
             buf := @ + "{";
         end if;
 
-        var first := true
+        var first := True;
         for interval in intervals loop
             if not first then
                 buf := @ + ", ";
             end if;
-            first := false
+            first := False;
 
             a : constant := interval.a
             b : constant := interval.b
@@ -712,7 +712,7 @@ begin
 
     public procedure makeReadonly (This : …) is
 begin
-        readonly := true
+        readonly := True;
     end ;
 end ;
 

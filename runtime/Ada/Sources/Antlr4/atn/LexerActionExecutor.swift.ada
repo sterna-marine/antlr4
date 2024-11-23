@@ -78,7 +78,7 @@ begin
     -- for position-dependent lexer actions.
     -- 
     -- Normally, when the executor encounters lexer actions where
-    -- _org.antlr.v4.runtime.atn.LexerAction#isPositionDependent_ returns `true`, it calls
+    -- _org.antlr.v4.runtime.atn.LexerAction#isPositionDependent_ returns `True`, it calls
     -- _org.antlr.v4.runtime.IntStream#seek_ on the input _org.antlr.v4.runtime.CharStream_ to set the input
     -- position to the __end__ of the current token. This behavior provides
     -- for efficient DFA representation of lexer actions which appear at the end
@@ -151,7 +151,7 @@ begin
     -- of the token.
     -- 
     public procedure execute (lexer : Lexer; input : CharStream; startIndex : Integer) {
-        var requiresSeek : Boolean := false
+        var requiresSeek : Boolean := False;
         let stopIndex: Integer := input.index()
         defer {
             if requiresSeek then
@@ -168,7 +168,7 @@ begin
             else
                 if lexerAction.isPositionDependent() then
                     try input.seek(stopIndex)
-                    requiresSeek := false
+                    requiresSeek := False;
                 end ;
             end ;
 
@@ -187,15 +187,15 @@ end ;
 public function ==(lhs: LexerActionExecutor, rhs: LexerActionExecutor) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     if lhs.lexerActions.count /= rhs.lexerActions.count then
-        return false;
+        return False;
     end if;
     length : constant := lhs.lexerActions.count
     for i in 0..<length loop
         if !(lhs.lexerActions[i] == rhs.lexerActions[i]) then
-            return false;
+            return False;
         end if;
     end loop;
 

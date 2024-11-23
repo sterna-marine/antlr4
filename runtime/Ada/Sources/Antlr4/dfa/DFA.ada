@@ -22,8 +22,8 @@ public type DFA is new CustomStringConvertible with null record;
     public let atnStartState: DecisionState
 
     -- 
-    -- `true` if this DFA is for a precedence decision; otherwise,
-    -- `false`. This is the backing field for _#isPrecedenceDfa_.
+    -- `True` if this DFA is for a precedence decision; otherwise,
+    -- `False`. This is the backing field for _#isPrecedenceDfa_.
     -- 
     private let precedenceDfa : Boolean;
     
@@ -43,13 +43,13 @@ public type DFA is new CustomStringConvertible with null record;
         if starLoopState : constant := atnStartState as? StarLoopEntryState, starLoopState.precedenceRuleDecision then
             precedenceState : constant := DFAState(ATNConfigSet())
             precedenceState.edges := [DFAState]()
-            precedenceState.isAcceptState := false
-            precedenceState.requiresFullContext := false
+            precedenceState.isAcceptState := False;
+            precedenceState.requiresFullContext := False;
 
-            precedenceDfa := true
+            precedenceDfa := True;
             s0 := precedenceState
         else
-            precedenceDfa := false
+            precedenceDfa := False;
             s0 := null;
         end ;
     end ;
@@ -61,8 +61,8 @@ public type DFA is new CustomStringConvertible with null record;
     -- supplying individual start states corresponding to specific precedence
     -- values.
     -- 
-    -- - returns: `true` if this is a precedence DFA; otherwise,
-    -- `false`.
+    -- - returns: `True` if this is a precedence DFA; otherwise,
+    -- `False`.
     -- - seealso: org.antlr.v4.runtime.Parser#getPrecedence()
     -- 
     public final function isPrecedenceDfa (This : …) return Boolean is

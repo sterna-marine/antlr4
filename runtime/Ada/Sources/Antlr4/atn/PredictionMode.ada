@@ -174,7 +174,7 @@ begin
         -- to match additional input so we terminate prediction.
         -- 
         if allConfigsInRuleStopStates(configs) then
-            return true;
+            return True;
         end if;
 
         -- pure SLL mode parsing
@@ -204,8 +204,8 @@ begin
     -- context).
     -- 
     -- - parameter configs: the configuration set to test
-    -- - returns: `true` if any configuration in `configs` is in a
-    -- _org.antlr.v4.runtime.atn.RuleStopState_, otherwise `false`
+    -- - returns: `True` if any configuration in `configs` is in a
+    -- _org.antlr.v4.runtime.atn.RuleStopState_, otherwise `False`
     -- 
     public static function hasConfigInRuleStopState (configs : ATNConfigSet) return Boolean is
 begin
@@ -220,8 +220,8 @@ begin
     -- context).
     -- 
     -- - parameter configs: the configuration set to test
-    -- - returns: `true` if all configurations in `configs` are in a
-    -- _org.antlr.v4.runtime.atn.RuleStopState_, otherwise `false`
+    -- - returns: `True` if all configurations in `configs` are in a
+    -- _org.antlr.v4.runtime.atn.RuleStopState_, otherwise `False`
     -- 
     public static function allConfigsInRuleStopStates (configs : ATNConfigSet) return Boolean is
 begin
@@ -376,8 +376,8 @@ begin
     -- than one alternative.
     -- 
     -- - parameter altsets: a collection of alternative subsets
-    -- - returns: `true` if every _java.util.BitSet_ in `altsets` has
-    -- _java.util.BitSet#cardinality cardinality_ &gt; 1, otherwise `false`
+    -- - returns: `True` if every _java.util.BitSet_ in `altsets` has
+    -- _java.util.BitSet#cardinality cardinality_ &gt; 1, otherwise `False`
     -- 
     public static function allSubsetsConflict (altsets : [BitSet]) return Boolean is
 begin
@@ -389,17 +389,17 @@ begin
     -- exactly one alternative.
     -- 
     -- - parameter altsets: a collection of alternative subsets
-    -- - returns: `true` if `altsets` contains a _java.util.BitSet_ with
-    -- _java.util.BitSet#cardinality cardinality_ 1, otherwise `false`
+    -- - returns: `True` if `altsets` contains a _java.util.BitSet_ with
+    -- _java.util.BitSet#cardinality cardinality_ 1, otherwise `False`
     -- 
     public static function hasNonConflictingAltSet (altsets : [BitSet]) return Boolean is
 begin
         for alts: BitSet in altsets loop
             if alts.cardinality() == 1 then
-                return true;
+                return True;
             end if;
         end loop;
-        return false
+        return False;
     end ;
 
     -- 
@@ -407,25 +407,25 @@ begin
     -- more than one alternative.
     -- 
     -- - parameter altsets: a collection of alternative subsets
-    -- - returns: `true` if `altsets` contains a _java.util.BitSet_ with
-    -- _java.util.BitSet#cardinality cardinality_ &gt; 1, otherwise `false`
+    -- - returns: `True` if `altsets` contains a _java.util.BitSet_ with
+    -- _java.util.BitSet#cardinality cardinality_ &gt; 1, otherwise `False`
     -- 
     public static function hasConflictingAltSet (altsets : [BitSet]) return Boolean is
 begin
         for alts: BitSet in altsets loop
             if alts.cardinality() > 1 then
-                return true;
+                return True;
             end if;
         end loop;
-        return false
+        return False;
     end ;
 
     -- 
     -- Determines if every alternative subset in `altsets` is equivalent.
     -- 
     -- - parameter altsets: a collection of alternative subsets
-    -- - returns: `true` if every member of `altsets` is equal to the
-    -- others, otherwise `false`
+    -- - returns: `True` if every member of `altsets` is equal to the
+    -- others, otherwise `False`
     -- 
     public static function allSubsetsEqual (altsets : [BitSet]) return Boolean is
 begin
@@ -433,11 +433,11 @@ begin
         let first: BitSet := altsets[0]
         for it in altsets loop
             if it /= first then
-                return false;
+                return False;
             end if;
 
         end loop;
-        return true
+        return True;
     end ;
 
     -- 
@@ -501,10 +501,10 @@ begin
         x : constant := configs.getStateToAltMap()
         for alts in x.values loop
             if alts.cardinality() == 1 then
-                return true;
+                return True;
             end if;
         end loop;
-        return false
+        return False;
     end ;
 
     public static function getSingleViableAlt (altsets : [BitSet]) return Integer is

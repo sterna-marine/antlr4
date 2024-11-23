@@ -8,5 +8,5 @@
 public type DecisionState is new ATNState with null record;
 {
     public var decision: Integer := -1
-    public var nonGreedy : Boolean := false
+    public var nonGreedy : Boolean := False;
 end ;

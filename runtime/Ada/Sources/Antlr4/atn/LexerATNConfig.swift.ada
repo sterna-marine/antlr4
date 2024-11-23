@@ -18,7 +18,7 @@ public type LexerATNConfig is new ATNConfig with null record;
                 alt : Integer;
                 context : PredictionContext) {
 
-        self.passedThroughNonGreedyDecision := false
+        self.passedThroughNonGreedyDecision := False;
         self.lexerActionExecutor := null;
         super.init(state, alt, context, SemanticContext.Empty.Instance)
     end ;
@@ -29,7 +29,7 @@ public type LexerATNConfig is new ATNConfig with null record;
                 lexerActionExecutor : LexerActionExecutor?) {
 
         self.lexerActionExecutor := lexerActionExecutor
-        self.passedThroughNonGreedyDecision := false
+        self.passedThroughNonGreedyDecision := False;
         super.init(state, alt, context, SemanticContext.Empty.Instance)
     end ;
 
@@ -90,34 +90,34 @@ public function ==(lhs: LexerATNConfig, rhs: LexerATNConfig) return Boolean is
 begin
 
     if lhs === rhs then
-        return true;
+        return True;
     end if;
 
 
     --lexerOther : constant : LexerATNConfig := rhs  -- as! LexerATNConfig;
     if lhs.passedThroughNonGreedyDecision /= rhs.passedThroughNonGreedyDecision then
-        return false;
+        return False;
     end if;
 
 
 
     if lhs.state.stateNumber /= rhs.state.stateNumber then
-        return false;
+        return False;
     end if;
     if lhs.alt /= rhs.alt then
-        return false;
+        return False;
     end if;
 
     if lhs.isPrecedenceFilterSuppressed() /= rhs.isPrecedenceFilterSuppressed() then
-        return false;
+        return False;
     end if;
 
     if lhs.getLexerActionExecutor() /= rhs.getLexerActionExecutor() then
-        return false;
+        return False;
     end if;
 
     if lhs.context /= rhs.context then
-        return false;
+        return False;
     end if;
 
     return  lhs.semanticContext == rhs.semanticContext

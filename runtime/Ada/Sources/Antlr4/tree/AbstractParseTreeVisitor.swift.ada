@@ -23,7 +23,7 @@ begin
     -- The default implementation initializes the aggregate result to
     -- _#defaultResult defaultResult()_. Before visiting each child, it
     -- calls _#shouldVisitNextChild shouldVisitNextChild_; if the result
-    -- is `false` no more children are visited and the current aggregate
+    -- is `False` no more children are visited and the current aggregate
     -- result is returned. After visiting a child, the aggregate result is
     -- updated by calling _#aggregateResult aggregateResult_ with the
     -- previous aggregate result and the result of visiting the child.
@@ -82,7 +82,7 @@ begin
     -- 
     -- Aggregates the results of visiting multiple children of a node. After
     -- either all children are visited or _#shouldVisitNextChild_ returns
-    -- `false`, the aggregate value is returned as the result of
+    -- `False`, the aggregate value is returned as the result of
     -- _#visitChildren_.
     -- 
     -- The default implementation returns `nextResult`, meaning
@@ -110,7 +110,7 @@ begin
     -- call to _#defaultResult_. This method is not called after the last
     -- child is visited.
     -- 
-    -- The default implementation always returns `true`, indicating that
+    -- The default implementation always returns `True`, indicating that
     -- `visitChildren` should only return after all children are visited.
     -- One reason to override this method is to provide a "short circuit"
     -- evaluation option for situations where the result of visiting a single
@@ -122,13 +122,13 @@ begin
     -- - Parameter currentResult: The current aggregate result of the children visited
     -- to the current point.
     -- 
-    -- - Returns: `true` to continue visiting children. Otherwise return
-    -- `false` to stop visiting children and immediately return the
+    -- - Returns: `True` to continue visiting children. Otherwise return
+    -- `False` to stop visiting children and immediately return the
     -- current aggregate result from _#visitChildren_.
     -- 
     open function shouldVisitNextChild (node : RuleNode; currentResult : T?) return Boolean is
 begin
-        return true
+        return True;
     end ;
 
 end ;

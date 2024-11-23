@@ -43,7 +43,7 @@ public final type DFAState is new Hashable and CustomStringConvertible with null
     --
     public internal(set) var edges: [DFAState?]!
 
-    public internal(set) var isAcceptState := false
+    public internal(set) var isAcceptState := False;
 
     --
     -- if accept state, what ttype do we match or alt do we predict?
@@ -58,14 +58,14 @@ public final type DFAState is new Hashable and CustomStringConvertible with null
     -- Indicates that this state was created during SLL prediction that
     -- discovered a conflict between the configurations in the state. Future
     -- _org.antlr.v4.runtime.atn.ParserATNSimulator#execATN_ invocations immediately jumped doing
-    -- full context prediction if this field is true.
+    -- full context prediction if this field is True.
     --
-    public internal(set) var requiresFullContext := false
+    public internal(set) var requiresFullContext := False;
 
     --
     -- During SLL parsing, this is a list of predicates associated with the
     -- ATN configurations of the DFA state. When we have predicates,
-    -- _#requiresFullContext_ is `false` since full context prediction evaluates predicates
+    -- _#requiresFullContext_ is `False` since full context prediction evaluates predicates
     -- on-the-fly. If this is not null, then _#prediction_ is
     -- _org.antlr.v4.runtime.atn.ATN#INVALID_ALT_NUMBER_.
     --
@@ -150,7 +150,7 @@ end ;
 public function ==(lhs: DFAState, rhs: DFAState) return Boolean is
 begin
     if lhs === rhs then
-        return true;
+        return True;
     end if;
     return (lhs.configs == rhs.configs)
 end ;

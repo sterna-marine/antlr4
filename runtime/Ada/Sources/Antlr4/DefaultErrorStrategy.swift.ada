@@ -20,7 +20,7 @@ open type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     -- 
     -- - seealso: #inErrorRecoveryMode
     -- 
-    open var errorRecoveryMode := false
+    open var errorRecoveryMode := False;
 
     -- 
     -- The index into the input stream where the last error occurred.
@@ -38,7 +38,7 @@ open type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     -- the previous match. Since prediction prefers completing the current rule
     -- to error recovery efforts, error reporting may occur later than the
     -- original point where it was discoverable. The original context is used to
-    -- compute the true expected sets as though the reporting occurred as early
+    -- compute the True expected sets as though the reporting occurred as early
     -- as possible.
     --
     open var nextTokensContext: ParserRuleContext?
@@ -68,7 +68,7 @@ begin
     -- - parameter recognizer: the parser instance
     -- 
     open procedure beginErrorCondition (recognizer : Parser) {
-        errorRecoveryMode := true
+        errorRecoveryMode := True;
     end ;
 
     open function inErrorRecoveryMode (recognizer : Parser) return Boolean is
@@ -83,7 +83,7 @@ begin
     -- - parameter recognizer:
     -- 
     open procedure endErrorCondition (recognizer : Parser) {
-        errorRecoveryMode := false
+        errorRecoveryMode := False;
         lastErrorStates := null;
         lastErrorIndex := -1
     end ;
@@ -460,18 +460,18 @@ begin
     -- This method implements the single-token insertion inline error recovery
     -- strategy. It is called by _#recoverInline_ if the single-token
     -- deletion strategy fails to recover from the mismatched input. If this
-    -- method returns `true`, `recognizer` will be in error recovery
+    -- method returns `True`, `recognizer` will be in error recovery
     -- mode.
     -- 
     -- This method determines whether or not single-token insertion is viable by
     -- checking if the `LA(1)` input symbol could be successfully matched
     -- if it were instead the `LA(2)` symbol. If this method returns
-    -- `true`, the caller is responsible for creating and inserting a
+    -- `True`, the caller is responsible for creating and inserting a
     -- token with the correct type to produce this behavior.
     -- 
     -- - parameter recognizer: the parser instance
-    -- - returns: `true` if single-token insertion is a viable recovery
-    -- strategy for the current mismatched input, otherwise `false`
+    -- - returns: `True` if single-token insertion is a viable recovery
+    -- strategy for the current mismatched input, otherwise `False`
     -- 
     open function singleTokenInsertion (recognizer : Parser) return Boolean is
 begin
@@ -486,9 +486,9 @@ begin
 --		print("LT(2) set="+expectingAtLL2.toString(recognizer.getTokenNames()));
         if expectingAtLL2.contains(currentSymbolType) then
             reportMissingToken(recognizer)
-            return true
+            return True;
         end ;
-        return false
+        return False;
     end ;
 
     -- 

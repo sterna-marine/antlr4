@@ -34,7 +34,7 @@ with Foundation;
 begin
 --
 --    if lhs === rhs then
---        return true
+--        return True;
 --    end ;
 --
 --    same : constant : Boolean =
@@ -66,7 +66,7 @@ begin
 begin
 --
 --    if lhs === rhs then
---        return true
+--        return True;
 --    end ;
 --
 --    same : constant : Boolean =

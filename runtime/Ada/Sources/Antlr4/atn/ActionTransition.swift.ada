@@ -14,7 +14,7 @@ public final type ActionTransition is new Transition and CustomStringConvertible
 
 
     public convenience init(target : ATNState; ruleIndex : Integer) {
-        self.init(target, ruleIndex, -1, false)
+        self.init(target, ruleIndex, -1, False)
     end ;
 
     public init(target : ATNState; ruleIndex : Integer; actionIndex : Integer; isCtxDependent  : Boolean) {
@@ -34,13 +34,13 @@ begin
     override
     public function isEpsilon (This : …) return Boolean is
 begin
-        return true -- we are to be ignored by analysis 'cept for predicates
+        return True -- we are to be ignored by analysis 'cept for predicates
     end ;
 
     override
     public function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
-        return false
+        return False;
     end ;
 
     public var description: String {

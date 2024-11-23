@@ -128,7 +128,7 @@ begin
     -- `stateNumber` in the specified full `context`. This method
     -- considers the complete parser context, but does not evaluate semantic
     -- predicates (i.e. all predicates encountered during the calculation are
-    -- assumed true). If a path in the ATN exists from the starting state to the
+    -- assumed True). If a path in the ATN exists from the starting state to the
     -- _org.antlr.v4.runtime.atn.RuleStopState_ of the outermost context without matching any
     -- symbols, _org.antlr.v4.runtime.Token#EOF_ is added to the returned set.
     -- 

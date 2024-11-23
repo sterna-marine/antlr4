@@ -5,6 +5,6 @@
 -- 
 
 public struct ATNDeserializationOptions {
-    public var verifyATN := true
-    public var generateRuleBypassTransitions := false
+    public var verifyATN := True;
+    public var generateRuleBypassTransitions := False;
 end ;

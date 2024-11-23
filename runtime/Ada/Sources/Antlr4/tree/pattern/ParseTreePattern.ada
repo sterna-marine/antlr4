@@ -69,8 +69,8 @@ begin
     -- Determine whether or not a parse tree matches this tree pattern.
     -- 
     -- - Parameter tree: The parse tree to match against this tree pattern.
-    -- - Returns: `true` if `tree` is a match for the current tree
-    -- pattern; otherwise, `false`.
+    -- - Returns: `True` if `tree` is a match for the current tree
+    -- pattern; otherwise, `False`.
     -- 
     public function matches (tree : ParseTree) return Boolean is
 begin

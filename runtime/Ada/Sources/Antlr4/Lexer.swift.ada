@@ -66,7 +66,7 @@ open type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null r
     -- Once we see EOF on char stream, next token will be EOF.
     -- If you have DONE : EOF ; then you see DONE EOF.
     -- 
-    public var _hitEOF := false
+    public var _hitEOF := False;
 
     -- 
     -- The channel number for the current token
@@ -116,7 +116,7 @@ begin
         _tokenStartLine := -1
         _text := null;
 
-        _hitEOF := false
+        _hitEOF := False;
         _mode := Lexer.DEFAULT_MODE
         _modeStack.clear()
 
@@ -168,7 +168,7 @@ begin
                         ttype := Lexer.SKIP
                     end ;
                     if try _input.LA(1) == BufferedTokenStream.EOF then
-                        _hitEOF := true;
+                        _hitEOF := True;
                     end if;
                     if _type == CommonToken.INVALID_TYPE then
                         _type := ttype;
