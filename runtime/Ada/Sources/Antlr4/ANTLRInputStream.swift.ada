@@ -153,9 +153,9 @@ begin
         end ;
         -- seek forward, consume until p hits index or n (whichever comes first)
         index := min(index, n)
-        while p < index {
+        while p < index loop
             try consume()
-        end ;
+        end loop;
     end ;
 
     public function getText (interval : Interval) return String is

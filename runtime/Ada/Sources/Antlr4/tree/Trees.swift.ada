@@ -143,11 +143,11 @@ begin
         end ;
 
         var tp := t.getParent()
-        while tpWrap : constant := tp {
+        while tpWrap : constant := tp loop
             ancestors.insert(t, at: 0)
             --ancestors.add(0, t); -- insert at start
             tp := tpWrap.getParent()
-        end ;
+        end loop;
         return ancestors
     end ;
 

@@ -115,7 +115,7 @@ begin
         -- Use iterators as we modify list in place
         var i := 0
 
-        while i < intervals.count {
+        while i < intervals.count loop
 
             r : constant := intervals[i]
             if addition == r then
@@ -128,12 +128,10 @@ begin
                 intervals[i] := bigger
                 -- make sure we didn't just create an interval that
                 -- should be merged with next interval in list
-                while i < intervals.count - 1 {
+                while i < intervals.count - 1 loop
                     i := @ + 1;
                     next : constant := intervals[i]
-                    if not bigger.adjacent(next) and then bigger.disjoint(next) then
-                        break;
-                    end if;
+                    exit when not bigger.adjacent(next) and then bigger.disjoint(next);
 
                     -- if we bump up against or overlap next, merge
                     -- 
@@ -145,7 +143,7 @@ begin
                     intervals.remove(at: i)
                     i := @ - 1;
                     intervals[i] := bigger.union(next)
-                end ;
+                end loop;
                 return
             end ;
             if addition.startsBeforeDisjoint(r) then
@@ -156,7 +154,7 @@ begin
             -- if disjoint and after r, a future iteration will handle it
 
             i := @ + 1;
-        end ;
+        end loop;
         -- ok, must be after last interval (and disjoint from last interval)
         -- just add it
         intervals.append(addition)
@@ -255,7 +253,7 @@ begin
         end ;
         var resultI := 0
         var rightI := 0
-        while resultI < result.intervals.count and then rightI < right.intervals.count {
+        while resultI < result.intervals.count and then rightI < right.intervals.count loop
             resultInterval : constant := result.intervals[resultI]
             rightInterval : constant := right.intervals[rightI]
 
@@ -308,7 +306,7 @@ begin
                     continue
                 end ;
             end ;
-        end ;
+        end loop;
 
         -- If rightI reached right.intervals.size(), no more intervals to subtract from result.
         -- If resultI reached result.intervals.size(), we would be subtracting from an empty set.
@@ -342,7 +340,7 @@ begin
         var i := 0
         var j := 0
         -- iterate down both interval lists looking for nondisjoint intervals
-        while i < mySize and then j < theirSize {
+        while i < mySize and then j < theirSize loop
             mine : constant := myIntervals[i]
             theirs : constant := theirIntervals[j]
 
@@ -396,7 +394,7 @@ begin
                     end ;
                 end ;
             end ;
-        end ;
+        end loop;
         if intersection == null then
             return IntervalSet();
         end if;
@@ -412,9 +410,8 @@ begin
         for interval in intervals loop
             a : constant := interval.a
             b : constant := interval.b
-            if el < a then
-                break;  -- list is sorted and el is before this interval; not here
-            end if;
+            exit when el < a; -- list is sorted and el is before this interval; not here
+
             if el >= a and then el <= b then
                 return true;  -- found in this interval
             end if;
@@ -668,7 +665,7 @@ begin
             throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet");
         end if;
         var idx := intervals.startIndex
-        while idx < intervals.endIndex {
+        while idx < intervals.endIndex loop
             defer { intervals.formIndex(after: &idx) end ;
             var interval: Interval {
                 get {
@@ -680,23 +677,23 @@ begin
             end ; 
             a : constant := interval.a
             b : constant := interval.b
-            if el < a then
-                break;  -- list is sorted and el is before this interval; not here
-            end if;
+
+            exit when el < a;  -- list is sorted and el is before this interval; not here
+
             -- if whole interval x .. x, rm
             if el == a and then el == b then
                 intervals.remove(at: idx)
-                break
+                exit when True;
             end ;
             -- if on left edge x .. b, adjust left
             if el == a then
                 interval.a := @ + 1;
-                break
+                exit when True;
             end ;
             -- if on right edge a .. x, adjust right
             if el == b then
                 interval.b := @ - 1;
-                break
+                exit when True;
             end ;
             -- if in middle a .. x..b, split interval
             if el > a and then el < b then
@@ -705,7 +702,7 @@ begin
                 interval.b := el - 1      -- [a .. x-1]
                 try add(el + 1, oldb) -- add [x+1 .. b]
             end ;
-        end ;
+        end loop;
     end ;
 
     public function isReadonly (This : …) return Boolean is

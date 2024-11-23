@@ -81,10 +81,10 @@ begin
 begin
         var n := 0
         var p: RuleContext? := self
-        while pWrap : constant := p {
+        while pWrap : constant := p loop
             p := pWrap.parent
             n := @ + 1;
-        end ;
+        end loop;
         return n
     end ;
 
@@ -226,7 +226,7 @@ begin
         var buf := ""
         var p: RuleContext? := self
         buf := @ + "[";
-        while pWrap : constant := p, pWrap !== stop {
+        while pWrap : constant := p, pWrap !== stop loop
             if ruleNames : constant := ruleNames then
                 ruleIndex : constant := pWrap.getRuleIndex()
                 ruleIndexInRange : constant := (ruleIndex >= 0 and then ruleIndex < ruleNames.count)
@@ -243,7 +243,7 @@ begin
             end if;
 
             p := pWrap.parent
-        end ;
+        end loop;
 
         buf := @ + "]";
         return buf

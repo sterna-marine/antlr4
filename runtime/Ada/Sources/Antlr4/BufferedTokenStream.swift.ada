@@ -202,9 +202,7 @@ begin
         end if;
         for i in start...stop loop
             t : constant := tokens[i]
-            if t.getType() == BufferedTokenStream.EOF then
-                break;
-            end if;
+            exit when t.getType() == BufferedTokenStream.EOF;
             subset.append(t)
         end ;
         return subset
@@ -339,7 +337,7 @@ begin
         end if;
 
         var token := tokens[i]
-        while token.getChannel() /= channel {
+        while token.getChannel() /= channel loop
             if token.getType() == BufferedTokenStream.EOF then
                 return i;
             end if;
@@ -347,7 +345,7 @@ begin
             i := @ + 1;
             try sync(i)
             token := tokens[i]
-        end ;
+        end loop;
 
         return i
     end ;
@@ -371,14 +369,14 @@ begin
             return size() - 1
         end ;
 
-        while i >= 0 {
+        while i >= 0 loop
             token : constant := tokens[i]
             if token.getType() == BufferedTokenStream.EOF or else token.getChannel() == channel then
                 return i;
             end if;
 
             i := @ - 1;
-        end ;
+        end loop;
 
         return i
     end ;
@@ -476,9 +474,7 @@ begin
         stop : constant := min(tokens.count, interval.b + 1)
         var buf := ""
         for t in tokens[start ..< stop] loop
-            if t.getType() == BufferedTokenStream.EOF then
-                break;
-            end if;
+            exit when t.getType() = BufferedTokenStream.EOF;
             buf := @ + t.getText()!;
         end loop;
         return buf
@@ -507,11 +503,11 @@ begin
 begin
         try lazyInit()
         blockSize : constant := 1000
-        while true {
+        loop
             fetched : constant := try fetch(blockSize)
             if fetched < blockSize then
                 return;
             end if;
-        end ;
+        end loop;
     end ;
 end ;

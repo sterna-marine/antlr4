@@ -440,7 +440,7 @@ begin
 
             var t := try input.LA(1)
 
-            while true {
+            loop
                 -- while more work
                 var D: DFAState
                 if dState : constant := getExistingTargetState(previousD, t) then
@@ -518,11 +518,11 @@ begin
                     try input.seek(startIndex)
                     alts : constant := try evalSemanticContext(preds, outerContext, true)
                     switch alts.cardinality() {
-                    case 0:
+                    when 0 =>
                         throw ANTLRException.recognition(e: noViableAlt(input, outerContext, D.configs, startIndex))
 
 
-                    case 1:
+                    when 1 =>
                         return alts.firstSetBit()
 
                     default:
@@ -539,7 +539,7 @@ begin
                     try input.consume()
                     t := try input.LA(1)
                 end ;
-            end ;
+            end loop;
     end ;
 
     --
@@ -654,7 +654,7 @@ begin
         try input.seek(startIndex)
         var t := try input.LA(1)
         var predictedAlt := ATN.INVALID_ALT_NUMBER
-        while true {
+        loop
             -- while more work
             if computeReach : constant := try computeReachSet(previous, t, fullCtx) then
                 reach := computeReach
@@ -688,13 +688,11 @@ begin
                 -- unique prediction?
                 if reach.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
                     predictedAlt := reach.uniqueAlt
-                    break
+                    exit when True;
                 end ;
                 if mode /= PredictionMode.LL_EXACT_AMBIG_DETECTION then
                     predictedAlt := PredictionMode.resolvesToJustOneViableAlt(altSubSets)
-                    if predictedAlt /= ATN.INVALID_ALT_NUMBER then
-                        break;
-                    end if;
+                    exit when predictedAlt /= ATN.INVALID_ALT_NUMBER;
                 else
                     -- In exact ambiguity mode, we never try to terminate early.
                     -- Just keeps scarfing until we know what the conflict is
@@ -702,7 +700,7 @@ begin
                         PredictionMode.allSubsetsEqual(altSubSets) {
                         foundExactAmbig := true
                         predictedAlt := PredictionMode.getSingleViableAlt(altSubSets)
-                        break
+                        exit when True;
                     end ;
                     -- else there are multiple non-conflicting subsets or
                     -- we're not sure what the ambiguity is yet.
@@ -715,7 +713,7 @@ begin
                     t := try input.LA(1)
                 end ;
             end ;
-        end ;
+        end loop;
         if reach : constant := reach then
             -- If the configuration set uniquely predicts an alternative,
             -- without conflict, then we know that it's a full LL decision
@@ -1260,9 +1258,7 @@ begin
             for pair in predPredictions loop
                 if pair.pred == SemanticContext.Empty.Instance then
                     try! predictions.set(pair.alt)
-                    if not complete then
-                        break;
-                    end if;
+                    exit when not complete;
                     continue
                 end ;
 
@@ -1277,9 +1273,7 @@ begin
                         print("PREDICT \(pair.alt)");
                     end if;
                     try! predictions.set(pair.alt)
-                    if not complete then
-                        break;
-                    end if;
+                    exit when not complete;
                 end ;
             end loop;
 
@@ -1670,27 +1664,27 @@ begin
         fullCtx : Boolean;
         treatEofAsEpsilon  : Boolean) return ATNConfig? {
             switch t.getSerializationType() {
-            case Transition.RULE:
+            when Transition.RULE =>
                 return ruleTransition(config, t as! RuleTransition)
 
-            case Transition.PRECEDENCE:
+            when Transition.PRECEDENCE =>
                 return try precedenceTransition(config, t as! PrecedencePredicateTransition, collectPredicates, inContext, fullCtx)
 
-            case Transition.PREDICATE:
+            when Transition.PREDICATE =>
                 return try predTransition(config, t as! PredicateTransition,
                     collectPredicates,
                     inContext,
                     fullCtx)
 
-            case Transition.ACTION:
+            when Transition.ACTION =>
                 return actionTransition(config, t as! ActionTransition)
 
-            case Transition.EPSILON:
+            when Transition.EPSILON =>
                 return ATNConfig(config, t.target)
 
-            case Transition.ATOM: fallthrough
-            case Transition.RANGE: fallthrough
-            case Transition.SET:
+            when Transition.ATOM => fallthrough;
+            when Transition.RANGE => fallthrough;
+            when Transition.SET =>
                 -- EOF transitions act like epsilon transitions after the first EOF
                 -- transition is traversed
                 if treatEofAsEpsilon then

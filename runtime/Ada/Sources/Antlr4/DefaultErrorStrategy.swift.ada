@@ -241,28 +241,27 @@ begin
         end ;
 
         switch s.getStateType() {
-        case ATNState.BLOCK_START: fallthrough
-        case ATNState.STAR_BLOCK_START: fallthrough
-        case ATNState.PLUS_BLOCK_START: fallthrough
-        case ATNState.STAR_LOOP_ENTRY:
+        when ATNState.BLOCK_START => fallthrough;
+        when ATNState.STAR_BLOCK_START => fallthrough;
+        when ATNState.PLUS_BLOCK_START => fallthrough;
+        when ATNState.STAR_LOOP_ENTRY =>
             -- report error and recover if possible
             if try singleTokenDeletion(recognizer) /= null then
                 return;
             end if;
             throw ANTLRException.recognition(e: InputMismatchException(recognizer))
 
-        case ATNState.PLUS_LOOP_BACK: fallthrough
-        case ATNState.STAR_LOOP_BACK:
+        when ATNState.PLUS_LOOP_BACK => fallthrough;
+        when ATNState.STAR_LOOP_BACK =>
 --			errPrint("at loop back: "+s.getClass().getSimpleName());
             reportUnwantedToken(recognizer)
             expecting : constant := try recognizer.getExpectedTokens()
             whatFollowsLoopIterationOrRule : constant := expecting.or(getErrorRecoverySet(recognizer)) as! IntervalSet
             try consumeUntil(recognizer, whatFollowsLoopIterationOrRule)
-            break
 
         default:
             -- do nothing if we can't identify the exact kind of ATN state
-            break;
+            null;
         end if;
     end ;
 
@@ -731,14 +730,14 @@ begin
         atn : constant := recognizer.getInterpreter().atn
         var ctx: RuleContext? := recognizer._ctx
         recoverSet : constant := IntervalSet()
-        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 {
+        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 loop
             -- compute what follows who invoked us
             invokingState : constant := atn.states[ctxWrap.invokingState]!
             rt : constant := invokingState.transition(0) as! RuleTransition
             follow : constant := atn.nextTokens(rt.followState)
             try! recoverSet.addAll(follow)
             ctx := ctxWrap.parent
-        end ;
+        end loop;
         try! recoverSet.remove(CommonToken.EPSILON)
 --		print("recover set "+recoverSet.toString(recognizer.getTokenNames()));
         return recoverSet
@@ -750,10 +749,10 @@ begin
     open procedure consumeUntil (recognizer : Parser; set : IntervalSet) {
 --		errPrint("consumeUntil("+set.toString(recognizer.getTokenNames())+")");
         var ttype := try getTokenStream(recognizer).LA(1)
-        while ttype /= CommonToken.EOF and then not set.contains(ttype) {
+        while ttype /= CommonToken.EOF and then not set.contains(ttype) loop
             --print("consume during recover LA(1)="+getTokenNames()[input.LA(1)]);
             try recognizer.consume()
             ttype := try getTokenStream(recognizer).LA(1)
-        end ;
+        end loop;
     end ;
 end ;

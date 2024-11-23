@@ -161,12 +161,12 @@ begin
                 if tLabel : constant := t.labelIntervalSet(), eLabel : constant := e.labelIntervalSet(), tLabel == eLabel then
 --                    print("Repeated transition upon \(eLabel) from \(stateNumber)->\(t.target.stateNumber)")
                     alreadyPresent := true
-                    break
+                    exit when True;
                 end ;
                 elsif t.isEpsilon() and then e.isEpsilon() then
 --                    print("Repeated epsilon transition from \(stateNumber)->\(t.target.stateNumber)")
                     alreadyPresent := true
-                    break
+                    exit when True;
                 end ;
             end ;
         end loop;

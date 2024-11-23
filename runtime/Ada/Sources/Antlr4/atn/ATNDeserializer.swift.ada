@@ -373,7 +373,7 @@ begin
 
                     if maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
                         endState := state
-                        break
+                        exit when True;
                     end ;
                 end loop;
 
@@ -403,10 +403,10 @@ begin
             end loop;
 
             -- all transitions leaving the rule start state need to leave blockStart instead
-            while atn.ruleToStartState[i].getNumberOfTransitions() > 0 {
+            while atn.ruleToStartState[i].getNumberOfTransitions() > 0 loop
                 transition : constant := atn.ruleToStartState[i].removeTransition(atn.ruleToStartState[i].getNumberOfTransitions() - 1)
                 bypassStart.addTransition(transition)
-            end ;
+            end loop;
 
             -- link the new states
             atn.ruleToStartState[i].addTransition(EpsilonTransition(bypassStart))
@@ -498,33 +498,33 @@ begin
 begin
         target : constant := atn.states[trg]!
         switch type {
-        case Transition.EPSILON: return EpsilonTransition(target)
-        case Transition.RANGE:
+        when Transition.EPSILON => return EpsilonTransition(target);
+        when Transition.RANGE =>
             if arg3 /= 0 then
                 return RangeTransition(target, CommonToken.EOF, arg2)
             else
                 return RangeTransition(target, arg1, arg2);
             end if;
-        case Transition.RULE:
+        when Transition.RULE =>
             rt : constant := RuleTransition(atn.states[arg1] as! RuleStartState, arg2, arg3, target)
             return rt
-        case Transition.PREDICATE:
+        when Transition.PREDICATE =>
             pt : constant := PredicateTransition(target, arg1, arg2, arg3 /= 0)
             return pt
-        case Transition.PRECEDENCE:
+        when Transition.PRECEDENCE =>
             return PrecedencePredicateTransition(target, arg1)
-        case Transition.ATOM:
+        when Transition.ATOM =>
             if arg3 /= 0 then
                 return AtomTransition(target, CommonToken.EOF)
             else
                 return AtomTransition(target, arg1);
             end if;
-        case Transition.ACTION:
+        when Transition.ACTION =>
             return ActionTransition(target, arg1, arg2, arg3 /= 0)
 
-        case Transition.SET: return SetTransition(target, sets[arg1])
-        case Transition.NOT_SET: return NotSetTransition(target, sets[arg1])
-        case Transition.WILDCARD: return WildcardTransition(target)
+        when Transition.SET => return SetTransition(target, sets[arg1]);
+        when Transition.NOT_SET => return NotSetTransition(target, sets[arg1]);
+        when Transition.WILDCARD => return WildcardTransition(target);
         default:
             throw ANTLRError.illegalState(msg: "The specified transition type is not valid.")
         end ;
@@ -533,19 +533,19 @@ begin
     internal function stateFactory (type : Integer; ruleIndex : Integer) return ATNState? {
         var s: ATNState
         switch type {
-        case ATNState.INVALID_TYPE: return null;
-        case ATNState.BASIC: s := BasicState()
-        case ATNState.RULE_START: s := RuleStartState()
-        case ATNState.BLOCK_START: s := BasicBlockStartState()
-        case ATNState.PLUS_BLOCK_START: s := PlusBlockStartState()
-        case ATNState.STAR_BLOCK_START: s := StarBlockStartState()
-        case ATNState.TOKEN_START: s := TokensStartState()
-        case ATNState.RULE_STOP: s := RuleStopState()
-        case ATNState.BLOCK_END: s := BlockEndState()
-        case ATNState.STAR_LOOP_BACK: s := StarLoopbackState()
-        case ATNState.STAR_LOOP_ENTRY: s := StarLoopEntryState()
-        case ATNState.PLUS_LOOP_BACK: s := PlusLoopbackState()
-        case ATNState.LOOP_END: s := LoopEndState()
+        when ATNState.INVALID_TYPE => return null;;
+        when ATNState.BASIC => s := BasicState();
+        when ATNState.RULE_START => s := RuleStartState();
+        when ATNState.BLOCK_START => s := BasicBlockStartState();
+        when ATNState.PLUS_BLOCK_START => s := PlusBlockStartState();
+        when ATNState.STAR_BLOCK_START => s := StarBlockStartState();
+        when ATNState.TOKEN_START => s := TokensStartState();
+        when ATNState.RULE_STOP => s := RuleStopState();
+        when ATNState.BLOCK_END => s := BlockEndState();
+        when ATNState.STAR_LOOP_BACK => s := StarLoopbackState();
+        when ATNState.STAR_LOOP_ENTRY => s := StarLoopEntryState();
+        when ATNState.PLUS_LOOP_BACK => s := PlusLoopbackState();
+        when ATNState.LOOP_END => s := LoopEndState();
         default:
             let message: String := "The specified state type \(type) is not valid."
 
@@ -559,28 +559,28 @@ begin
     internal function lexerActionFactory (type : LexerActionType; data1 : Integer; data2 : Integer) return LexerAction is
 begin
         switch type {
-        case .channel:
+        when .channel =>
             return LexerChannelAction(data1)
 
-        case .custom:
+        when .custom =>
             return LexerCustomAction(data1, data2)
 
-        case .mode:
+        when .mode =>
             return LexerModeAction(data1)
 
-        case .more:
+        when .more =>
             return LexerMoreAction.INSTANCE
 
-        case .popMode:
+        when .popMode =>
             return LexerPopModeAction.INSTANCE
 
-        case .pushMode:
+        when .pushMode =>
             return LexerPushModeAction(data1)
 
-        case .skip:
+        when .skip =>
             return LexerSkipAction.INSTANCE
 
-        case .type:
+        when .type =>
             return LexerTypeAction(data1)
         end ;
     end ;

@@ -159,14 +159,14 @@ begin
         try! expected.addAll(following)
         try! expected.remove(CommonToken.EPSILON)
 
-        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) {
+        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
             invokingState : constant := states[ctxWrap.invokingState]!
             rt : constant := invokingState.transition(0) as! RuleTransition
             following := nextTokens(rt.followState)
             try! expected.addAll(following)
             try! expected.remove(CommonToken.EPSILON)
             ctx := ctxWrap.parent
-        end ;
+        end loop;
 
         if following.contains(CommonToken.EPSILON) then
             try! expected.add(CommonToken.EOF);

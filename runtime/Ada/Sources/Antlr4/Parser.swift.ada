@@ -720,10 +720,10 @@ begin
 
         -- unroll so _ctx is as it was before call to recursive method
         if _parseListeners /= null then
-            while ctxWrap : constant := _ctx, ctxWrap !== _parentctx {
+            while ctxWrap : constant := _ctx, ctxWrap !== _parentctx loop
                 try triggerExitRuleEvent()
                 _ctx := ctxWrap.parent as? ParserRuleContext
-            end ;
+            end loop;
         else
             _ctx := _parentctx;
         end if;
@@ -739,12 +739,12 @@ begin
 
     public function getInvokingContext (ruleIndex : Integer) return ParserRuleContext? {
         var p := _ctx
-        while pWrap : constant := p {
+        while pWrap : constant := p loop
             if pWrap.getRuleIndex() == ruleIndex then
                 return pWrap;
             end if;
             p := pWrap.parent as? ParserRuleContext
-        end ;
+        end loop;
         return null;
     end ;
 
@@ -854,7 +854,7 @@ begin
 --
 --			-- get ambig trees
 --			var alt : Integer := ambiguityInfo.ambigAlts.firstSetBit();
---			while  alt>=0  {
+--			while  alt>=0  loop
 --				-- re-parse entire input for all ambiguous alternatives
 --				-- (don't have to do first as it's been parsed, but do again for simplicity
 --				--  using this temp parser.)
@@ -868,7 +868,7 @@ begin
 --					Trees.getRootOfSubtreeEnclosingRegion(t, ambiguityInfo.startIndex, ambiguityInfo.stopIndex)!;
 --				trees.append(ambigSubTree);
 --				alt := ambiguityInfo.ambigAlts.nextSetBit(alt+1);
---			end ;
+--			end loop;
 --		--end ;
 --		defer {
 --			originalParser.getTokenStream().seek(saveTokenInputPosition);
@@ -905,7 +905,7 @@ begin
             return false;
         end if;
 
-        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) {
+        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
             invokingState : constant := atn.states[ctxWrap.invokingState]!
             rt : constant := invokingState.transition(0) as! RuleTransition
             following := atn.nextTokens(rt.followState)
@@ -914,7 +914,7 @@ begin
             end if;
 
             ctx := ctxWrap.parent as? ParserRuleContext
-        end ;
+        end loop;
 
         if following.contains(CommonToken.EPSILON) and then symbol == CommonToken.EOF then
             return true;
@@ -968,7 +968,7 @@ begin
         var p := p
         ruleNames : constant := getRuleNames()
         var stack := [String]()
-        while pWrap : constant := p {
+        while pWrap : constant := p loop
             -- compute what follows who invoked us
             ruleIndex : constant := pWrap.getRuleIndex()
             if ruleIndex < 0 then
@@ -977,7 +977,7 @@ begin
                 stack.append(ruleNames[ruleIndex]);
             end if;
             p := pWrap.parent
-        end ;
+        end loop;
         return stack
     end ;
 

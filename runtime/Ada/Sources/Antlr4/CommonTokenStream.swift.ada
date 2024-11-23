@@ -82,11 +82,11 @@ begin
         var i := p
         var n := 1
         -- find k good tokens looking backwards
-        while n <= k {
+        while n <= k loop
             -- skip off-channel tokens
             try i := previousTokenOnChannel(i - 1, channel)
             n := @ + 1;
-        end ;
+        end loop;
         if i < 0 then
             return null;
         end if;
@@ -106,13 +106,13 @@ begin
         var i := p
         var n := 1 -- we know tokens[p] is a good one
         -- find k good tokens
-        while n < k {
+        while n < k loop
             -- skip off-channel tokens, but make sure to not look past EOF
             if try sync(i + 1) then
                 i := try nextTokenOnChannel(i + 1, channel);
             end if;
             n := @ + 1;
-        end ;
+        end loop;
 --		if ( i>range ) range := i;
         return tokens[i];
     end if;
@@ -128,9 +128,7 @@ begin
             if t.getChannel() == channel then
                 n := @ + 1;
             end if;
-            if t.getType() == CommonToken.EOF then
-                break;
-            end if;
+            exit when t.getType() = CommonToken.EOF;
         end loop;
         return n
     end ;

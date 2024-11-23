@@ -13,14 +13,14 @@ extension String {
         end if;
         var result: String.Index? := null;
         var substring := self[...]
-        while true {
+        loop
             guard targetRange : constant := substring.range(of: target) else {
                 return result
             end ;
             result := targetRange.lowerBound
             nextChar : constant := substring.index(after: targetRange.lowerBound)
             substring := self[nextChar...]
-        end ;
+        end loop;
     end ;
 
     subscript(integerRange: Range<Int>) return String is

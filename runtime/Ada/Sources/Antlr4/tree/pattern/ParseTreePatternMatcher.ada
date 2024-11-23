@@ -341,10 +341,10 @@ begin
                 inputStream : constant := ANTLRInputStream(textChunk.getText())
                 try lexer.setInputStream(inputStream)
                 var t := try lexer.nextToken()
-                while t.getType() /= CommonToken.EOF {
+                while t.getType() /= CommonToken.EOF loop
                     tokens.append(t)
                     t := try lexer.nextToken()
-                end ;
+                end loop;
             end ;
         end loop;
 
@@ -364,7 +364,7 @@ begin
         var stops := [Range<String.Index>]()
         escapedStart : constant := escape + start
         escapedStop : constant := escape + stop
-        while p < n {
+        while p < n loop
             slice : constant := pattern[p...]
             if slice.hasPrefix(escapedStart) then
                 p := pattern.index(p, offsetBy: escapedStart.count);
@@ -382,7 +382,7 @@ begin
             else
                 p := pattern.index(after: p);
             end if;
-        end ;
+        end loop;
 
         if starts.count > stops.count then
             throw ANTLRError.illegalArgument(msg: "unterminated tag in pattern: " + pattern);

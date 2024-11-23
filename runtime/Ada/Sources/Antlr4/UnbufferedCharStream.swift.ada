@@ -339,15 +339,15 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
         end if;
 
         switch stream.streamStatus {
-            case .notOpen, .writing, .closed:
+            when .notOpen, .writing, .closed =>
                 preconditionFailure()
-            case .atEnd:
+            when .atEnd =>
                 return null;
-            case .error:
+            when .error =>
                 hasErrorOccurred := true
                 return null;
-            case .opening, .open, .reading:
-                break
+            when .opening, .open, .reading =>
+                null;
         end ;
 
         count : constant := stream.read(&buffer, maxLength: buffer.count)
@@ -384,9 +384,9 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
         switch codec.decode(&streamIterator) {
         case .scalarValue(let scalar):
             return scalar
-        case .emptyInput:
+        when .emptyInput =>
             return null;
-        case .error:
+        when .error =>
             hasErrorOccurred := true
             return null;
         end ;

@@ -183,7 +183,7 @@ begin
 
         var s := ds0 -- s is current/from DFA state
 
-        while true {
+        loop
             -- while more work
             if LexerATNSimulator.debug then
                 print("execATN loop starting closure: \(s.configs)\n");
@@ -213,10 +213,7 @@ begin
                 target := try computeTargetState(input, s, t);
             end if;
 
-            if target == ATNSimulator.ERROR then
-                break;
-            end if;
-
+            exit when target == ATNSimulator.ERROR;
             -- If this is a consumable input element, make sure to consume before
             -- capturing the accept state so the input index, line, and char
             -- position accurately reflect the state of the interpreter at the
@@ -227,14 +224,12 @@ begin
 
             if target.isAcceptState then
                 captureSimState(prevAccept, input, target)
-                if t == BufferedTokenStream.EOF then
-                    break;
-                end if;
+                exit when t == BufferedTokenStream.EOF;
             end ;
 
             t := try input.LA(1)
             s := target -- flip; current DFA target becomes new src/from state
-        end ;
+        end loop;
 
         return try failOrAccept(prevAccept, input, s.configs, t)
     end ;
@@ -362,7 +357,7 @@ begin
                             -- any remaining configs for this alt have a lower priority than
                             -- the one that just reached an accept state.
                             skipAlt := c.alt
-                            break
+                            exit when True;
                     end ;
                 end ;
             end loop;
@@ -490,17 +485,16 @@ begin
         treatEofAsEpsilon  : Boolean) return LexerATNConfig? {
             var c: LexerATNConfig? := null;
             switch t.getSerializationType() {
-            case Transition.RULE:
+            when Transition.RULE =>
                 ruleTransition : constant := t as! RuleTransition
                 newContext : constant := SingletonPredictionContext.create(config.context, ruleTransition.followState.stateNumber)
                 c := LexerATNConfig(config, t.target, newContext)
-                break
 
-            case Transition.PRECEDENCE:
+            when Transition.PRECEDENCE =>
                 throw ANTLRError.unsupportedOperation(msg: "Precedence predicates are not supported in lexers.")
 
 
-            case Transition.PREDICATE:
+            when Transition.PREDICATE =>
                 --
                 -- Track traversing semantic predicates. If we traverse,
                 -- we cannot add a DFA state for this "reach" computation
@@ -528,9 +522,8 @@ begin
                 if try evaluatePredicate(input, pt.ruleIndex, pt.predIndex, speculative) then
                     c := LexerATNConfig(config, t.target);
                 end if;
-                break
 
-            case Transition.ACTION:
+            when Transition.ACTION =>
                 if config.context == null or else config.context!.hasEmptyPath() then
                     -- execute actions anywhere in the start rule for a token.
                     --
@@ -546,28 +539,23 @@ begin
                     -- the split operation.
                     lexerActionExecutor : constant := LexerActionExecutor.append(config.getLexerActionExecutor(), atn.lexerActions[(t as! ActionTransition).actionIndex])
                     c := LexerATNConfig(config, t.target, lexerActionExecutor)
-                    break
                 else
                     -- ignore actions in referenced rules
                     c := LexerATNConfig(config, t.target)
-                    break
                 end ;
 
-            case Transition.EPSILON:
+            when Transition.EPSILON =>
                 c := LexerATNConfig(config, t.target)
-                break
 
-            case Transition.ATOM: fallthrough
-            case Transition.RANGE: fallthrough
-            case Transition.SET:
+            when Transition.ATOM => fallthrough;
+            when Transition.RANGE => fallthrough;
+            when Transition.SET =>
                 if treatEofAsEpsilon then
                     if t.matches(BufferedTokenStream.EOF, Character.MIN_VALUE, Character.MAX_VALUE) then
                         c := LexerATNConfig(config, t.target)
-                        break
                     end ;
                 end ;
 
-                break
             default:
                 return c
             end ;

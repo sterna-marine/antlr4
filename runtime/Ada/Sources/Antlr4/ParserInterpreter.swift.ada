@@ -132,10 +132,10 @@ begin
             try enterRule(rootContext, startRuleStartState.stateNumber, startRuleIndex);
         end if;
 
-        while true {
+        loop
             p : constant := getATNState()!
             switch p.getStateType() {
-            case ATNState.RULE_STOP:
+            when ATNState.RULE_STOP =>
                 -- pop; return from rule
                 if _ctx!.isEmpty() then
                     if startRuleStartState.isPrecedenceRule then
@@ -150,7 +150,7 @@ begin
                 end ;
 
                 try visitRuleStopState(p)
-                break
+
 
             default:
                 do {
@@ -163,9 +163,8 @@ begin
                     try getErrorHandler().recover(self, e)
                 end ;
 
-                break
             end ;
-        end ;
+        end loop;
     end ;
 
     override
@@ -195,7 +194,7 @@ begin
 
         transition : constant := p.transition(altNum - 1)
         switch transition.getSerializationType() {
-        case Transition.EPSILON:
+        when Transition.EPSILON =>
             if try statesNeedingLeftRecursionContext.get(p.stateNumber) and
                     !(transition.target is LoopEndState) {
                 -- We are at the start of a left recursive rule's (...)* loop
@@ -207,26 +206,22 @@ begin
                         _ctx!.getRuleIndex())
                   pushNewRecursionContext(ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, _ctx!.getRuleIndex())
             end ;
-            break
 
-        case Transition.ATOM:
+        when Transition.ATOM =>
             try match((transition as! AtomTransition).label)
-            break
 
-        case Transition.RANGE: fallthrough
-        case Transition.SET: fallthrough
-        case Transition.NOT_SET:
+        when Transition.RANGE => fallthrough;
+        when Transition.SET => fallthrough;
+        when Transition.NOT_SET =>
             if not transition.matches(try _input.LA(1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then
                 try _errHandler.recoverInline(self);
             end if;
             try matchWildcard()
-            break
 
-        case Transition.WILDCARD:
+        when Transition.WILDCARD =>
             try matchWildcard()
-            break
 
-        case Transition.RULE:
+        when Transition.RULE =>
             ruleStartState : constant := transition.target as! RuleStartState
             ruleIndex : constant := ruleStartState.ruleIndex!
             ctx : constant := InterpreterRuleContext(_ctx, p.stateNumber, ruleIndex)
@@ -235,25 +230,21 @@ begin
             else
                 try enterRule(ctx, transition.target.stateNumber, ruleIndex);
             end if;
-            break
 
-        case Transition.PREDICATE:
+        when Transition.PREDICATE =>
             predicateTransition : constant := transition as! PredicateTransition
             if try not sempred(_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then
                 throw ANTLRException.recognition(e: FailedPredicateException(self));
             end if;
-            break
 
-        case Transition.ACTION:
+        when Transition.ACTION =>
             actionTransition : constant := transition as! ActionTransition
             try action(_ctx, actionTransition.ruleIndex, actionTransition.actionIndex)
-            break
 
-        case Transition.PRECEDENCE:
+        when Transition.PRECEDENCE =>
             if not precpred(_ctx!, (transition as! PrecedencePredicateTransition).precedence) then
                 throw ANTLRException.recognition(e: FailedPredicateException(self, "precpred(_ctx,\((transition as! PrecedencePredicateTransition).precedence))"));
             end if;
-            break
 
         default:
             throw ANTLRError.unsupportedOperation(msg: "Unrecognized ATN transition type.")

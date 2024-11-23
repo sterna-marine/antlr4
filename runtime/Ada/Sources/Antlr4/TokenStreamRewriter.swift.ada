@@ -610,7 +610,7 @@ begin
 
         -- Walk buffer, executing instructions and emitting tokens
         var i := start
-        while i <= stop and then i < tokens.size() {
+        while i <= stop and then i < tokens.size() loop
             op : constant := indexToOp[i]
             indexToOp.removeValue(forKey: i)  -- remove so any left have index size-1
             t : constant := try tokens.get(i)
@@ -623,7 +623,7 @@ begin
                 end if;
                 i := @ + 1; -- move to next token
             end ;
-        end ;
+        end loop;
 
         -- include stuff after end if it's last index in buffer
         -- So, if they did an insertAfter(lastValidIndex, "foo"), include

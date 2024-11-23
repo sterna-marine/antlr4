@@ -37,9 +37,7 @@ begin
         n : constant := node.getChildCount()
 
         for i in 0..<n loop
-            if not shouldVisitNextChild(node, result) then
-                break;
-            end if;
+            exit when not shouldVisitNextChild(node, result);
 
             c : constant := node[i]
             childResult : constant := c.accept(self)

@@ -46,10 +46,10 @@ begin
     -- 
     override open procedure recover (recognizer : Parser; e : RecognitionException) {
         var context := recognizer.getContext()
-        while contextWrap : constant := context {
+        while contextWrap : constant := context loop
             contextWrap.exception := e
             context := (contextWrap.getParent() as? ParserRuleContext)
-        end ;
+        end loop;
 
         throw ANTLRException.parseCancellation(e: e)
     end ;
@@ -63,10 +63,10 @@ begin
 begin
         e : constant := InputMismatchException(recognizer)
         var context := recognizer.getContext()
-        while contextWrap : constant := context {
+        while contextWrap : constant := context loop
              contextWrap.exception := e
              context := (contextWrap.getParent() as? ParserRuleContext)
-        end ;
+        end loop;
 
         throw ANTLRException.parseCancellation(e: e)
     end ;

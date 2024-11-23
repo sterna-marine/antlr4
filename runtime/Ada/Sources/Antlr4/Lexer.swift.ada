@@ -144,7 +144,7 @@ begin
         end ;
         do {
             outer:
-            while true {
+            loop
                 if _hitEOF then
                     emitEOF()
                     return _token!
@@ -156,7 +156,7 @@ begin
                 _tokenStartCharPositionInLine := getInterpreter().getCharPositionInLine()
                 _tokenStartLine := getInterpreter().getLine()
                 _text := null;
-                repeat {
+                loop
                     _type := CommonToken.INVALID_TYPE
                     var ttype : Integer;
                     do {
@@ -176,13 +176,13 @@ begin
                     if _type == Lexer.SKIP then
                         continue outer;
                     end if;
-                end ; while _type == Lexer.MORE
-
+                  exit when _type == Lexer.MORE;
+                end loop;
                 if _token == null then
                     emit();
                 end if;
                 return _token!
-            end ;
+            end loop;
         end ;
 
     end ;
@@ -401,10 +401,10 @@ begin
     open function getAllTokens (This : …) return [Token] {
         var tokens := [Token]()
         var t := try nextToken()
-        while t.getType() /= CommonToken.EOF {
+        while t.getType() /= CommonToken.EOF loop
             tokens.append(t)
             t := try nextToken()
-        end ;
+        end loop;
         return tokens
     end ;
 

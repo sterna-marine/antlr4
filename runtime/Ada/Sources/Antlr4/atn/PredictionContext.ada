@@ -408,7 +408,7 @@ begin
             aParents : constant := a.parents
             bParents : constant := b.parents
 
-            while i < aReturnStatesLength and then j < bReturnStatesLength {
+            while i < aReturnStatesLength and then j < bReturnStatesLength loop
                 a_parent : constant := aParents[i]
                 b_parent : constant := bParents[j]
                 if aReturnStates[i] == bReturnStates[j] then
@@ -441,7 +441,7 @@ begin
                     j := @ + 1;
                 end ;
                 k := @ + 1;
-            end ;
+            end loop;
 
             -- copy over any payloads remaining in either array
             if i < aReturnStatesLength then
@@ -662,19 +662,19 @@ begin
     public function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : Integer) return [String] {
         var result := [String]()
         var perm := 0
-        outer: while true {
+        outer: loop
                 var offset := 0
                 var last := true
                 var p := self
                 var stateNumber := currentState
                 var localBuffer := "["
-                while not p.isEmpty() and then p !== stop {
+                while not p.isEmpty() and then p !== stop loop
                     var index := 0
                     if p.size() > 0 then
                         var bits := 1
-                        while (1 << bits) < p.size() {
+                        while (1 << bits) < p.size() loop
                             bits := @ + 1;
-                        end ;
+                        end loop;
 
                         mask : constant := (1 << bits) - 1
                         index := (perm >> offset) & mask
@@ -712,16 +712,14 @@ begin
                     end ;
                     stateNumber := p.getReturnState(index)
                     p := p.getParent(index)!
-                end ;
+                end loop;
                 localBuffer := @ + "]";
                 result.append(localBuffer)
 
-                if last then
-                    break;
-                end if;
+                exit when last;
 
                 perm := @ + 1;
-        end ;
+        end loop outer;
 
         return result
     end ;

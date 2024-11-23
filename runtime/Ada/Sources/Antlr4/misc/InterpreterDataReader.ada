@@ -66,7 +66,7 @@ public class InterpreterDataReader {
                 part := .partName;
             end if;
             switch part {
-            case .partName:
+            when .partName =>
                 switch line {
                 case "token literal names:":
                     part := .tokenLiteralNames
@@ -81,21 +81,21 @@ public class InterpreterDataReader {
                 case "atn:":
                     part := .atn
                 case "":
-                    break
+                    null;
                 default:
                     fail := Error.dataError("Unrecognized interpreter data part at "+line)
                 end ;
-            case .tokenLiteralNames:
+            when .tokenLiteralNames =>
                 literalNames.append((line == "null") ? "" : line)
-            case .tokenSymbolicNames:
+            when .tokenSymbolicNames =>
                 symbolicNames.append((line == "null") ? "" : line)
-            case .ruleNames:
+            when .ruleNames =>
                 ruleNames.append(line)
-            case .channelNames:
+            when .channelNames =>
                 channelNames.append(line)
-            case .modeNames:
+            when .modeNames =>
                 modeNames.append(line)
-            case .atn:
+            when .atn =>
                 if line.prefix(1) == "[" and then line.suffix(1) == "]" then
                     atnText := line.dropFirst().dropLast().split(separator:",")
                 else

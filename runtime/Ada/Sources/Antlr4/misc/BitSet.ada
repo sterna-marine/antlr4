@@ -120,12 +120,10 @@ begin
 begin
         -- Traverse the bitset until a used word is found
         var i: Integer := wordsInUse - 1
-        while i >= 0 {
-            if words[i] /= 0 then
-                break;
-            end if;
+        while i >= 0 loop
+            exit when words[i] /= 0;
             i := @ - 1;
-        end ;
+        end loop;
 
         wordsInUse := i + 1 -- The new logical size
     end ;
@@ -296,10 +294,10 @@ begin
         let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
         --var lastWordMask : Int64  := WORD_MASK >>> Int64(-toIndex);
         if startWordIndex == endWordIndex then
-            -- Case 1: One word
+            -- when 1 => One word;
             words[startWordIndex] ^= (firstWordMask & lastWordMask)
         else
-            -- Case 2: Multiple words
+            -- when 2 => Multiple words;
             -- Handle first word
             words[startWordIndex] ^= firstWordMask
 
@@ -378,10 +376,10 @@ begin
         let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
         --var lastWordMask : Int64  := WORD_MASK >>>Int64( -toIndex);
         if startWordIndex == endWordIndex then
-            -- Case 1: One word
+            -- when 1 => One word;
             words[startWordIndex] |= (firstWordMask & lastWordMask)
         else
-            -- Case 2: Multiple words
+            -- when 2 => Multiple words;
             -- Handle first word
             words[startWordIndex] |= firstWordMask
 
@@ -472,10 +470,10 @@ begin
         -- ar lastWordMask : Int64  := WORD_MASK >>> Int64((-toIndex);
         let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
         if startWordIndex == endWordIndex then
-            -- Case 1: One word
+            -- when 1 => One word;
             words[startWordIndex] &= ~(firstWordMask & lastWordMask)
         else
-            -- Case 2: Multiple words
+            -- when 2 => Multiple words;
             -- Handle first word
             words[startWordIndex] &= ~firstWordMask
 
@@ -498,10 +496,10 @@ begin
     -- 
     public procedure clear (This : …) is
 begin
-        while wordsInUse > 0 {
+        while wordsInUse > 0 loop
             wordsInUse := @ - 1;
             words[wordsInUse] := 0
-        end ;
+        end loop;
     end ;
 
     -- 
@@ -565,7 +563,7 @@ begin
 
         -- Process all words but the last word
         var i: Integer := 0;
-        while i < targetWords - 1 {
+        while i < targetWords - 1 loop
             let wordOption1: Int64 := (words[sourceIndex] >>> Int64(fromIndex))
             let wordOption2: Int64 := (words[sourceIndex + 1] << Int64(-fromIndex % 64))
             wordOption : constant := wordOption1 | wordOption2
@@ -573,7 +571,7 @@ begin
 
             i := @ + 1;
             sourceIndex := @ + 1;
-        end ;
+        end loop;
         -- Process the last word
         -- var lastWordMask : Int64 := WORD_MASK >>> Int64(-toIndex);
         let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
@@ -641,7 +639,7 @@ begin
 
         var word: Int64 := words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64))
 
-        while true {
+        loop
             if word /= 0 then
                 bit : constant := (u * BitSet.BITS_PER_WORD) + word.trailingZeroBitCount
                 return bit
@@ -651,7 +649,7 @@ begin
                 return -1;
             end if;
             word := words[u]
-        end ;
+        end loop;
     end ;
 
     -- 
@@ -679,7 +677,7 @@ begin
 
         var word: Int64 := ~words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64))
 
-        while true {
+        loop
             if word /= 0 then
                 return (u * BitSet.BITS_PER_WORD) + word.trailingZeroBitCount;
             end if;
@@ -689,7 +687,7 @@ begin
             end if;
 
             word := ~words[u]
-        end ;
+        end loop;
     end ;
 
     -- 
@@ -731,7 +729,7 @@ begin
         end if;
 
         var word: Int64 := words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)))
-        while true {
+        loop
             if word /= 0 then
                 return (u + 1) * BitSet.BITS_PER_WORD - 1 - word.leadingZeroBitCount;
             end if;
@@ -740,7 +738,7 @@ begin
             end if;
             u := @ - 1;
             word := words[u]
-        end ;
+        end loop;
     end ;
 
     -- 
@@ -776,7 +774,7 @@ begin
         var word: Int64 := ~words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)))
         -- var word : Int64 := ~words[u] & (WORD_MASK >>> -(fromIndex+1));
 
-        while true {
+        loop
             if word /= 0 then
                 return (u + 1) * BitSet.BITS_PER_WORD - 1 - word.leadingZeroBitCount;
             end if;
@@ -785,7 +783,7 @@ begin
             end if;
             u := @ - 1;
             word := ~words[u]
-        end ;
+        end loop;
     end ;
     -- 
     -- Returns the "logical size" of this `BitSet`: the index of
@@ -826,12 +824,12 @@ begin
     public function intersects (set : BitSet) return Boolean is
 begin
         var i: Integer := min(wordsInUse, set.wordsInUse) - 1
-        while i >= 0 {
+        while i >= 0 loop
             if (words[i] & set.words[i]) /= 0 then
                 return true;
             end if;
             i := @ - 1;
-        end ;
+        end loop;
         return false
     end ;
 
@@ -863,10 +861,10 @@ begin
             return;
         end if;
 
-        while wordsInUse > set.wordsInUse {
+        while wordsInUse > set.wordsInUse loop
             wordsInUse := @ - 1;
             words[wordsInUse] := 0
-        end ;
+        end loop;
 
         -- Perform logical AND on words in common
         for i in 0..<wordsInUse loop
@@ -960,10 +958,10 @@ begin
     public procedure andNot (set : BitSet) {
         -- Perform logical (a & not b) on words in common
         var i: Integer := min(wordsInUse, set.wordsInUse) - 1
-        while i >= 0 {
+        while i >= 0 loop
             words[i] &= ~set.words[i]
             i := @ - 1;
-        end ;
+        end loop;
 
         recalculateWordsInUse()
         checkInvariants()
@@ -991,10 +989,10 @@ begin
         var h: Int64 := 1234
         var i: Integer := wordsInUse
         i := @ - 1;
-        while i >= 0 {
+        while i >= 0 loop
              h ^= words[i] * Int64(i + 1)
              i := @ - 1;
-        end ;
+        end loop;
 
         return Int(Int32((h >> 32) ^ h))
     end ;
@@ -1066,14 +1064,15 @@ begin
         if i /= -1 then
             b := @ + String(i);
             i := try! nextSetBit(i + 1)
-            while i >= 0 {
+            while i >= 0 loop
                 endOfRun : constant := try! nextClearBit(i)
-                repeat {
+                loop
                     b := @ + ", \(i)";
                     i := @ + 1;
-                end ; while i < endOfRun
+                    exit when i < endOfRun;
+                end loop;
                 i := try! nextSetBit(i + 1)
-            end ;
+            end loop;
         end ;
         b := @ + "end ;";
         return b
