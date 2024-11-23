@@ -1,0 +1,336 @@
+writeln(s) ::= <<ext_IO.Put_Line (<s>);>>
+
+write(s) ::= <<Text_IO.Put (<s>);>>
+
+False() ::= "False"
+
+True() ::= "True"
+
+Not(v) ::= "not <v>"
+
+Assert(s) ::= ""
+
+Cast(t,v) ::= "((<v> as! <t>))"
+
+Append(a,b) ::= "<a> & <b>"
+
+AppendStr(a,b) ::= "<a> & <b>"
+
+Concat(a,b) ::= "<a> & <b>"
+
+AssertIsList(v) ::= "var __ttt__ = <v>;" -- just use static type system
+
+AssignLocal(s,v) ::= "<s> := <v>"
+
+InitIntMember(n,v) ::= <%<n> := <v>;%>
+
+InitBooleanMember(n,v) ::= <%<n> := <v>%>
+
+InitIntVar(n,v) ::= <%<InitIntMember(n,v)>%>
+
+IntArg(n) ::= "Integer (<n>)"
+
+VarRef(n) ::= "<n>"
+
+GetMember(n) ::= <%self.<n>%>
+
+SetMember(n,v) ::= <%self.<n> := <v>%>
+
+AddMember(n,v) ::= <%self.<n> := @ + <v>%>
+
+MemberEquals(n,v) ::= <%self.<n> = <v>%>
+
+ModMemberEquals(n,m,v) ::= <%self.<n> mod <m> = <v>%>
+
+ModMemberNotEquals(n,m,v) ::= <%self.<n> mod <m> /= <v>%>
+
+DumpDFA() ::= "self.dumpDFA()"
+
+Pass() ::= ""
+
+StringList() ::= "Array\<String>"
+
+BuildParseTrees() ::= "setBuildParseTree (True);"
+
+BailErrorStrategy() ::= <%setErrorHandler (BailErrorStrategy());%>
+
+ToStringTree(s) ::= <%<s>.toStringTree(self);%>
+
+Column() ::= "self.getCharPositionInLine();"
+
+Text() ::= "self.getText();"
+
+ValEquals(a,b) ::= <%<a> = <b>%>
+
+TextEquals(a) ::= <%self.getText() = "<a>"%>
+
+PlusText(a) ::= <%"<a>" + self.getText%>
+
+InputText() ::= "self._input.getText"
+
+LTEquals(i, v) ::= <%self._input.LT(<i>)?.getText() = <v>%>
+
+LANotEquals(i, v) ::= <%self._input.LA(<i>) /= <v>%>
+
+TokenStartColumnEquals(i) ::= <%self._tokenStartCharPositionInLine = <i>%>
+
+ImportListener(X) ::= ""
+
+GetExpectedTokenNames() ::= "self.getExpectedTokens().toString(self.getVocabulary)"
+
+ImportRuleInvocationStack() ::= ""
+
+RuleInvocationStack() ::= "getRuleInvocationStack().description.replacingOccurrences(of: \"\\\"\", with: \"\")"
+
+LL_EXACT_AMBIG_DETECTION() ::= <<_interp.setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION);>>
+
+ParserToken(parser, token) ::= <%<parser>.Tokens.<token>.rawValue%>
+
+Production(p) ::= <%<p>%>
+
+Result(r) ::= <%<r>%>
+
+ParserPropertyMember() ::= <<
+@members {
+function Property return Boolean is True;
+}
+>>
+
+ParserPropertyCall(parser, property) ::= <<
+<parser>.<property>
+>>
+
+PositionAdjustingLexerDef() ::= ""
+
+PositionAdjustingLexer() ::= <<
+
+override
+function nextToken return Token is
+  begin$
+	if not (_interp is PositionAdjustingLexerATNSimulator)) then
+		_interp := PositionAdjustingLexerATNSimulator(self, PositionAdjustingLexer._ATN, PositionAdjustingLexer._decisionToDFA, PositionAdjustingLexer._sharedContextCache);
+	end if;
+
+	return super.nextToken;
+end nextToken;
+
+override
+function emit return Token is
+begin
+	case _type is 
+	when PositionAdjustingLexer.TOKEN =>
+		handleAcceptPositionForKeyword ("tokens");
+	when PositionAdjustingLexer.LABEL =>
+		handleAcceptPositionForIdentifier;
+	others =>
+		null;
+	end case
+	return super.emit;
+end emit;
+
+private 
+  function handleAcceptPositionForIdentifier return Boolean is
+	tokenText : constant tokenText := getText;
+	identifierLength := 0;
+	while (identifierLength \< tokenText.count) and isIdentifierChar (tokenText[tokenText.index (tokenText.startIndex, offsetBy => identifierLength)]) loop
+		identifierLength := @ + 1;
+	end loop;
+
+	if getInputStream()!.index() > _tokenStartCharIndex + identifierLength then
+		offset := identifierLength - 1;
+		(getInterpreter() as! PositionAdjustingLexerATNSimulator).resetAcceptPosition(getInputStream()!, _tokenStartCharIndex + offset, _tokenStartLine, _tokenStartCharPositionInLine + offset)
+		return True;
+	end if;
+
+	return False;
+  end handleAcceptPositionForIdentifier;
+
+  function handleAcceptPositionForKeyword (keyword : String) return Boolean is
+	if getInputStream()!.index() > _tokenStartCharIndex + keyword.count then
+		offset := keyword.count - 1;
+		(getInterpreter() as! PositionAdjustingLexerATNSimulator).resetAcceptPosition(getInputStream()!, _tokenStartCharIndex + offset, _tokenStartLine, _tokenStartCharPositionInLine + offset);
+		return True;
+	end if;
+
+	return False;
+  end handleAcceptPositionForKeyword;
+
+
+--public func getInterpreter() -> PositionAdjustingLexerATNSimulator {
+--	return super.getInterpreter() as! PositionAdjustingLexerATNSimulator
+--}
+
+  function isIdentifierChar (c : Character) return Boolean is
+	return (c >= '0' and c \<= '9') or (c >= 'a' and c \<= 'z') or c >= 'A' and c \<= 'Z' or c == '_'
+  end isIdentifierChar;
+
+type PositionAdjustingLexerATNSimulator is new LexerATNSimulator with null record;
+
+	procedure init (This : PositionAdjustingLexerATNSimulator;
+	  		recog: Lexer;
+			atn : ATN;
+			decisionToDFA : array (<>) of DFA;
+			sharedContextCache : PredictionContextCache) is
+	  begin
+		super.init (This, recog, atn, decisionToDFA, sharedContextCache);
+	end init;
+
+   function resetAcceptPosition (This : PositionAdjustingLexerATNSimulator;
+   								input : CharStream;
+								index : Integer;
+								line : Integer;
+								charPositionInLine : Integer) is
+		input.seek (index);
+		self.line := line;
+		self.charPositionInLine := charPositionInLine;
+		consume (input);
+	end resetAcceptPosition;
+
+>>
+
+BasicListener (X) ::= <<
+@parser::members {
+type LeafListener is new TBaseListener with null record;
+
+    override
+	procedure visitTerminal (This : LeafListener;
+		 					 node : TerminalNode) is
+		Text_IO.Put (node.getSymbol()?.getText());
+	end visitTerminal;
+}
+>>
+
+WalkListener(s) ::= <<
+walker : constant ParseTreeWalker :=  ParseTreeWalker;
+walker.walk(LeafListener(), <s>);
+>>
+
+
+TreeNodeWithAltNumField(X) ::= <<
+@parser::members {
+type MyRuleNode is new ParserRuleContext with new record;
+	altNum : Integer := 0;
+    override
+	procedure init (This : MyRuleNode;
+		  parent : ParserRuleContext;
+		  invokingStateNumber : Integer) is
+        super.init(This, parent, invokingStateNumber);
+    end init;
+
+    override
+	function getAltNumber (This : MyRuleNode) return Integer is
+		return altNum;
+
+	override
+	procedure setAltNumber (This : MyRuleNode;
+							altNum : Integer) is
+	begin
+		self.altNum := altNum;
+	end setAltNumber;
+}
+>>
+
+TokenGetterListener(X) ::= <<
+@parser::members {
+type LeafListener is new TBaseListener with null record;
+
+    override
+	procedure exitA (This : LeafListener;
+					 ctx : TParser.AContext) is
+	begin
+		if (ctx.getChildCount() = 2) then
+			Text_IO.Put ("\(ctx.INT(0)?.getSymbol()?.getText() ?? "") \(ctx.INT(1)?.getSymbol()?.getText() ?? "") \(ctx.INT())");
+		else
+			Text_IO.Put (ctx.ID()?.getSymbol());
+		end if;
+	end exitA;
+}
+>>
+
+RuleGetterListener(X) ::= <<
+@parser::members {
+type LeafListener is new TBaseListener with null record;
+    override
+	procedure exitA (This : LeafListener;
+					 ctx : TParser.AContext) is
+	begin
+		if (ctx.getChildCount = 2) then
+			Text_IO.Put ("\(ctx.b(0)?.start?.getText() ?? "") \(ctx.b(1)?.start?.getText() ?? "") \(ctx.b()[0].start?.getText() ?? "")")
+		else
+			Text_IO.Put (ctx.b(0)?.start?.getText() ?? "")
+		end if;
+	end exitA;
+}
+>>
+
+
+LRListener(X) ::= <<
+@parser::members {
+type LeafListener is new TBaseListener with null record;
+
+    override
+	procedure exitE (This : LeafListener;
+			   		 ctx : TParser.EContext) is
+	begin
+		if ctx.getChildCount = 3 then
+		    Text_IO.Put ("\(ctx.e(0)?.start?.getText() ?? "") \(ctx.e(1)?.start?.getText() ?? "") \(ctx.e()[0].start?.getText() ?? "")");
+		else
+			Text_IO.Put (ctx.INT()?.getSymbol()?.getText() ?? "");
+	    end if;
+	end exitE;
+}
+>>
+
+LRWithLabelsListener(X) ::= <<
+@parser::members {
+type LeafListener is new TBaseListener with null record;
+
+    override
+	procedure exitCall (This : LeafListener;
+						ctx : TParser.CallContext) is
+	begin
+		Text_IO.Put ("\(ctx.e()?.start?.getText() ?? "") \(ctx.eList()!)");
+	end exitCall;
+
+	override
+	procedure exitInt (This : LeafListener;
+					   ctx : TParser.IntContext) is
+	begin
+		Text_IO.Put (ctx.INT()?.getSymbol()?.getText() ?? "");
+	end exitInt;
+}
+>>
+
+DeclareContextListGettersFunction() ::= <<
+procedure Foo is
+	-- S : contant := SContext? = null;
+	-- A : contant := [AContext]? = S?.A();
+	-- B : contant := [BContext]? = S?.B();
+begin
+end Foo;
+>>
+
+Declare_foo() ::= <<
+procedure Foo is
+begin
+	Text_IO.Put ("foo");
+end Foo;
+>>
+
+Invoke_foo() ::= "Foo;"
+
+Declare_pred() ::= <<
+function pred (v: Boolean) return Boolean is
+begin
+	Text_IO.Put ("eval=\(v)");
+	return v;
+end pred;
+>>
+
+StringType() ::= "String"
+Invoke_pred(v) ::= <<self.pred(<v>)>>
+ContextRuleFunction(ctx, rule) ::= "<ctx>.<rule>"
+ContextListFunction(ctx, rule) ::= "<ctx>.<rule>()"
+ContextMember(ctx, member) ::= "<ctx>!.<member>"
+SubContextLocal(ctx, subctx, local) ::= "<ctx>.<subctx>!.<local>"
+SubContextMember(ctx, subctx, member) ::= "<ctx>.<subctx>!.<member>"

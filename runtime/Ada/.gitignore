@@ -1,0 +1,4 @@
+.build/
+.alire/
+Tests/Antlr4Tests/gen/
+

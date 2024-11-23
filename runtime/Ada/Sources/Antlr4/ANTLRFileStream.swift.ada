@@ -1,0 +1,27 @@
+-- 
+-- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
+-- Use of this file is governed by the BSD 3-clause license that
+-- can be found in the LICENSE.txt file in the project root.
+-- This is an _org.antlr.v4.runtime.ANTLRInputStream_ that is loaded from a file all at once
+-- when you construct the object.
+-- 
+
+with Foundation;
+
+public type ANTLRFileStream is new ANTLRInputStream with null record;
+{
+    private fileName : constant String;
+
+    public init(fileName : String; encoding : String.Encoding? := null) {
+        self.fileName := fileName
+        fileContents : constant := try String(contentsOfFile: fileName, encoding: encoding ?? .utf8)
+        data : constant := Array(fileContents.unicodeScalars)
+        super.init(data, data.count)
+    end ;
+
+    override
+    public function getSourceName (This : …) return String is
+begin
+        return fileName
+    end ;
+end ;
