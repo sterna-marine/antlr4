@@ -31,7 +31,7 @@ public type LexerInterpreter is new Lexer with null record;
         self._decisionToDFA := [DFA]()
         for i in 0 ..< atn.getNumberOfDecisions() loop
             _decisionToDFA.append(DFA(atn.getDecisionState(i)!, i))
-        end ;
+        end loop;
         super.init(input)
         self._interp := LexerATNSimulator(self, atn, _decisionToDFA, _sharedContextCache)
 

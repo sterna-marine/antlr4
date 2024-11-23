@@ -90,35 +90,35 @@ public function ==(lhs: LexerATNConfig, rhs: LexerATNConfig) return Boolean is
 begin
 
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
 
     --lexerOther : constant : LexerATNConfig := rhs  -- as! LexerATNConfig;
     if lhs.passedThroughNonGreedyDecision /= rhs.passedThroughNonGreedyDecision then
-        return false
-    end ;
+        return false;
+    end if;
 
 
 
     if lhs.state.stateNumber /= rhs.state.stateNumber then
-        return false
-    end ;
+        return false;
+    end if;
     if lhs.alt /= rhs.alt then
-        return false
-    end ;
+        return false;
+    end if;
 
     if lhs.isPrecedenceFilterSuppressed() /= rhs.isPrecedenceFilterSuppressed() then
-        return false
-    end ;
+        return false;
+    end if;
 
     if lhs.getLexerActionExecutor() /= rhs.getLexerActionExecutor() then
-        return false
-    end ;
+        return false;
+    end if;
 
     if lhs.context /= rhs.context then
-        return false
-    end ;
+        return false;
+    end if;
 
     return  lhs.semanticContext == rhs.semanticContext
 end ;

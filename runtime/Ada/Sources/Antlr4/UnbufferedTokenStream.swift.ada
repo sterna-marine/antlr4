@@ -71,22 +71,22 @@ begin
         -- get absolute index
         bufferStartIndex : constant := getBufferStartIndex()
         if i < bufferStartIndex or else i >= bufferStartIndex + n then
-            throw ANTLRError.indexOutOfBounds(msg: "get(\(i)) outside buffer: \(bufferStartIndex)..\(bufferStartIndex + n)")
-        end ;
+            throw ANTLRError.indexOutOfBounds(msg: "get(\(i)) outside buffer: \(bufferStartIndex)..\(bufferStartIndex + n)");
+        end if;
         return tokens[i - bufferStartIndex]
     end ;
 
 
     public function LT (i : Integer) return Token? {
         if i == -1 then
-            return lastToken
-        end ;
+            return lastToken;
+        end if;
 
         try sync(i)
         let index: Integer := p + i - 1
         if index < 0 then
-            throw ANTLRError.indexOutOfBounds(msg: "LT(\(i) gives negative index")
-        end ;
+            throw ANTLRError.indexOutOfBounds(msg: "LT(\(i) gives negative index");
+        end if;
 
         if index >= n then
             --Token.EOF
@@ -132,8 +132,8 @@ begin
 begin
         --Token.EOF
         if LA(1) == CommonToken.EOF then
-            throw ANTLRError.illegalState(msg: "cannot consume EOF")
-        end ;
+            throw ANTLRError.illegalState(msg: "cannot consume EOF");
+        end if;
 
         -- buf always has at least tokens[p==0] in this method due to ctor
         lastToken := tokens[p]   -- track last token for LT(-1)
@@ -157,8 +157,8 @@ begin
     internal procedure sync (want : Integer) {
         let need: Integer := (p + want - 1) - n + 1 -- how many more elements we need?
         if need > 0 then
-            try fill(need)
-        end ;
+            try fill(need);
+        end if;
     end ;
 
     -- 
@@ -171,12 +171,12 @@ begin
 begin
         for i in 0..<n loop
             if self.n > 0 and then tokens[self.n - 1].getType() == CommonToken.EOF then
-                return i
-            end ;
+                return i;
+            end if;
 
             let t: Token := try tokenSource.nextToken()
             add(t)
-        end ;
+        end loop;
 
         return n
     end ;
@@ -188,8 +188,8 @@ begin
         end ;
 
         if wt : constant := t as? WritableToken then
-            wt.setTokenIndex(getBufferStartIndex() + n)
-        end ;
+            wt.setTokenIndex(getBufferStartIndex() + n);
+        end if;
 
         tokens[n] := t
         n := @ + 1;
@@ -206,8 +206,8 @@ begin
     public function mark (This : …) return Integer is
 begin
         if numMarkers == 0 then
-            lastTokenBufferStart := lastToken
-        end ;
+            lastTokenBufferStart := lastToken;
+        end if;
 
         mark : constant := -numMarkers - 1
         numMarkers := @ + 1;
@@ -218,8 +218,8 @@ begin
     public procedure release (marker : Integer) {
         expectedMark : constant := -numMarkers
         if marker /= expectedMark then
-            throw ANTLRError.illegalState(msg: "release() called with an invalid marker.")
-        end ;
+            throw ANTLRError.illegalState(msg: "release() called with an invalid marker.");
+        end if;
 
         numMarkers := @ - 1;
         if numMarkers == 0 then
@@ -247,8 +247,8 @@ begin
         var index := index
         -- seek to absolute index
         if index == currentTokenIndex then
-            return
-        end ;
+            return;
+        end if;
 
         if index > currentTokenIndex then
             try sync(index - currentTokenIndex)
@@ -262,8 +262,8 @@ begin
 
         end ;
         elsif i >= n then
-            throw ANTLRError.unsupportedOperation(msg: "seek to index outside buffer: \(index) not in \(bufferStartIndex)..<\(bufferStartIndex + n)")
-        end ;
+            throw ANTLRError.unsupportedOperation(msg: "seek to index outside buffer: \(index) not in \(bufferStartIndex)..<\(bufferStartIndex + n)");
+        end if;
 
         p := i
         currentTokenIndex := index
@@ -295,8 +295,8 @@ begin
         start : constant := interval.a
         stop : constant := interval.b
         if start < bufferStartIndex or else stop > bufferStopIndex then
-            throw ANTLRError.unsupportedOperation(msg: "interval \(interval) not in token buffer window: \(bufferStartIndex)...\(bufferStopIndex)")
-        end ;
+            throw ANTLRError.unsupportedOperation(msg: "interval \(interval) not in token buffer window: \(bufferStartIndex)...\(bufferStopIndex)");
+        end if;
 
         a : constant := start - bufferStartIndex
         b : constant := stop - bufferStartIndex
@@ -304,7 +304,7 @@ begin
         var buf := ""
         for t in tokens[a...b] loop
             buf := @ + t.getText()!;
-        end ;
+        end loop;
         return buf
     end ;
 

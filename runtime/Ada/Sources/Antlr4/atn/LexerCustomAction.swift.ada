@@ -106,8 +106,8 @@ end ;
 public function ==(lhs: LexerCustomAction, rhs: LexerCustomAction) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
     return lhs.ruleIndex == rhs.ruleIndex
             and then lhs.actionIndex == rhs.actionIndex

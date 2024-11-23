@@ -90,13 +90,13 @@ begin
 begin
         var i := i
         if i == 0 then
-            return 0 -- undefined
-        end ;
+            return 0;  -- undefined
+        end if;
         if i < 0 then
             i := @ + 1; -- e.g., translate LA(-1) to use offset i=0; then data[p+0-1]
             if (p + i - 1) < 0 then
-                return ANTLRInputStream.EOF-- invalid; no char before first char
-            end ;
+                return ANTLRInputStream.EOF;  -- invalid; no char before first char
+            end if;
         end ;
 
         if (p + i - 1) >= n then
@@ -162,8 +162,8 @@ begin
 begin
         start : constant := interval.a
         if start >= n then
-            return ""
-        end ;
+            return "";
+        end if;
         stop : constant := min(n, interval.b + 1)
 
         var unicodeScalarView := String.UnicodeScalarView()

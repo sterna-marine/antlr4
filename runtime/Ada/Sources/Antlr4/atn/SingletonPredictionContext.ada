@@ -56,8 +56,8 @@ begin
         up : constant := parent?.description ?? ""
         if up.isEmpty then
             if returnState == PredictionContext.EMPTY_RETURN_STATE then
-                return "$"
-            end ;
+                return "$";
+            end if;
             return String(returnState)
         end ;
         return String(returnState) + " " + up
@@ -68,14 +68,14 @@ end ;
 public function ==(lhs: SingletonPredictionContext, rhs: SingletonPredictionContext) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     if lhs.hashValue /= rhs.hashValue then
-        return false
-    end ;
+        return false;
+    end if;
     if lhs.returnState /= rhs.returnState then
-        return false
-    end ;
+        return false;
+    end if;
 
     return lhs.parent == rhs.parent
 end ;

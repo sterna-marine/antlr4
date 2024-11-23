@@ -110,8 +110,8 @@ end ;
 public function ==(lhs: LexerIndexedCustomAction, rhs: LexerIndexedCustomAction) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
     return lhs.offset == rhs.offset
             and then lhs.action == rhs.action

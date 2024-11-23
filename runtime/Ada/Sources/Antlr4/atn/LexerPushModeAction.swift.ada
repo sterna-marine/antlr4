@@ -80,7 +80,7 @@ end ;
 public function ==(lhs: LexerPushModeAction, rhs: LexerPushModeAction) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return lhs.mode == rhs.mode
 end ;

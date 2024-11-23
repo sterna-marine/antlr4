@@ -82,8 +82,8 @@ begin
     public function nextTokens (s : ATNState) return IntervalSet is
 begin
         if nextTokenWithinRule : constant := s.nextTokenWithinRule then
-            return nextTokenWithinRule
-        end ;
+            return nextTokenWithinRule;
+        end if;
         intervalSet : constant := nextTokens(s, null)
         s.nextTokenWithinRule := intervalSet
         intervalSet.makeReadonly()
@@ -113,8 +113,8 @@ begin
 
     public function getDecisionState (decision : Integer) return DecisionState? {
         if  not decisionToState.isEmpty  then
-            return decisionToState[decision]
-        end ;
+            return decisionToState[decision];
+        end if;
         return null;
     end ;
 
@@ -152,8 +152,8 @@ begin
         s : constant := states[stateNumber]!
         var following := nextTokens(s)
         if not following.contains(CommonToken.EPSILON) then
-            return following
-        end ;
+            return following;
+        end if;
 
         expected : constant := IntervalSet()
         try! expected.addAll(following)
@@ -169,8 +169,8 @@ begin
         end ;
 
         if following.contains(CommonToken.EPSILON) then
-            try! expected.add(CommonToken.EOF)
-        end ;
+            try! expected.add(CommonToken.EOF);
+        end if;
 
         return expected
     end ;

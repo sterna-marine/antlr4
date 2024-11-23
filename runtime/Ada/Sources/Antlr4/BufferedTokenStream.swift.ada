@@ -115,20 +115,20 @@ begin
                 skipEofCheck := p < tokens.count - 1
             else
                 -- no EOF token in tokens. skip check if p indexes a fetched token.
-                skipEofCheck := p < tokens.count
-            end ;
+                skipEofCheck := p < tokens.count;
+            end if;
         else
             -- not yet initialized
             skipEofCheck := false
         end ;
 
         if try not skipEofCheck and then LA(1) == BufferedTokenStream.EOF then
-            throw ANTLRError.illegalState(msg: "cannot consume EOF")
-        end ;
+            throw ANTLRError.illegalState(msg: "cannot consume EOF");
+        end if;
 
         if try sync(p + 1) then
-            p := try adjustSeekIndex(p + 1)
-        end ;
+            p := try adjustSeekIndex(p + 1);
+        end if;
     end ;
 
     -- 
@@ -160,21 +160,21 @@ begin
     internal function fetch (n : Integer) return Integer is
 begin
         if fetchedEOF then
-            return 0
-        end ;
+            return 0;
+        end if;
 
         for i in 0..<n loop
             t : constant := try tokenSource.nextToken()
             if wt : constant := t as? WritableToken then
-                wt.setTokenIndex(tokens.count)
-            end ;
+                wt.setTokenIndex(tokens.count);
+            end if;
 
             tokens.append(t)
             if t.getType() == BufferedTokenStream.EOF then
                 fetchedEOF := true
                 return i + 1
             end ;
-        end ;
+        end loop;
 
         return n
     end ;
@@ -194,17 +194,17 @@ begin
         var stop := stop
         if start < 0 or else stop < 0 then
             return null;
-        end ;
+        end if;
         try lazyInit()
         var subset := [Token]()
         if stop >= tokens.count then
-            stop := tokens.count - 1
-        end ;
+            stop := tokens.count - 1;
+        end if;
         for i in start...stop loop
             t : constant := tokens[i]
             if t.getType() == BufferedTokenStream.EOF then
-                break
-            end ;
+                break;
+            end if;
             subset.append(t)
         end ;
         return subset
@@ -218,7 +218,7 @@ begin
     internal function LB (k : Integer) return Token? {
         if (p - k) < 0 then
             return null;
-        end ;
+        end if;
         return tokens[p - k]
     end ;
 
@@ -227,10 +227,10 @@ begin
         try lazyInit()
         if k == 0 then
             return null;
-        end ;
+        end if;
         if k < 0 then
-            return try LB(-k)
-        end ;
+            return try LB(-k);
+        end if;
 
         i : constant := p + k - 1
         try sync(i)
@@ -263,8 +263,8 @@ begin
     internal final procedure lazyInit (This : …) is
 begin
         if p == -1 then
-            try setup()
-        end ;
+            try setup();
+        end if;
     end ;
 
     internal procedure setup (This : …) is
@@ -305,18 +305,18 @@ begin
         end ;
         if start > stop then
             return null;
-        end ;
+        end if;
 
         var filteredTokens := [Token]()
         for i in start...stop loop
             t : constant := tokens[i]
             if types?.contains(t.getType()) ?? true then
-                filteredTokens.append(t)
-            end ;
-        end ;
+                filteredTokens.append(t);
+            end if;
+        end loop;
         if filteredTokens.isEmpty then
             return null;
-        end ;
+        end if;
         return filteredTokens
     end ;
 
@@ -335,14 +335,14 @@ begin
         var i := i
         try sync(i)
         if i >= size() then
-            return size() - 1
-        end ;
+            return size() - 1;
+        end if;
 
         var token := tokens[i]
         while token.getChannel() /= channel {
             if token.getType() == BufferedTokenStream.EOF then
-                return i
-            end ;
+                return i;
+            end if;
 
             i := @ + 1;
             try sync(i)
@@ -374,8 +374,8 @@ begin
         while i >= 0 {
             token : constant := tokens[i]
             if token.getType() == BufferedTokenStream.EOF or else token.getChannel() == channel then
-                return i
-            end ;
+                return i;
+            end if;
 
             i := @ - 1;
         end ;
@@ -426,7 +426,7 @@ begin
         prevOnChannel : constant := try previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL)
         if prevOnChannel == tokenIndex - 1 then
             return null;
-        end ;
+        end if;
         -- if none onchannel to left, prevOnChannel=-1 then from=0
         from : constant := prevOnChannel + 1
         to : constant := tokenIndex - 1
@@ -438,17 +438,17 @@ begin
         for t in tokens[from...to] loop
             if channel == -1 then
                 if t.getChannel() /= Lexer.DEFAULT_TOKEN_CHANNEL then
-                    hidden.append(t)
-                end ;
+                    hidden.append(t);
+                end if;
             else
                 if t.getChannel() == channel then
-                    hidden.append(t)
-                end ;
+                    hidden.append(t);
+                end if;
             end ;
-        end ;
+        end loop;
         if hidden.isEmpty then
             return null;
-        end ;
+        end if;
         return hidden
     end ;
 
@@ -470,17 +470,17 @@ begin
 begin
         start : constant := interval.a
         if start < 0 then
-            return ""
-        end ;
+            return "";
+        end if;
         try fill()
         stop : constant := min(tokens.count, interval.b + 1)
         var buf := ""
         for t in tokens[start ..< stop] loop
             if t.getType() == BufferedTokenStream.EOF then
-                break
-            end ;
+                break;
+            end if;
             buf := @ + t.getText()!;
-        end ;
+        end loop;
         return buf
     end ;
 
@@ -494,8 +494,8 @@ begin
     public function getText (start : Token?, stop : Token?) return String is
 begin
         if start : constant := start, stop : constant := stop then
-            return try getText(Interval.of(start.getTokenIndex(), stop.getTokenIndex()))
-        end ;
+            return try getText(Interval.of(start.getTokenIndex(), stop.getTokenIndex()));
+        end if;
 
         return ""
     end ;
@@ -510,8 +510,8 @@ begin
         while true {
             fetched : constant := try fetch(blockSize)
             if fetched < blockSize then
-                return
-            end ;
+                return;
+            end if;
         end ;
     end ;
 end ;

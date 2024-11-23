@@ -57,7 +57,7 @@ public type IntervalSet is new IntSet and Hashable and CustomStringConvertible w
             intervals := [Interval]()
             for e in els loop
                 try! add(e)
-            end ;
+            end loop;
         end ;
     end ;
 
@@ -74,8 +74,8 @@ begin
     public procedure clear (This : …) is
 begin
         if readonly then
-            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet")
-        end ;
+            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet");
+        end if;
         intervals.removeAll()
     end ;
 
@@ -86,8 +86,8 @@ begin
 
     public procedure add (el : Integer) {
         if readonly then
-            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet")
-        end ;
+            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet");
+        end if;
         try! add(el, el)
     end ;
 
@@ -106,11 +106,11 @@ begin
     -- copy on write so we can cache a .. a intervals and sets of that
     internal procedure add (addition : Interval) {
         if readonly then
-            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet")
-        end ;
+            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet");
+        end if;
         if addition.b < addition.a then
-            return
-        end ;
+            return;
+        end if;
         -- find position in list
         -- Use iterators as we modify list in place
         var i := 0
@@ -119,8 +119,8 @@ begin
 
             r : constant := intervals[i]
             if addition == r then
-                return
-            end ;
+                return;
+            end if;
             if addition.adjacent(r) or else not addition.disjoint(r) then
                 -- next to each other, make a single larger interval
                 bigger : constant := addition.union(r)
@@ -132,8 +132,8 @@ begin
                     i := @ + 1;
                     next : constant := intervals[i]
                     if not bigger.adjacent(next) and then bigger.disjoint(next) then
-                        break
-                    end ;
+                        break;
+                    end if;
 
                     -- if we bump up against or overlap next, merge
                     -- 
@@ -170,7 +170,7 @@ begin
         r : constant := IntervalSet()
         for s in sets loop
             try! r.addAll(s)
-        end ;
+        end loop;
         return r
     end ;
 
@@ -185,12 +185,12 @@ begin
             -- walk set and add each interval
             for interval in other.intervals loop
                 try add(interval)
-            end ;
+            end loop;
         else
             setList : constant := set.toList()
             for value in setList loop
                 try add(value)
-            end ;
+            end loop;
         end ;
 
         return self
@@ -226,8 +226,8 @@ begin
             return IntervalSet(self)
         end ;
         if a : constant := a as? IntervalSet then
-            return subtract(self, a)
-        end ;
+            return subtract(self, a);
+        end if;
 
         other : constant := IntervalSet()
         try! other.addAll(a)
@@ -274,12 +274,12 @@ begin
             var beforeCurrent: Interval? := null;
             var afterCurrent: Interval? := null;
             if rightInterval.a > resultInterval.a then
-                beforeCurrent := Interval(resultInterval.a, rightInterval.a - 1)
-            end ;
+                beforeCurrent := Interval(resultInterval.a, rightInterval.a - 1);
+            end if;
 
             if rightInterval.b < resultInterval.b then
-                afterCurrent := Interval(rightInterval.b + 1, resultInterval.b)
-            end ;
+                afterCurrent := Interval(rightInterval.b + 1, resultInterval.b);
+            end if;
 
             if beforeCurrent : constant := beforeCurrent then
                 if afterCurrent : constant := afterCurrent then
@@ -331,8 +331,8 @@ begin
 
     public function and (other : IntSet?) return IntSet? {
         if other == null then
-            return null -- nothing in common with null set
-        end ;
+            return null;  -- nothing in common with null set
+        end if;
 
         myIntervals : constant := self.intervals
         theirIntervals : constant := (other as! IntervalSet).intervals
@@ -357,8 +357,8 @@ begin
                     if mine.properlyContains(theirs) then
                         -- overlap, add intersection, get next theirs
                         if intersection == null then
-                            intersection := IntervalSet()
-                        end ;
+                            intersection := IntervalSet();
+                        end if;
 
                         try! intersection!.add(mine.intersection(theirs))
                         j := @ + 1;
@@ -366,16 +366,16 @@ begin
                         if theirs.properlyContains(mine) then
                             -- overlap, add intersection, get next mine
                             if intersection == null then
-                                intersection := IntervalSet()
-                            end ;
+                                intersection := IntervalSet();
+                            end if;
                             try! intersection!.add(mine.intersection(theirs))
                             i := @ + 1;
                         else
                             if not mine.disjoint(theirs) then
                                 -- overlap, add intersection
                                 if intersection == null then
-                                    intersection := IntervalSet()
-                                end ;
+                                    intersection := IntervalSet();
+                                end if;
                                 try! intersection!.add(mine.intersection(theirs))
                                 -- Move the iterator of lower range [a .. b], but not
                                 -- the upper range as it may contain elements that will collide
@@ -389,7 +389,7 @@ begin
                                 else
                                     if theirs.startsAfterNonDisjoint(mine) then
                                         i := @ + 1;
-                                    end ;
+                                    end if;
                                 end ;
                             end ;
                         end ;
@@ -398,8 +398,8 @@ begin
             end ;
         end ;
         if intersection == null then
-            return IntervalSet()
-        end ;
+            return IntervalSet();
+        end if;
         return intersection
     end ;
 
@@ -413,12 +413,12 @@ begin
             a : constant := interval.a
             b : constant := interval.b
             if el < a then
-                break -- list is sorted and el is before this interval; not here
-            end ;
+                break;  -- list is sorted and el is before this interval; not here
+            end if;
             if el >= a and then el <= b then
-                return true -- found in this interval
-            end ;
-        end ;
+                return true;  -- found in this interval
+            end if;
+        end loop;
         return false
     end ;
 
@@ -440,8 +440,8 @@ begin
         if intervals.count == 1 then
             interval : constant := intervals[0]
             if interval.a == interval.b then
-                return interval.a
-            end ;
+                return interval.a;
+            end if;
         end ;
         return CommonToken.INVALID_TYPE
     end ;
@@ -455,8 +455,8 @@ begin
     public function getMaxElement (This : …) return Integer is
 begin
         if isnull() then
-            return CommonToken.INVALID_TYPE
-        end ;
+            return CommonToken.INVALID_TYPE;
+        end if;
         last : constant := intervals[intervals.count - 1]
         return last.b
     end ;
@@ -470,8 +470,8 @@ begin
     public function getMinElement (This : …) return Integer is
 begin
         if isnull() then
-            return CommonToken.INVALID_TYPE
-        end ;
+            return CommonToken.INVALID_TYPE;
+        end if;
 
         return intervals[0].a
     end ;
@@ -487,7 +487,7 @@ begin
         for interval in intervals loop
             hasher.combine(interval.a)
             hasher.combine(interval.b)
-        end ;
+        end loop;
     end ;
 
     -- 
@@ -514,8 +514,8 @@ begin
     public function toString (elemAreChar  : Boolean) return String is
 begin
         if intervals.isEmpty then
-            return "{end ;"
-        end ;
+            return "{end ;";
+        end if;
 
         selfSize : constant := size()
 
@@ -523,12 +523,12 @@ begin
 
         if selfSize > 1 then
             buf := @ + "{";
-        end ;
+        end if;
         var first := true
         for interval in intervals loop
             if not first then
                 buf := @ + ", ";
-            end ;
+            end if;
             first := false
 
             a : constant := interval.a
@@ -536,23 +536,22 @@ begin
             if a == b then
                 if a == CommonToken.EOF then
                     buf := @ + "<EOF>";
-                end ;
                 elsif elemAreChar then
                     buf := @ + "'\(a)'";
                 else
-                    buf := @ + "\(a)";;
+                    buf := @ + "\(a)";
                 end if;
             end ;
             elsif elemAreChar then
                 buf := @ + "'\(a)'..'\(b)'";
             else
-                buf := @ + "\(a)..\(b)";;
+                buf := @ + "\(a)..\(b)";
             end if;
-        end ;
+        end loop;
 
         if selfSize > 1 then
             buf := @ + "end ;";
-        end ;
+        end if;
 
         return buf
     end ;
@@ -560,8 +559,8 @@ begin
     public function toString (vocabulary : Vocabulary) return String is
 begin
         if intervals.isEmpty then
-            return "{end ;"
-        end ;
+            return "{end ;";
+        end if;
 
         selfSize : constant := size()
 
@@ -569,13 +568,13 @@ begin
 
         if selfSize > 1 then
             buf := @ + "{";
-        end ;
+        end if;
 
         var first := true
         for interval in intervals loop
             if not first then
                 buf := @ + ", ";
-            end ;
+            end if;
             first := false
 
             a : constant := interval.a
@@ -586,15 +585,15 @@ begin
                 for i in a...b loop
                     if i > a then
                         buf := @ + ", ";
-                    end ;
+                    end if;
                     buf := @ + elementName(vocabulary, i);
-                end ;
+                end loop;
             end ;
-        end ;
+        end loop;
 
         if selfSize > 1 then
             buf := @ + "end ;";
-        end ;
+        end if;
 
         return buf
     end ;
@@ -602,8 +601,7 @@ begin
     internal function elementName (vocabulary : Vocabulary; a : Integer) return String is
 begin
         if a == CommonToken.EOF then
-            return "<EOF>"
-        end ;
+            return "<EOF>";
         elsif a == CommonToken.EPSILON then
             return "<EPSILON>"
         else
@@ -617,7 +615,7 @@ begin
         var n := 0
         for interval in intervals loop
             n := @ + (interval.b - interval.a + 1);
-        end ;
+        end loop;
         return n
     end ;
 
@@ -628,7 +626,7 @@ begin
             a : constant := interval.a
             b : constant := interval.b
             values.append(contentsOf: a...b)
-        end ;
+        end loop;
         return values
     end ;
 
@@ -639,8 +637,8 @@ begin
             b : constant := interval.b
             for v in a...b  loop
                 s.insert(v)
-            end ;
-        end ;
+            end loop;
+        end loop;
         return s
     end ;
 
@@ -657,18 +655,18 @@ begin
             b : constant := interval.b
             for v in a...b  loop
                 if index == i then
-                    return v
-                end ;
+                    return v;
+                end if;
                 index := @ + 1;
-            end ;
-        end ;
+            end loop;
+        end loop;
         return -1
     end ;
 
     public procedure remove (el : Integer) {
         if readonly then
-            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet")
-        end ;
+            throw ANTLRError.illegalState(msg: "can't alter readonly IntervalSet");
+        end if;
         var idx := intervals.startIndex
         while idx < intervals.endIndex {
             defer { intervals.formIndex(after: &idx) end ;
@@ -683,8 +681,8 @@ begin
             a : constant := interval.a
             b : constant := interval.b
             if el < a then
-                break -- list is sorted and el is before this interval; not here
-            end ;
+                break;  -- list is sorted and el is before this interval; not here
+            end if;
             -- if whole interval x .. x, rm
             if el == a and then el == b then
                 intervals.remove(at: idx)

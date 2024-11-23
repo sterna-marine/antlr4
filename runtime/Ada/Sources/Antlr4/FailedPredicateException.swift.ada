@@ -34,8 +34,8 @@ public type FailedPredicateException is new RecognitionException with null recor
 
         super.init(recognizer, recognizer.getInputStream()!, recognizer._ctx, FailedPredicateException.formatMessage(predicate, message))
         if token : constant := try? recognizer.getCurrentToken() then
-            setOffendingToken(token)
-        end ;
+            setOffendingToken(token);
+        end if;
 	end ;
 
 	public function getRuleIndex (This : …) return Integer is

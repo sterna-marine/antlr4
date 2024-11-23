@@ -129,7 +129,7 @@ begin
         var hash := initialize(UInt32(truncatingIfNeeded: seed))
         for value in data loop
             hash := update(hash, value)
-        end ;
+        end loop;
 
         return finish(hash, data.count)
     end ;
@@ -164,13 +164,13 @@ begin
             word |= UInt32(bytes[i + 3]) << 24
 
             hash := updateInternal(hash, word)
-        end ;
+        end loop;
         remaining : constant := byteCount & 3
         if remaining /= 0 then
             var lastWord := UInt32(0)
             for r in 0 ..< remaining loop
                 lastWord |= UInt32(bytes[byteCount - 1 - r]) << (8 * (remaining - 1 - r))
-            end ;
+            end loop;
 
             k : constant := calcK(lastWord)
             hash ^= k

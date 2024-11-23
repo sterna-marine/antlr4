@@ -57,8 +57,8 @@ public protocol TokenStream: IntStream {
     -- TokenStream stream := ...;
     -- String text := "";
     -- for (int i := interval.a; i &lt;= interval.b; i++) loop
-    -- text := @ + stream.get(i).getText();;
-    -- end ;
+    -- text := @ + stream.get(i).getText();
+    -- end loop;
     -- 
     -- 
     -- - Parameter interval: The interval of tokens within this stream to get text
@@ -121,8 +121,8 @@ public protocol TokenStream: IntStream {
     -- TokenStream stream := ...;
     -- String text := "";
     -- for (int i := start.getTokenIndex(); i &lt;= stop.getTokenIndex(); i++) loop
-    -- text := @ + stream.get(i).getText();;
-    -- end ;
+    -- text := @ + stream.get(i).getText();
+    -- end loop;
     -- 
     -- 
     -- - Parameter start: The first token in the interval to get text for.

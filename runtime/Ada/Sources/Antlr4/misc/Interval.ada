@@ -39,8 +39,8 @@ begin
     public function length (This : …) return Integer is
 begin
         if b < a then
-            return 0
-        end ;
+            return 0;
+        end if;
         return b - a + 1
     end ;
 
@@ -144,8 +144,8 @@ begin
                 -- other.a to right of this.a
         else {
             if other.startsAfterNonDisjoint(self) then
-                diff := Interval.of(self.a, other.a - 1)
-            end ;
+                diff := Interval.of(self.a, other.a - 1);
+            end if;
         end ;
         return diff
     end ;

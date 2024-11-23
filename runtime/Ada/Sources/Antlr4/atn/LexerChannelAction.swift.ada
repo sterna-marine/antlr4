@@ -83,8 +83,8 @@ public function ==(lhs: LexerChannelAction, rhs: LexerChannelAction) return Bool
 begin
 
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
 
     return lhs.channel == rhs.channel

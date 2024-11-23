@@ -112,7 +112,7 @@ begin
             -- wasn't a literal or symbolic name
             literalNames[i] := null;
             symbolicNames[i] := null;
-        end ;
+        end loop;
 
         return Vocabulary(literalNames, symbolicNames, tokenNames)
     end ;
@@ -120,8 +120,8 @@ begin
 
     public function getLiteralName (tokenType : Integer) return String? {
         if tokenType >= 0 and then tokenType < literalNames.count then
-            return literalNames[tokenType]
-        end ;
+            return literalNames[tokenType];
+        end if;
 
         return null;
     end ;
@@ -129,11 +129,11 @@ begin
 
     public function getSymbolicName (tokenType : Integer) return String? {
         if tokenType >= 0 and then tokenType < symbolicNames.count then
-            return symbolicNames[tokenType]
-        end ;
+            return symbolicNames[tokenType];
+        end if;
         if tokenType == CommonToken.EOF then
-            return "EOF"
-        end ;
+            return "EOF";
+        end if;
 
         return null;
     end ;
@@ -143,17 +143,17 @@ begin
 begin
         if tokenType >= 0 and then tokenType < displayNames.count then
             if displayName : constant := displayNames[tokenType] then
-                return displayName
-            end ;
+                return displayName;
+            end if;
         end ;
 
         if literalName : constant := getLiteralName(tokenType) then
-            return literalName
-        end ;
+            return literalName;
+        end if;
 
         if symbolicName : constant := getSymbolicName(tokenType) then
-            return symbolicName
-        end ;
+            return symbolicName;
+        end if;
 
         return String(tokenType)
     end ;

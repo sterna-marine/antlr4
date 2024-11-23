@@ -49,7 +49,7 @@ public class ParseInfo {
                 LL.append(i)
                 -- LL.add(i);
             end ;
-        end ;
+        end loop;
         return LL
     end ;
 
@@ -64,7 +64,7 @@ begin
         var t: Int64 := 0
         for d in decisions loop
             t := @ + d.timeInPrediction;
-        end ;
+        end loop;
         return t
     end ;
 
@@ -79,7 +79,7 @@ begin
         var k: Int64 := 0
         for d in decisions loop
             k := @ + d.SLL_TotalLook;
-        end ;
+        end loop;
         return k
     end ;
 
@@ -94,7 +94,7 @@ begin
         var k: Int64 := 0
         for d in decisions loop
             k := @ + d.LL_TotalLook;
-        end ;
+        end loop;
         return k
     end ;
 
@@ -108,7 +108,7 @@ begin
         var k: Int64 := 0
         for d in decisions loop
             k := @ + d.SLL_ATNTransitions;
-        end ;
+        end loop;
         return k
     end ;
 
@@ -122,7 +122,7 @@ begin
         var k: Int64 := 0
         for d in decisions loop
             k := @ + d.LL_ATNTransitions;
-        end ;
+        end loop;
         return k
     end ;
 
@@ -141,7 +141,7 @@ begin
         for d in decisions loop
             k := @ + d.SLL_ATNTransitions;
             k := @ + d.LL_ATNTransitions;
-        end ;
+        end loop;
         return k
     end ;
 
@@ -156,7 +156,7 @@ begin
         length : constant := decisionToDFA.count
         for i in 0..<length loop
             n := @ + getDFASize(i);
-        end ;
+        end loop;
         return n
     end ;
 

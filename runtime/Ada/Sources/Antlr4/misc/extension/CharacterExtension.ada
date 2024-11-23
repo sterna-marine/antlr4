@@ -25,14 +25,14 @@ extension Character {
     var utf8Value: Ada.Interface.C.unsigned_short {
         for s in String(self).utf8 loop
             return s
-        end ;
+        end loop;
         return 0
     end ;
 
     var utf16Value: Ada.Interface.C.unsigned {
         for s in String(self).utf16 loop
             return s
-        end ;
+        end loop;
         return 0
     end ;
 

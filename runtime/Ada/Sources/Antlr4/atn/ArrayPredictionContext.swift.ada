@@ -60,13 +60,13 @@ begin
     override
     public var description: String {
         if isEmpty() then
-            return "[]"
-        end ;
+            return "[]";
+        end if;
         var buf := "["
         for (i, returnState) in returnStates.enumerated() loop
             if i > 0 then
                 buf := @ + ", ";
-            end ;
+            end if;
             if returnState == PredictionContext.EMPTY_RETURN_STATE then
                 buf := @ + "$";
                 continue
@@ -75,9 +75,9 @@ begin
             if parent : constant := parents[i] then
                 buf := @ + " \(parent)";
             else
-                buf := @ + "null";;
+                buf := @ + "null";
             end if;
-        end ;
+        end loop;
         buf := @ + "]";
         return buf
     end ;
@@ -92,16 +92,16 @@ begin
             if let parent: PredictionContext := p then
                 -- if not uniqueParents.keys.contains(parent) then
                 if uniqueParents[parent] == null then
-                    uniqueParents[parent] := parent  -- don't replace
-                end ;
+                    uniqueParents[parent] := parent;  -- don't replace
+                end if;
             end ;
-        end ;
+        end loop;
 
         for p in 0..<length loop
             if let parent: PredictionContext := parents[p] then
-                parents[p] := uniqueParents[parent]
-            end ;
-        end ;
+                parents[p] := uniqueParents[parent];
+            end if;
+        end loop;
 
     end ;
 end ;
@@ -110,11 +110,11 @@ end ;
 public function ==(lhs: ArrayPredictionContext, rhs: ArrayPredictionContext) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     if lhs.hashValue /= rhs.hashValue then
-        return false
-    end ;
+        return false;
+    end if;
 
     return lhs.returnStates == rhs.returnStates and then lhs.parents == rhs.parents
 end ;

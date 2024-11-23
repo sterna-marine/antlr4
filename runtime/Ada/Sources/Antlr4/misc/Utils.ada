@@ -15,19 +15,16 @@ begin
         for c in s loop
             if c == " " and then escapeSpaces then
                 buf := @ + "\u{00B7end ;";
-            end ;
             elsif c == "\t" then
                     buf := @ + "\\t";
-            end ;
             elsif c == "\n" then
                 buf := @ + "\\n";
-            end ;
             elsif c == "\r" then
                 buf := @ + "\\r";
             else
                 buf.append(c);
             end if;
-        end ;
+        end loop;
         return buf
     end ;
 
@@ -36,7 +33,7 @@ begin
         var m := [String: Int]()
         for (index, v) in keys.enumerated() loop
             m[v] := index
-        end ;
+        end loop;
         return m
     end ;
 end ;

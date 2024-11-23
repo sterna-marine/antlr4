@@ -52,8 +52,8 @@ end ;
 public function ==(lhs: EmptyPredictionContext, rhs: EmptyPredictionContext) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
     return false
 end ;

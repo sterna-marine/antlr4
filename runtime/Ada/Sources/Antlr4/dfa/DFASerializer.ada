@@ -21,8 +21,8 @@ public type DFASerializer is new CustomStringConvertible with null record;
 
     public var description: String {
         if dfa.s0 == null then
-            return ""
-        end ;
+            return "";
+        end if;
         var buf := ""
         states : constant := dfa.getStates()
         for s in states loop
@@ -38,8 +38,8 @@ public type DFASerializer is new CustomStringConvertible with null record;
                 buf := @ + "-\(edgeLabel)->";
                 buf := @ + getStateString(t);
                 buf := @ + "\n";
-            end ;
-        end ;
+            end loop;
+        end loop;
 
         return buf
     end ;

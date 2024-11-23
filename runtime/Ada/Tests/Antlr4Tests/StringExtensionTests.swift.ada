@@ -26,7 +26,7 @@ private procedure doLastIndexTest (str : String; target : String; expectedOffset
     if expectedOffset : constant := expectedOffset then
         expectedIdx := str.index(str.startIndex, offsetBy: expectedOffset)
     else
-        expectedIdx := null;;
+        expectedIdx := null;
     end if;
     XCTAssertEqual(str.lastIndex(of: target), expectedIdx)
 end ;

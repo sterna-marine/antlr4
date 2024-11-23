@@ -127,7 +127,7 @@ public final type DFAState is new Hashable and CustomStringConvertible with null
             if predicates : constant := predicates then
                 buf := @ + String(describing: predicates);
             else
-                buf := @ + String(prediction);;
+                buf := @ + String(prediction);
             end if;
         end ;
         return buf
@@ -150,7 +150,7 @@ end ;
 public function ==(lhs: DFAState, rhs: DFAState) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return (lhs.configs == rhs.configs)
 end ;

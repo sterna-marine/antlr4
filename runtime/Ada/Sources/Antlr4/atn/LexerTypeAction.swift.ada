@@ -78,7 +78,7 @@ end ;
 public function ==(lhs: LexerTypeAction, rhs: LexerTypeAction) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return lhs.type == rhs.type
 end ;

@@ -47,7 +47,7 @@ public type ProfilingATNSimulator is new ParserATNSimulator with null record;
         numDecisions := atn.decisionToState.count
         for i in 0..<numDecisions loop
             decisions.append(DecisionInfo(i))
-        end ;
+        end loop;
 
 
     end ;

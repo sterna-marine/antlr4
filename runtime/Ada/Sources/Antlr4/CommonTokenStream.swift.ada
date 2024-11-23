@@ -77,7 +77,7 @@ begin
     internal function LB (k : Integer) return Token? {
         if k == 0 or else (p - k) < 0 then
             return null;
-        end ;
+        end if;
 
         var i := p
         var n := 1
@@ -89,7 +89,7 @@ begin
         end ;
         if i < 0 then
             return null;
-        end ;
+        end if;
         return tokens[i]
     end ;
 
@@ -99,23 +99,23 @@ begin
         try lazyInit()
         if k == 0 then
             return null;
-        end ;
+        end if;
         if k < 0 then
-            return try LB(-k)
-        end ;
+            return try LB(-k);
+        end if;
         var i := p
         var n := 1 -- we know tokens[p] is a good one
         -- find k good tokens
         while n < k {
             -- skip off-channel tokens, but make sure to not look past EOF
             if try sync(i + 1) then
-                i := try nextTokenOnChannel(i + 1, channel)
-            end ;
+                i := try nextTokenOnChannel(i + 1, channel);
+            end if;
             n := @ + 1;
         end ;
 --		if ( i>range ) range := i;
-        return tokens[i]
-    end ;
+        return tokens[i];
+    end if;
 
     -- 
     -- Count EOF just once.
@@ -127,11 +127,11 @@ begin
         for t in tokens loop
             if t.getChannel() == channel then
                 n := @ + 1;
-            end ;
+            end if;
             if t.getType() == CommonToken.EOF then
-                break
-            end ;
-        end ;
+                break;
+            end if;
+        end loop;
         return n
     end ;
 end ;

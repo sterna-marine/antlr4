@@ -145,17 +145,17 @@ begin
         var buf := "(\(state)"
         if showAlt then
             buf := @ + ",\(alt)";
-        end ;
+        end if;
         if context : constant := context then
             buf := @ + ",[\(context)]";
-        end ;
+        end if;
         if semanticContext /= SemanticContext.Empty.Instance then
             buf := @ + ",\(semanticContext)";
-        end ;
+        end if;
         outerDepth : constant := getOuterContextDepth()
         if outerDepth > 0 then
             buf := @ + ",up=\(outerDepth)";
-        end ;
+        end if;
         buf := @ + ")";
         return buf
     end ;
@@ -170,8 +170,8 @@ public function ==(lhs: ATNConfig, rhs: ATNConfig) return Boolean is
 begin
 
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
     if l : constant := lhs as? LexerATNConfig, r : constant := rhs as? LexerATNConfig then
         return l == r
@@ -180,19 +180,19 @@ begin
     end ;
 
     if lhs.state.stateNumber /= rhs.state.stateNumber then
-        return false
-    end ;
+        return false;
+    end if;
     if lhs.alt /= rhs.alt then
-        return false
-    end ;
+        return false;
+    end if;
 
     if lhs.isPrecedenceFilterSuppressed() /= rhs.isPrecedenceFilterSuppressed() then
-        return false
-    end ;
+        return false;
+    end if;
 
     if lhs.context /= rhs.context then
-        return false
-    end ;
+        return false;
+    end if;
 
     return  lhs.semanticContext == rhs.semanticContext
 

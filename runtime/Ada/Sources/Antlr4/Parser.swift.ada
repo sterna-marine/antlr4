@@ -156,8 +156,8 @@ begin
 
         --  getInterpreter();
         if interpreter : constant := _interp then
-            interpreter.reset()
-        end ;
+            interpreter.reset();
+        end if;
     end ;
 
     -- 
@@ -191,8 +191,8 @@ begin
             if _buildParseTrees and then t.getTokenIndex() == -1 then
                 -- we must have conjured up a new token during single token insertion
                 -- if it's not the current symbol
-                _ctx!.addErrorNode(createErrorNode(parent: _ctx!, t: t))
-            end ;
+                _ctx!.addErrorNode(createErrorNode(parent: _ctx!, t: t));
+            end if;
         end ;
         return t
     end ;
@@ -227,8 +227,8 @@ begin
             if _buildParseTrees and then t.getTokenIndex() == -1 then
                 -- we must have conjured up a new token during single token insertion
                 -- if it's not the current symbol
-                _ctx!.addErrorNode(createErrorNode(parent: _ctx!, t: t))
-            end ;
+                _ctx!.addErrorNode(createErrorNode(parent: _ctx!, t: t));
+            end if;
         end ;
 
         return t
@@ -275,8 +275,8 @@ begin
     public procedure setTrimParseTree (trimParseTrees  : Boolean) {
         if trimParseTrees then
             if getTrimParseTree() then
-                return
-            end ;
+                return;
+            end if;
             addParseListener(TrimToSizeListener.INSTANCE)
         else
             removeParseListener(TrimToSizeListener.INSTANCE);
@@ -323,8 +323,8 @@ begin
     -- 
     public procedure addParseListener (listener : ParseTreeListener) {
         if _parseListeners == null then
-            _parseListeners := [ParseTreeListener]()
-        end ;
+            _parseListeners := [ParseTreeListener]();
+        end if;
 
         _parseListeners!.append(listener)
     end ;
@@ -348,7 +348,7 @@ begin
                 end ;)
                 if _parseListeners!.isEmpty then
                     _parseListeners := null;
-                end ;
+                end if;
             end ;
         end ;
     end ;
@@ -374,7 +374,7 @@ begin
             for listener: ParseTreeListener in _parseListeners loop
                 try listener.enterEveryRule(_ctx)
                 _ctx.enterRule(listener)
-            end ;
+            end loop;
         end ;
     end ;
 
@@ -390,7 +390,7 @@ begin
             for listener in _parseListeners.reversed() loop
                 _ctx.exitRule(listener)
                 try listener.exitEveryRule(_ctx)
-            end ;
+            end loop;
         end ;
     end ;
 
@@ -427,8 +427,8 @@ begin
 
         return bypassAltsAtnCacheMutex.synchronized {
             if cachedResult : constant := bypassAltsAtnCache then
-                return cachedResult
-            end ;
+                return cachedResult;
+            end if;
 
             var opts := ATNDeserializationOptions()
             opts.generateRuleBypassTransitions := true
@@ -454,8 +454,8 @@ begin
         if tokenStream : constant := getTokenStream() then
             tokenSource : constant := tokenStream.getTokenSource()
             if lexer : constant := tokenSource as? Lexer then
-                return try compileParseTreePattern(pattern, patternRuleIndex, lexer)
-            end ;
+                return try compileParseTreePattern(pattern, patternRuleIndex, lexer);
+            end if;
         end ;
         throw ANTLRError.unsupportedOperation(msg: "Parser can't discover a lexer to use")
     end ;
@@ -556,8 +556,8 @@ begin
 begin
         o : constant := try getCurrentToken()
         if o.getType() /= Parser.EOF then
-            try getInputStream()!.consume()
-        end ;
+            try getInputStream()!.consume();
+        end if;
         guard _ctx : constant := _ctx else {
             return o
         end ;
@@ -570,7 +570,7 @@ begin
                 if _parseListeners : constant := _parseListeners then
                     for listener in _parseListeners loop
                         listener.visitErrorNode(node)
-                    end ;
+                    end loop;
                 end ;
             else
                 node : constant := createTerminalNode(parent: _ctx, t: o)
@@ -578,7 +578,7 @@ begin
                 if _parseListeners : constant := _parseListeners then
                     for listener in _parseListeners loop
                         listener.visitTerminal(node)
-                    end ;
+                    end loop;
                 end ;
             end ;
         end ;
@@ -610,8 +610,8 @@ begin
 
         -- add current context to parent if we have a parent
         if parent : constant := _ctx?.parent as? ParserRuleContext then
-            parent.addChild(_ctx!)
-        end ;
+            parent.addChild(_ctx!);
+        end if;
     end ;
 
     -- 
@@ -623,8 +623,8 @@ begin
         _ctx := localctx
         _ctx!.start := try _input.LT(1)
         if _buildParseTrees then
-            addContextToParseTree()
-        end ;
+            addContextToParseTree();
+        end if;
     end ;
 
     public procedure exitRule (This : …) is
@@ -635,8 +635,8 @@ begin
         ctx.stop := try _input.LT(-1)
         -- trigger event on _ctx, before it reverts to parent
         if _parseListeners /= null then
-            try triggerExitRuleEvent()
-        end ;
+            try triggerExitRuleEvent();
+        end if;
         setState(ctx.invokingState)
         _ctx := ctx.parent as? ParserRuleContext
     end ;
@@ -653,8 +653,8 @@ begin
         end ;
         _ctx := localctx
         if _parseListeners /= null then
-            try triggerEnterRuleEvent()
-        end ;
+            try triggerEnterRuleEvent();
+        end if;
     end ;
 
     -- 
@@ -666,8 +666,8 @@ begin
     public final function getPrecedence (This : …) return Integer is
 begin
         if _precedenceStack.isEmpty then
-            return -1
-        end ;
+            return -1;
+        end if;
 
         return _precedenceStack.peek() ?? -1
     end ;
@@ -689,8 +689,8 @@ begin
         _ctx := localctx
         _ctx!.start := try _input.LT(1)
         if _parseListeners /= null then
-            try triggerEnterRuleEvent() -- simulates rule entry for left-recursive rules
-        end ;
+            try triggerEnterRuleEvent();  -- simulates rule entry for left-recursive rules
+        end if;
     end ;
 
     -- Like _#enterRule_ but for recursive rules.
@@ -705,12 +705,12 @@ begin
         _ctx := localctx
         _ctx!.start := previous.start
         if _buildParseTrees then
-            _ctx!.addChild(previous)
-        end ;
+            _ctx!.addChild(previous);
+        end if;
 
         if _parseListeners /= null then
-            try triggerEnterRuleEvent() -- simulates rule entry for left-recursive rules
-        end ;
+            try triggerEnterRuleEvent();  -- simulates rule entry for left-recursive rules
+        end if;
     end ;
 
     public procedure unrollRecursionContexts (_parentctx : ParserRuleContext?) {
@@ -741,8 +741,8 @@ begin
         var p := _ctx
         while pWrap : constant := p {
             if pWrap.getRuleIndex() == ruleIndex then
-                return pWrap
-            end ;
+                return pWrap;
+            end if;
             p := pWrap.parent as? ParserRuleContext
         end ;
         return null;
@@ -898,27 +898,27 @@ begin
         s : constant := atn.states[getState()]!
         var following := atn.nextTokens(s)
         if following.contains(symbol) then
-            return true
-        end ;
+            return true;
+        end if;
 --        System.out.println("following "+s+"="+following);
         if not following.contains(CommonToken.EPSILON) then
-            return false
-        end ;
+            return false;
+        end if;
 
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) {
             invokingState : constant := atn.states[ctxWrap.invokingState]!
             rt : constant := invokingState.transition(0) as! RuleTransition
             following := atn.nextTokens(rt.followState)
             if following.contains(symbol) then
-                return true
-            end ;
+                return true;
+            end if;
 
             ctx := ctxWrap.parent as? ParserRuleContext
         end ;
 
         if following.contains(CommonToken.EPSILON) and then symbol == CommonToken.EOF then
-            return true
-        end ;
+            return true;
+        end if;
 
         return false
     end ;
@@ -1003,13 +1003,13 @@ begin
         for dfa in _interp.decisionToDFA loop
             if not dfa.states.isEmpty then
                 if seenOne then
-                    print("")
-                end ;
+                    print("");
+                end if;
                 print("Decision \(dfa.decision):")
                 print(dfa.toString(vocab), terminator: "")
                 seenOne := true
             end ;
-        end ;
+        end loop;
     end ;
 
     public function getSourceName (This : …) return String is
@@ -1021,8 +1021,8 @@ begin
     open function getParseInfo () return ParseInfo? {
         interp : constant := getInterpreter()
         if interp : constant := interp as? ProfilingATNSimulator then
-            return ParseInfo(interp)
-        end ;
+            return ParseInfo(interp);
+        end if;
         return null;
     end ;
 
@@ -1034,8 +1034,8 @@ begin
         saveMode : constant := interp.getPredictionMode()
         if profile then
             if !(interp is ProfilingATNSimulator) then
-                setInterpreter(ProfilingATNSimulator(self))
-            end ;
+                setInterpreter(ProfilingATNSimulator(self));
+            end if;
         end ;
         elsif interp is ProfilingATNSimulator then
             sim : constant := ParserATNSimulator(self, getATN(), interp.decisionToDFA, interp.getSharedContextCache())

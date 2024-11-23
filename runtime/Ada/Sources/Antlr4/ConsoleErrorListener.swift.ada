@@ -34,8 +34,8 @@ public type ConsoleErrorListener is new BaseErrorListener with null record;
                                         e : AnyObject?
     ) {
         if Parser.ConsoleError then
-            errPrint("line \(line):\(charPositionInLine) \(msg)")
-        end ;
+            errPrint("line \(line):\(charPositionInLine) \(msg)");
+        end if;
     end ;
 
 end ;

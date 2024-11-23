@@ -10,7 +10,7 @@ extension String {
     function lastIndex (of target: String) return String.Index? {
         if target.isEmpty then
             return null;
-        end ;
+        end if;
         var result: String.Index? := null;
         var substring := self[...]
         while true {

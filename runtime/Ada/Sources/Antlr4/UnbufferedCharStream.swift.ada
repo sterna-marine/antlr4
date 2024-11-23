@@ -89,8 +89,8 @@ open type UnbufferedCharStream is new CharStream with null record;
     public procedure consume (This : …) is
 begin
         if try LA(1) == CommonToken.EOF then
-            throw ANTLRError.illegalState(msg: "cannot consume EOF")
-        end ;
+            throw ANTLRError.illegalState(msg: "cannot consume EOF");
+        end if;
 
         -- buf always has at least data[p==0] in this method due to ctor
         lastChar := data[p]   -- track last char for LA(-1)
@@ -115,8 +115,8 @@ begin
     internal procedure sync (want : Integer) {
         need : constant := (p + want - 1) - n + 1 -- how many more elements we need?
         if need > 0 then
-            fill(need)
-        end ;
+            fill(need);
+        end if;
     end ;
 
     --
@@ -128,14 +128,14 @@ begin
 begin
         for i in 0 ..< toAdd loop
             if n > 0 and then data[n - 1] == CommonToken.EOF then
-                return i
-            end ;
+                return i;
+            end if;
 
             guard c : constant := nextChar() else {
                 return i
             end ;
             add(c)
-        end ;
+        end loop;
 
         return n
     end ;
@@ -146,19 +146,18 @@ begin
     --
     internal function nextChar () return Int? {
         if next : constant := unicodeIterator.next() then
-            return Int(next.value)
-        end ;
+            return Int(next.value);
         elsif unicodeIterator.hasErrorOccurred then
             return null;
         else
-            return null;;
+            return null;
         end if;
     end ;
 
     internal procedure add (c : Integer) {
         if n >= data.count then
             data := @ + [Int](repeating: 0, count: data.count);
-        end ;
+        end if;
         data[n] := c
         n := @ + 1;
     end ;
@@ -166,16 +165,16 @@ begin
     public function LA (i : Integer) return Integer is
 begin
         if i == -1 then
-            return lastChar -- special case
-        end ;
+            return lastChar;  -- special case
+        end if;
         sync(i)
         index : constant := p + i - 1
         if index < 0 then
-            throw ANTLRError.indexOutOfBounds(msg: "")
-        end ;
+            throw ANTLRError.indexOutOfBounds(msg: "");
+        end if;
         if index >= n then
-            return CommonToken.EOF
-        end ;
+            return CommonToken.EOF;
+        end if;
         return data[index]
     end ;
 
@@ -189,8 +188,8 @@ begin
     public function mark (This : …) return Integer is
 begin
         if numMarkers == 0 then
-            lastCharBufferStart := lastChar
-        end ;
+            lastCharBufferStart := lastChar;
+        end if;
 
         mark : constant := -numMarkers - 1
         numMarkers := @ + 1;
@@ -203,8 +202,8 @@ begin
     public procedure release (marker : Integer) {
         expectedMark : constant := -numMarkers
         if marker /= expectedMark then
-            preconditionFailure("release() called with an invalid marker.")
-        end ;
+            preconditionFailure("release() called with an invalid marker.");
+        end if;
 
         numMarkers := @ - 1;
         if numMarkers == 0 and then p > 0 then
@@ -214,8 +213,8 @@ begin
             -- p is last valid char; move nothing if p==n as we have no valid char
             if p == n then
                 if data.count /= bufferSize then
-                    data := [Int](repeating: 0, count: bufferSize)
-                end ;
+                    data := [Int](repeating: 0, count: bufferSize);
+                end if;
                 n := 0
             else
                 data := Array(data[p ..< n])
@@ -238,8 +237,8 @@ begin
         var index := index_
 
         if index == currentCharIndex then
-            return
-        end ;
+            return;
+        end if;
 
         if index > currentCharIndex then
             sync(index - currentCharIndex)
@@ -249,8 +248,7 @@ begin
         -- index == to bufferStartIndex should set p to 0
         i : constant := index - getBufferStartIndex()
         if i < 0 then
-            throw ANTLRError.illegalArgument(msg: "cannot seek to negative index \(index)")
-        end ;
+            throw ANTLRError.illegalArgument(msg: "cannot seek to negative index \(index)");
         elsif i >= n then
             si : constant := getBufferStartIndex()
             ei : constant := si + n
@@ -280,8 +278,8 @@ begin
     public function getText (interval : Interval) return String is
 begin
         if interval.a < 0 or else interval.b < interval.a - 1 then
-            throw ANTLRError.illegalArgument(msg: "invalid interval")
-        end ;
+            throw ANTLRError.illegalArgument(msg: "invalid interval");
+        end if;
 
         bufferStartIndex : constant := getBufferStartIndex()
         if n > 0 and
@@ -333,12 +331,12 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
 
     mutating function next () return Ada.Interface.C.unsigned_short? {
         if result : constant := buffGen.next() then
-            return result
-        end ;
+            return result;
+        end if;
 
         if hasErrorOccurred then
             return null;
-        end ;
+        end if;
 
         switch stream.streamStatus {
             case .notOpen, .writing, .closed:
@@ -359,7 +357,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
         end ;
         elsif count == 0 then
             return null;
-        end ;
+        end if;
 
         buffGen := buffer.prefix(count).makeIterator()
         return buffGen.next()

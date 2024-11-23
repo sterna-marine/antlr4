@@ -105,8 +105,8 @@ begin
     -- 
     public final procedure setPrecedenceStartState (precedence : Integer; startState : DFAState) {
         if not isPrecedenceDfa() then
-            throw ANTLRError.illegalState(msg: "Only precedence DFAs may contain a precedence start state.")
-        end ;
+            throw ANTLRError.illegalState(msg: "Only precedence DFAs may contain a precedence start state.");
+        end if;
 
         guard s0 : constant := s0, edges : constant := s0.edges, precedence >= 0 else {
             return
@@ -145,8 +145,8 @@ begin
     public function toString (vocabulary : Vocabulary) return String is
 begin
         if s0 == null then
-            return ""
-        end ;
+            return "";
+        end if;
 
         serializer : constant := DFASerializer(self, vocabulary)
         return serializer.description
@@ -155,8 +155,8 @@ begin
     public function toLexerString (This : …) return String is
 begin
         if s0 == null then
-            return ""
-        end ;
+            return "";
+        end if;
         serializer : constant := LexerDFASerializer(self)
         return serializer.description
     end ;

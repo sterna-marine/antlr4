@@ -129,12 +129,12 @@ begin
         override public function execute (buf : inout String) return Integer is
 begin
             if text : constant := text then
-                buf.append(text)
-            end ;
+                buf.append(text);
+            end if;
             token : constant := try tokens.get(index)
             if token.getType() /= CommonToken.EOF then
-                buf.append(token.getText()!)
-            end ;
+                buf.append(token.getText()!);
+            end if;
             return index + 1
         end ;
     end ;
@@ -163,7 +163,7 @@ begin
 begin
             if text : constant := text then
                 buf := @ + text;
-            end ;
+            end if;
             return lastIndex + 1
         end ;
 
@@ -172,8 +172,8 @@ begin
             token : constant := try! tokens.get(index)
             lastToken : constant := try! tokens.get(lastIndex)
             if text : constant := text then
-                return "<ReplaceOp@\(token)..\(lastToken):\"\(text)\">"
-            end ;
+                return "<ReplaceOp@\(token)..\(lastToken):\"\(text)\">";
+            end if;
             return "<DeleteOp@\(token)..\(lastToken)>"
         end ;
     end ;
@@ -276,7 +276,7 @@ begin
                             rewrites[iop.instructionIndex] := null;
                         end ;
                     end ;
-                end ;
+                end loop;
                 -- Drop any prior replaces contained within
                 prevRopIndexList : constant := getKindOfOps(&rewrites, ReplaceOp.self, i)
                 for j in prevRopIndexList loop
@@ -301,7 +301,7 @@ begin
                         end ;
                     end ;
                 end ;
-            end ;
+            end loop;
 
             -- WALK INSERTS
             for i in 0..<rewritesCount loop
@@ -309,8 +309,8 @@ begin
                     continue
                 end ;
                 if !(iop is InsertBeforeOp) then
-                    continue
-                end ;
+                    continue;
+                end if;
 
                 -- combine current insert with prior if any at same index
                 prevIopIndexList : constant := getKindOfOps(&rewrites, InsertBeforeOp.self, i)
@@ -330,7 +330,7 @@ begin
                             end ;
                         end ;
                     end ;
-                end ;
+                end loop;
 
                 -- look for replaces where iop.index is in range; error
                 ropIndexList : constant := getKindOfOps(&rewrites, ReplaceOp.self, i)
@@ -347,18 +347,18 @@ begin
 
                         end ;
                     end ;
-                end ;
-            end ;
+                end loop;
+            end loop;
 
             var m := [Int: RewriteOperation]()
             for i in 0..<rewritesCount loop
                 if op : constant := rewrites[i] then
                     if m[op.index] /= null then
-                        throw ANTLRError.illegalArgument(msg: "should only be one op per index")
-                    end ;
+                        throw ANTLRError.illegalArgument(msg: "should only be one op per index");
+                    end if;
                     m[op.index] := op
                 end ;
-            end ;
+            end loop;
 
             return m
         end ;
@@ -380,9 +380,9 @@ begin
             op.reserveCapacity(length)
             for i in 0..<length loop
                 if rewrites[i] is T then
-                    op.append(i)
-                end ;
-            end ;
+                    op.append(i);
+                end if;
+            end loop;
             return op
         end ;
     end ;
@@ -420,8 +420,8 @@ begin
     -- 
     public procedure rollback (programName : String; instructionIndex : Integer) {
         if program : constant := programs[programName] then
-            program.rollback(instructionIndex)
-        end ;
+            program.rollback(instructionIndex);
+        end if;
     end ;
 
     public procedure deleteProgram (This : …) is
@@ -489,8 +489,8 @@ begin
 
     public procedure replace (programName : String; from : Integer; to : Integer; text : String?) {
         if from > to or else from < 0 or else to < 0 or else to >= tokens.size() then
-            throw ANTLRError.illegalArgument(msg: "replace: range invalid: \(from)..\(to)(size=\(tokens.size()))")
-        end ;
+            throw ANTLRError.illegalArgument(msg: "replace: range invalid: \(from)..\(to)(size=\(tokens.size()))");
+        end if;
         op : constant := ReplaceOp(from, to, text, tokens)
         rewritesArray : constant := getProgram(programName)
         rewritesArray.append(op)
@@ -594,11 +594,11 @@ begin
 
         -- ensure start/end are in range
         if stop > tokens.size() - 1 then
-            stop := tokens.size() - 1
-        end ;
+            stop := tokens.size() - 1;
+        end if;
         if start < 0 then
-            start := 0
-        end ;
+            start := 0;
+        end if;
         guard rewrites : constant := programs[programName], not rewrites.isEmpty else {
              return try tokens.getText(interval) -- no instructions to execute
         end ;
@@ -619,8 +619,8 @@ begin
             else
                 -- no operation at that index, just dump token
                 if t.getType() /= CommonToken.EOF then
-                    buf.append(t.getText()!)
-                end ;
+                    buf.append(t.getText()!);
+                end if;
                 i := @ + 1; -- move to next token
             end ;
         end ;
@@ -634,8 +634,8 @@ begin
             for op in indexToOp.values loop
                 if op.index >= tokens.size() - 1 then
                     buf := @ + op.text!;
-                end ;
-            end ;
+                end if;
+            end loop;
         end ;
 
         return buf

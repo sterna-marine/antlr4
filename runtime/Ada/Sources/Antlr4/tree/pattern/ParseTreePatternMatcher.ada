@@ -103,11 +103,11 @@ public class ParseTreePatternMatcher {
     -- 
     public procedure setDelimiters (start : String; stop : String; escapeLeft : String) {
         if start.isEmpty then
-            throw ANTLRError.illegalArgument(msg: "start cannot be null or empty")
-        end ;
+            throw ANTLRError.illegalArgument(msg: "start cannot be null or empty");
+        end if;
         if stop.isEmpty then
-            throw ANTLRError.illegalArgument(msg: "stop cannot be null or empty")
-        end ;
+            throw ANTLRError.illegalArgument(msg: "stop cannot be null or empty");
+        end if;
 
         self.start := start
         self.stop := stop
@@ -179,8 +179,8 @@ begin
 
         -- Make sure tree pattern compilation checks for a complete parse
         if try tokens.LA(1) /= CommonToken.EOF then
-            throw ANTLRError.illegalState(msg: "Tree pattern compilation doesn't check for a complete parse")
-        end ;
+            throw ANTLRError.illegalState(msg: "Tree pattern compilation doesn't check for a complete parse");
+        end if;
 
         return ParseTreePattern(self, pattern, patternRuleIndex, tree)
     end ;
@@ -231,22 +231,22 @@ begin
                     -- track label->list-of-nodes for both token name and label (if any)
                     labels.map(tokenTagToken.getTokenName(), tree)
                     if label : constant := tokenTagToken.getLabel() then
-                        labels.map(label, tree)
-                    end ;
+                        labels.map(label, tree);
+                    end if;
                 else
                     if t1.getText() == t2.getText() then
                         -- x and x
                     else
                         -- x and y
                         if mismatchedNode == null then
-                            mismatchedNode := t1
-                        end ;
+                            mismatchedNode := t1;
+                        end if;
                     end ;
                 end ;
             else
                 if mismatchedNode == null then
-                    mismatchedNode := t1
-                end ;
+                    mismatchedNode := t1;
+                end if;
             end ;
 
             return mismatchedNode
@@ -262,12 +262,12 @@ begin
                     -- track label->list-of-nodes for both rule name and label (if any)
                     labels.map(ruleTagToken.getRuleName(), tree)
                     if label : constant := ruleTagToken.getLabel() then
-                        labels.map(label, tree)
-                    end ;
+                        labels.map(label, tree);
+                    end if;
                 else
                     if mismatchedNode == null then
-                        mismatchedNode := r1
-                    end ;
+                        mismatchedNode := r1;
+                    end if;
                 end ;
 
                 return mismatchedNode
@@ -276,24 +276,24 @@ begin
             -- (expr ...) and (expr ...)
             if r1.getChildCount() /= r2.getChildCount() then
                 if mismatchedNode == null then
-                    mismatchedNode := r1
-                end ;
+                    mismatchedNode := r1;
+                end if;
 
                 return mismatchedNode
             end ;
 
             for i in 0 ..< r1.getChildCount() loop
                 if childMatch : constant := try matchImpl(r1[i], patternTree[i], labels) then
-                    return childMatch
-                end ;
-            end ;
+                    return childMatch;
+                end if;
+            end loop;
 
             return mismatchedNode
         end ;
 
         -- if nodes aren't both tokens or both rule nodes, can't match
-        return tree
-    end ;
+        return tree;
+    end if;
 
     -- Is `t` `(expr <expr>)` subtree?
     internal function getRuleTagToken (t : ParseTree) return RuleTagToken? {
@@ -320,16 +320,16 @@ begin
                 if firstStr.lowercased() /= firstStr then
                     ttype : constant := parser.getTokenType(tagChunk.getTag())
                     if ttype == CommonToken.INVALID_TYPE then
-                        throw ANTLRError.illegalArgument(msg: "Unknown token " + tagChunk.getTag() + " in pattern: " + pattern)
-                    end ;
+                        throw ANTLRError.illegalArgument(msg: "Unknown token " + tagChunk.getTag() + " in pattern: " + pattern);
+                    end if;
                     t : constant := TokenTagToken(tagChunk.getTag(), ttype, tagChunk.getLabel())
                     tokens.append(t)
                 else
                     if firstStr.uppercased() /= firstStr then
                         let ruleIndex: Integer := parser.getRuleIndex(tagChunk.getTag())
                         if ruleIndex == -1 then
-                            throw ANTLRError.illegalArgument(msg: "Unknown rule " + tagChunk.getTag() + " in pattern: " + pattern)
-                        end ;
+                            throw ANTLRError.illegalArgument(msg: "Unknown rule " + tagChunk.getTag() + " in pattern: " + pattern);
+                        end if;
                         let ruleImaginaryTokenType: Integer := parser.getATNWithBypassAlts().ruleToTokenType[ruleIndex]
                         tokens.append(RuleTagToken(tagChunk.getTag(), ruleImaginaryTokenType, tagChunk.getLabel()))
                     else
@@ -346,7 +346,7 @@ begin
                     t := try lexer.nextToken()
                 end ;
             end ;
-        end ;
+        end loop;
 
 --		print("tokens="+tokens);
         return tokens
@@ -367,11 +367,9 @@ begin
         while p < n {
             slice : constant := pattern[p...]
             if slice.hasPrefix(escapedStart) then
-                p := pattern.index(p, offsetBy: escapedStart.count)
-            end ;
+                p := pattern.index(p, offsetBy: escapedStart.count);
             elsif slice.hasPrefix(escapedStop) then
-                p := pattern.index(p, offsetBy: escapedStop.count)
-            end ;
+                p := pattern.index(p, offsetBy: escapedStop.count);
             elsif slice.hasPrefix(start) then
                 upperBound : constant := pattern.index(p, offsetBy: start.count)
                 starts.append(p ..< upperBound)
@@ -387,19 +385,19 @@ begin
         end ;
 
         if starts.count > stops.count then
-            throw ANTLRError.illegalArgument(msg: "unterminated tag in pattern: " + pattern)
-        end ;
+            throw ANTLRError.illegalArgument(msg: "unterminated tag in pattern: " + pattern);
+        end if;
 
         if starts.count < stops.count then
-            throw ANTLRError.illegalArgument(msg: "missing start tag in pattern: " + pattern)
-        end ;
+            throw ANTLRError.illegalArgument(msg: "missing start tag in pattern: " + pattern);
+        end if;
 
         ntags : constant := starts.count
         for i in 0..<ntags loop
             if starts[i].lowerBound >= stops[i].lowerBound then
-                throw ANTLRError.illegalArgument(msg: "tag delimiters out of order in pattern: " + pattern)
-            end ;
-        end ;
+                throw ANTLRError.illegalArgument(msg: "tag delimiters out of order in pattern: " + pattern);
+            end if;
+        end loop;
 
         -- collect into chunks now
         if ntags == 0 then
@@ -432,7 +430,7 @@ begin
                 text : constant := pattern[stops[i].upperBound ..< starts[i + 1].lowerBound]
                 chunks.append(TextChunk(String(text)))
             end ;
-        end ;
+        end loop;
         if ntags > 0 then
             afterLastTag : constant := stops[ntags - 1].upperBound
             if afterLastTag < n then
@@ -448,10 +446,10 @@ begin
             if tc : constant := c as? TextChunk then
                 unescaped : constant := tc.getText().replacingOccurrences(of: escape, with: "")
                 if unescaped.count < tc.getText().count then
-                    chunks[i] := TextChunk(unescaped)
-                end ;
+                    chunks[i] := TextChunk(unescaped);
+                end if;
             end ;
-        end ;
+        end loop;
 
         return chunks
     end ;

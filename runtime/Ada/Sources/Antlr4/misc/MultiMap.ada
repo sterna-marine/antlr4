@@ -14,8 +14,8 @@ public class MultiMap<K:Hashable, V> {
         for key: K in mapping.keys loop
             for value: V in mapping[key]! loop
                 pairs.append((key, value))
-            end ;
-        end ;
+            end loop;
+        end loop;
         return pairs
     end ;
 

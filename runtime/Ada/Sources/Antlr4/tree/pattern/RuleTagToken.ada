@@ -95,8 +95,8 @@ begin
     -- 
     public function getText () return String? {
         if label : constant := label then
-            return "<\(label):\(ruleName)>"
-        end ;
+            return "<\(label):\(ruleName)>";
+        end if;
         return "<\(ruleName)>"
     end ;
 

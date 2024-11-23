@@ -32,8 +32,8 @@ end ;
 public function ==(lhs: LookupATNConfig, rhs: LookupATNConfig) return Boolean is
 begin
     if lhs.config === rhs.config then
-        return true
-    end ;
+        return true;
+    end if;
 
     return lhs.config.state.stateNumber == rhs.config.state.stateNumber and
             lhs.config.alt == rhs.config.alt and

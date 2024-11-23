@@ -148,7 +148,7 @@ begin
             if parser.precpred(parserCallStack, precedence) then
                 return SemanticContext.Empty.Instance
             else
-                return null;;
+                return null;
             end if;
         end ;
 
@@ -244,9 +244,9 @@ begin
 begin
             for opnd in opnds loop
                 if try not opnd.eval(parser, parserCallStack) then
-                    return false
-                end ;
-            end ;
+                    return false;
+                end if;
+            end loop;
             return true
         end ;
 
@@ -263,16 +263,15 @@ begin
                 if evaluated == null then
                     -- The AND context is false if any element is false
                     return null;
-                end ;
                 elsif evaluated /= SemanticContext.Empty.Instance then
                     -- Reduce the result by skipping true elements
                     operands.append(evaluated!)
                 end ;
-            end ;
+            end loop;
 
             if not differs then
-                return self
-            end ;
+                return self;
+            end if;
 
             return operands.reduce(SemanticContext.Empty.Instance, SemanticContext.and)
         end ;
@@ -340,9 +339,9 @@ begin
 begin
             for opnd in opnds loop
                 if try opnd.eval(parser, parserCallStack) then
-                    return true
-                end ;
-            end ;
+                    return true;
+                end if;
+            end loop;
             return false
         end ;
 
@@ -355,17 +354,16 @@ begin
                 differs := differs or else (evaluated /= context)
                 if evaluated == SemanticContext.Empty.Instance then
                     -- The OR context is true if any element is true
-                    return SemanticContext.Empty.Instance
-                end ;
+                    return SemanticContext.Empty.Instance;
                 elsif evaluated : constant := evaluated then
                     -- Reduce the result by skipping false elements
                     operands.append(evaluated)
                 end ;
-            end ;
+            end loop;
 
             if not differs then
-                return self
-            end ;
+                return self;
+            end if;
 
             return operands.reduce(null, SemanticContext.or)
         end ;
@@ -380,15 +378,15 @@ begin
     public static function and (a : SemanticContext?, b : SemanticContext?) return SemanticContext is
 begin
         if a == null or else a == SemanticContext.Empty.Instance then
-            return b!
-        end ;
+            return b!;
+        end if;
         if b == null or else b == SemanticContext.Empty.Instance then
-            return a!
-        end ;
+            return a!;
+        end if;
         let result: AND := AND(a!, b!)
         if result.opnds.count == 1 then
-            return result.opnds[0]
-        end ;
+            return result.opnds[0];
+        end if;
 
         return result
     end ;
@@ -400,18 +398,18 @@ begin
     public static function or (a : SemanticContext?, b : SemanticContext?) return SemanticContext is
 begin
         if a == null then
-            return b!
-        end ;
+            return b!;
+        end if;
         if b == null then
-            return a!
-        end ;
+            return a!;
+        end if;
         if a == SemanticContext.Empty.Instance or else b == SemanticContext.Empty.Instance then
-            return SemanticContext.Empty.Instance
-        end ;
+            return SemanticContext.Empty.Instance;
+        end if;
         let result: OR := OR(a!, b!)
         if result.opnds.count == 1 then
-            return result.opnds[0]
-        end ;
+            return result.opnds[0];
+        end if;
 
         return result
     end ;
@@ -430,24 +428,24 @@ end ;
 public function ==(lhs: SemanticContext, rhs: SemanticContext) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
     if (lhs is SemanticContext.Predicate) and then (rhs is SemanticContext.Predicate) then
-        return (lhs as! SemanticContext.Predicate) == (rhs as! SemanticContext.Predicate)
-    end ;
+        return (lhs as! SemanticContext.Predicate) == (rhs as! SemanticContext.Predicate);
+    end if;
 
     if (lhs is SemanticContext.PrecedencePredicate) and then (rhs is SemanticContext.PrecedencePredicate) then
-        return (lhs as! SemanticContext.PrecedencePredicate) == (rhs as! SemanticContext.PrecedencePredicate)
-    end ;
+        return (lhs as! SemanticContext.PrecedencePredicate) == (rhs as! SemanticContext.PrecedencePredicate);
+    end if;
 
     if (lhs is SemanticContext.AND) and then (rhs is SemanticContext.AND) then
-        return (lhs as! SemanticContext.AND) == (rhs as! SemanticContext.AND)
-    end ;
+        return (lhs as! SemanticContext.AND) == (rhs as! SemanticContext.AND);
+    end if;
 
     if (lhs is SemanticContext.OR) and then (rhs is SemanticContext.OR) then
-        return (lhs as! SemanticContext.OR) == (rhs as! SemanticContext.OR)
-    end ;
+        return (lhs as! SemanticContext.OR) == (rhs as! SemanticContext.OR);
+    end if;
 
 
     return false
@@ -456,8 +454,8 @@ end ;
 public function ==(lhs: SemanticContext.Predicate, rhs: SemanticContext.Predicate) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return lhs.ruleIndex == rhs.ruleIndex and
             lhs.predIndex == rhs.predIndex and
             lhs.isCtxDependent == rhs.isCtxDependent
@@ -466,8 +464,8 @@ end ;
 public function ==(lhs: SemanticContext.PrecedencePredicate, rhs: SemanticContext.PrecedencePredicate) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return lhs.precedence == rhs.precedence
 end ;
 
@@ -475,15 +473,15 @@ end ;
 public function ==(lhs: SemanticContext.AND, rhs: SemanticContext.AND) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return lhs.opnds == rhs.opnds
 end ;
 
 public function ==(lhs: SemanticContext.OR, rhs: SemanticContext.OR) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     return lhs.opnds == rhs.opnds
 end ;

@@ -60,8 +60,8 @@ begin
 begin
         if type == LookupDictionaryType.lookup then
             if lhs === rhs then
-                return true
-            end ;
+                return true;
+            end if;
 
             return
                 lhs.state.stateNumber == rhs.state.stateNumber and

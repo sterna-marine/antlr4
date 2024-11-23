@@ -62,7 +62,7 @@ begin
                 endStateNumbers.append((s, endStateNumber))
             end ;
             atn.addState(s)
-        end ;
+        end loop;
 
         -- delay the assignment of loop back and end states until we know all the state instances have been initialized
         for pair in loopBackStateNumbers loop
@@ -71,7 +71,7 @@ begin
 
         for pair in endStateNumbers loop
             pair.0.endState := atn.states[pair.1] as? BlockEndState
-        end ;
+        end loop;
 
         numNonGreedyStates : constant := data[p]
         p := @ + 1;
@@ -79,7 +79,7 @@ begin
             stateNumber : constant := data[p]
             p := @ + 1;
             (atn.states[stateNumber] as! DecisionState).nonGreedy := true
-        end ;
+        end loop;
 
         numPrecedenceStates : constant := data[p]
         p := @ + 1;
@@ -87,7 +87,7 @@ begin
             stateNumber : constant := data[p]
             p := @ + 1;
             (atn.states[stateNumber] as! RuleStartState).isPrecedenceRule := true
-        end ;
+        end loop;
 
         --
         -- RULES
@@ -107,11 +107,11 @@ begin
                 p := @ + 1;
                 ruleToTokenType.append(tokenType)
             end ;
-        end ;
+        end loop;
         atn.ruleToStartState := ruleToStartState
         if atn.grammarType == ATNType.lexer then
-            atn.ruleToTokenType := ruleToTokenType
-        end ;
+            atn.ruleToTokenType := ruleToTokenType;
+        end if;
 
         fillRuleToStopState(atn)
 
@@ -124,7 +124,7 @@ begin
             s : constant := data[p]
             p := @ + 1;
             atn.appendModeToStartState(atn.states[s] as! TokensStartState)
-        end ;
+        end loop;
 
         --
         -- SETS
@@ -150,7 +150,7 @@ begin
             srcState : constant := atn.states[src]!
             srcState.addTransition(trans)
             p := @ + 6;
-        end ;
+        end loop;
 
         deriveEdgesForRuleStopStates(atn)
         try validateStates(atn)
@@ -167,7 +167,7 @@ begin
                 decState : constant := atn.states[s] as! DecisionState
                 atn.appendDecisionToState(decState)
                 decState.decision := i - 1
-            end ;
+            end loop;
         end ;
 
         --
@@ -186,7 +186,7 @@ begin
                 p := @ + 1;
                 lexerAction : constant := lexerActionFactory(actionType, data1, data2)
                 lexerActions.append(lexerAction)
-            end ;
+            end loop;
             atn.lexerActions := lexerActions
         end ;
 
@@ -213,13 +213,13 @@ begin
             containsEof : constant := (data[p] /= 0)
             p := @ + 1;
             if containsEof then
-                try! set.add(-1)
-            end ;
+                try! set.add(-1);
+            end if;
 
             for _ in 0..<nintervals loop
                 try! set.add(readUnicode(data, &p), readUnicode(data, &p))
-            end ;
-        end ;
+            end loop;
+        end loop;
     end ;
 
     private procedure fillRuleToStopState (atn : ATN) {
@@ -230,7 +230,7 @@ begin
             if stopState : constant := state as? RuleStopState, index : constant := stopState.ruleIndex then
                 atn.ruleToStopState[index] := stopState
                 atn.ruleToStartState[index].stopState := stopState
-            end ;
+            end loop;
         end ;
     end ;
 
@@ -250,15 +250,15 @@ begin
                 if targetRuleIndex : constant := ruleTransition.target.ruleIndex then
                     if atn.ruleToStartState[targetRuleIndex].isPrecedenceRule then
                         if ruleTransition.precedence == 0 then
-                            outermostPrecedenceReturn := targetRuleIndex
-                        end ;
+                            outermostPrecedenceReturn := targetRuleIndex;
+                        end if;
                     end ;
 
                     returnTransition : constant := EpsilonTransition(ruleTransition.followState, outermostPrecedenceReturn)
                     atn.ruleToStopState[targetRuleIndex].addTransition(returnTransition)
                 end ;
-            end ;
-        end ;
+            end loop;
+        end loop;
     end ;
 
     private procedure validateStates (atn : ATN) {
@@ -268,8 +268,8 @@ begin
                 if stateEndState : constant := state.endState then
                     -- block end states can only be associated to a single block start state
                     if stateEndState.startState /= null then
-                        throw ANTLRError.illegalState(msg: "state.endState.startState /= null")
-                    end ;
+                        throw ANTLRError.illegalState(msg: "state.endState.startState /= null");
+                    end if;
                     stateEndState.startState := state
                 else
                     throw ANTLRError.illegalState(msg: "state.endState == null");
@@ -280,28 +280,28 @@ begin
                 for i in 0..<length loop
                     target : constant := loopbackState.transition(i).target
                     if startState : constant := target as? PlusBlockStartState then
-                        startState.loopBackState := loopbackState
-                    end ;
-                end ;
+                        startState.loopBackState := loopbackState;
+                    end if;
+                end loop;
             end ;
             elsif loopbackState : constant := state as? StarLoopbackState then
                 length : constant := loopbackState.getNumberOfTransitions()
                 for i in 0..<length loop
                     target : constant := loopbackState.transition(i).target
                     if entryState : constant := target as? StarLoopEntryState then
-                        entryState.loopBackState := loopbackState
-                    end ;
-                end ;
-            end ;
-        end ;
+                        entryState.loopBackState := loopbackState;
+                    end if;
+                end loop;
+            end if;
+        end loop;
     end ;
 
 
     private procedure finalizeATN (atn : ATN) {
         markPrecedenceDecisions(atn)
         if deserializationOptions.verifyATN then
-            try verifyATN(atn)
-        end ;
+            try verifyATN(atn);
+        end if;
         if deserializationOptions.generateRuleBypassTransitions and then atn.grammarType == ATNType.parser then
             try generateRuleBypassTransitions(atn)
 
@@ -332,9 +332,9 @@ begin
             end ;
             maybeLoopEndState : constant := state.transition(state.getNumberOfTransitions() - 1).target
             if maybeLoopEndState is LoopEndState and then maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
-                state.precedenceRuleDecision := true
-            end ;
-        end ;
+                state.precedenceRuleDecision := true;
+            end if;
+        end loop;
     end ;
 
 
@@ -368,18 +368,18 @@ begin
 
                     maybeLoopEndState : constant := state.transition(state.getNumberOfTransitions() - 1).target
                     if !(maybeLoopEndState is LoopEndState) then
-                        continue
-                    end ;
+                        continue;
+                    end if;
 
                     if maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
                         endState := state
                         break
                     end ;
-                end ;
+                end loop;
 
                 if endState == null then
-                    throw ANTLRError.unsupportedOperation(msg: "Couldn't identify final state of the precedence rule prefix section.")
-                end ;
+                    throw ANTLRError.unsupportedOperation(msg: "Couldn't identify final state of the precedence rule prefix section.");
+                end if;
 
                 excludeTransition := (endState as? StarLoopEntryState)?.loopBackState?.transition(0)
             else
@@ -393,14 +393,14 @@ begin
                 end ;
                 for transition in state.transitions loop
                     if transition === excludeTransition! then
-                        continue
-                    end ;
+                        continue;
+                    end if;
 
                     if transition.target == endState then
-                        transition.target := bypassStop
-                    end ;
-                end ;
-            end ;
+                        transition.target := bypassStop;
+                    end if;
+                end loop;
+            end loop;
 
             -- all transitions leaving the rule start state need to leave blockStart instead
             while atn.ruleToStartState[i].getNumberOfTransitions() > 0 {
@@ -416,7 +416,7 @@ begin
             atn.addState(matchState)
             matchState.addTransition(AtomTransition(bypassStop, atn.ruleToTokenType[i]))
             bypassStart.addTransition(EpsilonTransition(matchState))
-        end ;
+        end loop;
     end ;
 
 
@@ -430,8 +430,8 @@ begin
             try checkCondition(state.onlyHasEpsilonTransitions() or else state.getNumberOfTransitions() <= 1)
 
             if state : constant := state as? PlusBlockStartState then
-                try checkCondition(state.loopBackState /= null)
-            end ;
+                try checkCondition(state.loopBackState /= null);
+            end if;
 
             if starLoopEntryState : constant := state as? StarLoopEntryState then
                 try checkCondition(starLoopEntryState.loopBackState /= null)
@@ -456,27 +456,27 @@ begin
             end ;
 
             if state is LoopEndState then
-                try checkCondition((state as! LoopEndState).loopBackState /= null)
-            end ;
+                try checkCondition((state as! LoopEndState).loopBackState /= null);
+            end if;
 
             if state is RuleStartState then
-                try checkCondition((state as! RuleStartState).stopState /= null)
-            end ;
+                try checkCondition((state as! RuleStartState).stopState /= null);
+            end if;
 
             if state is BlockStartState then
-                try checkCondition((state as! BlockStartState).endState /= null)
-            end ;
+                try checkCondition((state as! BlockStartState).endState /= null);
+            end if;
 
             if state is BlockEndState then
-                try checkCondition((state as! BlockEndState).startState /= null)
-            end ;
+                try checkCondition((state as! BlockEndState).startState /= null);
+            end if;
 
             if decisionState : constant := state as? DecisionState then
                 try checkCondition(decisionState.getNumberOfTransitions() <= 1 or else decisionState.decision >= 0)
             else
                 try checkCondition(state.getNumberOfTransitions() <= 1 or else state is RuleStopState);
             end if;
-        end ;
+        end loop;
     end ;
 
     internal procedure checkCondition (condition  : Boolean) {

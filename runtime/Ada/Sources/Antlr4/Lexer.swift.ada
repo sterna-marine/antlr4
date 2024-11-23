@@ -106,8 +106,8 @@ begin
 begin
         -- wack Lexer state variables
         if _input : constant := _input then
-            _input.seek(0) -- rewind the input
-        end ;
+            _input.seek(0);  -- rewind the input
+        end if;
         _token := null;
         _type := CommonToken.INVALID_TYPE
         _channel := CommonToken.DEFAULT_CHANNEL
@@ -168,19 +168,19 @@ begin
                         ttype := Lexer.SKIP
                     end ;
                     if try _input.LA(1) == BufferedTokenStream.EOF then
-                        _hitEOF := true
-                    end ;
+                        _hitEOF := true;
+                    end if;
                     if _type == CommonToken.INVALID_TYPE then
-                        _type := ttype
-                    end ;
+                        _type := ttype;
+                    end if;
                     if _type == Lexer.SKIP then
-                        continue outer
-                    end ;
+                        continue outer;
+                    end if;
                 end ; while _type == Lexer.MORE
 
                 if _token == null then
-                    emit()
-                end ;
+                    emit();
+                end if;
                 return _token!
             end ;
         end ;
@@ -210,8 +210,8 @@ begin
 
     open procedure pushMode (m : Integer) {
         if LexerATNSimulator.debug then
-            print("pushMode \(m)")
-        end ;
+            print("pushMode \(m)");
+        end if;
         _modeStack.push(_mode)
         mode(m)
     end ;
@@ -219,12 +219,12 @@ begin
     open function popMode (This : …) return Integer is
 begin
         if _modeStack.isEmpty then
-            throw ANTLRError.unsupportedOperation(msg: " EmptyStackException")
-        end ;
+            throw ANTLRError.unsupportedOperation(msg: " EmptyStackException");
+        end if;
 
         if LexerATNSimulator.debug then
-            print("popMode back to \(String(describing: _modeStack.peek()))")
-        end ;
+            print("popMode back to \(String(describing: _modeStack.peek()))");
+        end if;
         mode(_modeStack.pop())
         return _mode
     end ;
@@ -343,8 +343,8 @@ begin
     open function getText (This : …) return String is
 begin
         if _text /= null then
-            return _text!
-        end ;
+            return _text!;
+        end if;
         return getInterpreter().getText(_input!)
     end ;
 
@@ -435,15 +435,15 @@ begin
         var buf := ""
         for c in s loop
             buf := @ + getErrorDisplay(c);
-        end ;
+        end loop;
         return buf
     end ;
 
     open function getErrorDisplay (c : Character) return String is
 begin
         if c.integerValue == CommonToken.EOF then
-            return "<EOF>"
-        end ;
+            return "<EOF>";
+        end if;
         switch c {
         case "\n":
             return "\\n"

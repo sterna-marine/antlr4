@@ -136,7 +136,7 @@ begin
 begin
         for d in 0..<decisionToDFA.count loop
             decisionToDFA[d] := DFA(atn.getDecisionState(d)!, d)
-        end ;
+        end loop;
     end ;
 
     internal function matchATN (input : CharStream) return Integer is
@@ -144,8 +144,8 @@ begin
         startState : constant := atn.modeToStartState[mode]
 
         if LexerATNSimulator.debug then
-            print("matchATN mode \(mode) start: \(startState)\n")
-        end ;
+            print("matchATN mode \(mode) start: \(startState)\n");
+        end if;
 
         old_mode : constant := mode
 
@@ -155,14 +155,14 @@ begin
 
         next : constant := addDFAState(s0_closure)
         if not suppressEdge then
-            decisionToDFA[mode].s0 := next
-        end ;
+            decisionToDFA[mode].s0 := next;
+        end if;
 
         predict : constant := try execATN(input, next)
 
         if LexerATNSimulator.debug then
-            print("DFA after matchATN: \(decisionToDFA[old_mode].toLexerString())")
-        end ;
+            print("DFA after matchATN: \(decisionToDFA[old_mode].toLexerString())");
+        end if;
 
         return predict
     end ;
@@ -171,8 +171,8 @@ begin
 begin
         --print("enter exec index "+input.index()+" from "+ds0.configs);
         if LexerATNSimulator.debug then
-            print("start state closure=\(ds0.configs)\n")
-        end ;
+            print("start state closure=\(ds0.configs)\n");
+        end if;
 
         if ds0.isAcceptState then
             -- allow zero-length tokens
@@ -186,8 +186,8 @@ begin
         while true {
             -- while more work
             if LexerATNSimulator.debug then
-                print("execATN loop starting closure: \(s.configs)\n")
-            end ;
+                print("execATN loop starting closure: \(s.configs)\n");
+            end if;
 
             -- As we move src->trg, src->trg, we keep track of the previous trg to
             -- avoid looking up the DFA state again, which is expensive.
@@ -214,22 +214,22 @@ begin
             end if;
 
             if target == ATNSimulator.ERROR then
-                break
-            end ;
+                break;
+            end if;
 
             -- If this is a consumable input element, make sure to consume before
             -- capturing the accept state so the input index, line, and char
             -- position accurately reflect the state of the interpreter at the
             -- end of the token.
             if t /= BufferedTokenStream.EOF then
-                try consume(input)
-            end ;
+                try consume(input);
+            end if;
 
             if target.isAcceptState then
                 captureSimState(prevAccept, input, target)
                 if t == BufferedTokenStream.EOF then
-                    break
-                end ;
+                    break;
+                end if;
             end ;
 
             t := try input.LA(1)
@@ -254,12 +254,12 @@ begin
     internal function getExistingTargetState (s : DFAState; t : Integer) return DFAState? {
         if s.edges == null or else t < LexerATNSimulator.MIN_DFA_EDGE or else t > LexerATNSimulator.MAX_DFA_EDGE then
             return null;
-        end ;
+        end if;
 
         target : constant := s.edges[t - LexerATNSimulator.MIN_DFA_EDGE]
         if LexerATNSimulator.debug and then target /= null then
-            print("reuse state \(s.stateNumber) edge to \(target!.stateNumber)")
-        end ;
+            print("reuse state \(s.stateNumber) edge to \(target!.stateNumber)");
+        end if;
 
         return target
     end ;
@@ -313,8 +313,8 @@ begin
             else
                 -- if no accept and EOF is first char, return EOF
                 if t == BufferedTokenStream.EOF and then input.index() == startIndex then
-                    return CommonToken.EOF
-                end ;
+                    return CommonToken.EOF;
+                end if;
                 throw ANTLRException.recognition(e: LexerNoViableAltException(recog, input, startIndex, reach))
             end ;
     end ;
@@ -334,8 +334,8 @@ begin
             end ;
             currentAltReachedAcceptState : constant := (c.alt == skipAlt)
             if currentAltReachedAcceptState and then c.hasPassedThroughNonGreedyDecision() then
-                continue
-            end ;
+                continue;
+            end if;
 
             if LexerATNSimulator.debug then
                 print("testing \(getTokenName(t)) at \(c.toString(recog, true))\n")
@@ -349,8 +349,8 @@ begin
                 if target : constant := getReachableTarget(trans, t) then
                     var lexerActionExecutor := c.getLexerActionExecutor()
                     if lex : constant := lexerActionExecutor then
-                        lexerActionExecutor := lex.fixOffsetBeforeMatch(input.index() - startIndex)
-                    end ;
+                        lexerActionExecutor := lex.fixOffsetBeforeMatch(input.index() - startIndex);
+                    end if;
 
                     treatEofAsEpsilon : constant := (t == BufferedTokenStream.EOF)
                     if try closure(input,
@@ -365,15 +365,15 @@ begin
                             break
                     end ;
                 end ;
-            end ;
-        end ;
+            end loop;
+        end loop;
     end ;
 
     internal procedure accept (input : CharStream; lexerActionExecutor : LexerActionExecutor?,
         startIndex : Integer; index : Integer; line : Integer; charPos : Integer) {
             if LexerATNSimulator.debug then
-                print("ACTION \(String(describing: lexerActionExecutor))\n")
-            end ;
+                print("ACTION \(String(describing: lexerActionExecutor))\n");
+            end if;
 
             -- seek to after last char in token
             try input.seek(index)
@@ -381,15 +381,15 @@ begin
             self.charPositionInLine := charPos
             --TODO: CHECK
             if lexerActionExecutor : constant := lexerActionExecutor, recog : constant := recog then
-                try lexerActionExecutor.execute(recog, input, startIndex)
-            end ;
+                try lexerActionExecutor.execute(recog, input, startIndex);
+            end if;
     end ;
 
 
     internal function getReachableTarget (trans : Transition; t : Integer) return ATNState? {
         if trans.matches(t, Character.MIN_VALUE, Character.MAX_VALUE) then
-            return trans.target
-        end ;
+            return trans.target;
+        end if;
 
         return null;
     end ;
@@ -405,7 +405,7 @@ begin
                 target : constant := p.transition(i).target
                 c : constant := LexerATNConfig(target, i + 1, initialContext)
                 try closure(input, c, configs, false, false, false)
-            end ;
+            end loop;
             return configs
     end ;
 
@@ -424,8 +424,8 @@ begin
 begin
         var currentAltReachedAcceptState := currentAltReachedAcceptState
         if LexerATNSimulator.debug then
-            print("closure(" + config.toString(recog, true) + ")")
-        end ;
+            print("closure(" + config.toString(recog, true) + ")");
+        end if;
 
         if config.state is RuleStopState then
             if LexerATNSimulator.debug then
@@ -455,7 +455,7 @@ begin
                         c : constant := LexerATNConfig(config, returnState!, newContext)
                         currentAltReachedAcceptState := try closure(input, c, configs, currentAltReachedAcceptState, speculative, treatEofAsEpsilon)
                     end ;
-                end ;
+                end loop;
             end ;
 
             return currentAltReachedAcceptState
@@ -464,8 +464,8 @@ begin
         -- optimization
         if not config.state.onlyHasEpsilonTransitions() then
             if not currentAltReachedAcceptState or else not config.hasPassedThroughNonGreedyDecision() then
-                try configs.add(config)
-            end ;
+                try configs.add(config);
+            end if;
         end ;
 
         p : constant := config.state
@@ -473,9 +473,9 @@ begin
         for i in 0..<length loop
             t : constant := p.transition(i)
             if c : constant := try getEpsilonTarget(input, config, t, configs, speculative, treatEofAsEpsilon) then
-                currentAltReachedAcceptState := try closure(input, c, configs, currentAltReachedAcceptState, speculative, treatEofAsEpsilon)
-            end ;
-        end ;
+                currentAltReachedAcceptState := try closure(input, c, configs, currentAltReachedAcceptState, speculative, treatEofAsEpsilon);
+            end if;
+        end loop;
 
         return currentAltReachedAcceptState
     end ;
@@ -522,12 +522,12 @@ begin
                 --
                 pt : constant := t as! PredicateTransition
                 if LexerATNSimulator.debug then
-                    print("EVAL rule \(pt.ruleIndex):\(pt.predIndex)")
-                end ;
+                    print("EVAL rule \(pt.ruleIndex):\(pt.predIndex)");
+                end if;
                 configs.hasSemanticContext := true
                 if try evaluatePredicate(input, pt.ruleIndex, pt.predIndex, speculative) then
-                    c := LexerATNConfig(config, t.target)
-                end ;
+                    c := LexerATNConfig(config, t.target);
+                end if;
                 break
 
             case Transition.ACTION:
@@ -603,8 +603,8 @@ begin
             return true
         end ;
         if not speculative then
-            return try recog.sempred(null, ruleIndex, predIndex)
-        end ;
+            return try recog.sempred(null, ruleIndex, predIndex);
+        end if;
 
         savedCharPositionInLine : constant := charPositionInLine
         savedLine : constant := line
@@ -656,8 +656,8 @@ begin
             to : constant := addDFAState(q)
 
             if suppressEdge then
-                return to
-            end ;
+                return to;
+            end if;
 
             addDFAEdge(from, t, to)
             return to
@@ -670,8 +670,8 @@ begin
         end ;
 
         if LexerATNSimulator.debug then
-            print("EDGE \(p) -> \(q) upon \(t)")
-        end ;
+            print("EDGE \(p) -> \(q) upon \(t)");
+        end if;
 
         p.mutex.synchronized {
             if p.edges == null then
@@ -709,8 +709,8 @@ begin
 
         return dfa.statesMutex.synchronized {
             if existing : constant := dfa.states[proposed] then
-                return existing
-            end ;
+                return existing;
+            end if;
 
             newState : constant := proposed
             newState.stateNumber := dfa.states.count
@@ -761,7 +761,7 @@ begin
             line := @ + 1;
             charPositionInLine := 0
         else
-            charPositionInLine := @ + 1;;
+            charPositionInLine := @ + 1;
         end if;
         input.consume()
     end ;
@@ -770,9 +770,9 @@ begin
     public function getTokenName (t : Integer) return String is
 begin
         if t == -1 then
-            return "EOF"
-        end ;
+            return "EOF";
+        end if;
         --if ( atn.g!=null ) return atn.g.getTokenDisplayName(t);
-        return "'" + String(Character(integerLiteral: t)) + "'"
-    end ;
+        return "'" + String(Character(integerLiteral: t)) + "'";
+    end if;
 end ;

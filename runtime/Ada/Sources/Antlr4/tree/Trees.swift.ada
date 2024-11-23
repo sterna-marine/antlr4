@@ -70,16 +70,16 @@ begin
 begin
         s : constant := Utils.escapeWhitespace(getNodeText(t, ruleNames), false)
         if t.getChildCount() == 0 then
-            return s
-        end ;
+            return s;
+        end if;
         var buf := "(\(s) "
         length : constant := t.getChildCount()
         for i in 0..<length loop
             if i > 0 then
                 buf := @ + " ";
-            end ;
+            end if;
             buf := @ + toStringTree(t.getChild(i)!, ruleNames);
-        end ;
+        end loop;
         buf := @ + ")";
         return buf
     end ;
@@ -97,13 +97,13 @@ begin
                 let ruleName: String := ruleNames[ruleIndex]
                 altNumber : constant := (t as! RuleContext).getAltNumber()
                 if altNumber /= ATN.INVALID_ALT_NUMBER  then
-                    return "\(ruleName):\(altNumber)"
-                end ;
+                    return "\(ruleName):\(altNumber)";
+                end if;
                 return ruleName
             else
                 if errorNode : constant := t as? ErrorNode then
-                    return errorNode.description
-                end ; elsif terminalNode : constant := t as? TerminalNode then
+                    return errorNode.description;
+                end if; elsif terminalNode : constant := t as? TerminalNode then
                     if symbol : constant := terminalNode.getSymbol() then
                         let s: String := symbol.getText()!
                         return s
@@ -114,8 +114,8 @@ begin
         -- no recog for rule names
         let payload: AnyObject := t.getPayload()
         if token : constant := payload as? Token then
-            return token.getText()!
-        end ;
+            return token.getText()!;
+        end if;
         return "\(t.getPayload())"
 
     end ;
@@ -126,7 +126,7 @@ begin
         length : constant := t.getChildCount()
         for i in 0..<length loop
             kids.append(t.getChild(i)!)
-        end ;
+        end loop;
         return kids
     end ;
 
@@ -170,20 +170,20 @@ begin
         -- check this node (the root) first
         if tnode : constant := t as? TerminalNode , findTokens then
             if tnode.getSymbol()!.getType() == index then
-                nodes.append(t)
-            end ;
+                nodes.append(t);
+            end if;
         else
             if ctx : constant := t as? ParserRuleContext , not findTokens then
                 if ctx.getRuleIndex() == index then
-                    nodes.append(t)
-                end ;
+                    nodes.append(t);
+                end if;
             end ;
         end ;
         -- check children
         length : constant := t.getChildCount()
         for i in 0..<length loop
             _findAllNodes(t.getChild(i) as! ParseTree, index, findTokens, &nodes)
-        end ;
+        end loop;
     end ;
 
     public static function descendants (t : ParseTree) return Array<ParseTree> {
@@ -194,10 +194,10 @@ begin
 
             --nodes.addAll(descendants(t.getChild(i)));
             if child : constant := t.getChild(i) then
-                nodes.concat(descendants(child as! ParseTree))
-            end ;
+                nodes.concat(descendants(child as! ParseTree));
+            end if;
 
-        end ;
+        end loop;
         return nodes
     end ;
 
@@ -218,9 +218,9 @@ begin
                 return null;
             end ;
             if r : constant := getRootOfSubtreeEnclosingRegion(child, startTokenIndex, stopTokenIndex) then
-                return r
-            end ;
-        end ;
+                return r;
+            end if;
+        end loop;
         if r : constant := t as? ParserRuleContext then
             if startTokenIndex >= r.getStart()!.getTokenIndex() and then -- is range fully contained in t?
                     stopTokenIndex <= r.getStop()!.getTokenIndex() {

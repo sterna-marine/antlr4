@@ -74,8 +74,8 @@ begin
     public init(parent : RuleContext?, invokingState : Integer) {
         self.parent := parent
         --if ( parent!=null ) { print("invoke "+stateNumber+" from "+parent)end ;
-        self.invokingState := invokingState
-    end ;
+        self.invokingState := invokingState;
+    end if;
 
     open function depth (This : …) return Integer is
 begin
@@ -133,13 +133,13 @@ begin
 begin
         length : constant := getChildCount()
         if length == 0 then
-            return ""
-        end ;
+            return "";
+        end if;
 
         var builder := ""
         for i in 0..<length loop
             builder := @ + self[i].getText();
-        end ;
+        end loop;
 
         return builder
     end ;
@@ -235,12 +235,12 @@ begin
             else
                 if not pWrap.isEmpty() then
                     buf := @ + String(pWrap.invokingState);
-                end ;
+                end if;
             end ;
 
             if pWp : constant := pWrap.parent, (ruleNames /= null or else not pWp.isEmpty()) then
                 buf := @ + " ";
-            end ;
+            end if;
 
             p := pWrap.parent
         end ;

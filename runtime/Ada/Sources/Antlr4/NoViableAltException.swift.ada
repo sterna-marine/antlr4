@@ -46,8 +46,8 @@ public type NoViableAltException is new RecognitionException with null record;
 
         super.init(recognizer, input, ctx)
         if offendingToken : constant := offendingToken then
-            setOffendingToken(offendingToken)
-        end ;
+            setOffendingToken(offendingToken);
+        end if;
     end ;
 
 

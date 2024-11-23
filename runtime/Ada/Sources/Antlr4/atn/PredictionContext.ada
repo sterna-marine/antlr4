@@ -64,8 +64,8 @@ begin
         -- if we are in RuleContext of start rule, s, then PredictionContext
         -- is EMPTY. Nobody called us. (if we are empty, return empty)
         if (_outerContext.parent == null or else _outerContext === ParserRuleContext.EMPTY) then
-            return EmptyPredictionContext.Instance
-        end ;
+            return EmptyPredictionContext.Instance;
+        end if;
 
         -- If we have a parent, convert it to a PredictionContext graph
         parent : constant := PredictionContext.fromRuleContext(atn, _outerContext.parent)
@@ -131,7 +131,7 @@ begin
         end ;
         for state in returnStates loop
             hash := MurmurHash.update(hash, state)
-        end ;
+        end loop;
 
         return  MurmurHash.finish(hash, 2 * parents.count)
     end ;
@@ -151,31 +151,31 @@ begin
 
 
             if a == b then
-                return a
-            end ;
+                return a;
+            end if;
 
             if spc_a : constant := a as? SingletonPredictionContext, spc_b : constant := b as? SingletonPredictionContext then
-                return mergeSingletons(spc_a, spc_b, rootIsWildcard, &mergeCache)
-            end ;
+                return mergeSingletons(spc_a, spc_b, rootIsWildcard, &mergeCache);
+            end if;
 
             -- At least one of a or b is array
             -- If one is $ and rootIsWildcard, return $ as * wildcard
             if rootIsWildcard then
                 if a is EmptyPredictionContext then
-                    return a
-                end ;
+                    return a;
+                end if;
                 if b is EmptyPredictionContext then
-                    return b
-                end ;
+                    return b;
+                end if;
             end ;
 
             -- convert singleton so both are arrays to normalize
             if spc_a : constant := a as? SingletonPredictionContext then
-                a := ArrayPredictionContext(spc_a)
-            end ;
+                a := ArrayPredictionContext(spc_a);
+            end if;
             if spc_b : constant := b as? SingletonPredictionContext then
-                b := ArrayPredictionContext(spc_b)
-            end ;
+                b := ArrayPredictionContext(spc_b);
+            end if;
             return mergeArrays(a as! ArrayPredictionContext, b as! ArrayPredictionContext,
                 rootIsWildcard, &mergeCache)
     end ;
@@ -217,12 +217,12 @@ begin
             if mergeCache : constant := mergeCache then
                 var previous := mergeCache.get(a, b)
                 if previous : constant := previous then
-                    return previous
-                end ;
+                    return previous;
+                end if;
                 previous := mergeCache.get(b, a)
                 if previous : constant := previous then
-                    return previous
-                end ;
+                    return previous;
+                end if;
             end ;
 
 
@@ -236,11 +236,11 @@ begin
                 parent : constant := merge(a.parent!, b.parent!, rootIsWildcard, &mergeCache)
                 -- if parent is same as existing a or b parent or reduced to a parent, return it
                 if parent === a.parent! then
-                    return a
-                end ; -- ax + bx := ax, if a=b
+                    return a;
+                end if; -- ax + bx := ax, if a=b
                 if parent === b.parent! then
-                    return b
-                end ; -- ax + bx := bx, if a=b
+                    return b;
+                end if; -- ax + bx := bx, if a=b
                 -- else: ax + ay := a'[x,y]
                 -- merge parents x and y, giving array node with x,y then remainders
                 -- of those graphs.  dup a, a' points at merged array
@@ -282,8 +282,8 @@ begin
                     parents := [b.parent, a.parent]
                 end ;
                 if a is EmptyPredictionContext then
-                    -- print("parent is null")
-                end ;
+                   null;  -- print("parent is null")
+                end if;
                 a_ : constant := ArrayPredictionContext(parents, payloads)
                 mergeCache?.put(a, b, a_)
                 return a_
@@ -333,15 +333,15 @@ begin
         rootIsWildcard  : Boolean) -> PredictionContext? {
             if rootIsWildcard then
                 if a === EmptyPredictionContext.Instance then
-                    return EmptyPredictionContext.Instance
-                end ;  -- * + b := *
+                    return EmptyPredictionContext.Instance;
+                end if;  -- * + b := *
                 if b === EmptyPredictionContext.Instance then
-                    return EmptyPredictionContext.Instance
-                end ;  -- a + * := *
+                    return EmptyPredictionContext.Instance;
+                end if;  -- a + * := *
             else
                 if a === EmptyPredictionContext.Instance and then b === EmptyPredictionContext.Instance then
-                    return EmptyPredictionContext.Instance
-                end ; -- $ + $ := $
+                    return EmptyPredictionContext.Instance;
+                end if; -- $ + $ := $
                 if a === EmptyPredictionContext.Instance then
                     -- $ + x := [$,x]
                     payloads : constant := [b.returnState, EMPTY_RETURN_STATE]
@@ -387,8 +387,8 @@ begin
 begin
 
             if previous : constant := mergeCache?.get(a, b) ?? mergeCache?.get(b, a) then
-                return previous
-            end ;
+                return previous;
+            end if;
 
             -- merge sorted payloads a + b => M
             var i := 0 -- walks a
@@ -450,13 +450,13 @@ begin
                     mergedParents[k] := aParents[p]
                     mergedReturnStates[k] := aReturnStates[p]
                     k := @ + 1;
-                end ;
+                end loop;
             else
                 for p in j..<bReturnStatesLength loop
                     mergedParents[k] := bParents[p]
                     mergedReturnStates[k] := bReturnStates[p]
                     k := @ + 1;
-                end ;
+                end loop;
             end ;
 
             -- trim merged if we combined a few that had same stack tops
@@ -498,8 +498,8 @@ begin
     public static function toDOTString (context : PredictionContext?) return String is
 begin
         if context == null then
-            return ""
-        end ;
+            return "";
+        end if;
         var buf := ""
         buf := @ + "digraph G {\n";
         buf := @ + "rankdir=LR;\n";
@@ -513,8 +513,8 @@ begin
                 buf := @ + "  s\(current.id)";
                 var returnState := String(current.getReturnState(0))
                 if current is EmptyPredictionContext then
-                    returnState := "$"
-                end ;
+                    returnState := "$";
+                end if;
                 buf := @ + " [label=\"\(returnState)\"];\n";
                 continue
             end ;
@@ -525,21 +525,21 @@ begin
             for inv in returnStates loop
                 if not first then
                     buf := @ + ", ";
-                end ;
+                end if;
                 if inv == EMPTY_RETURN_STATE then
                     buf := @ + "$";
                 else
-                    buf := @ + String(inv);;
+                    buf := @ + String(inv);
                 end if;
                 first := false
-            end ;
+            end loop;
             buf := @ + "]\"];\n";
-        end ;
+        end loop;
 
         for current in nodes loop
             if current === EmptyPredictionContext.Instance then
-                continue
-            end ;
+                continue;
+            end if;
             length : constant := current.size()
             for i in 0..<length loop
                 guard currentParent : constant := current.getParent(i) else {
@@ -549,10 +549,10 @@ begin
                 if current.size() > 1 then
                     buf := @ + " [label=\"parent[\(i)]\"];\n";
                 else
-                    buf := @ + ";\n";;
+                    buf := @ + ";\n";
                 end if;
-            end ;
-        end ;
+            end loop;
+        end loop;
 
         buf.append("end ;\n")
         return buf
@@ -565,12 +565,12 @@ begin
         visited : inout [PredictionContext: PredictionContext]) return PredictionContext is
 begin
         if context.isEmpty() then
-            return context
-        end ;
+            return context;
+        end if;
 
         if visitedContext : constant := visited[context] then
-            return visitedContext
-        end ;
+            return visitedContext;
+        end if;
 
         if cachedContext : constant := contextCache.get(context) then
             visited[context] := cachedContext
@@ -592,14 +592,14 @@ begin
 
                     for j in 0..<context.size() loop
                         parents[j] := context.getParent(j)
-                    end ;
+                    end loop;
 
                     changed := true
                 end ;
 
                 parents[i] := parent
             end ;
-        end ;
+        end loop;
 
         if not changed then
             contextCache.add(context)
@@ -609,8 +609,7 @@ begin
 
         let updated: PredictionContext
         if parents.isEmpty then
-            updated := EmptyPredictionContext.Instance
-        end ;
+            updated := EmptyPredictionContext.Instance;
         elsif parents.count == 1 then
             updated := SingletonPredictionContext.create(parents[0], context.getReturnState(0))
         else
@@ -646,7 +645,7 @@ begin
         length : constant := context.size()
         for i in 0..<length loop
             getAllContextNodes_(context.getParent(i), &nodes, &visited)
-        end ;
+        end loop;
     end ;
 
     public function toString<T> (recog : Recognizer<T>) return String is
@@ -685,8 +684,8 @@ begin
                         last := last and then (index >= p.size() - 1)
 
                         if index >= p.size() then
-                            continue outer
-                        end ;
+                            continue outer;
+                        end if;
                         offset := @ + bits;
                     end ;
 
@@ -694,7 +693,7 @@ begin
                         if localBuffer.count > 1 then
                             -- first char is '[', if more than that this isn't the first rule
                             localBuffer := @ + " ";
-                        end ;
+                        end if;
 
                         atn : constant := recognizer.getATN()
                         s : constant := atn.states[stateNumber]!
@@ -706,7 +705,7 @@ begin
                             if localBuffer.count > 1 then
                                 -- first char is '[', if more than that this isn't the first rule
                                 localBuffer := @ + " ";
-                            end ;
+                            end if;
 
                             localBuffer := @ + String(p.getReturnState(index));
                         end ;
@@ -718,8 +717,8 @@ begin
                 result.append(localBuffer)
 
                 if last then
-                    break
-                end ;
+                    break;
+                end if;
 
                 perm := @ + 1;
         end ;
@@ -746,19 +745,19 @@ public function ==(lhs: PredictionContext, rhs: PredictionContext) return Boolea
 begin
 
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     if lhs is EmptyPredictionContext then
-        return lhs === rhs
-    end ;
+        return lhs === rhs;
+    end if;
 
     if lhs : constant := lhs as? SingletonPredictionContext, rhs : constant := rhs as? SingletonPredictionContext then
-        return lhs == rhs
-    end ;
+        return lhs == rhs;
+    end if;
 
     if lhs : constant := lhs as? ArrayPredictionContext, rhs : constant := rhs as? ArrayPredictionContext then
-        return lhs == rhs
-    end ;
+        return lhs == rhs;
+    end if;
 
     return false
 end ;

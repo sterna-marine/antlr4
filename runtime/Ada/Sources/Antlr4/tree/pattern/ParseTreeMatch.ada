@@ -74,7 +74,7 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
         if parseTrees : constant := labels.get(label) , parseTrees.count > 0 then
             return parseTrees[parseTrees.count - 1]   -- return last if multiple
         else
-            return null;;
+            return null;
         end if;
 
     end ;

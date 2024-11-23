@@ -147,11 +147,11 @@ begin
                 !(getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(compileTimeVersion)))
 
         if runtimeConflictsWithGeneratingTool then
-            print("ANTLR Tool version \(generatingToolVersion) used for code generation does not match the current runtime version \(runtimeVersion)")
-        end ;
+            print("ANTLR Tool version \(generatingToolVersion) used for code generation does not match the current runtime version \(runtimeVersion)");
+        end if;
         if runtimeConflictsWithCompileTimeTool then
-            print("ANTLR Runtime version \(compileTimeVersion)used for parser compilation does not match the current runtime version \(runtimeVersion)")
-        end ;
+            print("ANTLR Runtime version \(compileTimeVersion)used for parser compilation does not match the current runtime version \(runtimeVersion)");
+        end if;
     end ;
 
     -- 
@@ -169,8 +169,8 @@ begin
 
         dotBits : constant := version.split(separator: ".", maxSplits: 2, omittingEmptySubsequences: false)
         if dotBits.count >= 2 then
-            result := dotBits[0..<2].joined(separator: ".")
-        end ;
+            result := dotBits[0..<2].joined(separator: ".");
+        end if;
 
         dashBits : constant := result.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: false)
         return String(dashBits[0])

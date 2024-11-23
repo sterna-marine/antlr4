@@ -96,8 +96,8 @@ begin
             var match : ParseTreeMatch := match(t);
             if ( match.succeeded() ) then
                 matches.add(match);
-            end ;
-        end ;
+            end if;
+        end loop;
         return matches;
     end ;*/
 

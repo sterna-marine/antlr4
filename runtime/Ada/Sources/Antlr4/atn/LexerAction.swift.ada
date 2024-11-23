@@ -69,28 +69,28 @@ public function ==(lhs: LexerAction, rhs: LexerAction) return Boolean is
 begin
 
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
 
     if (lhs is LexerChannelAction) and then (rhs is LexerChannelAction) then
-        return (lhs as! LexerChannelAction) == (rhs as! LexerChannelAction)
-    end ; elsif (lhs is LexerCustomAction) and then (rhs is LexerCustomAction) then
-        return (lhs as! LexerCustomAction) == (rhs as! LexerCustomAction)
-    end ; elsif (lhs is LexerIndexedCustomAction) and then (rhs is LexerIndexedCustomAction) then
-        return (lhs as! LexerIndexedCustomAction) == (rhs as! LexerIndexedCustomAction)
-    end ; elsif (lhs is LexerModeAction) and then (rhs is LexerModeAction) then
-        return (lhs as! LexerModeAction) == (rhs as! LexerModeAction)
-    end ; elsif (lhs is LexerMoreAction) and then (rhs is LexerMoreAction) then
-        return (lhs as! LexerMoreAction) == (rhs as! LexerMoreAction)
-    end ; elsif (lhs is LexerPopModeAction) and then (rhs is LexerPopModeAction) then
-        return (lhs as! LexerPopModeAction) == (rhs as! LexerPopModeAction)
-    end ; elsif (lhs is LexerPushModeAction) and then (rhs is LexerPushModeAction) then
-        return (lhs as! LexerPushModeAction) == (rhs as! LexerPushModeAction)
-    end ; elsif (lhs is LexerSkipAction) and then (rhs is LexerSkipAction) then
-        return (lhs as! LexerSkipAction) == (rhs as! LexerSkipAction)
-    end ; elsif (lhs is LexerTypeAction) and then (rhs is LexerTypeAction) then
-        return (lhs as! LexerTypeAction) == (rhs as! LexerTypeAction)
-    end ;
+        return (lhs as! LexerChannelAction) == (rhs as! LexerChannelAction);
+    end if; elsif (lhs is LexerCustomAction) and then (rhs is LexerCustomAction) then
+        return (lhs as! LexerCustomAction) == (rhs as! LexerCustomAction);
+    end if; elsif (lhs is LexerIndexedCustomAction) and then (rhs is LexerIndexedCustomAction) then
+        return (lhs as! LexerIndexedCustomAction) == (rhs as! LexerIndexedCustomAction);
+    end if; elsif (lhs is LexerModeAction) and then (rhs is LexerModeAction) then
+        return (lhs as! LexerModeAction) == (rhs as! LexerModeAction);
+    end if; elsif (lhs is LexerMoreAction) and then (rhs is LexerMoreAction) then
+        return (lhs as! LexerMoreAction) == (rhs as! LexerMoreAction);
+    end if; elsif (lhs is LexerPopModeAction) and then (rhs is LexerPopModeAction) then
+        return (lhs as! LexerPopModeAction) == (rhs as! LexerPopModeAction);
+    end if; elsif (lhs is LexerPushModeAction) and then (rhs is LexerPushModeAction) then
+        return (lhs as! LexerPushModeAction) == (rhs as! LexerPushModeAction);
+    end if; elsif (lhs is LexerSkipAction) and then (rhs is LexerSkipAction) then
+        return (lhs as! LexerSkipAction) == (rhs as! LexerSkipAction);
+    end if; elsif (lhs is LexerTypeAction) and then (rhs is LexerTypeAction) then
+        return (lhs as! LexerTypeAction) == (rhs as! LexerTypeAction);
+    end if;
 
 
     return false

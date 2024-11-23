@@ -40,7 +40,7 @@ public type LexerActionExecutor is new Hashable with null record;
         var hash := MurmurHash.initialize()
         for lexerAction: LexerAction in lexerActions loop
             hash := MurmurHash.update(hash, lexerAction)
-        end ;
+        end loop;
 
         self.hashCode := MurmurHash.finish(hash, lexerActions.count)
     end ;
@@ -109,16 +109,16 @@ begin
         for i in 0..<length loop
             if lexerActions[i].isPositionDependent() and then !(lexerActions[i] is LexerIndexedCustomAction) then
                 if updatedLexerActions == null then
-                    updatedLexerActions := lexerActions   --lexerActions.clone();
-                end ;
+                    updatedLexerActions := lexerActions;  --lexerActions.clone();
+                end if;
 
                 updatedLexerActions![i] := LexerIndexedCustomAction(offset, lexerActions[i])
             end ;
-        end ;
+        end loop;
 
         if updatedLexerActions == null then
-            return self
-        end ;
+            return self;
+        end if;
 
         return LexerActionExecutor(updatedLexerActions!)
     end ;
@@ -155,8 +155,8 @@ begin
         let stopIndex: Integer := input.index()
         defer {
             if requiresSeek then
-                try! input.seek(stopIndex)
-            end ;
+                try! input.seek(stopIndex);
+            end if;
         end ;
         --try {
         for var lexerAction: LexerAction in self.lexerActions loop
@@ -173,7 +173,7 @@ begin
             end ;
 
             try lexerAction.execute(lexer)
-        end ;
+        end loop;
         --end ;
 
     end ;
@@ -187,17 +187,17 @@ end ;
 public function ==(lhs: LexerActionExecutor, rhs: LexerActionExecutor) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     if lhs.lexerActions.count /= rhs.lexerActions.count then
-        return false
-    end ;
+        return false;
+    end if;
     length : constant := lhs.lexerActions.count
     for i in 0..<length loop
         if !(lhs.lexerActions[i] == rhs.lexerActions[i]) then
-            return false
-        end ;
-    end ;
+            return false;
+        end if;
+    end loop;
 
 
     return lhs.hashCode == rhs.hashCode

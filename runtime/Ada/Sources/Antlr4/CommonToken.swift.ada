@@ -140,8 +140,8 @@ begin
 
     public function getText () return String? {
         if text : constant := text then
-            return text
-        end ;
+            return text;
+        end if;
 
         if input : constant := getInputStream() then
             n : constant := input.size()

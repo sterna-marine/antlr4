@@ -120,11 +120,9 @@ begin
         end ;
         beginErrorCondition(recognizer)
         if nvae : constant := e as? NoViableAltException then
-            reportNoViableAlternative(recognizer, nvae)
-        end ;
+            reportNoViableAlternative(recognizer, nvae);
         elsif ime : constant := e as? InputMismatchException then
-            reportInputMismatch(recognizer, ime)
-        end ;
+            reportInputMismatch(recognizer, ime);
         elsif fpe : constant := e as? FailedPredicateException then
             reportFailedPredicate(recognizer, fpe)
         else
@@ -158,8 +156,8 @@ begin
         end ;
         lastErrorIndex := getTokenStream(recognizer).index()
         if lastErrorStates == null then
-            lastErrorStates := IntervalSet()
-        end ;
+            lastErrorStates := IntervalSet();
+        end if;
         try lastErrorStates!.add(recognizer.getState())
         followSet : constant := getErrorRecoverySet(recognizer)
         try consumeUntil(recognizer, followSet)
@@ -217,8 +215,8 @@ begin
 --		errPrint("sync @ "+s.stateNumber+"="+s.getClass().getSimpleName());
         -- If already recovering, don't try to sync
         if inErrorRecoveryMode(recognizer) then
-            return
-        end ;
+            return;
+        end if;
 
         tokens : constant := getTokenStream(recognizer)
         la : constant := try tokens.LA(1)
@@ -249,8 +247,8 @@ begin
         case ATNState.STAR_LOOP_ENTRY:
             -- report error and recover if possible
             if try singleTokenDeletion(recognizer) /= null then
-                return
-            end ;
+                return;
+            end if;
             throw ANTLRException.recognition(e: InputMismatchException(recognizer))
 
         case ATNState.PLUS_LOOP_BACK: fallthrough
@@ -264,8 +262,8 @@ begin
 
         default:
             -- do nothing if we can't identify the exact kind of ATN state
-            break
-        end ;
+            break;
+        end if;
     end ;
 
     -- 
@@ -345,8 +343,8 @@ begin
     -- 
     open procedure reportUnwantedToken (recognizer : Parser) {
         if inErrorRecoveryMode(recognizer) then
-            return
-        end ;
+            return;
+        end if;
 
         beginErrorCondition(recognizer)
 
@@ -376,8 +374,8 @@ begin
     -- 
     open procedure reportMissingToken (recognizer : Parser) {
         if inErrorRecoveryMode(recognizer) then
-            return
-        end ;
+            return;
+        end if;
 
         beginErrorCondition(recognizer)
 
@@ -452,8 +450,8 @@ begin
 
         -- SINGLE TOKEN INSERTION
         if try singleTokenInsertion(recognizer) then
-            return try getMissingSymbol(recognizer)
-        end ;
+            return try getMissingSymbol(recognizer);
+        end if;
         -- even that didn't work; must throw the exception
         exn : constant := InputMismatchException(recognizer, state: nextTokensState, ctx: nextTokensContext)
         throw ANTLRException.recognition(e: exn)
@@ -572,8 +570,8 @@ begin
         var current := currentSymbol
         lookback : constant := try getTokenStream(recognizer).LT(-1)
         if current.getType() == CommonToken.EOF and then lookback /= null then
-            current := lookback!
-        end ;
+            current := lookback!;
+        end if;
 
         token : constant := recognizer.getTokenFactory().create(
             current.getTokenSourceAndStream(),

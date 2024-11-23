@@ -75,11 +75,10 @@ begin
         t.setLine(line)
         t.setCharPositionInLine(charPositionInLine)
         if text : constant := text then
-            t.setText(text)
-        end ;
+            t.setText(text);
         elsif cStream : constant := source.stream, copyText then
-            t.setText(try! cStream.getText(Interval.of(start, stop)))
-        end ;
+            t.setText(try! cStream.getText(Interval.of(start, stop)));
+        end if;
 
         return t
     end ;

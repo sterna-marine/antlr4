@@ -72,8 +72,8 @@ begin
         --TODO: symbol == null?
         --if    symbol == null   {return "<null>"; end ;
         if symbol.getType() == CommonToken.EOF then
-            return "<EOF>"
-        end ;
+            return "<EOF>";
+        end if;
         return symbol.getText()!
     end ;
 

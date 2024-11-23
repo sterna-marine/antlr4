@@ -41,8 +41,8 @@ public class RecognitionException {
         self.ctx := ctx
         self.message := message
         if recognizer : constant := recognizer then
-            self.offendingState := recognizer.getState()
-        end ;
+            self.offendingState := recognizer.getState();
+        end if;
     end ;
 
     -- 
@@ -75,8 +75,8 @@ begin
     -- 
     public function getExpectedTokens () return IntervalSet? {
         if recognizer : constant := recognizer then
-            return try? recognizer.getATN().getExpectedTokens(offendingState, ctx!)
-        end ;
+            return try? recognizer.getATN().getExpectedTokens(offendingState, ctx!);
+        end if;
         return null;
     end ;
 

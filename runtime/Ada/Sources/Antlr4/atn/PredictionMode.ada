@@ -174,8 +174,8 @@ begin
         -- to match additional input so we terminate prediction.
         -- 
         if allConfigsInRuleStopStates(configs) then
-            return true
-        end ;
+            return true;
+        end if;
 
         -- pure SLL mode parsing
         if mode == PredictionMode.SLL then
@@ -396,9 +396,9 @@ begin
 begin
         for alts: BitSet in altsets loop
             if alts.cardinality() == 1 then
-                return true
-            end ;
-        end ;
+                return true;
+            end if;
+        end loop;
         return false
     end ;
 
@@ -414,9 +414,9 @@ begin
 begin
         for alts: BitSet in altsets loop
             if alts.cardinality() > 1 then
-                return true
-            end ;
-        end ;
+                return true;
+            end if;
+        end loop;
         return false
     end ;
 
@@ -433,10 +433,10 @@ begin
         let first: BitSet := altsets[0]
         for it in altsets loop
             if it /= first then
-                return false
-            end ;
+                return false;
+            end if;
 
-        end ;
+        end loop;
         return true
     end ;
 
@@ -451,8 +451,8 @@ begin
 begin
         let all: BitSet := getAlts(altsets)
         if all.cardinality() == 1 then
-            return all.firstSetBit()
-        end ;
+            return all.firstSetBit();
+        end if;
         return ATN.INVALID_ALT_NUMBER
     end ;
 
@@ -501,9 +501,9 @@ begin
         x : constant := configs.getStateToAltMap()
         for alts in x.values loop
             if alts.cardinality() == 1 then
-                return true
-            end ;
-        end ;
+                return true;
+            end if;
+        end loop;
         return false
     end ;
 
@@ -517,7 +517,7 @@ begin
                 -- more than 1 viable alt
                 return ATN.INVALID_ALT_NUMBER
             end ;
-        end ;
+        end loop;
         return viableAlts.firstSetBit()
     end ;
 

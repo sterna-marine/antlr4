@@ -78,18 +78,18 @@ public type ParserInterpreter is new Parser with null record;
         self.decisionToDFA := [DFA]()
         for i in 0 ..< atn.getNumberOfDecisions() loop
             decisionToDFA.append(DFA(atn.getDecisionState(i)!, i))
-        end ;
+        end loop;
 
         -- identify the ATN states where pushNewRecursionContext() must be called
         self.statesNeedingLeftRecursionContext := try! BitSet(atn.states.count)
         for  state in atn.states loop
             if state : constant := state as? StarLoopEntryState then
                 if state.precedenceRuleDecision then
-                    try! self.statesNeedingLeftRecursionContext.set(state.stateNumber)
-                end ;
+                    try! self.statesNeedingLeftRecursionContext.set(state.stateNumber);
+                end if;
             end ;
 
-        end ;
+        end loop;
         try super.init(input)
         -- get atn simulator that knows how to do predictions
         setInterpreter(ParserATNSimulator(self, atn,
@@ -217,8 +217,8 @@ begin
         case Transition.SET: fallthrough
         case Transition.NOT_SET:
             if not transition.matches(try _input.LA(1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then
-                try _errHandler.recoverInline(self)
-            end ;
+                try _errHandler.recoverInline(self);
+            end if;
             try matchWildcard()
             break
 
@@ -240,8 +240,8 @@ begin
         case Transition.PREDICATE:
             predicateTransition : constant := transition as! PredicateTransition
             if try not sempred(_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then
-                throw ANTLRException.recognition(e: FailedPredicateException(self))
-            end ;
+                throw ANTLRException.recognition(e: FailedPredicateException(self));
+            end if;
             break
 
         case Transition.ACTION:
@@ -251,8 +251,8 @@ begin
 
         case Transition.PRECEDENCE:
             if not precpred(_ctx!, (transition as! PrecedencePredicateTransition).precedence) then
-                throw ANTLRException.recognition(e: FailedPredicateException(self, "precpred(_ctx,\((transition as! PrecedencePredicateTransition).precedence))"))
-            end ;
+                throw ANTLRException.recognition(e: FailedPredicateException(self, "precpred(_ctx,\((transition as! PrecedencePredicateTransition).precedence))"));
+            end if;
             break
 
         default:

@@ -21,17 +21,15 @@ begin
 	--
     public procedure walk (listener : ParseTreeListener; t : ParseTree) {
         if errNode : constant := t as? ErrorNode then
-            listener.visitErrorNode(errNode)
-        end ;
+            listener.visitErrorNode(errNode);
         elsif termNode : constant := t as? TerminalNode then
-            listener.visitTerminal(termNode)
-        end ;
+            listener.visitTerminal(termNode);
         elsif r : constant := t as? RuleNode then
             try enterRule(listener, r)
             n : constant := r.getChildCount()
             for i in 0..<n loop
                 try walk(listener, r[i])
-            end ;
+            end loop;
             try exitRule(listener, r)
         else
             preconditionFailure();

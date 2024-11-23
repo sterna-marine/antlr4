@@ -29,7 +29,7 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
     {
         for listener in delegates loop
             listener.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
-        end ;
+        end loop;
     end ;
 
 
@@ -42,7 +42,7 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
                                 configs : ATNConfigSet) {
         for listener in delegates loop
             listener.reportAmbiguity(recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs)
-        end ;
+        end loop;
     end ;
 
 
@@ -54,7 +54,7 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
                                             configs : ATNConfigSet) {
         for listener in delegates loop
             listener.reportAttemptingFullContext(recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs)
-        end ;
+        end loop;
     end ;
 
 
@@ -66,6 +66,6 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
                                          configs : ATNConfigSet) {
         for listener in delegates loop
             listener.reportContextSensitivity(recognizer, dfa, startIndex, stopIndex, prediction, configs)
-        end ;
+        end loop;
     end ;
 end ;

@@ -38,13 +38,13 @@ begin
 
         for i in 0..<n loop
             if not shouldVisitNextChild(node, result) then
-                break
-            end ;
+                break;
+            end if;
 
             c : constant := node[i]
             childResult : constant := c.accept(self)
             result := aggregateResult(result, childResult)
-        end ;
+        end loop;
 
         return result
     end ;

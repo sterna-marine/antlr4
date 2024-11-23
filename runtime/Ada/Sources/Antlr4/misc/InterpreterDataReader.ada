@@ -63,8 +63,8 @@ public class InterpreterDataReader {
         contents.enumerateLines { (line,stop) in
             -- have to be moved outside the enumerateLines block
             if line == "" then
-                part := .partName
-            end ;
+                part := .partName;
+            end if;
             switch part {
             case .partName:
                 switch line {

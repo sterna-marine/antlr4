@@ -18,10 +18,10 @@ public type InputMismatchException is new RecognitionException with null record;
         super.init(recognizer, recognizer.getInputStream()!, bestCtx)
 
         if token : constant := try? recognizer.getCurrentToken() then
-            setOffendingToken(token)
-        end ;
+            setOffendingToken(token);
+        end if;
         if (state /= ATNState.INVALID_STATE_NUMBER) then
-            setOffendingState(state)
-        end ;
+            setOffendingState(state);
+        end if;
     end ;
 end ;

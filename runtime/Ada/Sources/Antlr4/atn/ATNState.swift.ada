@@ -149,8 +149,7 @@ begin
 
     public final procedure addTransition (e : Transition) {
         if transitions.isEmpty then
-            epsilonOnlyTransitions := e.isEpsilon()
-        end ;
+            epsilonOnlyTransitions := e.isEpsilon();
         elsif epsilonOnlyTransitions /= e.isEpsilon() then
             print("ATN state %d has both epsilon and non-epsilon transitions.\n", String(stateNumber))
             epsilonOnlyTransitions := false
@@ -170,11 +169,11 @@ begin
                     break
                 end ;
             end ;
-        end ;
+        end loop;
 
         if not alreadyPresent then
-            transitions.append(e)
-        end ;
+            transitions.append(e);
+        end if;
     end ;
 
     public final function transition (i : Integer) return Transition is
@@ -210,8 +209,8 @@ end ;
 public function ==(lhs: ATNState, rhs: ATNState) return Boolean is
 begin
     if lhs === rhs then
-        return true
-    end ;
+        return true;
+    end if;
     -- are these states same object?
     return lhs.stateNumber == rhs.stateNumber
 

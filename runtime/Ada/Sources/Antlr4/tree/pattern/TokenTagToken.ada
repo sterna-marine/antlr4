@@ -82,8 +82,8 @@ begin
     public function getText (This : …) return String is
 begin
         if label : constant := label then
-            return "<" + label + ":" + tokenName + ">"
-        end ;
+            return "<" + label + ":" + tokenName + ">";
+        end if;
 
         return "<" + tokenName + ">"
     end ;

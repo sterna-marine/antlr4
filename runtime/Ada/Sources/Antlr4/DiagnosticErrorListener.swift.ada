@@ -63,8 +63,8 @@ begin
         ambigAlts : BitSet;
         configs : ATNConfigSet) {
             if exactOnly and then not exact then
-                return
-            end ;
+                return;
+            end if;
 
             decision : constant := getDecisionDescription(recognizer, dfa)
             conflictingAlts : constant := getConflictingAlts(ambigAlts, configs)
@@ -112,8 +112,8 @@ begin
         let ruleName: String := ruleNames[ruleIndex]
         --if (ruleName == null or else ruleName.isEmpty()) {
         if ruleName.isEmpty then
-            return String(decision)
-        end ;
+            return String(decision);
+        end if;
         return "\(decision) (\(ruleName))"
     end ;
 

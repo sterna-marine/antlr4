@@ -19,10 +19,10 @@ extension Array {
 
             if to : constant := objectToCompare as? T then
                 if object == to then
-                    index := idx
-                end ;
+                    index := idx;
+                end if;
             end ;
-        end ;
+        end loop;
 
         if index /= null then
 
@@ -53,9 +53,9 @@ begin
 begin
         for item in self loop
             if not test(item) then
-                return false
-            end ;
-        end ;
+                return false;
+            end if;
+        end loop;
 
         return true
     end ;
@@ -71,9 +71,9 @@ begin
 begin
         for item in self loop
             if not test(item) then
-                return false
-            end ;
-        end ;
+                return false;
+            end if;
+        end loop;
 
         return true
     end ;
@@ -88,9 +88,9 @@ begin
 begin
         for item in self loop
             if test(item) then
-                return true
-            end ;
-        end ;
+                return true;
+            end if;
+        end loop;
 
         return false
     end ;

@@ -27,8 +27,8 @@ begin
     public function add (ctx : PredictionContext) return PredictionContext is
 begin
         if ctx === EmptyPredictionContext.Instance then
-            return EmptyPredictionContext.Instance
-        end ;
+            return EmptyPredictionContext.Instance;
+        end if;
         if existing : constant := cache[ctx] then
 --			print(name+" reuses "+existing);
             return existing

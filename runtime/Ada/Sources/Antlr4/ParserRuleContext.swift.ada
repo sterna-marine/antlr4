@@ -98,9 +98,9 @@ begin
             -- reset parent pointer for any error nodes
             for child in ctxChildren loop
                 if errNode : constant := child as? ErrorNode then
-                    addChild(errNode)
-                end ;
-            end ;
+                    addChild(errNode);
+                end if;
+            end loop;
         end ;
     end ;
 
@@ -125,8 +125,8 @@ begin
     --
     open procedure addAnyChild (t : ParseTree) {
         if children == null then
-            children := [ParseTree]()
-        end ;
+            children := [ParseTree]();
+        end if;
         children!.append(t)
     end ;
 
@@ -175,10 +175,10 @@ begin
             if o : constant := o as? T then
                 j := @ + 1;
                 if j == i then
-                    return o
-                end ;
+                    return o;
+                end if;
             end ;
-        end ;
+        end loop;
 
         return null;
     end ;
@@ -194,11 +194,11 @@ begin
                 if symbol.getType() == ttype then
                     j := @ + 1;
                     if j == i then
-                        return tnode
-                    end ;
+                        return tnode;
+                    end if;
                 end ;
             end ;
-        end ;
+        end loop;
 
         return null;
     end ;
@@ -212,7 +212,7 @@ begin
             if tnode : constant := $0 as? TerminalNode, symbol : constant := tnode.getSymbol(), symbol.getType() == ttype then
                 return tnode
             else
-                return null;;
+                return null;
             end if;
         end ;
     end ;

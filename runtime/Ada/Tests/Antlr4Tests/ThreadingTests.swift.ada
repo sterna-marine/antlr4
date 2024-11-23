@@ -37,7 +37,7 @@ begin
 
                 exp.fulfill()
             end ;
-        end ;
+        end loop;
 
         waitForExpectations(timeout: 30.0) { (_) in
             print("Completed")

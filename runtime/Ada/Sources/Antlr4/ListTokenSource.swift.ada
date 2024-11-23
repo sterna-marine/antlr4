@@ -76,11 +76,9 @@ public type ListTokenSource is new TokenSource with null record;
     public function getCharPositionInLine (This : …) return Integer is
 begin
         if i < tokens.count then
-            return tokens[i].getCharPositionInLine()
-        end ;
+            return tokens[i].getCharPositionInLine();
         elsif eofToken : constant := eofToken then
-            return eofToken.getCharPositionInLine()
-        end ;
+            return eofToken.getCharPositionInLine();
         elsif not tokens.isEmpty then
             -- have to calculate the result from the line/column of the previous
             -- token, along with the text of the token.
@@ -88,8 +86,8 @@ begin
 
             if tokenText : constant := lastToken.getText() then
                 if lastNewLine : constant := tokenText.lastIndex(of: "\n") then
-                    return tokenText.distance(from: lastNewLine, to: tokenText.endIndex) - 1
-                end ;
+                    return tokenText.distance(from: lastNewLine, to: tokenText.endIndex) - 1;
+                end if;
             end ;
             return (lastToken.getCharPositionInLine() +
                     lastToken.getStopIndex() -
@@ -109,8 +107,8 @@ begin
                 if tokens.count > 0 then
                     previousStop : constant := tokens[tokens.count - 1].getStopIndex()
                     if previousStop /= -1 then
-                        start := previousStop + 1
-                    end ;
+                        start := previousStop + 1;
+                    end if;
                 end ;
 
                 stop : constant := max(-1, start - 1)
@@ -123,8 +121,8 @@ begin
 
         t : constant := tokens[i]
         if i == tokens.count - 1 and then t.getType() == CommonToken.EOF then
-            eofToken := t
-        end ;
+            eofToken := t;
+        end if;
 
         i := @ + 1;
         return t
@@ -133,11 +131,9 @@ begin
     public function getLine (This : …) return Integer is
 begin
         if i < tokens.count then
-            return tokens[i].getLine()
-        end ;
+            return tokens[i].getLine();
         elsif eofToken : constant := eofToken then
-            return eofToken.getLine()
-        end ;
+            return eofToken.getLine();
         elsif not tokens.isEmpty then
             -- have to calculate the result from the line/column of the previous
             -- token, along with the text of the token.
@@ -148,8 +144,8 @@ begin
                 for c in tokenText loop
                     if c == "\n" then
                         line := @ + 1;
-                    end ;
-                end ;
+                    end if;
+                end loop;
             end ;
 
             -- if no text is available, assume the token did not contain any newline characters.
@@ -163,14 +159,12 @@ begin
 
     public function getInputStream () return CharStream? {
         if i < tokens.count then
-            return tokens[i].getInputStream()
-        end ;
+            return tokens[i].getInputStream();
         elsif eofToken : constant := eofToken then
-            return eofToken.getInputStream()
-        end ;
+            return eofToken.getInputStream();
         elsif not tokens.isEmpty then
-            return tokens.last!.getInputStream()
-        end ;
+            return tokens.last!.getInputStream();
+        end if;
 
         -- no input stream information is available
         return null;
@@ -179,12 +173,12 @@ begin
     public function getSourceName (This : …) return String is
 begin
         if sourceName : constant := sourceName then
-            return sourceName
-        end ;
+            return sourceName;
+        end if;
 
         if inputStream : constant := getInputStream() then
-            return inputStream.getSourceName()
-        end ;
+            return inputStream.getSourceName();
+        end if;
 
         return "List"
     end ;

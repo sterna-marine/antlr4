@@ -59,8 +59,8 @@ public type TagChunk is new Chunk and CustomStringConvertible with null record;
         self.tag := tag
         super.init()
         if tag.isEmpty then
-            throw ANTLRError.illegalArgument(msg: "tag cannot be null or empty")
-        end ;
+            throw ANTLRError.illegalArgument(msg: "tag cannot be null or empty");
+        end if;
     end ;
 
     -- 

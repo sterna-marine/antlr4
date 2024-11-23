@@ -45,8 +45,8 @@ public class LL1Analyzer {
             -- or we had a predicate when we not seeThruPreds
             if look[alt]!.size() == 0 or else look[alt]!.contains(HIT_PRED) then
                 look[alt] := null;
-            end ;
-        end ;
+            end if;
+        end loop;
         return look
     end ;
 
@@ -175,15 +175,15 @@ begin
                 try! calledRuleStack.clear(s.ruleIndex!)
                 defer {
                     if removed then
-                         try! calledRuleStack.set(s.ruleIndex!)
-                     end ;
+                         try! calledRuleStack.set(s.ruleIndex!);
+                     end if;
                 end ;
                 -- run thru all possible stack tops in ctx
                 length : constant := ctx.size()
                 for i in 0..<length loop
                     returnState : constant := atn.states[(ctx.getReturnState(i))]!
                     _LOOK(returnState, stopState, ctx.getParent(i), look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
-                end ;
+                end loop;
                 return
             end ;
         end ;
@@ -193,8 +193,8 @@ begin
             t : constant := s.transition(i)
             if rt : constant := t as? RuleTransition then
                 if try! calledRuleStack.get(rt.target.ruleIndex!) then
-                    continue
-                end ;
+                    continue;
+                end if;
 
                 newContext : constant := SingletonPredictionContext.create(ctx, rt.followState.stateNumber)
                 try! calledRuleStack.set(rt.target.ruleIndex!)
@@ -209,19 +209,18 @@ begin
                 end if;
             end ;
             elsif t.isEpsilon() then
-                _LOOK(t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
-            end ;
+                _LOOK(t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
             elsif t is WildcardTransition then
                 try! look.addAll(IntervalSet.of(CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType))
             else
                 var set := t.labelIntervalSet()
                 if set /= null then
                     if t is NotSetTransition then
-                        set := set!.complement(IntervalSet.of(CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType)) as? IntervalSet
-                    end ;
+                        set := set!.complement(IntervalSet.of(CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType)) as? IntervalSet;
+                    end if;
                     try! look.addAll(set)
                 end ;
             end ;
-        end ;
+        end loop;
     end ;
 end ;

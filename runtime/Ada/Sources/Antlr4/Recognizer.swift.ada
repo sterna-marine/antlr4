@@ -56,13 +56,13 @@ begin
         length : constant := getATN().maxTokenType
         for i in 0...length loop
             if literalName : constant := vocabulary.getLiteralName(i) then
-                result[literalName] := i
-            end ;
+                result[literalName] := i;
+            end if;
 
             if symbolicName : constant := vocabulary.getSymbolicName(i) then
-                result[symbolicName] := i
-            end ;
-        end ;
+                result[symbolicName] := i;
+            end if;
+        end loop;
 
         result["EOF"] := CommonToken.EOF
 
