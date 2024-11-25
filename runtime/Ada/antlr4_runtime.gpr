@@ -1,0 +1,22 @@
+with "config/antlr4_config.gpr";
+project antlr4_runtime is
+
+   for Source_Dirs use ("src/**", "config/");
+   for Object_Dir use "build/" & Antlr4_Config.Build_Profile & "/obj";
+   for Exec_Dir use "build/" & Antlr4_Config.Build_Profile & "/bin";
+   for Create_Missing_Dirs use "True";
+   for Main use ("main.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Antlr4_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("build/share");
+   end Install;
+
+end antlr4_runtime;

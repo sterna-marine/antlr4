@@ -1,0 +1,122 @@
+name = "tests"
+description = "ANTLR v4 Runtime tests"
+version = "0.1.0-dev"
+
+authors = ["William J. Franck"]
+maintainers = ["William J. Franck <william@sterna.dev>"]
+maintainers-logins = ["haddock17"]
+licenses = "Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = ["lexer", "parser", "grammar", "tests"]
+
+executables = [
+    "TokenStreamRewriterTests",
+    "TokenStreamTests",
+    "VisitorTests"]
+
+[[depends-on]]
+antlr4_runtime = "*"
+sterdevttestunit = ">=3.9.0"
+
+
+[build-profiles]
+antlr4_runtime = "Validation"
+sterdevttestunit = "Release"
+
+
+[[pins]]
+antlr4_runtime = { path='..' }
+sterdevttestunit = { path='../../../../sterdevttestunit' }
+
+[configuration.variables]
+Trace_Level = {type = "Enum", values = ["Info", "Details", "Debug"], default = "Info"}
+
+[configuration]
+auto_gpr_with = false
+output_dir = "../bld"
+
+[build-switches]
+"*".Ada_Version = "Ada2022"
+# "*".Ada_Version = "GNAT_Extensions"
+"*".Runtime_Checks = "Everything" 
+"*".Contracts = "Yes" 
+
+Development.Optimization =  "Debug" 
+Development.Debug_Info = "Yes" 
+# Development.Runtime_Checks = "Everything" 
+Development.Compile_Checks =  "Warnings"  
+# Development.Contracts = "Yes" 
+Development.style_checks = [
+      "-gnatyB",   # Check Boolean operators
+      "-gnaty-d",  # Disable check no DOS line terminators present
+      "-gnatye",   # Check end/exit labels
+      "-gnatyf",   # No form feeds or vertical tabs
+      "-gnatyI",   # check mode IN keywords
+      "-gnatyM120",# Check maximum line length
+      "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
+      "-gnatyS",   # Check no statements after THEN/ELSE
+      "-gnatyx"    # Check extra parentheses
+]
+
+Validation.Optimization = "Performance" 
+Validation.Debug_Info = "Yes" 
+# Validation.Runtime_Checks = "Everything" 
+Validation.Compile_Checks = "Errors"
+# Validation.Contracts = "Yes" 
+Validation.Style_Checks = [
+      "-gnaty3",   # Specify indentation level of 3
+      "-gnatya",   # Check attribute casing
+      "-gnatyA",   # Use of array index numbers in array attributes
+      "-gnatyB",   # Check Boolean operators
+      "-gnatyb",   # Blanks not allowed at statement end
+      "-gnatyc",   # Check comments
+      "-gnaty-d",  # Disable check no DOS line terminators present
+#     "-gnatyD",   # Check declared identifiers in mixed case
+      "-gnatye",   # Check end/exit labels
+      "-gnatyf",   # No form feeds or vertical tabs
+      "-gnatyh",   # No horizontal tabs
+      "-gnatyi",   # Check if-then layout
+      "-gnatyI",   # check mode IN keywords
+      "-gnatyk",   # Check keyword casing
+      "-gnatyl",   # Check layout
+      "-gnatyM120",# Check maximum line length
+      "-gnatyn",   # Check casing of entities in Standard
+      "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
+      "-gnatyp",   # Check pragma casing
+      "-gnatyr",   # Check identifier references casing
+      "-gnatyS",   # Check no statements after THEN/ELSE
+      "-gnatyt",   # Check token spacing
+      "-gnatyu",   # Check unnecessary blank lines
+      "-gnatyx"    # Check extra parentheses
+]
+Release.Optimization = "Performance" 
+Release.Debug_Info = "No" 
+# Release.Runtime_Checks = "Everything" 
+Release.Compile_Checks = "Errors"  
+# Release.Contracts = "Yes" 
+Release.Style_Checks = [
+      "-gnaty3",   # Specify indentation level of 3
+      "-gnatya",   # Check attribute casing
+      "-gnatyA",   # Use of array index numbers in array attributes
+      "-gnatyB",   # Check Boolean operators
+      "-gnatyb",   # Blanks not allowed at statement end
+      "-gnatyc",   # Check comments
+      "-gnaty-d",  # Disable check no DOS line terminators present
+#     "-gnatyD",   # Check declared identifiers in mixed case
+      "-gnatye",   # Check end/exit labels
+      "-gnatyf",   # No form feeds or vertical tabs
+      "-gnatyh",   # No horizontal tabs
+      "-gnatyi",   # Check if-then layout
+      "-gnatyI",   # check mode IN keywords
+      "-gnatyk",   # Check keyword casing
+      "-gnatyl",   # Check layout
+      "-gnatyM120",# Check maximum line length
+      "-gnatyn",   # Check casing of entities in Standard
+      "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
+      "-gnatyp",   # Check pragma casing
+      "-gnatyr",   # Check identifier references casing
+      "-gnatyS",   # Check no statements after THEN/ELSE
+      "-gnatyt",   # Check token spacing
+      "-gnatyu",   # Check unnecessary blank lines
+      "-gnatyx"    # Check extra parentheses
+]

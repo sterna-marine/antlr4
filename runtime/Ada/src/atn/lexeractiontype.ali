@@ -1,0 +1,27 @@
+V "GNAT Lib v14"
+A -mmacosx-version-min=15.0.0
+A -mtune=core2
+A -fPIC
+P ZX
+
+RN
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLICIT_LOOPS
+
+U lexeractiontype%s	lexeractiontype.ads	ebd31214 NE OO PK
+
+D lexeractiontype.ads	20241124095546 ebd31214 lexeractiontype%s
+D system.ads		20240507065137 70765b54 system%s
+G a e
+X 1 lexeractiontype.ads
+13K9*LexerActionType 27l5 27e20
+15E9*LexerActionType 15e95 16r8 25r8
+15n29*channel{15E9} 17r7
+15n38*custom{15E9} 18r7
+15n46*mode{15E9} 19r7
+15n52*more{15E9} 20r7
+15n58*popMode{15E9} 21r7
+15n67*pushMode{15E9} 22r7
+15n77*skip{15E9} 23r7
+15n83*type_action{15E9} 24r7
+

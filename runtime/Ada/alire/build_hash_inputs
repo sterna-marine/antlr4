@@ -1,0 +1,5 @@
+config:antlr4_runtime.trace_level=Info
+external:ANTLR4_RUNTIME_LIBRARY_TYPE=default
+external:LIBRARY_TYPE=default
+profile:antlr4_runtime=DEVELOPMENT
+switches:antlr4_runtime=-Og,-fdata-sections,-ffunction-sections,-g,-gnat2022,-gnatVa,-gnatW8,-gnata,-gnato,-gnatw.X,-gnatwa,-gnaty-d,-gnatyB,-gnatyI,-gnatyM120,-gnatyO,-gnatyS,-gnatye,-gnatyf,-gnatyx

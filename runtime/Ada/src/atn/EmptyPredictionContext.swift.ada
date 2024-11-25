@@ -1,0 +1,62 @@
+--
+-- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
+-- Use of this file is governed by the BSD 3-clause license that
+-- can be found in the LICENSE.txt file in the project root.
+--
+
+
+public type EmptyPredictionContext is new SingletonPredictionContext with null record;
+{
+    --
+    -- Represents `$` in local context prediction, which means wildcard.
+    -- `+x := *`.
+    --
+    public static Instance : constant := EmptyPredictionContext()
+
+    public procedure Init (Self : …) is
+begin
+        super.init(null, PredictionContext.EMPTY_RETURN_STATE)
+    end ;
+
+    override
+    public function isEmpty (This : …) return Boolean is
+begin
+        return True;
+    end ;
+
+    override
+    public function size (This : …) return Integer is
+begin
+        return 1
+    end ;
+
+    override
+    public function getParent (index : Integer) return PredictionContext? {
+        return null;
+    end ;
+
+    override
+    public function getReturnState (index : Integer) return Integer is
+begin
+        return returnState
+    end ;
+
+
+    override
+    -- public
+    description : String;
+    function description return String is
+        return "$"
+    end ;
+end ;
+
+
+-- public
+function "=" (lhs: EmptyPredictionContext, rhs: EmptyPredictionContext) return Boolean is
+begin
+    if lhs === rhs then
+        return True;
+    end if;
+
+    return False;
+end ;

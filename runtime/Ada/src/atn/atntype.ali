@@ -1,0 +1,19 @@
+V "GNAT Lib v14"
+A -mmacosx-version-min=15.0.0
+A -mtune=core2
+A -fPIC
+P ZX
+
+RN
+
+U atntype%s		atntype.ads		60f33aba NE OO PK
+
+D atntype.ads		20241124094858 60f33aba atntype%s
+D system.ads		20240507065137 70765b54 system%s
+G a e
+X 1 atntype.ads
+9K9*ATNType 19l5 19e12
+13E9*ATNType 13e35 14r8 17r8
+13n21*lexer{13E9} 15r7
+13n28*parser{13E9} 16r7
+
