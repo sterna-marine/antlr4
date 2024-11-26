@@ -44,7 +44,7 @@ begin
     -- 
     -- public 
     procedure Init (Self : in out …; parent : Optional_ParserRuleContext;
-                invokingStateNumber : Integer;
+                invokingStateNumber : ATNStates.State;
                 ruleIndex : Integer) {
         self.ruleIndex := ruleIndex
         super.init(parent, invokingStateNumber)

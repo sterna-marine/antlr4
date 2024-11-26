@@ -79,7 +79,7 @@ begin
     procedure Init (Self : in out …; parent : Optional_RuleContext; invokingState : Integer) {
         self.parent := parent
         -- if parent /= null then 
-        --    print("invoke " & stateNumber & " from " & parent);
+        --    print("invoke " & ATNStates.State'Image (stateNumber) & " from " & parent);
         -- }
         self.invokingState := invokingState;
     end if;

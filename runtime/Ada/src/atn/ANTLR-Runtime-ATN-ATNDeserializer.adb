@@ -4,6 +4,9 @@
 -- can be found in the LICENSE.txt file in the project root.
 --
 
+with ANTLR.Runtime.ATN.ATNState;
+use ANTLR.Runtime.ATN;
+
 package body ANTLR.Runtime.ATNDeserializer is
 
 -- public
@@ -58,11 +61,11 @@ begin
             s : constant := stateFactory(stype, ruleIndex)!;
             if stype = ATNState.LOOP_END then
                 -- special case
-                loopBackStateNumber : constant := data[p]
+                loopBackStateNumber : constant ATNStates.State := data[p]
                 p := @ + 1;
                 loopBackStateNumbers.append((s as! LoopEndState, loopBackStateNumber))
             end if; elsif s : constant := s as? BlockStartState then
-                endStateNumber : constant := data[p]
+                endStateNumber : constant ATNStates.State := data[p]
                 p := @ + 1;
                 endStateNumbers.append((s, endStateNumber))
             end if;
@@ -81,7 +84,7 @@ begin
         numNonGreedyStates : constant := data[p]
         p := @ + 1;
         for _ in 0 .. numNonGreedyStates - 1 loop
-            stateNumber : constant := data[p]
+            stateNumber : constant ATNStates.State := data[p]
             p := @ + 1;
             (atn.states[stateNumber] as! DecisionState).nonGreedy := True;
         end loop;
@@ -89,7 +92,7 @@ begin
         numPrecedenceStates : constant := data[p]
         p := @ + 1;
         for _ in 0 .. numPrecedenceStates - 1 loop
-            stateNumber : constant := data[p]
+            stateNumber : constant ATNStates.State := data[p]
             p := @ + 1;
             (atn.states[stateNumber] as! RuleStartState).isPrecedenceRule := True;
         end loop;
@@ -557,10 +560,10 @@ begin
     end if;
 
     -- internal
-    function stateFactory (type : Integer; ruleIndex : Integer) return Optional_ATNState is
+    function stateFactory (State : ATNState.State; ruleIndex : Integer) return Optional_ATNState is
    begin
         s : ATNState;
-         case type is
+         case state is
             when ATNState.INVALID_TYPE => return null;
             when ATNState.BASIC => s := BasicState();
             when ATNState.RULE_START => s := RuleStartState();
@@ -575,7 +578,7 @@ begin
             when ATNState.PLUS_LOOP_BACK => s := PlusLoopbackState();
             when ATNState.LOOP_END => s := LoopEndState();
             when others =>
-                  message : constant String := "The specified state type \(type) is not valid.";
+                  message : constant String := "The specified state type " & ATNState.State'Image &" is not valid.";
 
                   raise ANTLRError.illegalArgument with message;
          end case;

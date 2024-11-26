@@ -4,6 +4,7 @@
 -- can be found in the LICENSE.txt file in the project root.
 -- 
 
+package ANTLR.Runtime.ATN.ATNStates is
 
 -- 
 -- 
@@ -65,10 +66,9 @@
 -- 
 -- 
 -- 
--- public
-type ATNState is new Hashable and CustomStringConvertible with null record;
-{
-    -- constants for serialization
+
+    -- public static 
+    INVALID_STATE_NUMBER : constant Integer := -1;
     -- public static 
     INVALID_TYPE : constant Integer := 0;
     -- public static 
@@ -96,36 +96,54 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- public static 
     LOOP_END : constant Integer := 12;
 
-    -- public static 
-    serializationNames : constant Array<String> =;
+   type State is (
+      INVALID_STATE_NUMBER,
+      INVALID,
+      BASIC,
+      RULE_START,
+      BLOCK_START,
+      PLUS_BLOCK_START,
+      STAR_BLOCK_START,
+      TOKEN_START,
+      RULE_STOP,
+      BLOCK_END,
+      STAR_LOOP_BACK,
+      STAR_LOOP_ENTRY,
+      PLUS_LOOP_BACK,
+      LOOP_END);
+   for State use (
+      INVALID_STATE_NUMBER => -1,
+      INVALID => 0,
+      BASIC => 1,
+      RULE_START => 2,
+      BLOCK_START => 3,
+      PLUS_BLOCK_START => 4,
+      STAR_BLOCK_START => 5,
+      TOKEN_START => 6,
+      RULE_STOP => 7,
+      BLOCK_END => 8,
+      STAR_LOOP_BACK => 9,
+      STAR_LOOP_ENTRY => 10,
+      PLUS_LOOP_BACK => 11,
+      LOOP_END => 12);
 
-    ["INVALID",
-        "BASIC",
-        "RULE_START",
-        "BLOCK_START",
-        "PLUS_BLOCK_START",
-        "STAR_BLOCK_START",
-        "TOKEN_START",
-        "RULE_STOP",
-        "BLOCK_END",
-        "STAR_LOOP_BACK",
-        "STAR_LOOP_ENTRY",
-        "PLUS_LOOP_BACK",
-        "LOOP_END"]
+   package State_Container is new Ada.Cantainer.Vector (
+      Index_Type : Natural;
+      Element_Type : State;
+      "=" : "=");
 
-
-    -- public static 
-    INVALID_STATE_NUMBER : constant Integer := -1;
-
-    -- 
+-- public
+type ATNState is new Hashable with record
     -- Which ATN are we in?
     -- 
     -- public final 
-     atn: Optional_ATN; := null;
+     atn: Optional_ATN;
 
-    public internal(set) final var stateNumber: Integer := INVALID_STATE_NUMBER
+    -- public internal(set) final var
+    stateNumber: Integer := INVALID_STATE_NUMBER;
 
-    public internal(set) final var ruleIndex: Optional_Int;
+    -- public internal(set) final var
+    ruleIndex: Optional_Int;
     -- at runtime, we don't have Rule objects
 
     -- public private(set) final var
@@ -140,8 +158,18 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- 
     -- Used to cache lookahead during parsing, not used during construction
     -- 
-    public internal(set) final var nextTokenWithinRule: Optional_IntervalSet;
+    -- public internal(set) final var
+    nextTokenWithinRule: Optional_IntervalSet;
+   end record;
 
+
+   type Optional_ATNState (Is_Valid : Boolean := False) is record
+      if Is_Valid then
+         Value : ATNState;
+      else
+         null;
+      end if;
+   end record;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
@@ -253,3 +281,4 @@ begin
 
 end if;
 
+end ANTLR.Runtime.ATN.ATNStates;

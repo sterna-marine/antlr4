@@ -123,11 +123,9 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- public final 
      atn: Optional_ATN; := null;
 
-    -- public internal(set) final var
-    stateNumber: Integer := INVALID_STATE_NUMBER;
+    public internal(set) final var stateNumber: ATNStates.State := ATNStates.INVALID_STATE_NUMBER;
 
-    -- public internal(set) final var
-    ruleIndex: Optional_Int;
+    public internal(set) final var ruleIndex: Optional_Int;
     -- at runtime, we don't have Rule objects
 
     -- public private(set) final var
@@ -142,8 +140,7 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- 
     -- Used to cache lookahead during parsing, not used during construction
     -- 
-    -- public internal(set) final var
-    nextTokenWithinRule: Optional_IntervalSet;
+    public internal(set) final var nextTokenWithinRule: Optional_IntervalSet;
 
 
     -- public
@@ -190,12 +187,12 @@ begin
         for t in transitions loop
             if t.target.stateNumber = e.target.stateNumber then
                 if tLabel : constant := t.labelIntervalSet(), eLabel : constant := e.labelIntervalSet(), tLabel = eLabel then
---                    print("Repeated transition upon \(eLabel) from \(stateNumber)->\(t.target.stateNumber)")
+                    -- print("Repeated transition upon " & \(eLabel) & " from " & ATNStates.State'Image (stateNumber) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
                     alreadyPresent := True;
                     exit when True;
                 end if;
                 elsif t.isEpsilon() and then e.isEpsilon() then
---                    print("Repeated epsilon transition from \(stateNumber)->\(t.target.stateNumber)")
+                    -- print("Repeated epsilon transition from " & ATNStates.State'Image (stateNumber(stateNumber)) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
                     alreadyPresent := True;
                     exit when True;
                 end if;

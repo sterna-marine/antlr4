@@ -27,7 +27,7 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
     _interp : ATNInterpreter!
 
     -- private
-    _stateNumber := ATNState.INVALID_STATE_NUMBER
+    _stateNumber := ATNStates.State'Enum_Rep (INVALID_STATE_NUMBER);
 
     -- open
     function getRuleNames () return [String] {
@@ -230,9 +230,9 @@ begin
     end if;
 
     -- public final
-    function getState (This : …) return Integer is
+    function getState (This : …) return ATNStates.State is
 begin
-        return _stateNumber
+        return This.stateNumber;
     end if;
 
     -- Indicate that the recognizer has changed internal state that is

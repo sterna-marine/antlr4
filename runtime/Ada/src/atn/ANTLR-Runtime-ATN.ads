@@ -1,13 +1,24 @@
--- 
 -- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
 -- Use of this file is governed by the BSD 3-clause license that
 -- can be found in the LICENSE.txt file in the project root.
 -- 
 
+with Ada.Containers.Vector;
+with ANTLR.Runtime.ATN.ATNStates;
+-- use ANTLR.Runtime.ATN;
+
 package ANTLR.Runtime.ATN is
 
    -- public static 
    INVALID_ALT_NUMBER : constant Integer := 0;
+
+   package ATNState_Container is new Ada.Containers.Vector (
+      Index_Type : Natural;
+      Element_Type : ATNState;
+      "=" : "=");
+
+   -- public private(set) final
+   states : ATNState_Container.Vector := Empty_Vector;
 
    -- public
 
@@ -112,14 +123,14 @@ begin
     -- number `stateNumber`
     -- 
     -- public
-    function getExpectedTokens (stateNumber : Integer; context : RuleContext) return IntervalSet is
+    function getExpectedTokens (stateNumber : ATNStates.State; context : RuleContext) return IntervalSet is
 begin
         guard states.indices.contains(stateNumber) else {
             raise ANTLRError.illegalArgument with "Invalid state number.";
         end if;
 
         ctx : Optional_RuleContext; := context;
-        s : constant := states[stateNumber]!
+        s : constant ATNStates.State := states[stateNumber]!
         var following := nextTokens(s)
         if not following.contains(CommonToken.EPSILON) then
             return following;
@@ -159,8 +170,6 @@ begin
 private 
    type ATN is tagged record with record
 
-    -- public private(set) final
-    states := [ATNState?]()
 
     -- 
     -- Each subrule/rule is a decision point and we must track them so we

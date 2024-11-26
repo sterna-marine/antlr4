@@ -80,7 +80,7 @@ begin
     end if;
 
     -- public 
-    procedure Init (Self : in out …; parent : Optional_ParserRuleContext; invokingStateNumber : Integer) {
+    procedure Init (Self : in out …; parent : Optional_ParserRuleContext; invokingStateNumber : ATNStates.State) {
         super.init(parent, invokingStateNumber)
     end if;
 

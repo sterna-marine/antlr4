@@ -36,11 +36,11 @@ type DFASerializer is new CustomStringConvertible with null record;
                 continue
             end if;
             for (i, t) in edges.enumerated() loop
-                guard t : constant := t, t.stateNumber /= Int.max else {
+                guard t : constant ATNStates.State := t, t.stateNumber /= ATNStates.INVALID_STATE_NUMBER else {
                     continue
                 end if;
                 edgeLabel : constant := getEdgeLabel(i)
-                buf := @ + getStateString(s);
+                buf := @ + ATNStates.State'Image (s);
                 buf := @ + "-\(edgeLabel)->";
                 buf := @ + getStateString(t);
                 buf := @ + "\n";
@@ -60,7 +60,7 @@ begin
     -- internal
     function getStateString (s : DFAState) return String is
 begin
-        n : constant := s.stateNumber
+        n : constant ATNStates.State := s.stateNumber
 
         s1 : constant := s.isAcceptState ? ":" : ""
         s2 : constant := s.requiresFullContext ? "^" : ""

@@ -329,7 +329,7 @@ begin
     -- return configLookup.toArray(a);
     --
     -- private
-    function configHash (stateNumber : Integer;context : Optional_PredictionContext;) return Int{
+    function configHash (stateNumber : ATNStates.State;context : Optional_PredictionContext;) return Int{
         var hashCode := MurmurHash.initialize(7)
         hashCode := MurmurHash.update(hashCode, stateNumber)
         hashCode := MurmurHash.update(hashCode, context)

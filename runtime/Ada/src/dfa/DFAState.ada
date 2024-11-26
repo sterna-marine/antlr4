@@ -34,7 +34,8 @@
 -- public final
 type DFAState is new Hashable and CustomStringConvertible with null record;
 {
-    public internal(set) var stateNumber := ATNState.INVALID_STATE_NUMBER
+    -- public internal(set)
+    stateNumber : ATNStates.State := ATNState.INVALID_STATE_NUMBER;
 
     public internal(set) var configs: ATNConfigSet
 
@@ -135,7 +136,7 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     -- public
     description : String;
     function description return String is
-        var buf := "\(stateNumber):\(configs)"
+        var buf := ATNState.State'Image (stateNumber) & ":" & \(configs)
         if isAcceptState then
             buf := @ + "=>";
             if predicates : constant := predicates then

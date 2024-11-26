@@ -38,7 +38,7 @@ Development.style_checks = [
       "-gnatye",   # Check end/exit labels
       "-gnatyf",   # No form feeds or vertical tabs
       "-gnatyI",   # check mode IN keywords
-      "-gnatyM120",# Check maximum line length
+      "-gnatyM132",# Check maximum line length
       "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
       "-gnatyS",   # Check no statements after THEN/ELSE
       "-gnatyx"    # Check extra parentheses
@@ -55,7 +55,7 @@ Validation.Style_Checks = [
       "-gnatyA",   # Use of array index numbers in array attributes
       "-gnatyB",   # Check Boolean operators
       "-gnatyb",   # Blanks not allowed at statement end
-      "-gnatyc",   # Check comments
+      "-gnatyC",   # Check comments
       "-gnaty-d",  # Disable check no DOS line terminators present
 #     "-gnatyD",   # Check declared identifiers in mixed case
       "-gnatye",   # Check end/exit labels
@@ -65,7 +65,7 @@ Validation.Style_Checks = [
       "-gnatyI",   # check mode IN keywords
       "-gnatyk",   # Check keyword casing
       "-gnatyl",   # Check layout
-      "-gnatyM120",# Check maximum line length
+      "-gnatyM132",# Check maximum line length
       "-gnatyn",   # Check casing of entities in Standard
       "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
       "-gnatyp",   # Check pragma casing
@@ -86,7 +86,7 @@ Release.Style_Checks = [
       "-gnatyA",   # Use of array index numbers in array attributes
       "-gnatyB",   # Check Boolean operators
       "-gnatyb",   # Blanks not allowed at statement end
-      "-gnatyc",   # Check comments
+      "-gnatyC",   # Check comments
       "-gnaty-d",  # Disable check no DOS line terminators present
 #     "-gnatyD",   # Check declared identifiers in mixed case
       "-gnatye",   # Check end/exit labels
@@ -96,7 +96,7 @@ Release.Style_Checks = [
       "-gnatyI",   # check mode IN keywords
       "-gnatyk",   # Check keyword casing
       "-gnatyl",   # Check layout
-      "-gnatyM120",# Check maximum line length
+      "-gnatyM132",# Check maximum line length
       "-gnatyn",   # Check casing of entities in Standard
       "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
       "-gnatyp",   # Check pragma casing

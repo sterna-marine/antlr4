@@ -18,17 +18,18 @@ type PredictionContext is new Hashable and CustomStringConvertible with null rec
     -- public static 
     EMPTY_RETURN_STATE : constant := Integer (Int32.max)
 
-    private static INITIAL_HASH : constant := UInt32(1)
+    -- private static 
+    INITIAL_HASH : constant := UInt32(1)
 
     -- public static 
-    var globalNodeCount := 0
+    globalNodeCount := 0
 
     -- public final
-    id : constant Integer := {;
+    id : constant Integer := {
         oldGlobalNodeCount : constant := globalNodeCount
         globalNodeCount := @ + 1;
         return oldGlobalNodeCount
-    end if;()
+    }()
 
     --
     -- Stores the computed hash code of this _org.antlr.v4.runtime.atn.PredictionContext_. The hash
@@ -724,7 +725,7 @@ begin
                         end if;
 
                         atn : constant := recognizer.getATN()
-                        s : constant := atn.states[stateNumber]!
+                        s : constant ATNStates.State := atn.states[stateNumber]!
                         ruleName : constant := recognizer.getRuleNames()[s.ruleIndex!]
                         localBuffer.append(ruleName)
                     end if;

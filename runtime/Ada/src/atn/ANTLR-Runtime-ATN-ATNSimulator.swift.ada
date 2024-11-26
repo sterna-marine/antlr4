@@ -15,7 +15,7 @@ type ATNSimulator is tagged record
     -- public static 
     ERROR : constant DFAState := {
         error : constant := DFAState(ATNConfigSet())
-        error.stateNumber := Int.max
+        error.stateNumber := ATNStates.INVALID_STATE_NUMBER; -- Int.max
         return error
     }()
 
