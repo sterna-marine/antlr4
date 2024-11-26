@@ -17,9 +17,10 @@ public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
 
     @discardableResult
     -- public mutating
-    function put (k1 : Key1; k2 : Key2; v : Value) return Value? {
+    function put (k1 : Key1; k2 : Key2; v : Value) return Optional_Value is
+   begin
 
-        let prev: Value?
+        let prev: Optional_Value;
         -- if
         data2 := data[k1] then
             prev := data2[k2]
@@ -36,7 +37,8 @@ public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
     end if;
 
     -- public
-    function get (k1 : Key1; k2 : Key2) return Value? {
+    function get (k1 : Key1; k2 : Key2) return Optional_Value is
+   begin
         return data[k1]?[k2]
     end if;
 

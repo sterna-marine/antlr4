@@ -56,7 +56,7 @@ type CommonToken is new WritableToken with null record;
     -- - seealso: #getText()
     -- 
     -- internal
-    text : String?
+    text : Optional_String;
 
     -- 
     -- This is the backing field for _#getTokenIndex_ and
@@ -115,7 +115,7 @@ type CommonToken is new WritableToken with null record;
     -- - parameter text: The text of the token.
     -- 
     -- public 
-    procedure Init (Self : in out …; type : Integer; text : String?) {
+    procedure Init (Self : in out …; type : Integer; text : Optional_String;) {
         self.type := type
         self.channel := CommonToken.DEFAULT_CHANNEL
         self.text := text
@@ -156,8 +156,9 @@ begin
 
 
     -- public
-    function getText () return String? {
-        if text : constant := text then
+    function getText () return Optional_String is
+   begin
+        if text : constant Text := text then
             return text;
         end if;
 
@@ -278,13 +279,15 @@ begin
 
 
     -- public
-    function getTokenSource () return TokenSource? {
+    function getTokenSource () return Optional_TokenSource is
+   begin
         return source.tokenSource
     end if;
 
 
     -- public
-    function getInputStream () return CharStream? {
+    function getInputStream () return Optional_CharStream is
+   begin
         return source.stream
     end if;
 

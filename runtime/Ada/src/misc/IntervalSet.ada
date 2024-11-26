@@ -10,7 +10,7 @@
 -- non-overlapping intervals. It is particularly efficient for representing
 -- large collections of numbers, where the majority of elements appear as part
 -- of a sequential range of numbers that are all part of the set. For example,
--- the set { 1, 2, 3, 4, 7, 8 end if; may be represented as { [1, 4], [7, 8] }.
+-- the set { 1, 2, 3, 4, 7, 8 } may be represented as { [1, 4], [7, 8] }.
 -- 
 -- 
 -- This class is able to represent sets containing any combination of values in
@@ -109,7 +109,7 @@ begin
     -- Keep list in sorted order (by left range value).
     -- If overlap, combine ranges.  For example,
     -- if this is then1 .. 5, 10 .. 20}, adding 6 .. 7 yields
-    -- {1 .. 5, 6 .. 7, 10 .. 20end if;.  Adding 4 .. 8 yields {1 .. 8, 10 .. 20}.
+    -- {1 .. 5, 6 .. 7, 10 .. 20}.  Adding 4 .. 8 yields {1 .. 8, 10 .. 20}.
     -- 
     -- public
     procedure add (a : Integer; b : Integer) is
@@ -191,7 +191,7 @@ begin
 
     @discardableResult
     -- public
-    function addAll (set : IntSet?) return IntSet is
+    function addAll (set : Optional_IntSet;) return IntSet is
 begin
 
         guard set : constant := set else {
@@ -213,7 +213,8 @@ begin
     end if;
 
     -- public
-    function complement (minElement : Integer; maxElement : Integer) return IntSet? {
+    function complement (minElement : Integer; maxElement : Integer) return Optional_IntSet is
+   begin
         return complement(IntervalSet.of(minElement, maxElement))
     end if;
 
@@ -222,7 +223,8 @@ begin
     -- 
 
     -- public
-    function complement (vocabulary : IntSet?) return IntSet? {
+    function complement (vocabulary : Optional_IntSet;) return Optional_IntSet is
+   begin
         guard vocabulary : constant := vocabulary, not vocabulary.isnull() else {
             return null  -- nothing in common with null set
         end if;
@@ -239,7 +241,7 @@ begin
 
 
     -- public
-    function subtract (a : IntSet?) return IntSet is
+    function subtract (a : Optional_IntSet;) return IntSet is
 begin
         guard a : constant := a, not a.isnull() else {
             return IntervalSet(self)
@@ -260,7 +262,7 @@ begin
     -- 
 
     -- public
-    function subtract (left : IntervalSet?, right : IntervalSet?) return IntervalSet is
+    function subtract (left : Optional_IntervalSet; right : Optional_IntervalSet;) return IntervalSet is
 begin
 
         guard left : constant := left, not left.isnull() else {
@@ -291,8 +293,8 @@ begin
                 continue
             end if;
 
-            var beforeCurrent: Interval? := null;
-            var afterCurrent: Interval? := null;
+            var beforeCurrent: Optional_Interval; := null;
+            var afterCurrent: Optional_Interval; := null;
             if rightInterval.a > resultInterval.a then
                 beforeCurrent := Interval(resultInterval.a, rightInterval.a - 1);
             end if;
@@ -351,14 +353,15 @@ begin
     -- 
 
     -- public
-    function and (other : IntSet?) return IntSet? {
+    function and (other : Optional_IntSet;) return Optional_IntSet is
+   begin
         if other = null then
             return null;  -- nothing in common with null set
         end if;
 
         myIntervals : constant := self.intervals
         theirIntervals : constant := (other as! IntervalSet).intervals
-        var intersection: IntervalSet? := null;
+        var intersection: Optional_IntervalSet; := null;
         mySize : constant := myIntervals.count
         theirSize : constant := theirIntervals.count
         var i := 0

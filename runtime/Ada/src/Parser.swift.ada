@@ -15,7 +15,7 @@ with Foundation;
 -- - SeeAlso: `ATNDeserializationOptions.generateRuleBypassTransitions`
 --
 -- private
-bypassAltsAtnCache : ATN? := null;
+bypassAltsAtnCache : Optional_ATN; := null;
 
 --
 -- mutex for bypassAltsAtnCache updates
@@ -140,7 +140,7 @@ type Parser is new Recognizer<ParserATNSimulator> with record
     -- This is always non-null during the parsing process.
     -- 
     -- public
-    _ctx : ParserRuleContext? := null;
+    _ctx : Optional_ParserRuleContext; := null;
 
     -- 
     -- Specifies whether or not the parser should construct a parse tree during
@@ -160,7 +160,7 @@ type Parser is new Recognizer<ParserATNSimulator> with record
     -- other parser methods.
     -- 
     -- private
-    _tracer : TraceListener?
+    _tracer : Optional_TraceListener;
 
     -- 
     -- The list of _org.antlr.v4.runtime.tree.ParseTreeListener_ listeners registered to receive
@@ -396,7 +396,7 @@ begin
     -- 
 
     -- public
-    procedure removeParseListener (This : Parser; listener : ParseTreeListener?) is
+    procedure removeParseListener (This : Parser; listener : Optional_ParseTreeListener;) is
     begin
         if _parseListeners /= null then
             if not _parseListeners!.filter({ $0 === listener end if;).isEmpty then
@@ -517,7 +517,7 @@ begin
     -- public
     function compileParseTreePattern (This : Parser; pattern : String; patternRuleIndex : Integer) return ParseTreePattern is
 begin
-        if tokenStream : constant := getTokenStream() then
+        if tokenStream : constant Token := getTokenStream() then;
             tokenSource : constant := tokenStream.getTokenSource()
             if lexer : constant := tokenSource as? Lexer then
                 return compileParseTreePattern(pattern, patternRuleIndex, lexer);
@@ -553,7 +553,8 @@ begin
 
     override
     -- open
-    function getInputStream (This : Parser) return IntStream? {
+    function getInputStream (This : Parser) return Optional_IntStream is
+   begin
         return getTokenStream()
     end if;
 
@@ -563,7 +564,8 @@ begin
     end if;
 
     -- public
-    function getTokenStream (This : Parser) return TokenStream? {
+    function getTokenStream (This : Parser) return Optional_TokenStream is
+   begin
         return _input
     end if;
 
@@ -593,12 +595,12 @@ begin
     end if;
 
     -- public
-    procedure notifyErrorListeners (This : Parser; offendingToken : Token?, msg : String; e : AnyObject?) is
+    procedure notifyErrorListeners (This : Parser; offendingToken : Optional_Token; msg : String; e : Optional_AnyObject;) is
     begin
         _syntaxErrors := @ + 1;
         var line := -1
         var charPositionInLine := -1
-        if offendingToken : constant := offendingToken then
+        if offendingToken : constant Token := offendingToken then;
             line := offendingToken.getLine()
             charPositionInLine := offendingToken.getCharPositionInLine()
         end if;
@@ -632,7 +634,7 @@ begin
     -- public
     function consume (This : Parser; ) return Token is
 begin
-        o : constant := getCurrentToken();
+        o : constant Token := getCurrentToken();;
         if o.getType() /= Parser.EOF then
             getInputStream()!.consume();
         end if;
@@ -807,7 +809,7 @@ begin
     end if;
 
     -- public
-    procedure unrollRecursionContexts (This : Parser; _parentctx : ParserRuleContext?) is
+    procedure unrollRecursionContexts (This : Parser; _parentctx : Optional_ParserRuleContext;) is
     begin
         _precedenceStack.pop()
         _ctx!.stop := _input.LT(-1);
@@ -833,7 +835,8 @@ begin
     end if;
 
     -- public
-    function getInvokingContext (This : Parser; ruleIndex : Integer) return ParserRuleContext? {
+    function getInvokingContext (This : Parser; ruleIndex : Integer) return Optional_ParserRuleContext is
+   begin
         var p := _ctx
         while pWrap : constant := p loop
             if pWrap.getRuleIndex() == ruleIndex then
@@ -845,7 +848,8 @@ begin
     end if;
 
     -- public
-    function getContext (This : Parser) return ParserRuleContext? {
+    function getContext (This : Parser) return Optional_ParserRuleContext is
+   begin
         return _ctx
     end if;
 
@@ -857,7 +861,7 @@ begin
 
     override
     -- open
-    function precpred (This : Parser; localctx : RuleContext?, precedence : Integer) return Boolean is
+    function precpred (This : Parser; localctx : Optional_RuleContext; precedence : Integer) return Boolean is
 begin
         return precedence >= _precedenceStack.peek()!
     end if;
@@ -996,7 +1000,7 @@ begin
     function isExpectedToken (This : Parser; symbol : Integer) return Boolean is
 begin
         atn : constant := getInterpreter().atn
-        var ctx: ParserRuleContext? := _ctx
+        var ctx: Optional_ParserRuleContext; := _ctx
         s : constant := atn.states[getState()]!
         var following := atn.nextTokens(s)
         if following.contains(symbol) then
@@ -1055,7 +1059,8 @@ begin
     end if;
 
     -- public
-    function getRuleContext () return ParserRuleContext? {
+    function getRuleContext () return Optional_ParserRuleContext is
+   begin
         return _ctx
     end if;
 
@@ -1072,7 +1077,7 @@ begin
     end if;
 
     -- public
-    function getRuleInvocationStack (This : Parser; p : RuleContext?) return [String] {
+    function getRuleInvocationStack (This : Parser; p : Optional_RuleContext;) return [String] {
         var p := p
         ruleNames : constant := getRuleNames()
         var stack := [String]()
@@ -1130,7 +1135,8 @@ begin
 
     override
     -- open
-    function getParseInfo (This : Parser) return ParseInfo? {
+    function getParseInfo (This : Parser) return Optional_ParseInfo is
+   begin
         interp : constant := getInterpreter()
         if interp : constant := interp as? ProfilingATNSimulator then
             return ParseInfo(interp);

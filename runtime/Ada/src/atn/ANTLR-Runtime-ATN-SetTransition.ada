@@ -33,7 +33,8 @@ begin
 
     override
     -- public
-    function labelIntervalSet () return IntervalSet? {
+    function labelIntervalSet () return Optional_IntervalSet is
+   begin
         return set
     end if;
 

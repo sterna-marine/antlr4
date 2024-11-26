@@ -58,7 +58,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "0")
@@ -71,7 +71,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertAfter(2, "x")
@@ -84,7 +84,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(1, "x")
@@ -98,7 +98,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(0, "x");
@@ -111,7 +111,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, "x");
@@ -124,7 +124,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, "x");
@@ -139,7 +139,7 @@ begin
         -- Input:  x := 3 * 0
         input : constant := ANTLRInputStream("x := 3 * 0;")
         lexer : constant := LexerB(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
 
@@ -170,7 +170,7 @@ begin
         -- Input:  x := 3 * 0 + 2 * 0;
         input : constant := ANTLRInputStream("x := 3 * 0 + 2 * 0;")
         lexer : constant := LexerB(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
 
@@ -218,7 +218,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, "x");
@@ -232,7 +232,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "_")
@@ -247,7 +247,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, "x");
@@ -261,7 +261,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(0, 2, "x");
@@ -281,7 +281,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "0")
@@ -295,7 +295,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(1, "x")
@@ -309,7 +309,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "x")
@@ -324,7 +324,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, "x");
@@ -338,7 +338,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(2, "y")
@@ -352,7 +352,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, "x");
@@ -366,7 +366,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 4, "x");
@@ -380,7 +380,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 4, "x");
@@ -400,7 +400,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 4, "x");
@@ -414,7 +414,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(0, 6, "x");
@@ -427,7 +427,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 4, "xyz");
@@ -440,7 +440,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 4, "xyz");
@@ -459,7 +459,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcccba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 4, "xyz");
@@ -478,7 +478,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcba")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 2, "xyz");
@@ -492,7 +492,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "x")
@@ -506,7 +506,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(1, "x")
@@ -521,7 +521,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         -- combine with left edge of rewrite
@@ -537,7 +537,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         -- combine with left edge of rewrite
@@ -555,7 +555,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(1, "x")
@@ -571,7 +571,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, 2, "foo");
@@ -587,7 +587,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(0, 3, "bar");
@@ -608,7 +608,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, 2, "foo");
@@ -624,7 +624,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, 2, "foo");
@@ -640,7 +640,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(1, 2, "foo");
@@ -656,7 +656,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(1, "foo")
@@ -672,7 +672,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(1, "x")
@@ -686,7 +686,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abcc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.replace(2, 3, "foo");
@@ -700,7 +700,7 @@ begin
 begin
         input : constant := ANTLRInputStream("abc")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(2, "y")
@@ -714,7 +714,7 @@ begin
 begin
         input : constant := ANTLRInputStream("aa")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "<b>")
@@ -730,7 +730,7 @@ begin
 begin
         input : constant := ANTLRInputStream("aa")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "<p>")
@@ -748,7 +748,7 @@ begin
 begin
         input : constant := ANTLRInputStream("ab")
         lexer : constant := LexerA(input)
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         tokens : constant := TokenStreamRewriter(stream)
         tokens.insertBefore(0, "<p>")

@@ -30,7 +30,7 @@ type LexerATNConfig is new ATNConfig with null record;
     procedure Init (Self : in out …; state : ATNState;
                 alt : Integer;
                 context : PredictionContext;
-                lexerActionExecutor : LexerActionExecutor?) {
+                lexerActionExecutor : Optional_LexerActionExecutor;) {
 
         self.lexerActionExecutor := lexerActionExecutor
         self.passedThroughNonGreedyDecision := False;
@@ -47,7 +47,7 @@ type LexerATNConfig is new ATNConfig with null record;
 
     -- public 
     procedure Init (Self : in out …; c : LexerATNConfig; state : ATNState;
-                lexerActionExecutor : LexerActionExecutor?) {
+                lexerActionExecutor : Optional_LexerActionExecutor;) {
 
         self.lexerActionExecutor := lexerActionExecutor
         self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision(c, state)
@@ -75,7 +75,8 @@ begin
     -- action(s) for the current configuration.
     --
     -- public final
-    function getLexerActionExecutor () return LexerActionExecutor? {
+    function getLexerActionExecutor () return Optional_LexerActionExecutor is
+   begin
         return lexerActionExecutor
     end if;
 

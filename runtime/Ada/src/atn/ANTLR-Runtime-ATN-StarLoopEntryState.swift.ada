@@ -9,7 +9,7 @@
 type StarLoopEntryState is new DecisionState with null record;
 {
     -- public
-    loopBackState : StarLoopbackState?
+    loopBackState : Optional_StarLoopbackState;
 
     -- 
     -- Indicates whether this state can benefit from a precedence DFA during SLL

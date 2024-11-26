@@ -81,7 +81,8 @@ begin
 
     override
     -- internal
-    function LB (k : Integer) return Token? {
+    function LB (k : Integer) return Optional_Token is
+   begin
         if k = 0 or else (p - k) < 0 then
             return null;
         end if;
@@ -102,7 +103,8 @@ begin
 
     override
     -- public
-    function LT (k : Integer) return Token? {
+    function LT (k : Integer) return Optional_Token is
+   begin
         --System.out.println("enter LT("+k+")");
         lazyInit();
         if k = 0 then

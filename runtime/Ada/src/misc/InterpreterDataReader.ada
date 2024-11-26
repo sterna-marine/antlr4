@@ -51,7 +51,7 @@ type InterpreterDataReader is tagged record
     -- public 
     procedure Init (Self : in out …; _ filePath:String) {
         self.filePath := filePath
-        contents : constant := String(contentsOfFile: filePath, encoding: String.Encoding.utf8);
+        contents : constant String := To_String(contentsOfFile: filePath, encoding: String.Encoding.utf8);
         var part := Part.partName,
             literalNames := [String](),
             symbolicNames := [String](),
@@ -59,7 +59,7 @@ type InterpreterDataReader is tagged record
             channelNames := [String](),
             modeNames := [String](),
             atnText := [Substring](),
-            fail:Error?
+            fail: Optional_Error;
         contents.enumerateLines { (line,stop) in
             -- have to be moved outside the enumerateLines block
             if line == "" then

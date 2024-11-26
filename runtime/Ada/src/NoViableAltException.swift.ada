@@ -39,18 +39,18 @@ type NoViableAltException is new RecognitionException with null record;
     end if;
 
     -- public 
-    procedure Init (Self : in out …; recognizer : Parser?,
+    procedure Init (Self : in out …; recognizer : Optional_Parser;
                 input : IntStream;
                 startToken : Token;
-                offendingToken : Token?,
-                deadEndConfigs : ATNConfigSet?,
-                ctx : ParserRuleContext?) {
+                offendingToken : Optional_Token;
+                deadEndConfigs : Optional_ATNConfigSet;
+                ctx : Optional_ParserRuleContext;) {
 
         self.deadEndConfigs := deadEndConfigs
         self.startToken := startToken
 
         super.init(recognizer, input, ctx)
-        if offendingToken : constant := offendingToken then
+        if offendingToken : constant Token := offendingToken then;
             setOffendingToken(offendingToken);
         end if;
     end if;
@@ -64,7 +64,8 @@ begin
 
 
     -- public
-    function getDeadEndConfigs () return ATNConfigSet? {
+    function getDeadEndConfigs () return Optional_ATNConfigSet is
+   begin
         return deadEndConfigs
     end if;
 

@@ -14,7 +14,8 @@ type ArrayPredictionContext is new PredictionContext with null record;
     -- from _#EMPTY_ and non-empty. We merge _#EMPTY_ by using null parent and
     -- returnState = _#EMPTY_RETURN_STATE_.
     -- 
-    public private(set) final var parents: [PredictionContext?]
+    -- public private(set) final var
+    parents : [PredictionContext?];
 
     -- 
     -- Sorted for merge, no duplicates; if present,
@@ -55,7 +56,8 @@ begin
 
     override
     -- final public
-    function getParent (index : Integer) return PredictionContext? {
+    function getParent (index : Integer) return Optional_PredictionContext is
+   begin
         return parents[index]
     end if;
 

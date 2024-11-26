@@ -14,7 +14,7 @@
 type InputMismatchException is new RecognitionException with null record;
 {
     -- public 
-    procedure Init (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: ParserRuleContext? := null) {
+    procedure Init (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: Optional_ParserRuleContext; := null) {
         bestCtx : constant := ctx ?? recognizer._ctx
 
         super.init(recognizer, recognizer.getInputStream()!, bestCtx)

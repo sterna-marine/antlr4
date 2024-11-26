@@ -15,7 +15,7 @@ with Foundation;
 --public struct DefaultATNConfig: ATNConfig {
 --    public var state: ATNState
 --    public var alt : Integer;
---    public var context: PredictionContext?
+--    public var context: Optional_PredictionContext;
 --    public var semanticContext: SemanticContext
 --    public var hashValue: Integer {
 --

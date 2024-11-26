@@ -56,7 +56,8 @@ begin
     -- semantic context after precedence predicates are evaluated.
     --
     -- public
-    function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
+    function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
+   begin
         return self
     end if;
 
@@ -91,7 +92,7 @@ begin
         -- public
         description : String;
         function description return String is
-            return "{Trueend if;?"
+            return "{True}?"
         end if;
     end if;
 
@@ -169,7 +170,8 @@ begin
 
         override
         -- public
-        function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
+        function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
+   begin
             if parser.precpred(parserCallStack, precedence) then
                 return SemanticContext.Empty.Instance
             else
@@ -188,7 +190,7 @@ begin
         -- public
         description : String;
         function description return String is
-            return "{" + String(precedence) + ">=precend if;?"
+            return "{" + String(precedence) + ">=prec}?"
 
         end if;
     end if;
@@ -290,7 +292,8 @@ begin
 
         override
         -- public
-        function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
+        function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
+   begin
             var differs := False;
             var operands := [SemanticContext]()
             for context in opnds loop
@@ -395,7 +398,8 @@ begin
 
         override
         -- public
-        function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
+        function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
+   begin
             var differs := False;
             var operands := [SemanticContext]()
             for context in opnds loop
@@ -427,7 +431,7 @@ begin
     end if;
 
     -- public static
-    function and (a : SemanticContext?, b : SemanticContext?) return SemanticContext is
+    function and (a : Optional_SemanticContext; b : Optional_SemanticContext;) return SemanticContext is
 begin
         if a = null or else a = SemanticContext.Empty.Instance then
             return b!;
@@ -448,7 +452,7 @@ begin
     -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getPredsForAmbigAlts
     --
     -- public static
-    function or (a : SemanticContext?, b : SemanticContext?) return SemanticContext is
+    function or (a : Optional_SemanticContext; b : Optional_SemanticContext;) return SemanticContext is
 begin
         if a = null then
             return b!;

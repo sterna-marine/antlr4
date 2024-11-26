@@ -15,7 +15,7 @@ type ATNDeserializer is tagged record
     deserializationOptions : constant ATNDeserializationOptions;
 
     -- public 
-    procedure Init (Self : in out …; deserializationOptions : ATNDeserializationOptions? := null) {
+    procedure Init (Self : in out …; deserializationOptions : Optional_ATNDeserializationOptions; := null) {
         self.deserializationOptions := deserializationOptions ?? ATNDeserializationOptions()
     end if;
 
@@ -375,8 +375,8 @@ begin
 
             bypassStop.startState := bypassStart
 
-            var endState: ATNState?
-            var excludeTransition: Transition? := null;
+            var endState: Optional_ATNState;
+            var excludeTransition: Optional_Transition; := null;
             if atn.ruleToStartState[i].isPrecedenceRule then
                 -- wrap from the beginning of the rule to the StarLoopEntryState
                 endState := null;
@@ -507,7 +507,7 @@ begin
     end if;
 
     -- internal
-    procedure checkCondition (condition : Boolean; message : String?) is
+    procedure checkCondition (condition : Boolean; message : Optional_String;) is
     begin
         if not condition then
             raise ANTLRError.illegalState with message ?? "";
@@ -557,7 +557,8 @@ begin
     end if;
 
     -- internal
-    function stateFactory (type : Integer; ruleIndex : Integer) return ATNState? {
+    function stateFactory (type : Integer; ruleIndex : Integer) return Optional_ATNState is
+   begin
         var s: ATNState
          case type is
             when ATNState.INVALID_TYPE => return null;

@@ -256,7 +256,8 @@ type ParserATNSimulator is new ATNSimulator with null record;
 
     internal final unowned let parser: Parser
 
-    public private(set) final var decisionToDFA: [DFA]
+    -- public private(set) final var
+    decisionToDFA : [DFA];
 
     --
     -- SLL, LL, or LL + exact ambig detection?
@@ -284,7 +285,7 @@ type ParserATNSimulator is new ATNSimulator with null record;
     -- internal
     _outerContext : ParserRuleContext!
     -- internal
-    _dfa : DFA?
+    _dfa : Optional_DFA;
 
 --    -- Testing only!
 --    public convenience init(_ atn : ATN; _ decisionToDFA : [DFA],
@@ -322,7 +323,7 @@ begin
 
     -- open
     procedure adaptivePredict (input : TokenStream; decision : Integer;
-        outerContext : ParserRuleContext?) return Integer is
+        outerContext : Optional_ParserRuleContext;) return Integer is
 begin
         var outerContext := outerContext
         if debug or else trace_atn_sim then
@@ -347,7 +348,7 @@ begin
         -- But, do we still need an initial state?
         --TODO: exception handler
         do {
-            var s0: DFAState?
+            var s0: Optional_DFAState;
             if dfa.isPrecedenceDfa() then
                 -- the start state for a precedence DFA depends on the current
                 -- parser precedence, and is provided by a DFA method.
@@ -565,7 +566,8 @@ begin
     -- `t`, or `null` if the target state for this edge is not
     -- already cached
     --
-   function getExistingTargetState (previousD : DFAState; t : Integer) return DFAState? {
+   function getExistingTargetState (previousD : DFAState; t : Integer) return Optional_DFAState is
+   begin
         edges : constant := previousD.edges
         if edges = null or else (t + 1) < 0 or else (t + 1) >= (edges!.count) then
             return null;
@@ -664,7 +666,7 @@ begin
         end if;
         fullCtx : constant := True;
         var foundExactAmbig := False;
-        var reach: ATNConfigSet? := null;
+        var reach: Optional_ATNConfigSet; := null;
         var previous := s0
         input.seek(startIndex);
         var t := input.LA(1);
@@ -751,7 +753,7 @@ begin
             -- But, that does not mean that there is no way forward without a
             -- conflict. It's possible to have nonconflicting alt subsets as in:
             --
-            -- LL altSubSets=[{1, 2end if;, {1, 2end if;, {1end if;, {1, 2}]
+            -- LL altSubSets=[{1, 2}, {1, 2}, {1}, {1, 2}]
             --
             -- from
             --
@@ -772,7 +774,8 @@ begin
     end if;
 
     procedure computeReachSet (closureConfigSet : ATNConfigSet; t : Integer;
-                         fullCtx  : Boolean) return ATNConfigSet? {
+                         fullCtx  : Boolean) return Optional_ATNConfigSet is
+   begin
 
         if debug then
             print("in computeReachSet, starting closure: \(closureConfigSet)");
@@ -828,7 +831,7 @@ begin
 
         -- Now figure out where the reach operation can take us .. 
 
-        var reach: ATNConfigSet? := null;
+        var reach: Optional_ATNConfigSet; := null;
 
         --
         -- This block optimizes the reach operation for intermediate sets which
@@ -1042,7 +1045,7 @@ begin
     -- levels. For example, for input 1+2+3 at the first +, we see
     -- prediction filtering
     --
-    -- [(11,1,[$],{3>=precend if;?), (14,1,[$],{2>=prec}?), (5,2,[$],up=1),
+    -- [(11,1,[$],{3>=prec}?), (14,1,[$],{2>=prec}?), (5,2,[$],up=1),
     -- (11,2,[$],up=1), (14,2,[$],up=1)],hasSemanticContext=True,dipsIntoOuterContext
     --
     -- to
@@ -1123,7 +1126,8 @@ begin
     end if;
 
     -- final internal
-    function getReachableTarget (trans : Transition; ttype : Integer) return ATNState? {
+    function getReachableTarget (trans : Transition; ttype : Integer) return Optional_ATNState is
+   begin
 
         if trans.matches(ttype, 0, atn.maxTokenType) then
             return trans.target;
@@ -1155,7 +1159,7 @@ begin
             return altToPred
     end if;
 
-    final internal procedure getPredicatePredictions (ambigAlts : BitSet?,
+    final internal procedure getPredicatePredictions (ambigAlts : Optional_BitSet;
         altToPred : [SemanticContext?]) -> [DFAState.PredPrediction]? {
             var pairs := [DFAState.PredPrediction]()
             var containsPredicate := False;
@@ -1346,7 +1350,7 @@ begin
         collectPredicates : Boolean;
         fullCtx : Boolean;
         treatEofAsEpsilon  : Boolean) {
-            initialDepth : constant := 0
+            initialDepth : constant Integer := 0;
             closureCheckingStopState(config, configs, &closureBusy, collectPredicates, fullCtx, initialDepth, treatEofAsEpsilon);
             assert(!fullCtx or else not configs.dipsIntoOuterContext, "Expected: not fullCtx||!configs.dipsIntoOuterContext")
     end if;
@@ -1386,7 +1390,7 @@ begin
                             continue
                         end if;
                         let returnState: ATNState := atn.states[configContext.getReturnState(i)]!
-                        let newContext: PredictionContext? := configContext.getParent(i) -- "pop" return state
+                        let newContext: Optional_PredictionContext; := configContext.getParent(i) -- "pop" return state
                         let c: ATNConfig := ATNConfig(returnState, config.alt, newContext,
                             config.semanticContext)
                         -- While we have context to pop back from, we may have
@@ -1621,7 +1625,7 @@ begin
         for  i in 0 ..< numCtxs loop -- for each stack context
             returnState : constant := atn.states[configContext.getReturnState(i)]!
             if  returnState.ruleIndex /= p.ruleIndex
-            {return Falseend if;
+            {return False}
         end if;
 
         decisionStartState : constant := (p.transition(0).target as! BlockStartState)
@@ -1686,7 +1690,8 @@ begin
         collectPredicates : Boolean;
         inContext : Boolean;
         fullCtx : Boolean;
-        treatEofAsEpsilon  : Boolean) return ATNConfig? {
+        treatEofAsEpsilon  : Boolean) return Optional_ATNConfig is
+   begin
             case t.getSerializationType() is
                when Transition.RULE =>
                   return ruleTransition(config, t as! RuleTransition)
@@ -1743,7 +1748,8 @@ begin
                                     pt : PrecedencePredicateTransition;
                                     collectPredicates : Boolean;
                                     inContext : Boolean;
-                                    fullCtx  : Boolean) return ATNConfig? {
+                                    fullCtx  : Boolean) return Optional_ATNConfig is
+   begin
         if debug then
             print("PRED (collectPredicates=\(collectPredicates)) \(pt.precedence)>=_p, ctx dependent=True")
             --if ( parser /= null ) {
@@ -1751,7 +1757,7 @@ begin
             -- }
         end if;
 
-        var c: ATNConfig? := null;
+        var c: Optional_ATNConfig; := null;
         if collectPredicates and then inContext then
             if fullCtx then
                 -- In full context mode, we can evaluate predicates on-the-fly
@@ -1785,7 +1791,8 @@ begin
                               pt : PredicateTransition;
                               collectPredicates : Boolean;
                               inContext : Boolean;
-                              fullCtx  : Boolean) return ATNConfig? {
+                              fullCtx  : Boolean) return Optional_ATNConfig is
+   begin
         if debug then
             print("PRED (collectPredicates=\(collectPredicates)) \(pt.ruleIndex):\(pt.predIndex), ctx dependent=\(pt.isCtxDependent)")
             --if ( parser /= null ) {
@@ -1793,7 +1800,7 @@ begin
             --}
         end if;
 
-        var c: ATNConfig? := null;
+        var c: Optional_ATNConfig; := null;
         if collectPredicates and
             (!pt.isCtxDependent or else (pt.isCtxDependent and then inContext)) {
             if fullCtx then
@@ -1952,7 +1959,7 @@ begin
                            startIndex : Integer) return NoViableAltException is
 begin
         startToken : constant := try! input.get(startIndex)
-        var offendingToken: Token? := null;
+        var offendingToken: Optional_Token; := null;
         do {
             offendingToken := input.LT(1);
         end if;
@@ -2060,7 +2067,7 @@ begin
         end if;
     end if;
 
-    procedure reportAttemptingFullContext (dfa : DFA; conflictingAlts : BitSet?, configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) {
+    procedure reportAttemptingFullContext (dfa : DFA; conflictingAlts : Optional_BitSet; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) {
         if debug or else retry_debug then
             input : constant := getTextInInterval(startIndex, stopIndex)
             print("reportAttemptingFullContext decision=\(dfa.decision):\(configs), input=\(input)")

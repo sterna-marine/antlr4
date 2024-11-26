@@ -128,7 +128,8 @@ begin
 
 
     -- public
-    function getLiteralName (tokenType : Integer) return String? {
+    function getLiteralName (tokenType : Integer) return Optional_String is
+   begin
         if tokenType >= 0 and then tokenType < literalNames.count then
             return literalNames[tokenType];
         end if;
@@ -138,7 +139,8 @@ begin
 
 
     -- public
-    function getSymbolicName (tokenType : Integer) return String? {
+    function getSymbolicName (tokenType : Integer) return Optional_String is
+   begin
         if tokenType >= 0 and then tokenType < symbolicNames.count then
             return symbolicNames[tokenType];
         end if;

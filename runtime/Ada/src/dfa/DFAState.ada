@@ -53,7 +53,7 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     --
     public internal(set) var prediction := ATN.INVALID_ALT_NUMBER
 
-    public internal(set) var lexerActionExecutor: LexerActionExecutor?
+    public internal(set) var lexerActionExecutor: Optional_LexerActionExecutor;
 
     --
     -- Indicates that this state was created during SLL prediction that

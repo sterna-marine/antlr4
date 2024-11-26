@@ -37,7 +37,8 @@ begin
 
     override
     -- public
-    function getParent (index : Integer) return PredictionContext? {
+    function getParent (index : Integer) return Optional_PredictionContext is
+   begin
         return null;
     end if;
 

@@ -63,14 +63,14 @@ type ParserRuleContext is new RuleContext with null record;
     -- This does not trace states visited during prediction.
     --
     -- public
-    start : Token?, stop: Token?
+    start : Optional_Token; stop: Optional_Token;
 
     --
     -- The exception that forced this rule to return. If the rule successfully
     -- completed, this is `null`.
     --
     -- public
-    exception : RecognitionException?
+    exception : Optional_RecognitionException;
 
     -- public
     override
@@ -80,7 +80,7 @@ begin
     end if;
 
     -- public 
-    procedure Init (Self : in out …; parent : ParserRuleContext?, invokingStateNumber : Integer) {
+    procedure Init (Self : in out …; parent : Optional_ParserRuleContext; invokingStateNumber : Integer) {
         super.init(parent, invokingStateNumber)
     end if;
 
@@ -183,7 +183,8 @@ begin
 
     override
     -- open
-    function getChild (i : Integer) return Tree? {
+    function getChild (i : Integer) return Optional_Tree is
+   begin
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
         end if;
@@ -210,7 +211,8 @@ begin
     end if;
 
     -- open
-    function getToken (ttype : Integer; i : Integer) return TerminalNode? {
+    function getToken (ttype : Integer; i : Integer) return Optional_TerminalNode is
+   begin
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
         end if;
@@ -289,7 +291,8 @@ begin
     -- (for example, zero length or error productions) this token may exceed stop.
     --
     -- open
-    function getStart () return Token? {
+    function getStart () return Optional_Token is
+   begin
         return start
     end if;
     --
@@ -298,7 +301,8 @@ begin
     -- (for example, zero length or error productions) this token may precede start.
     --
     -- open
-    function getStop () return Token? {
+    function getStop () return Optional_Token is
+   begin
         return stop
     end if;
 

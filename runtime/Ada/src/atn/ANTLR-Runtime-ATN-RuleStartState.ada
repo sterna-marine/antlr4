@@ -9,7 +9,7 @@
 type RuleStartState is new ATNState with null record;
 {
     -- public
-    stopState : RuleStopState?
+    stopState : Optional_RuleStopState;
     -- public
     isPrecedenceRule : Boolean := False;
     --Synonymous with rule being left recursive; consider renaming.

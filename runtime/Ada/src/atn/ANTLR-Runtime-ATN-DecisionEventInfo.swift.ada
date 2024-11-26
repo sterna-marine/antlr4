@@ -64,7 +64,7 @@ type DecisionEventInfo is tagged record
 
     -- public 
     procedure Init (Self : in out …; decision : Integer;
-                configs : ATNConfigSet?,
+                configs : Optional_ATNConfigSet;
                 input : TokenStream;
                 startIndex : Integer;
                 stopIndex : Integer;

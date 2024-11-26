@@ -11,7 +11,9 @@
 --  Created by janyou on 15/9/4.
 --
 
-with Foundation;
+with Unicode;
+use Unicode;
+
 
 extension Character {
 
@@ -49,12 +51,12 @@ extension Character {
 
     -- public static 
     var MAX_VALUE: Integer {
-        let c: Character := "\u{10FFFFend if;"
+        let c: Character := To_Unicode (16#10FFFF#)
         return c.unicodeValue
     end if;
     -- public static 
     var MIN_VALUE: Integer {
-        let c: Character := "\u{0000end if;"
+        let c: Character := To_Unicode (16#0000#)
         return c.unicodeValue
     end if;
 
@@ -78,8 +80,8 @@ begin
     function toCodePoint (high : Integer; low : Integer) return Integer is
 begin
         MIN_SUPPLEMENTARY_CODE_POINT : constant := 65536 -- 0x010000
-        MIN_HIGH_SURROGATE : constant := 0xd800 --"\u{dbffend if;"  --"\u{DBFFend if;"  --"\u{DBFF}"
-        MIN_LOW_SURROGATE : constant := 0xdc00 --"\u{dc00end if;" --"\u{DC00}"
+        MIN_HIGH_SURROGATE : constant Integer := 0xd800 --To_Unicode (16#dbff#)  --"To_Unicode (16#DBFF#)"  --"To_Unicode (16#DBFF#)";
+        MIN_LOW_SURROGATE : constant Integer := 0xdc00 --"To_Unicode (16#dc00#)" --"To_Unicode (16#DC00#)";
         return ((high << 10) + low) + (MIN_SUPPLEMENTARY_CODE_POINT
                 - (MIN_HIGH_SURROGATE << 10)
                 - MIN_LOW_SURROGATE)

@@ -57,7 +57,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- empty.
     -- 
     -- public 
-    procedure Init (Self : in out …; label : String?, tag : String) {
+    procedure Init (Self : in out …; label : Optional_String; tag : String) {
 
         self.label := label
         self.tag := tag
@@ -85,7 +85,8 @@ begin
     -- assigned to the chunk.
     -- 
     -- public final
-    function getLabel () return String? {
+    function getLabel () return Optional_String is
+   begin
         return label
     end if;
 

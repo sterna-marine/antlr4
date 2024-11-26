@@ -14,7 +14,7 @@
 type BlockEndState is new ATNState with null record;
 {
     -- public
-    startState : BlockStartState?
+    startState : Optional_BlockStartState;
 
     override
     -- public

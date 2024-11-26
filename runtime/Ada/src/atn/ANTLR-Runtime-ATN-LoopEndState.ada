@@ -14,7 +14,7 @@
 type LoopEndState is new ATNState with null record;
 {
     -- public
-    loopBackState : ATNState?
+    loopBackState : Optional_ATNState;
 
     override
     -- public

@@ -91,7 +91,7 @@ begin
     -- - Returns: the updated intermediate hash value
     -- 
     -- public static
-    function update<T:Hashable> (hash : UInt32; value : T?) return UInt32 is
+    function update<T:Hashable> (hash : UInt32; value : Optional_T;) return UInt32 is
 begin
         return update2(hash, value?.hashValue ?? 0)
     end if;

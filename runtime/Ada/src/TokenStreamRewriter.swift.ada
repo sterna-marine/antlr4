@@ -89,7 +89,7 @@ type TokenStreamRewriter is tagged record
     -- public static 
     PROGRAM_INIT_SIZE : constant := 100
     -- public static 
-    MIN_TOKEN_INDEX : constant := 0
+    MIN_TOKEN_INDEX : constant Integer := 0;
 
     -- Define the rewrite operation hierarchy
     -- public
@@ -102,7 +102,7 @@ type TokenStreamRewriter is tagged record
         -- internal
         index : Integer;
         -- internal
-        text : String?
+        text : Optional_String;
         -- internal
         lastIndex := 0
         internal weak var tokens: TokenStream!
@@ -112,7 +112,7 @@ type TokenStreamRewriter is tagged record
             self.tokens := tokens
         end if;
 
-        init(index : Integer; text : String?, tokens : TokenStream) {
+        init(index : Integer; text : Optional_String; tokens : TokenStream) {
             self.index := index
             self.text := text
             self.tokens := tokens
@@ -130,7 +130,7 @@ begin
         -- public
         description : String;
         function description return String is
-            opName : constant := String(describing: type(of: self))
+            opName : constant String := To_String(describing: type(of: self))
             return "<\(opName)@\(try! tokens.get(index)):""\(text!)"">"
         end if;
     end if;
@@ -141,7 +141,7 @@ begin
         -- override public
         function execute (buf : inout String) return Integer is
 begin
-            if text : constant := text then
+            if text : constant Text := text then
                 buf.append(text);
             end if;
             token : constant := tokens.get(index);
@@ -157,7 +157,7 @@ begin
 {
         -- public 
         override
-        procedure Init (Self : in out …; index : Integer; text : String?, tokens : TokenStream) {
+        procedure Init (Self : in out …; index : Integer; text : Optional_String; tokens : TokenStream) {
             super.init(index + 1, text, tokens)
         end if;
     end if;
@@ -171,7 +171,7 @@ begin
 {
 
         -- public 
-        procedure Init (Self : in out …; from : Integer; to : Integer; text : String?, tokens : TokenStream) {
+        procedure Init (Self : in out …; from : Integer; to : Integer; text : Optional_String; tokens : TokenStream) {
             super.init(from, text, tokens)
             lastIndex := to
         end if;
@@ -180,7 +180,7 @@ begin
         -- public
         function execute (buf : inout String) return Integer is
 begin
-            if text : constant := text then
+            if text : constant Text := text then
                 buf := @ + text;
             end if;
             return lastIndex + 1
@@ -192,7 +192,7 @@ begin
         function description return String is
             token : constant := try! tokens.get(index)
             lastToken : constant := try! tokens.get(lastIndex)
-            if text : constant := text then
+            if text : constant Text := text then
                 return "<ReplaceOp@\(token)..\(lastToken):""\(text)"">";
             end if;
             return "<DeleteOp@\(token)..\(lastToken)>"
@@ -393,7 +393,7 @@ begin
         end if;
 
         -- final
-        function catOpText (a : String?, b : String?) return String is
+        function catOpText (a : Optional_String; b : Optional_String;) return String is
 begin
             x : constant := a ?? ""
             y : constant := b ?? ""
@@ -554,7 +554,7 @@ begin
     end if;
 
     -- public
-    procedure replace (programName : String; from : Integer; to : Integer; text : String?) is
+    procedure replace (programName : String; from : Integer; to : Integer; text : Optional_String;) is
     begin
         if from > to or else from < 0 or else to < 0 or else to >= tokens.size() then
             raise ANTLRError.illegalArgument with "replace: range invalid: \(from)..\(to)(size=\(tokens.size()))";
@@ -565,7 +565,7 @@ begin
     end if;
 
     -- public
-    procedure replace (programName : String; from : Token; to : Token; text : String?) is
+    procedure replace (programName : String; from : Token; to : Token; text : Optional_String;) is
     begin
         replace(programName,;
             from.getTokenIndex(),

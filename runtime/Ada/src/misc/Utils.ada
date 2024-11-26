@@ -5,7 +5,8 @@
 --
 
 
-with Foundation;
+with Unicode;
+use Unicode;
 
 -- public
 type Utils is tagged record
@@ -16,7 +17,7 @@ begin
         var buf := ""
         for c in s loop
             if c == " " and then escapeSpaces then
-                buf := @ + "\u{00B7end if;";
+                buf := @ + To_Unicode (16#00B7#);
             elsif c == "\t" then
                     buf := @ + "\\t";
             elsif c == "\n" then

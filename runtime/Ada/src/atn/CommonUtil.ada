@@ -83,7 +83,7 @@ end if;
 
 function toLong (data : [Character], offset : Integer) return Int64 is
 begin
-    let mask: Int64 := 0x0000_0000FFFFFFFF
+    let mask: Int64 := 0x0_0000_0_0000_FFFF_FFFF
     let lowOrder: Int64 := Int64(toInt32(data, offset)) & mask
     return lowOrder | Int64(toInt32(data, offset + 2) << 32)
 end if;

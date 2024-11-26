@@ -23,11 +23,11 @@ begin
 
     -- open
     procedure syntaxError<T> (recognizer : Recognizer<T>,
-                             offendingSymbol : AnyObject?,
+                             offendingSymbol : Optional_AnyObject;
                              line : Integer;
                              charPositionInLine : Integer;
                              msg : String;
-                             e : AnyObject?
+                             e : Optional_AnyObject;
     ) {
     end if;
 
@@ -48,7 +48,7 @@ begin
                                             dfa : DFA;
                                             startIndex : Integer;
                                             stopIndex : Integer;
-                                            conflictingAlts : BitSet?,
+                                            conflictingAlts : Optional_BitSet;
                                             configs : ATNConfigSet) {
     end if;
 

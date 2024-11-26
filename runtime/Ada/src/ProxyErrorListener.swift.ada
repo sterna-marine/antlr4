@@ -24,11 +24,11 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
 
     -- public
     procedure syntaxError<T> (recognizer : Recognizer<T>,
-                               offendingSymbol : AnyObject?,
+                               offendingSymbol : Optional_AnyObject;
                                line : Integer;
                                charPositionInLine : Integer;
                                msg : String;
-                               e : AnyObject?)
+                               e : Optional_AnyObject;)
     {
         for listener in delegates loop
             listener.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
@@ -55,7 +55,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
                                             dfa : DFA;
                                             startIndex : Integer;
                                             stopIndex : Integer;
-                                            conflictingAlts : BitSet?,
+                                            conflictingAlts : Optional_BitSet;
                                             configs : ATNConfigSet) {
         for listener in delegates loop
             listener.reportAttemptingFullContext(recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs)

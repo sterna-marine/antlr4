@@ -235,7 +235,8 @@ begin
     end if;
 
     -- internal
-    function LB (k : Integer) return Token? {
+    function LB (k : Integer) return Optional_Token is
+   begin
         if (p - k) < 0 then
             return null;
         end if;
@@ -244,7 +245,8 @@ begin
 
 
     -- public
-    function LT (k : Integer) return Token? {
+    function LT (k : Integer) return Optional_Token is
+   begin
         lazyInit();
         if k = 0 then
             return null;
@@ -426,7 +428,7 @@ begin
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
         end if;
 
-        nextOnChannel : constant := nextTokenOnChannel(tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
+        nextOnChannel : constant Token := nextTokenOnChannel(tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);;
         from : constant := tokenIndex + 1
         let to : Integer;
         -- if none onchannel to right, nextOnChannel=-1 so set to := last token
@@ -456,7 +458,7 @@ begin
             return null;
         end if;
 
-        prevOnChannel : constant := previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
+        prevOnChannel : constant Token := previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);;
         if prevOnChannel = tokenIndex - 1 then
             return null;
         end if;
@@ -528,7 +530,7 @@ begin
 
 
     -- public
-    function getText (start : Token?, stop : Token?) return String is
+    function getText (start : Optional_Token; stop : Optional_Token;) return String is
 begin
         if start : constant := start, stop : constant := stop then
             return getText(Interval.of(start.getTokenIndex(), stop.getTokenIndex()));

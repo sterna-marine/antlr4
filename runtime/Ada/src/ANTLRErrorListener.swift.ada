@@ -41,11 +41,11 @@ type ANTLRErrorListener is interface;
     -- surrounding rule.
     -- 
     procedure syntaxError<T> (recognizer : Recognizer<T>,
-                        offendingSymbol : AnyObject?,
+                        offendingSymbol : Optional_AnyObject;
                         line : Integer;
                         charPositionInLine : Integer;
                         msg : String;
-                        e : AnyObject?
+                        e : Optional_AnyObject;
     )
 
     -- 
@@ -123,7 +123,7 @@ type ANTLRErrorListener is interface;
                                      dfa : DFA;
                                      startIndex : Integer;
                                      stopIndex : Integer;
-                                     conflictingAlts : BitSet?,
+                                     conflictingAlts : Optional_BitSet;
                                      configs : ATNConfigSet)
 
     -- 

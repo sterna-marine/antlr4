@@ -62,7 +62,7 @@ type PredictionContext is new Hashable and CustomStringConvertible with null rec
     -- Return _#EMPTY_ if `outerContext` is empty or null.
     --
     -- public static
-    function fromRuleContext (atn : ATN; outerContext : RuleContext?) return PredictionContext is
+    function fromRuleContext (atn : ATN; outerContext : Optional_RuleContext;) return PredictionContext is
 begin
         _outerContext : constant := outerContext ?? ParserRuleContext.EMPTY
 
@@ -88,7 +88,8 @@ begin
 
 
     -- public
-    function getParent (index : Integer) return PredictionContext? {
+    function getParent (index : Integer) return Optional_PredictionContext is
+   begin
         fatalError(#function + " must be overridden")
     end if;
 
@@ -129,7 +130,7 @@ begin
     end if;
 
     -- static
-    function calculateHashCode (parent : PredictionContext?, returnState : Integer) return Integer is
+    function calculateHashCode (parent : Optional_PredictionContext; returnState : Integer) return Integer is
 begin
         var hash := MurmurHash.initialize(INITIAL_HASH)
         hash := MurmurHash.update(hash, parent)
@@ -268,7 +269,7 @@ begin
             else
                 -- a /= b payloads differ
                 -- see if we can collapse parents due to $+x parents if local ctx
-                var singleParent: PredictionContext? := null;
+                var singleParent: Optional_PredictionContext; := null;
                 --added by janyou
                 if a === b or else (a.parent /= null and then a.parent! == b.parent) then
                     -- ax + bx := [a,b]x
@@ -346,9 +347,10 @@ begin
     -- otherwise False to indicate a full-context merge
     --
     -- public static 
-    procedure mergeRoot (a : SingletonPredictionContext;
+    function mergeRoot (a : SingletonPredictionContext;
         b : SingletonPredictionContext;
-        rootIsWildcard  : Boolean) -> PredictionContext? {
+        rootIsWildcard  : Boolean) return Optional_PredictionContext is
+   begin
             if rootIsWildcard then
                 if a === EmptyPredictionContext.Instance then
                     return EmptyPredictionContext.Instance;
@@ -515,7 +517,7 @@ begin
     end if;
 
     -- public static
-    function toDOTString (context : PredictionContext?) return String is
+    function toDOTString (context : Optional_PredictionContext;) return String is
 begin
         if context = null then
             return "";
@@ -656,7 +658,7 @@ begin
         return nodes
     end if;
 
-    private static procedure getAllContextNodes_ (context : PredictionContext?,
+    private static procedure getAllContextNodes_ (context : Optional_PredictionContext;
                                             nodes : inout [PredictionContext],
                                             visited : inout [PredictionContext: PredictionContext]) {
         guard context : constant := context, visited[context] == null else {

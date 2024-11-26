@@ -20,7 +20,7 @@ begin
     procedure testBasicMultilingualPlaneCharactersString (This : …) is
 begin
         -- Three Japanese hiragana characters.
-        inputStream : constant := ANTLRInputStream("\u{3053end if;\u{306Dend if;\u{3053end if;")
+        inputStream : constant := ANTLRInputStream(To_Unicode (16#3053#) & To_Unicode (16#306D#) & To_Unicode (16#3053#))
         XCTAssertEqual(inputStream.LA(1), 0x3053)
         XCTAssertEqual(inputStream.LA(2), 0x306D)
         XCTAssertEqual(inputStream.LA(3), 0x3053)
@@ -29,7 +29,7 @@ begin
     procedure testSupplementaryMultilingualPlaneCharactersString (This : …) is
 begin
         -- Three "Cat", "Cat Face", and "Grinning Cat with Smiling Eyes" emojis
-        inputStream : constant := ANTLRInputStream("\u{1F408end if;\u{1F431end if;\u{1F638end if;")
+        inputStream : constant := ANTLRInputStream(To_Unicode (16#1F408#) & To_Unicode (16#1F431#) & To_Unicode (16#1F638#))
         XCTAssertEqual(inputStream.LA(1), 0x1F408)
         XCTAssertEqual(inputStream.LA(2), 0x1F431)
         XCTAssertEqual(inputStream.LA(3), 0x1F638)
@@ -38,7 +38,7 @@ begin
     procedure testGraphemeCharactersString (This : …) is
 begin
         -- One "Family (Man, Woman, Girl, Boy)" emoji
-        inputStream : constant := ANTLRInputStream("\u{1F468end if;\u{200Dend if;\u{1F469end if;\u{200Dend if;\u{1F467end if;\u{200Dend if;\u{1F466end if;")
+        inputStream : constant := ANTLRInputStream(To_Unicode (16#1F468#) & To_Unicode (16#200D#) To_Unicode (16#1F469#) To_Unicode (16#200D#) To_Unicode (16#1F467#) To_Unicode (16#200D#) & To_Unicode (16#1F466#))
         XCTAssertEqual(inputStream.LA(1), 0x1F468)
         XCTAssertEqual(inputStream.LA(2), 0x200D)
         XCTAssertEqual(inputStream.LA(3), 0x1F469)

@@ -21,11 +21,11 @@ type LexerNoViableAltException is new RecognitionException and CustomStringConve
     deadEndConfigs : constant ATNConfigSet;
 
     -- public 
-    procedure Init (Self : in out …; lexer : Lexer?,
+    procedure Init (Self : in out …; lexer : Optional_Lexer;
                 input : CharStream;
                 startIndex : Integer;
                 deadEndConfigs : ATNConfigSet) {
-        let ctx: ParserRuleContext? := null;
+        let ctx: Optional_ParserRuleContext; := null;
         self.startIndex := startIndex
         self.deadEndConfigs := deadEndConfigs
         super.init(lexer, input as IntStream, ctx)

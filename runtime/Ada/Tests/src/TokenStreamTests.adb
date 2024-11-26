@@ -16,7 +16,7 @@ begin
     procedure testBufferedTokenStreamClearFetchEOFWithNewSource (This : …) is
 begin
         inputStream1 : constant := ANTLRInputStream("A")
-        tokenStream : constant := CommonTokenStream(VisitorBasicLexer(inputStream1))
+        tokenStream : constant Token := CommonTokenStream(VisitorBasicLexer(inputStream1));
 
         tokenStream.fill();
         XCTAssertEqual(2, tokenStream.size())

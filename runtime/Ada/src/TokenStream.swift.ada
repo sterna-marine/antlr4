@@ -134,5 +134,5 @@ type TokenStream is interface;
     -- and `stop` tokens.
     -- 
     -- 
-    function getText (start : Token?, stop : Token?) return String
+    function getText (start : Optional_Token; stop : Optional_Token;) return String
 end if;

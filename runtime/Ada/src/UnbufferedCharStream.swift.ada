@@ -160,7 +160,8 @@ begin
     -- {@link #input input}.
     --
     -- internal
-    function nextChar () return Int? {
+    function nextChar () return Optional_Int is
+   begin
         if next : constant := unicodeIterator.next() then
             return Integer (next.value);
         elsif unicodeIterator.hasErrorOccurred then
@@ -362,7 +363,8 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
     end if;
 
     -- mutating
-    function next () return Ada.Interface.C.unsigned_short? {
+    function next () return Ada.Interface.C.Optional_unsigned_short is
+   begin
         if result : constant := buffGen.next() then
             return result;
         end if;
@@ -411,7 +413,8 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
     end if;
 
     -- mutating
-    function next () return Unicode.Scalar? {
+    function next () return Unicode.Optional_Scalar is
+   begin
         if streamIterator.hasErrorOccurred then
             hasErrorOccurred := True;
             return null;

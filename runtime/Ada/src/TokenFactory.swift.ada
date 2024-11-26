@@ -16,9 +16,10 @@ type TokenFactory is interface;
     -- error handling strategy. If text /= null, than the start and stop positions
     -- are wiped to -1 in the text override is set in the CommonToken.
     -- 
-    procedure create (source : TokenSourceAndStream; type : Integer; text : String?,
+    function create (source : TokenSourceAndStream; type : Integer; text : Optional_String;
                 channel : Integer; start : Integer; stop : Integer;
-                line : Integer; charPositionInLine : Integer) -> Token
+                line : Integer; charPositionInLine : Integer) return Token is
+   begin
     -- Generically useful
     function create (type : Integer; text : String) return Token
 
@@ -40,11 +41,11 @@ type TokenSourceAndStream is tagged record
     -- public static 
     EMPTY : constant := TokenSourceAndStream()
 
-    public weak var tokenSource: TokenSource?
-    public weak var stream: CharStream?
+    public weak var tokenSource: Optional_TokenSource;
+    public weak var stream: Optional_CharStream;
 
     -- public 
-    procedure Init (Self : in out …; tokenSource : TokenSource? := null, stream : CharStream? := null) {
+    procedure Init (Self : in out …; tokenSource : Optional_TokenSource; := null, stream : Optional_CharStream; := null) {
         self.tokenSource := tokenSource
         self.stream := stream
     end if;

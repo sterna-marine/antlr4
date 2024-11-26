@@ -20,7 +20,8 @@ begin
     -- 
     --open
     override
-    function visit (tree : ParseTree) return T? {
+    function visit (tree : ParseTree) return Optional_T is
+   begin
         return tree.accept(self)
     end if;
 
@@ -39,8 +40,9 @@ begin
     -- 
     --open
     override
-    function visitChildren (node : RuleNode) return T? {
-        var result: T? := defaultResult()
+    function visitChildren (node : RuleNode) return Optional_T is
+   begin
+        var result: Optional_T; := defaultResult()
         n : constant := node.getChildCount()
 
         for i in 0 .. n - 1 loop
@@ -60,7 +62,8 @@ begin
     -- 
     --open
     override
-    function visitTerminal (node : TerminalNode) return T? {
+    function visitTerminal (node : TerminalNode) return Optional_T is
+   begin
         return defaultResult()
     end if;
 
@@ -70,7 +73,8 @@ begin
     -- 
     override
     -- open
-    function visitErrorNode (node : ErrorNode) return T? {
+    function visitErrorNode (node : ErrorNode) return Optional_T is
+   begin
         return defaultResult()
     end if;
 
@@ -86,7 +90,8 @@ begin
     -- - Returns: The default value returned by visitor methods.
     -- 
     -- open
-    function defaultResult () return T? {
+    function defaultResult () return Optional_T is
+   begin
         return null;
     end if;
 
@@ -110,7 +115,8 @@ begin
     -- - Returns: The updated aggregate result.
     -- 
     -- open
-    function aggregateResult (aggregate : T?, nextResult : T?) return T? {
+    function aggregateResult (aggregate : Optional_T; nextResult : Optional_T;) return Optional_T is
+   begin
         return nextResult
     end if;
 
@@ -139,7 +145,7 @@ begin
     -- current aggregate result from _#visitChildren_.
     -- 
     -- open
-    function shouldVisitNextChild (node : RuleNode; currentResult : T?) return Boolean is
+    function shouldVisitNextChild (node : RuleNode; currentResult : Optional_T;) return Boolean is
 begin
         return True;
     end if;

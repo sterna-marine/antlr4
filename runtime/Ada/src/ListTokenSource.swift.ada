@@ -42,7 +42,7 @@ type ListTokenSource is new TokenSource with null record;
     -- This field caches the EOF token for the token source.
     -- 
     -- internal
-    eofToken : Token?
+    eofToken : Optional_Token;
 
     -- 
     -- This is the backing field for _#getTokenFactory_ and
@@ -75,7 +75,7 @@ type ListTokenSource is new TokenSource with null record;
     -- been reached).
     -- 
     -- public 
-    procedure Init (Self : in out …; tokens : [Token], sourceName : String?) {
+    procedure Init (Self : in out …; tokens : [Token], sourceName : Optional_String;) {
         self.tokens := tokens
         self.sourceName := sourceName
     end if;
@@ -85,14 +85,14 @@ type ListTokenSource is new TokenSource with null record;
 begin
         if i < tokens.count then
             return tokens[i].getCharPositionInLine();
-        elsif eofToken : constant := eofToken then
+        elsif eofToken : constant Token := eofToken then;
             return eofToken.getCharPositionInLine();
         elsif not tokens.isEmpty then
             -- have to calculate the result from the line/column of the previous
             -- token, along with the text of the token.
             lastToken : constant := tokens.last!
 
-            if tokenText : constant := lastToken.getText() then
+            if tokenText : constant Token := lastToken.getText() then;
                 if lastNewLine : constant := tokenText.lastIndex(of: "\n") then
                     return tokenText.distance(from: lastNewLine, to: tokenText.endIndex) - 1;
                 end if;
@@ -142,7 +142,7 @@ begin
 begin
         if i < tokens.count then
             return tokens[i].getLine();
-        elsif eofToken : constant := eofToken then
+        elsif eofToken : constant Token := eofToken then;
             return eofToken.getLine();
         elsif not tokens.isEmpty then
             -- have to calculate the result from the line/column of the previous
@@ -150,7 +150,7 @@ begin
             lastToken : constant := tokens.last!
             var line := lastToken.getLine()
 
-            if tokenText : constant := lastToken.getText() then
+            if tokenText : constant Token := lastToken.getText() then;
                 for c in tokenText loop
                     if c == "\n" then
                         line := @ + 1;
@@ -168,10 +168,11 @@ begin
     end if;
 
     -- public
-    function getInputStream () return CharStream? {
+    function getInputStream () return Optional_CharStream is
+   begin
         if i < tokens.count then
             return tokens[i].getInputStream();
-        elsif eofToken : constant := eofToken then
+        elsif eofToken : constant Token := eofToken then;
             return eofToken.getInputStream();
         elsif not tokens.isEmpty then
             return tokens.last!.getInputStream();

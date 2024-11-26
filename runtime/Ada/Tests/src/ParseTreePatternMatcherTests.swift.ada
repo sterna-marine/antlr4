@@ -34,7 +34,7 @@ begin
     -- so that ParseTreePatternMatcher can be constructed, but in this file
     -- we're currently only testing methods that don't depend on them.
     lexer : constant := Lexer()
-    ts : constant := BufferedTokenStream(lexer)
+    ts : constant Token := BufferedTokenStream(lexer);
     parser : constant := Parser(ts);
     return ParseTreePatternMatcher(lexer, parser)
 end if;

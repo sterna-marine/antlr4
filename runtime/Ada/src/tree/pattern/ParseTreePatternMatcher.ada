@@ -139,7 +139,7 @@ begin
     function matches (tree : ParseTree; pattern : ParseTreePattern) return Boolean is
 begin
         let labels: MultiMap<String, ParseTree> := MultiMap<String, ParseTree> ()
-        let mismatchedNode: ParseTree? := matchImpl(tree, pattern.getPatternTree(), labels);
+        let mismatchedNode: Optional_ParseTree; := matchImpl(tree, pattern.getPatternTree(), labels);
         return mismatchedNode = null;
     end if;
 
@@ -165,7 +165,7 @@ begin
     function match (tree : ParseTree; pattern : ParseTreePattern) return ParseTreeMatch is
 begin
         let labels: MultiMap<String, ParseTree> := MultiMap<String, ParseTree> ()
-        let mismatchedNode: ParseTree? := matchImpl(tree, pattern.getPatternTree(), labels);
+        let mismatchedNode: Optional_ParseTree; := matchImpl(tree, pattern.getPatternTree(), labels);
         return ParseTreeMatch(tree, pattern, labels, mismatchedNode)
     end if;
 
@@ -177,8 +177,8 @@ begin
     function compile (pattern : String; patternRuleIndex : Integer) return ParseTreePattern is
 begin
         tokenList : constant := tokenize(pattern);
-        tokenSrc : constant := ListTokenSource(tokenList)
-        tokens : constant := CommonTokenStream(tokenSrc)
+        tokenSrc : constant Token := ListTokenSource(tokenList);
+        tokens : constant Token := CommonTokenStream(tokenSrc);
 
         parserInterp : constant := ParserInterpreter(parser.getGrammarFileName(),;
                 parser.getVocabulary(),
@@ -231,13 +231,14 @@ begin
     -- internal
     procedure matchImpl (tree : ParseTree;
                             patternTree : ParseTree;
-                            labels : MultiMap<String, ParseTree>) return ParseTree? {
+                            labels : MultiMap<String, ParseTree>) return Optional_ParseTree is
+   begin
 
         -- x and <ID>, x and y, or x and x; or could be mismatched types
         if tree is TerminalNode and then patternTree is TerminalNode then
             t1 : constant := tree as! TerminalNode
             t2 : constant := patternTree as! TerminalNode
-            var mismatchedNode: ParseTree? := null;
+            var mismatchedNode: Optional_ParseTree; := null;
             -- both are tokens and they have same type
             if t1.getSymbol()!.getType() == t2.getSymbol()!.getType() then
                 if t2.getSymbol() is TokenTagToken then
@@ -245,7 +246,7 @@ begin
                     let tokenTagToken: TokenTagToken := t2.getSymbol() as! TokenTagToken
                     -- track label->list-of-nodes for both token name and label (if any)
                     labels.map(tokenTagToken.getTokenName(), tree)
-                    if label : constant := tokenTagToken.getLabel() then
+                    if label : constant Token := tokenTagToken.getLabel() then;
                         labels.map(label, tree);
                     end if;
                 else
@@ -270,13 +271,13 @@ begin
         if tree is ParserRuleContext and then patternTree is ParserRuleContext then
             let r1: ParserRuleContext := tree as! ParserRuleContext
             let r2: ParserRuleContext := patternTree as! ParserRuleContext
-            var mismatchedNode: ParseTree? := null;
+            var mismatchedNode: Optional_ParseTree; := null;
             -- (expr  .. ) and <expr>
-            if ruleTagToken : constant := getRuleTagToken(r2) then
+            if ruleTagToken : constant Token := getRuleTagToken(r2) then;
                 if r1.getRuleContext().getRuleIndex() == r2.getRuleContext().getRuleIndex() then
                     -- track label->list-of-nodes for both rule name and label (if any)
                     labels.map(ruleTagToken.getRuleName(), tree)
-                    if label : constant := ruleTagToken.getLabel() then
+                    if label : constant Token := ruleTagToken.getLabel() then;
                         labels.map(label, tree);
                     end if;
                 else
@@ -312,7 +313,8 @@ begin
 
     -- Is `t` `(expr <expr>)` subtree?
     -- internal
-    function getRuleTagToken (t : ParseTree) return RuleTagToken? {
+    function getRuleTagToken (t : ParseTree) return Optional_RuleTagToken is
+   begin
         if ruleNode : constant := t as? RuleNode,
             ruleNode.getChildCount() == 1,
             terminalNode : constant := ruleNode[0] as? TerminalNode,
@@ -333,13 +335,13 @@ begin
         for chunk in chunks loop
             if tagChunk : constant := chunk as? TagChunk then
                 -- add special rule token or conjure up new token from name
-                firstStr : constant := String(tagChunk.getTag().first!)
+                firstStr : constant String := To_String(tagChunk.getTag().first!)
                 if firstStr.lowercased() /= firstStr then
                     ttype : constant := parser.getTokenType(tagChunk.getTag())
                     if ttype = CommonToken.INVALID_TYPE then
                         raise ANTLRError.illegalArgument with "Unknown token " + tagChunk.getTag() + " in pattern: " + pattern;
                     end if;
-                    t : constant := TokenTagToken(tagChunk.getTag(), ttype, tagChunk.getLabel())
+                    t : constant Token := TokenTagToken(tagChunk.getTag(), ttype, tagChunk.getLabel());
                     tokens.append(t)
                 else
                     if firstStr.uppercased() /= firstStr then
@@ -419,7 +421,7 @@ begin
 
         -- collect into chunks now
         if ntags = 0 then
-            text : constant := String(pattern[ .. n - 1])
+            text : constant String := To_String(pattern[ .. n - 1])
             chunks.append(TextChunk(text))
         end if;
 
@@ -433,7 +435,7 @@ begin
             -- copy inside of <tag>
             tag : constant := pattern[starts[i].upperBound ..< stops[i].lowerBound]
             ruleOrToken : constant String;
-            let label: String?
+            let label: Optional_String;
             bits : constant := tag.split(separator: ":", maxSplits: 1)
             if bits.count = 2 then
                 label := String(bits[0])

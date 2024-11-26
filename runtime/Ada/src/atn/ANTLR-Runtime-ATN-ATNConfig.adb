@@ -20,7 +20,7 @@ package body ANTLR.Runtime.ATNConfig is
 --
 
 -- private static let 
-   SUPPRESS_PRECEDENCE_FILTER : constant Integer := 16#40000000#;
+   SUPPRESS_PRECEDENCE_FILTER : constant Integer := 16#4000_0000#;
    -- This field stores the bit mask for implementing the
    -- _#isPrecedenceFilterSuppressed_ property as a bit within the
    -- existing _#reachesIntoOuterContext_ field.
@@ -57,7 +57,7 @@ package body ANTLR.Runtime.ATNConfig is
       -- What alt (or lexer rule) is predicted by this configuration
 
 -- public internal(set) final var 
-      context : PredictionContext?;
+      context : Optional_PredictionContext;;
       -- The stack of invoking states leading to the rule/states associated
       -- with this config.  We track only those contexts pushed during
       -- execution of the ATN simulator.
@@ -95,7 +95,7 @@ package body ANTLR.Runtime.ATNConfig is
    procedure Init (Self : in out ATNConfig;
                    state : ATNState;
                    alt : Integer;
-                   context : PredictionContext?,
+                   context : Optional_PredictionContext;
                    semanticContext : SemanticContext := SemanticContext.Empty.Instance) is
         self.state := state
         self.alt := alt
@@ -131,7 +131,7 @@ package body ANTLR.Runtime.ATNConfig is
    procedure Init (Self : in out ATNConfig;
                    c : ATNConfig;
                    state : ATNState;
-                   context : PredictionContext?) {
+                   context : Optional_PredictionContext;) {
         Init (Self, state, c.alt, context, c.semanticContext)
     end Init;
 
@@ -139,7 +139,7 @@ package body ANTLR.Runtime.ATNConfig is
    procedure Init (Self : in out ATNConfig;
                    c : ATNConfig;
                    state : ATNState;
-                   context : PredictionContext?;
+                   context : Optional_PredictionContext;;
                    semanticContext : SemanticContext) is
    begin
         self.state := state;

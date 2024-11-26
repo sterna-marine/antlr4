@@ -30,7 +30,7 @@ begin
         for i in 1 .. 100 loop
             DispatchQueue.global().async {
                 lexer : constant := ThreadingLexer(ANTLRInputStream(input[i % 7]))
-                tokenStream : constant := CommonTokenStream(lexer)
+                tokenStream : constant Token := CommonTokenStream(lexer);
                 parser : constant := try? ThreadingParser(tokenStream)
 
                 _ : constant := try? parser?.s()

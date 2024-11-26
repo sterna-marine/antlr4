@@ -17,7 +17,7 @@
 type PlusBlockStartState is new BlockStartState with null record;
 {
     -- public
-    loopBackState : PlusLoopbackState?
+    loopBackState : Optional_PlusLoopbackState;
 
     override
     -- public

@@ -42,7 +42,8 @@ begin
     end if;
 
     -- public
-    function get (ctx : PredictionContext) return PredictionContext? {
+    function get (ctx : PredictionContext) return Optional_PredictionContext is
+   begin
         return cache[ctx]
     end if;
 

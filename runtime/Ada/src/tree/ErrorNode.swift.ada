@@ -22,7 +22,8 @@ type ErrorNode is new TerminalNodeImpl with null record;
 
     override
     -- public
-    function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
+    function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
+   begin
         return visitor.visitErrorNode(self)
     end if;
 

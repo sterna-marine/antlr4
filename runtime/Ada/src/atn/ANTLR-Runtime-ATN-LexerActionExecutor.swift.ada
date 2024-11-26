@@ -63,7 +63,7 @@ type LexerActionExecutor is new Hashable with null record;
     -- of `lexerActionExecutor` and `lexerAction`.
     -- 
     -- public static
-    function append (lexerActionExecutor : LexerActionExecutor?, lexerAction : LexerAction) return LexerActionExecutor is
+    function append (lexerActionExecutor : Optional_LexerActionExecutor; lexerAction : LexerAction) return LexerActionExecutor is
 begin
         guard lexerActionExecutor : constant := lexerActionExecutor else {
             return LexerActionExecutor([lexerAction])

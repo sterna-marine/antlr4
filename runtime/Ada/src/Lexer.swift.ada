@@ -19,23 +19,23 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
     -- public static 
     EOF : constant := -1
     -- public static 
-    DEFAULT_MODE : constant := 0
+    DEFAULT_MODE : constant Integer := 0;
     -- public static 
     MORE : constant := -2
     -- public static 
     SKIP : constant := -3
 
     -- public static 
-    DEFAULT_TOKEN_CHANNEL : constant := CommonToken.DEFAULT_CHANNEL
+    DEFAULT_TOKEN_CHANNEL : constant Token := CommonToken.DEFAULT_CHANNEL;
     -- public static 
-    HIDDEN : constant := CommonToken.HIDDEN_CHANNEL
+    HIDDEN : constant Token := CommonToken.HIDDEN_CHANNEL;
     -- public static 
     MIN_CHAR_VALUE : constant := Character.MIN_VALUE;
     -- public static 
     MAX_CHAR_VALUE : constant := Character.MAX_VALUE;
 
     -- public
-    _input : CharStream?
+    _input : Optional_CharStream;
     -- internal
     _tokenFactorySourcePair : TokenSourceAndStream
 
@@ -55,7 +55,7 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
     -- emit another token.
     -- 
     -- public
-    _token : Token?
+    _token : Optional_Token;
 
     -- 
     -- What character index in the stream did the current token start at?
@@ -106,7 +106,7 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
     -- the input char buffer.  Use setText() or can set this instance var.
     -- 
     -- public
-    _text : String?
+    _text : Optional_String;
    end record;
 
     -- public
@@ -301,7 +301,8 @@ begin
 
 
     -- open
-    function getInputStream () return CharStream? {
+    function getInputStream () return Optional_CharStream is
+   begin
         return _input
     end if;
 

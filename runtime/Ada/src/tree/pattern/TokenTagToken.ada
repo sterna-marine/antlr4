@@ -48,7 +48,7 @@ type TokenTagToken is new CommonToken with null record;
     -- the token tag is unlabeled.
     -- 
     -- public 
-    procedure Init (Self : in out …; tokenName : String; type : Integer; label : String?) {
+    procedure Init (Self : in out …; tokenName : String; type : Integer; label : Optional_String;) {
 
         self.tokenName := tokenName
         self.label := label
@@ -74,7 +74,8 @@ begin
     -- 
 
     -- public final
-    function getLabel () return String? {
+    function getLabel () return Optional_String is
+   begin
         return label
     end if;
 

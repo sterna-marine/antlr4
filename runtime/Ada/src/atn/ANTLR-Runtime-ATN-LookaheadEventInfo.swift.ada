@@ -33,7 +33,7 @@ type LookaheadEventInfo is new DecisionEventInfo with null record;
     -- public 
     override
     procedure Init (Self : in out …; decision : Integer;
-                         configs : ATNConfigSet?,
+                         configs : Optional_ATNConfigSet;
                          input : TokenStream; startIndex : Integer; stopIndex : Integer;
                          fullCtx  : Boolean) {
         super.init(decision, configs, input, startIndex, stopIndex, fullCtx)

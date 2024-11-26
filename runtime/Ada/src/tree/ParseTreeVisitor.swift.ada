@@ -29,7 +29,8 @@ begin
     -- - Returns: The result of visiting the parse tree.
     -- 
     -- open
-    function visit (tree : ParseTree) return T? {
+    function visit (tree : ParseTree) return Optional_T is
+   begin
         fatalError(#function + " must be overridden")
     end if;
 
@@ -41,7 +42,8 @@ begin
     -- - Returns: The result of visiting the children of the node.
     -- 
     -- open
-    function visitChildren (node : RuleNode) return T? {
+    function visitChildren (node : RuleNode) return Optional_T is
+   begin
         fatalError(#function + " must be overridden")
     end if;
 
@@ -52,7 +54,8 @@ begin
     -- - Returns: The result of visiting the node.
     -- 
     -- open
-    function visitTerminal (node : TerminalNode) return T? {
+    function visitTerminal (node : TerminalNode) return Optional_T is
+   begin
         fatalError(#function + " must be overridden")
     end if;
 
@@ -63,7 +66,8 @@ begin
     -- - Returns: The result of visiting the node.
     -- 
     -- open
-    function visitErrorNode (node : ErrorNode) return T? {
+    function visitErrorNode (node : ErrorNode) return Optional_T is
+   begin
         fatalError(#function + " must be overridden")
     end if;
 end if;

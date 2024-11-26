@@ -26,7 +26,7 @@ type ProfilingATNSimulator is new ParserATNSimulator with null record;
     -- internal
     currentDecision : Integer := 0
     -- internal
-    currentState : DFAState?
+    currentState : Optional_DFAState;
 
     -- 
     -- At the point of LL failover, we record how SLL would resolve the conflict so that
@@ -62,7 +62,7 @@ type ProfilingATNSimulator is new ParserATNSimulator with null record;
 
     override
     -- public
-    function adaptivePredict (input : TokenStream; decision : Integer;outerContext : ParserRuleContext?) return Integer is
+    function adaptivePredict (input : TokenStream; decision : Integer;outerContext : Optional_ParserRuleContext;) return Integer is
 begin
         outerContext : constant := outerContext
         self._sllStopIndex := -1
@@ -104,12 +104,13 @@ begin
 
     override
     -- internal
-    function getExistingTargetState (previousD : DFAState; t : Integer) return DFAState? {
+    function getExistingTargetState (previousD : DFAState; t : Integer) return Optional_DFAState is
+   begin
         -- this method is called after each time the input position advances
         -- during SLL prediction
         _sllStopIndex := _input.index()
 
-        let existingTargetState: DFAState? := super.getExistingTargetState(previousD, t)
+        let existingTargetState: Optional_DFAState; := super.getExistingTargetState(previousD, t)
         if existingTargetState /= null then
             decisions[currentDecision].SLL_DFATransitions := @ + 1; -- count only if we transition over a DFA state
             if existingTargetState = ATNSimulator.ERROR then
@@ -134,7 +135,8 @@ begin
 
     override
     -- internal
-    function computeReachSet (closure : ATNConfigSet; t : Integer; fullCtx  : Boolean) return ATNConfigSet? {
+    function computeReachSet (closure : ATNConfigSet; t : Integer; fullCtx  : Boolean) return Optional_ATNConfigSet is
+   begin
         if fullCtx then
             -- this method is called after each time the input position advances
             -- during full context prediction
@@ -183,7 +185,7 @@ begin
 
     override
     -- internal
-    procedure reportAttemptingFullContext (dfa : DFA; conflictingAlts : BitSet?, configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) is
+    procedure reportAttemptingFullContext (dfa : DFA; conflictingAlts : Optional_BitSet; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) is
     begin
         if conflictingAlts : constant := conflictingAlts then
             conflictingAltResolvedBySLL := conflictingAlts.firstSetBit()
@@ -210,7 +212,7 @@ begin
     override
     -- internal
     procedure reportAmbiguity (dfa : DFA; D : DFAState; startIndex : Integer; stopIndex : Integer; exact : Boolean;
-                                  ambigAlts : BitSet?, configs : ATNConfigSet) {
+                                  ambigAlts : Optional_BitSet; configs : ATNConfigSet) {
         var prediction : Integer;
         if ambigAlts : constant := ambigAlts then
             prediction := ambigAlts.firstSetBit()

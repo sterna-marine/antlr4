@@ -8,7 +8,7 @@
 -- public final
 type NotSetTransition is new SetTransition with null record;
 {
---	public override init(_ target : ATNState; inout _ set : IntervalSet?) {
+--	public override init(_ target : ATNState; inout _ set : Optional_IntervalSet;) {
 --		super.init(target, &set);
 --	}
 

@@ -72,14 +72,14 @@ begin
 
 
     -- public
-    procedure create (source : TokenSourceAndStream; type : Integer; text : String?,
+    procedure create (source : TokenSourceAndStream; type : Integer; text : Optional_String;
                        channel : Integer; start : Integer; stop : Integer;
                        line : Integer; charPositionInLine : Integer) return Token is
 begin
-        t : constant := CommonToken(source, type, channel, start, stop)
+        t : constant Token := CommonToken(source, type, channel, start, stop);
         t.setLine(line)
         t.setCharPositionInLine(charPositionInLine)
-        if text : constant := text then
+        if text : constant Text := text then
             t.setText(text);
         elsif cStream : constant := source.stream, copyText then
             t.setText(try! cStream.getText(Interval.of(start, stop)));

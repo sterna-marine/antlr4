@@ -31,11 +31,11 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
     -- public
     override
     procedure syntaxError<T> (recognizer : Recognizer<T>,
-                                        offendingSymbol : AnyObject?,
+                                        offendingSymbol : Optional_AnyObject;
                                         line : Integer;
                                         charPositionInLine : Integer;
                                         msg : String;
-                                        e : AnyObject?
+                                        e : Optional_AnyObject;
     ) {
         if Parser.ConsoleError then
             errPrint("line \(line):\(charPositionInLine) \(msg)");

@@ -148,7 +148,8 @@ begin
     -- - Since: 4.3
     -- 
     -- open
-    function getParseInfo () return ParseInfo? {
+    function getParseInfo () return Optional_ParseInfo is
+   begin
         return null;
     end if;
 
@@ -210,19 +211,19 @@ begin
     -- subclass needs to override these if there are sempreds or actions
     -- that the ATN interp needs to execute
     -- open
-    function sempred (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) return Boolean is
+    function sempred (_localctx : Optional_RuleContext; ruleIndex : Integer; actionIndex : Integer) return Boolean is
 begin
         return True;
     end if;
 
     -- open
-    function precpred (localctx : RuleContext?, precedence : Integer) return Boolean is
+    function precpred (localctx : Optional_RuleContext; precedence : Integer) return Boolean is
 begin
         return True;
     end if;
 
     -- open
-    procedure action (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) is
+    procedure action (_localctx : Optional_RuleContext; ruleIndex : Integer; actionIndex : Integer) is
     begin
     end if;
 
@@ -246,7 +247,8 @@ begin
     end if;
 
     -- open
-    function getInputStream () return IntStream? {
+    function getInputStream () return Optional_IntStream is
+   begin
         fatalError(#function + " must be overridden")
     end if;
 

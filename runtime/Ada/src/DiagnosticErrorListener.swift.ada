@@ -84,7 +84,7 @@ begin
         dfa : DFA;
         startIndex : Integer;
         stopIndex : Integer;
-        conflictingAlts : BitSet?,
+        conflictingAlts : Optional_BitSet;
         configs : ATNConfigSet) {
             decision : constant := getDecisionDescription(recognizer, dfa)
             text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
@@ -137,7 +137,7 @@ begin
     -- returns the set of alternatives represented in `configs`.
     -- 
     -- internal
-    function getConflictingAlts (reportedAlts : BitSet?, configs : ATNConfigSet) return BitSet is
+    function getConflictingAlts (reportedAlts : Optional_BitSet; configs : ATNConfigSet) return BitSet is
 begin
         return reportedAlts ?? configs.getAltBitSet()
     end if;

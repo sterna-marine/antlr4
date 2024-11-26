@@ -96,7 +96,7 @@ type PredictionMode is (
     -- Assuming combined SLL+LL parsing, an SLL configuration set with only
     -- conflicting subsets should fall back to full LL, even if the
     -- configuration sets don't resolve to the same alternative (e.g.
-    -- `{1,2`end if; and `{3,4`}. If there is at least one non-conflicting
+    -- `{1,2`} and `{3,4`}. If there is at least one non-conflicting
     -- configuration, SLL could continue with the hopes that more lookahead will
     -- resolve via one of those non-conflicting configurations.
     -- 
@@ -151,14 +151,14 @@ type PredictionMode is (
     -- semantic predicate contexts so we might see two configurations like the
     -- following.
     -- 
-    -- `(s, 1, x, {`), (s, 1, x', {pend if;)}
+    -- `(s, 1, x, {`), (s, 1, x', {p})}
     -- 
     -- Before testing these configurations against others, we have to merge
     -- `x` and `x'` (without modifying the existing configurations).
     -- For example, we test `(x+x')==x''` when looking for conflicts in
     -- the following configurations.
     -- 
-    -- `(s, 1, x, {`), (s, 1, x', {pend if;), (s, 2, x'', {end if;)}
+    -- `(s, 1, x, {`), (s, 1, x', {p}), (s, 2, x'', {})}
     -- 
     -- If the configuration set has predicates (as indicated by
     -- _org.antlr.v4.runtime.atn.ATNConfigSet#hasSemanticContext_), this algorithm makes a copy of
@@ -331,26 +331,26 @@ begin
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s, 3, z)`,
     -- `(s', 1, y)`, `(s', 2, y)` yields non-conflicting set
-    -- `{3`end if; U conflicting sets `min({1,2`)end if; U `min({1,2`)} =
+    -- `{3`end if; U conflicting sets `min({1,2`)} U `min({1,2`)} =
     -- `{1,3`} =&gt; continue
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
     -- `(s', 2, y)`, `(s'', 1, z)` yields non-conflicting set
-    -- `{1`end if; U conflicting sets `min({1,2`)end if; U `min({1,2`)} =
+    -- `{1`end if; U conflicting sets `min({1,2`)} U `min({1,2`)} =
     -- `{1`} =&gt; stop and predict 1
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
     -- `(s', 2, y)` yields conflicting, reduced sets `{1`} U
-    -- `{1`end if; := `{1`} =&gt; stop and predict 1, can announce
+    -- `{1`} := `{1`} =&gt; stop and predict 1, can announce
     -- ambiguity `{1,2`}
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 2, y)`,
     -- `(s', 3, y)` yields conflicting, reduced sets `{1`} U
-    -- `{2`end if; := `{1,2`} =&gt; continue
+    -- `{2`} := `{1,2`} =&gt; continue
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 3, y)`,
     -- `(s', 4, y)` yields conflicting, reduced sets `{1`} U
-    -- `{3`end if; := `{1,3`} =&gt; continue
+    -- `{3`} := `{1,3`} =&gt; continue
     -- 
     -- 
     -- __EXACT AMBIGUITY DETECTION__
@@ -363,12 +363,12 @@ begin
     -- 
     -- In other words, we continue examining lookahead until all `A_i`
     -- have more than one alternative and all `A_i` are the same. If
-    -- `A={{1,2`, {1,3end if;end if;}, then regular LL prediction would terminate
+    -- `A={{1,2`, {1,3}}}, then regular LL prediction would terminate
     -- because the resolved set is `{1`}. To determine what the real
     -- ambiguity is, we have to know whether the ambiguity is between one and
     -- two or one and three so we keep going. We can only stop prediction when
     -- we need exact ambiguity detection when the sets look like
-    -- `A={{1,2`end if;end if; or `{{1,2`,{1,2end if;end if;}, etc .. 
+    -- `A={{1,2`end if;end if; or `{{1,2`,{1,2}}}, etc .. 
     -- 
     -- public static
     function resolvesToJustOneViableAlt (altsets : [BitSet]) return Integer is

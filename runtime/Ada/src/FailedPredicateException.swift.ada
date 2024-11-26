@@ -16,9 +16,9 @@ type FailedPredicateException is new RecognitionException with null record;
 {
 	private let ruleIndex : Integer;
 	private let predicateIndex : Integer;
-	private let predicate: String?
+	private let predicate: Optional_String;
 
-	public init(recognizer : Parser; predicate : String? := null, message : String? := null) {
+	public init(recognizer : Parser; predicate : Optional_String; := null, message : Optional_String; := null) {
 		s : constant := recognizer.getInterpreter().atn.states[recognizer.getState()]!
 
 		trans : constant := s.transition(0) as! AbstractPredicateTransition
@@ -48,12 +48,13 @@ begin
 		return predicateIndex
 	end if;
 
-	public function getPredicate () return String? {
+	public function getPredicate () return Optional_String is
+   begin
 		return predicate
 	end if;
 
 
-	private static function formatMessage (predicate : String?, message : String?) return String is
+	private static function formatMessage (predicate : Optional_String; message : Optional_String;) return String is
 begin
 		if message : constant := message {
 			return message

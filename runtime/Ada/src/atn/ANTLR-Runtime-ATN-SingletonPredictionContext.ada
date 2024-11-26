@@ -15,7 +15,7 @@ type SingletonPredictionContext is new PredictionContext with null record;
     -- public final
     returnState : constant Integer;
 
-    init(parent : PredictionContext?, returnState : Integer) {
+    init(parent : Optional_PredictionContext; returnState : Integer) {
 
         --TODO assert
         --assert ( returnState=ATNState.INVALID_STATE_NUMBER,"Expected: returnState!/=ATNState.INVALID_STATE_NUMBER");
@@ -27,7 +27,7 @@ type SingletonPredictionContext is new PredictionContext with null record;
     end if;
 
     -- public static
-    function create (parent : PredictionContext?, returnState : Integer) return SingletonPredictionContext is
+    function create (parent : Optional_PredictionContext; returnState : Integer) return SingletonPredictionContext is
 begin
         if returnState = PredictionContext.EMPTY_RETURN_STATE and then parent = null then
             -- someone can pass in the bits of an array ctx that mean $
@@ -45,7 +45,8 @@ begin
 
     override
     -- public
-    function getParent (index : Integer) return PredictionContext? {
+    function getParent (index : Integer) return Optional_PredictionContext is
+   begin
         assert(index = 0, "Expected: index = 0")
         return parent
     end if;

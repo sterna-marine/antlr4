@@ -61,7 +61,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- or empty.
     -- 
     -- public 
-    procedure Init (Self : in out …; ruleName : String; bypassTokenType : Integer; label : String?) {
+    procedure Init (Self : in out …; ruleName : String; bypassTokenType : Integer; label : Optional_String;) {
         self.ruleName := ruleName
         self.bypassTokenType := bypassTokenType
         self.label := label
@@ -85,7 +85,8 @@ begin
     -- `null` if this is an unlabeled rule tag.
     -- 
     -- public final
-    function getLabel () return String? {
+    function getLabel () return Optional_String is
+   begin
         return label
     end if;
 
@@ -103,7 +104,8 @@ begin
     -- delimiters.
     -- 
     -- public
-    function getText () return String? {
+    function getText () return Optional_String is
+   begin
         if label : constant := label then
             return "<\(label):\(ruleName)>";
         end if;
@@ -171,7 +173,8 @@ begin
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns `null`.
     -- 
     -- public
-    function getTokenSource () return TokenSource? {
+    function getTokenSource () return Optional_TokenSource is
+   begin
         return null;
     end if;
 
@@ -179,7 +182,8 @@ begin
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns `null`.
     -- 
     -- public
-    function getInputStream () return CharStream? {
+    function getInputStream () return Optional_CharStream is
+   begin
         return null;
     end if;
 

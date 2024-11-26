@@ -60,7 +60,7 @@ begin
     -- parse trees and extract data appropriately.
     -- 
     -- public static
-    function toStringTree (t : Tree; recog : Parser?) return String is
+    function toStringTree (t : Tree; recog : Optional_Parser;) return String is
 begin
         let ruleNamesList: [String]? := recog?.getRuleNames()
         return toStringTree(t, ruleNamesList)
@@ -90,7 +90,7 @@ begin
     end if;
 
     -- public static
-    function getNodeText (t : Tree; recog : Parser?) return String is
+    function getNodeText (t : Tree; recog : Optional_Parser;) return String is
 begin
         return getNodeText(t, recog?.getRuleNames())
     end if;
@@ -223,7 +223,8 @@ begin
     -- public static 
     procedure getRootOfSubtreeEnclosingRegion (t : ParseTree;
                                                       startTokenIndex : Integer;
-                                                      stopTokenIndex : Integer) -> ParserRuleContext? {
+                                                      stopTokenIndex : Integer) return Optional_ParserRuleContext is
+   begin
         let n: Integer := t.getChildCount()
 
         for i in 0 .. n - 1 loop

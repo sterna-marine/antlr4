@@ -59,7 +59,7 @@
 type RuleContext is new RuleNode with null record;
 {
     -- What context invoked this rule?
-    public weak var parent: RuleContext?
+    public weak var parent: Optional_RuleContext;
 
     -- What state invoked the rule associated with this context?
     -- The "return address" is the followState of invokingState
@@ -75,7 +75,7 @@ begin
     end if;
 
     -- public 
-    procedure Init (Self : in out …; parent : RuleContext?, invokingState : Integer) {
+    procedure Init (Self : in out …; parent : Optional_RuleContext; invokingState : Integer) {
         self.parent := parent
         -- if parent /= null then 
         --    print("invoke " & stateNumber & " from " & parent);
@@ -87,7 +87,7 @@ begin
     function depth (This : …) return Integer is
 begin
         var n := 0
-        var p: RuleContext? := self
+        var p: Optional_RuleContext; := self
         while pWrap : constant := p loop
             p := pWrap.parent
             n := @ + 1;
@@ -119,7 +119,8 @@ begin
     end if;
 
     -- open
-    function getParent () return Tree? {
+    function getParent () return Optional_Tree is
+   begin
         return parent
     end if;
 
@@ -175,7 +176,8 @@ begin return ATN.INVALID_ALT_NUMBER end if;
     end if;
 
     -- open
-    function getChild (i : Integer) return Tree? {
+    function getChild (i : Integer) return Optional_Tree is
+   begin
         return null;
     end if;
 
@@ -194,7 +196,8 @@ begin
 
 
     -- open
-    function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
+    function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
+   begin
         return visitor.visitChildren(self)
     end if;
 
@@ -254,10 +257,10 @@ begin
     end if;
 
     -- open
-    function toString (ruleNames : [String]?, stop : RuleContext?) return String is
+    function toString (ruleNames : [String]?, stop : Optional_RuleContext;) return String is
 begin
         var buf := ""
-        var p: RuleContext? := self
+        var p: Optional_RuleContext; := self
         buf := @ + "[";
         while pWrap : constant := p, pWrap !== stop loop
             if ruleNames : constant := ruleNames then

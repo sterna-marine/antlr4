@@ -32,7 +32,7 @@ type IntSet is interface;
     -- 
     -- - throws: _ANTLRError.illegalState_ if the current set is read-only
     -- 
-    function addAll (set : IntSet?) return IntSet
+    function addAll (set : Optional_IntSet;) return IntSet
 
     -- 
     -- Return a new _org.antlr.v4.runtime.misc.IntSet_ object containing all elements that are
@@ -44,7 +44,7 @@ type IntSet is interface;
     -- current set and `a`. The value `null` may be returned in
     -- place of an empty result set.
     -- 
-    function and (a : IntSet?) return IntSet?
+    function and (a : Optional_IntSet;) return IntSet?
 
     -- 
     -- Return a new _org.antlr.v4.runtime.misc.IntSet_ object containing all elements that are
@@ -61,7 +61,7 @@ type IntSet is interface;
     -- `elements` but not present in the current set. The value
     -- `null` may be returned in place of an empty result set.
     -- 
-    function complement (elements : IntSet?) return IntSet?
+    function complement (elements : Optional_IntSet;) return IntSet?
 
     -- 
     -- Return a new _org.antlr.v4.runtime.misc.IntSet_ object containing all elements that are
@@ -94,7 +94,7 @@ type IntSet is interface;
     -- `elements` but not present in the current set. The value
     -- `null` may be returned in place of an empty result set.
     -- 
-    function subtract (a : IntSet?) return IntSet
+    function subtract (a : Optional_IntSet;) return IntSet
 
     -- 
     -- Return the total number of elements represented by the current set.

@@ -33,7 +33,7 @@ type LL1Analyzer is tagged record
     -- - returns: the expected symbols for each outgoing transition of `s`.
     --
     -- public
-    function getDecisionLookahead (s : ATNState?) return [IntervalSet?]? {
+    function getDecisionLookahead (s : Optional_ATNState;) return [IntervalSet?]? {
 
         guard s : constant := s else {
              return null;
@@ -72,7 +72,7 @@ type LL1Analyzer is tagged record
     -- specified `ctx`.
     --
     -- public
-    function LOOK (s : ATNState; ctx : RuleContext?) return IntervalSet is
+    function LOOK (s : ATNState; ctx : Optional_RuleContext;) return IntervalSet is
 begin
         return LOOK(s, null, ctx)
     end if;
@@ -97,7 +97,7 @@ begin
     --
 
     -- public
-    function LOOK (s : ATNState; stopState : ATNState?, ctx : RuleContext?) return IntervalSet is
+    function LOOK (s : ATNState; stopState : Optional_ATNState; ctx : Optional_RuleContext;) return IntervalSet is
 begin
         r : constant := IntervalSet()
         seeThruPreds : constant := True -- ignore preds; get all lookahead
@@ -139,8 +139,8 @@ begin
     --
     -- internal
     procedure _LOOK (s : ATNState;
-                        stopState : ATNState?,
-                        ctx : PredictionContext?,
+                        stopState : Optional_ATNState;
+                        ctx : Optional_PredictionContext;
                         look : IntervalSet;
                         lookBusy : inout Set<ATNConfig>,
                         calledRuleStack : BitSet;

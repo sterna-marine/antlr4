@@ -89,7 +89,8 @@ begin
 
 
     -- public
-    function LT (i : Integer) return Token? {
+    function LT (i : Integer) return Optional_Token is
+   begin
         if i == -1 then
             return lastToken;
         end if;
@@ -139,7 +140,7 @@ begin
 
 
     -- public
-    function getText (start : Token?, stop : Token?) return String is
+    function getText (start : Optional_Token; stop : Optional_Token;) return String is
 begin
         return getText(Interval.of(start!.getTokenIndex(), stop!.getTokenIndex()));
     end if;

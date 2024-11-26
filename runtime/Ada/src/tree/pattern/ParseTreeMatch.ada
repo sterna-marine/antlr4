@@ -51,7 +51,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- - Throws: ANTLRError.ilegalArgument if `labels` is `null`
     -- 
     -- public 
-    procedure Init (Self : in out …; tree : ParseTree; pattern : ParseTreePattern; labels : MultiMap<String, ParseTree>, mismatchedNode : ParseTree?) {
+    procedure Init (Self : in out …; tree : ParseTree; pattern : ParseTreePattern; labels : MultiMap<String, ParseTree>, mismatchedNode : Optional_ParseTree;) {
 
         self.tree := tree
         self.pattern := pattern
@@ -77,7 +77,8 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
 
     -- public
-    function get (label : String) return ParseTree? {
+    function get (label : String) return Optional_ParseTree is
+   begin
         if parseTrees : constant := labels.get(label) , parseTrees.count > 0 then
             return parseTrees[parseTrees.count - 1]   -- return last if multiple
         else
@@ -134,7 +135,8 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- if the match was successful.
     -- 
     -- public
-    function getMismatchedNode () return ParseTree? {
+    function getMismatchedNode () return Optional_ParseTree is
+   begin
         return mismatchedNode
     end if;
 

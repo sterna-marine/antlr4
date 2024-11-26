@@ -30,7 +30,8 @@ begin
     end if;
 
     -- public
-    function peek () return T? {
+    function peek () return Optional_T is
+   begin
         return items.last
     end if;
     -- public

@@ -17,7 +17,7 @@ begin
         interpPath : constant := sourceDir.appendingPathComponent("gen/LexerA.interp").path
         data : constant := InterpreterDataReader(interpPath);
         lexer : constant := data.createLexer (input => input);
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         result : constant := stream.getText();
         expecting : constant := "abc"
@@ -30,7 +30,7 @@ begin
         interpPath : constant := sourceDir.appendingPathComponent("gen/LexerB.interp").path
         data : constant := InterpreterDataReader(interpPath);
         lexer : constant := data.createLexer(input:input);
-        stream : constant := CommonTokenStream(lexer)
+        stream : constant Token := CommonTokenStream(lexer);
         stream.fill();
         result : constant := stream.getText();
         expecting : constant := "x := 3 * 0 + 2 * 0;"

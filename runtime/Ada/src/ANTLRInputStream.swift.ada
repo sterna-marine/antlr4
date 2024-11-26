@@ -35,7 +35,7 @@ type ANTLRInputStream is new CharStream with null record;
     -- What is name or source of this char stream?
     -- 
     -- public
-    name : String?
+    name : Optional_String;
 
     -- public
     procedure Init (Self : …) is
@@ -68,7 +68,7 @@ begin
     --
     -- public 
     procedure Init (Self : in out …; data : [Character], numberOfActualUnicodeScalarsInArray : Integer) {
-        string : constant := String(data)
+        string : constant String := To_String(data)
         self.data := Array(string.unicodeScalars)
         self.n := numberOfActualUnicodeScalarsInArray
     end if;

@@ -15,7 +15,7 @@ type DFA is new CustomStringConvertible with null record;
     states := [DFAState: DFAState]()
 
     -- public
-    s0 : DFAState?
+    s0 : Optional_DFAState;
 
     public let decision : Integer;
 
@@ -89,7 +89,8 @@ begin
     -- - seealso: #isPrecedenceDfa()
     -- 
     -- public final
-    function getPrecedenceStartState (precedence : Integer) return DFAState? {
+    function getPrecedenceStartState (precedence : Integer) return Optional_DFAState is
+   begin
         if not isPrecedenceDfa() then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
 

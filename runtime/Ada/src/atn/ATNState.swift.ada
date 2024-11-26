@@ -121,14 +121,15 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- Which ATN are we in?
     -- 
     -- public final 
-     atn: ATN? := null;;
+     atn: Optional_ATN; := null;;
 
     public internal(set) final var stateNumber: Integer := INVALID_STATE_NUMBER
 
-    public internal(set) final var ruleIndex: Int?
+    public internal(set) final var ruleIndex: Optional_Int;
     -- at runtime, we don't have Rule objects
 
-    public private(set) final var epsilonOnlyTransitions : Boolean := False;
+    -- public private(set) final var
+    epsilonOnlyTransitions : Boolean := False;;
 
     -- 
     -- Track the transitions emanating from this ATN state.
@@ -138,7 +139,7 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- 
     -- Used to cache lookahead during parsing, not used during construction
     -- 
-    public internal(set) final var nextTokenWithinRule: IntervalSet?
+    public internal(set) final var nextTokenWithinRule: Optional_IntervalSet;
 
 
     -- public

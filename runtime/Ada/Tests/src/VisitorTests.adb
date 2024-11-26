@@ -31,17 +31,20 @@ begin
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
-            function visitTerminal (node : TerminalNode) return String? {
+            function visitTerminal (node : TerminalNode) return Optional_String is
+   begin
                 return "\(node.getSymbol()!)\n"
             end if;
 
             override
-            function defaultResult () return String? {
+            function defaultResult () return Optional_String is
+   begin
                 return ""
             end if;
 
             override
-            function aggregateResult (aggregate : String?, nextResult : String?) return String? {
+            function aggregateResult (aggregate : Optional_String; nextResult : Optional_String;) return Optional_String is
+   begin
                 return aggregate! + nextResult!
             end if;
         end if;
@@ -75,9 +78,9 @@ begin
 
             override
             procedure syntaxError<T> (recognizer : Recognizer<T>,
-                                         offendingSymbol : AnyObject?,
+                                         offendingSymbol : Optional_AnyObject;
                                          line : Integer; charPositionInLine : Integer;
-                                         msg : String; e : AnyObject?) {
+                                         msg : String; e : Optional_AnyObject;) {
                 errors.append("line \(line):\(charPositionInLine) \(msg)")
             end if;
         end if;
@@ -95,17 +98,20 @@ begin
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
-            function visitErrorNode (node : ErrorNode) return String? {
+            function visitErrorNode (node : ErrorNode) return Optional_String is
+   begin
                 return "Error encountered: \(node.getSymbol()!)"
             end if;
 
             override
-            function defaultResult () return String? {
+            function defaultResult () return Optional_String is
+   begin
                 return ""
             end if;
 
             override
-            function aggregateResult (aggregate : String?, nextResult : String?) return String? {
+            function aggregateResult (aggregate : Optional_String; nextResult : Optional_String;) return Optional_String is
+   begin
                 return aggregate! + nextResult!
             end if;
         end if;
@@ -118,7 +124,7 @@ begin
 
     --
     -- This test verifies that {@link AbstractParseTreeVisitor#visitChildren} does not call
-    -- {@link ParseTreeVisitor#visitend if; after {@link AbstractParseTreeVisitor#shouldVisitNextChild} returns
+    -- {@link ParseTreeVisitor#visit} after {@link AbstractParseTreeVisitor#shouldVisitNextChild} returns
     -- {@code False}.
     --
     procedure testShouldNotVisitEOF (This : …) is
@@ -133,12 +139,13 @@ begin
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
-            function visitTerminal (node : TerminalNode) return String? {
+            function visitTerminal (node : TerminalNode) return Optional_String is
+   begin
                 return "\(node.getSymbol()!)\n"
             end if;
 
             override
-            function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
+            function shouldVisitNextChild (node : RuleNode; currentResult : Optional_String;) return Boolean is
 begin
                 return currentResult = null or else currentResult!.isEmpty
             end if;
@@ -167,18 +174,20 @@ begin
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
-            function visitTerminal (node : TerminalNode) return String? {
+            function visitTerminal (node : TerminalNode) return Optional_String is
+   begin
                 XCTFail()
                 return null;
             end if;
 
             override
-            function defaultResult () return String? {
+            function defaultResult () return Optional_String is
+   begin
                 return "default result"
             end if;
 
             override
-            function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
+            function shouldVisitNextChild (node : RuleNode; currentResult : Optional_String;) return Boolean is
 begin
                 return False;
             end if;
@@ -205,17 +214,20 @@ begin
         type Visitor is new VisitorCalcBaseVisitor<Int> with null record;
 {
             override
-            function visitS (ctx : VisitorCalcParser.SContext) return Int? {
+            function visitS (ctx : VisitorCalcParser.SContext) return Optional_Int is
+   begin
                 return visit(ctx.expr()!)
             end if;
 
             override
-            function visitNumber (ctx : VisitorCalcParser.NumberContext) return Int? {
+            function visitNumber (ctx : VisitorCalcParser.NumberContext) return Optional_Int is
+   begin
                 return Integer ((ctx.INT()?.getText())!)
             end if;
 
             override
-            function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Int? {
+            function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Optional_Int is
+   begin
                 left : constant := visit(ctx.expr(0)!)!
                 right : constant := visit(ctx.expr(1)!)!
                 if ctx.MUL() /= null then
@@ -226,7 +238,8 @@ begin
             end if;
 
             override
-            function visitAdd (ctx : VisitorCalcParser.AddContext) return Int? {
+            function visitAdd (ctx : VisitorCalcParser.AddContext) return Optional_Int is
+   begin
                 left : constant := visit(ctx.expr(0)!)!
                 right : constant := visit(ctx.expr(1)!)!
                 if ctx.ADD() /= null then

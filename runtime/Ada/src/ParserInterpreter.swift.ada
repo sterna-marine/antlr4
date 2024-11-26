@@ -188,7 +188,8 @@ begin
     end if;
 
     -- internal
-    function getATNState () return ATNState? {
+    function getATNState () return Optional_ATNState is
+   begin
         return atn.states[getState()]
     end if;
 

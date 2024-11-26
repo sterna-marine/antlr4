@@ -18,7 +18,7 @@ type LexerATNSimulator is new ATNSimulator with null record;
     public dfa_debug : constant := False;
 
     -- public static 
-    MIN_DFA_EDGE : constant := 0
+    MIN_DFA_EDGE : constant Integer := 0;
     -- public static 
     MAX_DFA_EDGE : constant := 127  -- forces unicode to stay in ATN
 
@@ -48,7 +48,7 @@ type LexerATNSimulator is new ATNSimulator with null record;
         -- internal
         charPos : Integer := -1
         -- internal
-        dfaState : DFAState?
+        dfaState : Optional_DFAState;
 
         -- internal
         procedure reset (This : …) is
@@ -61,7 +61,7 @@ begin
     end if;
 
 
-    internal weak var recog: Lexer?
+    internal weak var recog: Optional_Lexer;
 
     --
     -- The current token's starting index into the character stream.
@@ -84,7 +84,8 @@ begin
     -- public
     charPositionInLine := 0
 
-    public private(set) final var decisionToDFA: [DFA]
+    -- public private(set) final var
+    decisionToDFA : [DFA];
 
     -- internal
     mode := Lexer.DEFAULT_MODE
@@ -102,7 +103,7 @@ begin
     end if;
 
     -- public 
-    procedure Init (Self : in out …; recog : Lexer?, atn : ATN;
+    procedure Init (Self : in out …; recog : Optional_Lexer; atn : ATN;
         decisionToDFA : [DFA],
         sharedContextCache : PredictionContextCache) {
 
@@ -270,7 +271,8 @@ begin
     --
 
     -- internal
-    function getExistingTargetState (s : DFAState; t : Integer) return DFAState? {
+    function getExistingTargetState (s : DFAState; t : Integer) return Optional_DFAState is
+   begin
         if s.edges = null or else t < LexerATNSimulator.MIN_DFA_EDGE or else t > LexerATNSimulator.MAX_DFA_EDGE then
             return null;
         end if;
@@ -393,7 +395,7 @@ begin
     end if;
 
     -- internal
-    procedure accept (input : CharStream; lexerActionExecutor : LexerActionExecutor?,
+    procedure accept (input : CharStream; lexerActionExecutor : Optional_LexerActionExecutor;
         startIndex : Integer; index : Integer; line : Integer; charPos : Integer) {
             if LexerATNSimulator.debug then
                 print("ACTION \(String(describing: lexerActionExecutor))\n");
@@ -411,7 +413,8 @@ begin
 
 
     -- internal
-    function getReachableTarget (trans : Transition; t : Integer) return ATNState? {
+    function getReachableTarget (trans : Transition; t : Integer) return Optional_ATNState is
+   begin
         if trans.matches(t, Character.MIN_VALUE, Character.MAX_VALUE) then
             return trans.target;
         end if;
@@ -515,9 +518,10 @@ begin
         t : Transition;
         configs : ATNConfigSet;
         speculative : Boolean;
-        treatEofAsEpsilon  : Boolean) return LexerATNConfig? {
+        treatEofAsEpsilon  : Boolean) return Optional_LexerATNConfig is
+   begin
 
-            var c: LexerATNConfig? := null;
+            var c: Optional_LexerATNConfig; := null;
             case t.getSerializationType() is
                when Transition.RULE =>
                   ruleTransition : constant := t as! RuleTransition
@@ -540,7 +544,7 @@ begin
                   -- this predicate mechanism is not adding DFA states that see
                   -- predicates immediately afterwards in the ATN. For example,
                   --
-                  -- a : ID {p1end if;? | ID {p2}? ;
+                  -- a : ID {p1}? | ID {p2}? ;
                   --
                   -- should create the start state for rule 'a' (to save start state
                   -- competition), but should not create target of ID state. The

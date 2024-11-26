@@ -7,7 +7,8 @@
 with Foundation;
 
 extension String {
-    function lastIndex (of target: String) return String.Index? {
+    function lastIndex (of target: String) return String.Optional_Index is
+   begin
         if target.isEmpty then
             return null;
         end if;

@@ -55,7 +55,7 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     -- that have predicates that evaluate to False. Computed in computeTargetState().
     --
     -- internal
-    conflictingAlts : BitSet?
+    conflictingAlts : Optional_BitSet;
 
     -- Used in parser and lexer. In lexer, it indicates we hit a pred
     -- while computing a closure operation.  Don't make a DFA state from this.
@@ -327,7 +327,7 @@ begin
     -- return configLookup.toArray(a);
     --
     -- private
-    function configHash (stateNumber : Integer;context : PredictionContext?) return Int{
+    function configHash (stateNumber : Integer;context : Optional_PredictionContext;) return Int{
         var hashCode := MurmurHash.initialize(7)
         hashCode := MurmurHash.update(hashCode, stateNumber)
         hashCode := MurmurHash.update(hashCode, context)
@@ -397,7 +397,7 @@ begin
 
     --LexerATNSimulator
     -- public
-    firstConfigWithRuleStopState : ATNConfig?;
+    firstConfigWithRuleStopState : Optional_ATNConfig;;
     function firstConfigWithRuleStopState return ATNConfig? is
         for config in configs loop
             if config.state is RuleStopState then

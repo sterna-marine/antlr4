@@ -35,7 +35,7 @@ type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     lastErrorIndex := -1
 
     -- open
-    lastErrorStates : IntervalSet?
+    lastErrorStates : Optional_IntervalSet;
 
     --
     -- This field is used to propagate information about the lookahead following
@@ -46,7 +46,7 @@ type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     -- as possible.
     --
     -- open
-    nextTokensContext : ParserRuleContext?
+    nextTokensContext : Optional_ParserRuleContext;
 
     --
     -- @see #nextTokensContext
@@ -240,7 +240,7 @@ begin
             return;
         end if;
 
-        tokens : constant := getTokenStream(recognizer)
+        tokens : constant Token := getTokenStream(recognizer);
         la : constant := tokens.LA(1);
 
         -- cheaper subset first; might get lucky. seems to shave a wee bit off;
@@ -299,7 +299,7 @@ begin
     -- open
     procedure reportNoViableAlternative (recognizer : Parser; e : NoViableAltException) is
     begin
-        tokens : constant := getTokenStream(recognizer)
+        tokens : constant Token := getTokenStream(recognizer);
         var input : String;
         if e.getStartToken().getType() == CommonToken.EOF then
             input := "<EOF>"
@@ -327,7 +327,7 @@ begin
     -- open
     procedure reportInputMismatch (recognizer : Parser; e : InputMismatchException) is
     begin
-        tok : constant := getTokenErrorDisplay(e.getOffendingToken())
+        tok : constant Token := getTokenErrorDisplay(e.getOffendingToken());
         expected : constant := e.getExpectedTokens()?.toString(recognizer.getVocabulary()) ?? "<missing>"
         msg : constant := "mismatched input \(tok) expecting \(expected)"
         recognizer.notifyErrorListeners(e.getOffendingToken(), msg, e)
@@ -378,7 +378,7 @@ begin
         beginErrorCondition(recognizer)
 
         t : constant := try? recognizer.getCurrentToken()
-        tokenName : constant := getTokenErrorDisplay(t)
+        tokenName : constant Token := getTokenErrorDisplay(t);
         expecting : constant := (try? getExpectedTokens(recognizer)) ?? IntervalSet.EMPTY_SET
         msg : constant := "extraneous input \(tokenName) expecting \(expecting.toString(recognizer.getVocabulary()))"
         recognizer.notifyErrorListeners(t, msg, null)
@@ -472,7 +472,7 @@ begin
     function recoverInline (recognizer : Parser) return Token is
 begin
         -- SINGLE TOKEN DELETION
-        matchedSymbol : constant := singleTokenDeletion(recognizer);
+        matchedSymbol : constant Token := singleTokenDeletion(recognizer);;
         if matchedSymbol : constant := matchedSymbol then
             -- we have deleted the extra token.
             -- now, move past ttype token as if all were ok
@@ -509,7 +509,7 @@ begin
     -- open
     function singleTokenInsertion (recognizer : Parser) return Boolean is
 begin
-        currentSymbolType : constant := getTokenStream(recognizer).LA(1);
+        currentSymbolType : constant Token := getTokenStream(recognizer).LA(1);;
         -- if current token is consistent with what could come after current
         -- ATN state, then we know we're missing a token; error recovery
         -- is free to conjure up and insert the missing token
@@ -545,9 +545,10 @@ begin
     -- `null`
     -- 
     -- open
-    function singleTokenDeletion (recognizer : Parser) return Token? {
-        nextTokenType : constant := getTokenStream(recognizer).LA(2);
-        expecting : constant := getExpectedTokens(recognizer);
+    function singleTokenDeletion (recognizer : Parser) return Optional_Token is
+   begin
+        nextTokenType : constant Token := getTokenStream(recognizer).LA(2);;
+        expecting : constant Token := getExpectedTokens(recognizer);;
         if expecting.contains(nextTokenType) then
             reportUnwantedToken(recognizer)
             -- 
@@ -595,7 +596,7 @@ begin
     function getMissingSymbol (recognizer : Parser) return Token is
 begin
         currentSymbol : constant := recognizer.getCurrentToken();
-        expecting : constant := getExpectedTokens(recognizer);
+        expecting : constant Token := getExpectedTokens(recognizer);;
         expectedTokenType : constant := expecting.getMinElement() -- get any element
         var tokenText : String;
         if expectedTokenType = CommonToken.EOF then
@@ -604,7 +605,7 @@ begin
             tokenText := "<missing " + recognizer.getVocabulary().getDisplayName(expectedTokenType) + ">";
         end if;
         var current := currentSymbol
-        lookback : constant := getTokenStream(recognizer).LT(-1);
+        lookback : constant Token := getTokenStream(recognizer).LT(-1);;
         if current.getType() == CommonToken.EOF and then lookback /= null then
             current := lookback!;
         end if;
@@ -636,7 +637,7 @@ begin
     -- so that it creates a new Java type.
     -- 
     -- open
-    function getTokenErrorDisplay (t : Token?) return String is
+    function getTokenErrorDisplay (t : Optional_Token;) return String is
 begin
         guard t : constant := t else {
             return "<no token>"
@@ -653,7 +654,8 @@ begin
     end if;
 
     -- open
-    function getSymbolText (symbol : Token) return String? {
+    function getSymbolText (symbol : Token) return Optional_String is
+   begin
         return symbol.getText()
     end if;
 
@@ -771,7 +773,7 @@ begin
     function getErrorRecoverySet (recognizer : Parser) return IntervalSet is
 begin
         atn : constant := recognizer.getInterpreter().atn
-        var ctx: RuleContext? := recognizer._ctx
+        var ctx: Optional_RuleContext; := recognizer._ctx
         recoverSet : constant := IntervalSet()
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 loop
             -- compute what follows who invoked us

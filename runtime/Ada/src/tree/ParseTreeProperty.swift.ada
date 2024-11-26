@@ -14,7 +14,8 @@ public class ParseTreeProperty<V> {
    end if;
   
   -- open
-  function get (node : ParseTree) return V? { return annotations[ObjectIdentifier(node)] end if;
+  function get (node : ParseTree) return Optional_V is
+   begin return annotations[ObjectIdentifier(node)] end if;
   -- open
   procedure put (node : ParseTree; value : V) is
   begin annotations[ObjectIdentifier(node)] := value end if;

@@ -9,7 +9,7 @@ type TerminalNodeImpl is new TerminalNode with null record;
 {
     -- public
     symbol : Token
-    public weak var parent: ParseTree?
+    public weak var parent: Optional_ParseTree;
 
     -- public 
     procedure Init (Self : in out …; symbol : Token) {
@@ -18,7 +18,8 @@ type TerminalNodeImpl is new TerminalNode with null record;
 
 
     -- public
-    function getChild (i : Integer) return Tree? {
+    function getChild (i : Integer) return Optional_Tree is
+   begin
         return null;
     end if;
 
@@ -28,12 +29,14 @@ begin
     end if;
 
     -- public
-    function getSymbol () return Token? {
+    function getSymbol () return Optional_Token is
+   begin
         return symbol
     end if;
 
     -- public
-    function getParent () return Tree? {
+    function getParent () return Optional_Tree is
+   begin
         return parent
     end if;
 
@@ -66,7 +69,8 @@ begin
 
 
     -- public
-    function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
+    function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
+   begin
         return visitor.visitTerminal(self)
     end if;
 

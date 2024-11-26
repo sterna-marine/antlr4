@@ -43,7 +43,7 @@ begin
     -- - parameter ruleIndex: The rule index for the current context.
     -- 
     -- public 
-    procedure Init (Self : in out …; parent : ParserRuleContext?,
+    procedure Init (Self : in out …; parent : Optional_ParserRuleContext;
                 invokingStateNumber : Integer;
                 ruleIndex : Integer) {
         self.ruleIndex := ruleIndex
@@ -64,7 +64,8 @@ begin
     -- Return _null_ if `ctx` is null.
     -- 
     -- public static
-    function fromParserRuleContext (ctx : ParserRuleContext?) return InterpreterRuleContext? {
+    function fromParserRuleContext (ctx : Optional_ParserRuleContext;) return Optional_InterpreterRuleContext is
+   begin
         guard ctx : constant := ctx else {
              return null;
         end if;

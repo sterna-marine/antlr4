@@ -16,11 +16,11 @@ type RecognitionException is tagged record
     -- 
     -- The _org.antlr.v4.runtime.Recognizer_ where this exception originated.
     -- 
-    private final var recognizer: RecognizerProtocol?
+    private final var recognizer: Optional_RecognizerProtocol;
 
-    private final weak var ctx: RuleContext?
+    private final weak var ctx: Optional_RuleContext;
 
-    private final var input: IntStream?
+    private final var input: Optional_IntStream;
 
     -- 
     -- The current _org.antlr.v4.runtime.Token_ when an error occurred. Since not all streams
@@ -34,13 +34,13 @@ type RecognitionException is tagged record
     offendingState := ATNState.INVALID_STATE_NUMBER
 
     -- public
-    message : String?
+    message : Optional_String;
 
     -- public 
-    procedure Init (Self : in out …; recognizer : RecognizerProtocol?,
+    procedure Init (Self : in out …; recognizer : Optional_RecognizerProtocol;
                 input : IntStream;
-                ctx : ParserRuleContext? := null,
-                message : String? := null) {
+                ctx : Optional_ParserRuleContext; := null,
+                message : Optional_String; := null) {
         self.recognizer := recognizer
         self.input := input
         self.ctx := ctx
@@ -80,7 +80,8 @@ begin
     -- state in the ATN, or `null` if the information is not available.
     -- 
     -- public
-    function getExpectedTokens () return IntervalSet? {
+    function getExpectedTokens () return Optional_IntervalSet is
+   begin
         if recognizer : constant := recognizer then
             return try? recognizer.getATN().getExpectedTokens(offendingState, ctx!);
         end if;
@@ -96,7 +97,8 @@ begin
     -- If the context is not available, this method returns `null`.
     -- 
     -- public
-    function getCtx () return RuleContext? {
+    function getCtx () return Optional_RuleContext is
+   begin
         return ctx
     end if;
 
@@ -111,7 +113,8 @@ begin
     -- available.
     -- 
     -- public
-    function getInputStream () return IntStream? {
+    function getInputStream () return Optional_IntStream is
+   begin
         return input
     end if;
 
@@ -140,7 +143,8 @@ begin
     -- the recognizer is not available.
     -- 
     -- public
-    function getRecognizer () return RecognizerProtocol? {
+    function getRecognizer () return Optional_RecognizerProtocol is
+   begin
         return recognizer
     end if;
 
