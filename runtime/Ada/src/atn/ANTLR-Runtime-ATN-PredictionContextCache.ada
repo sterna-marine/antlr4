@@ -19,7 +19,7 @@ type PredictionContextCache is tagged record
     -- public
     procedure Init (Self : …) is
 begin
-    end ;
+    end if;
 
     --
     -- Add a context to the cache and return it. If the context already exists,
@@ -36,19 +36,19 @@ begin
         if existing : constant := cache[ctx] then
 --			print(name+" reuses "+existing);
             return existing
-        end ;
+        end if;
         cache[ctx] := ctx
         return ctx
-    end ;
+    end if;
 
     -- public
     function get (ctx : PredictionContext) return PredictionContext? {
         return cache[ctx]
-    end ;
+    end if;
 
     -- public
     function size (This : …) return Integer is
 begin
         return cache.count
-    end ;
-end ;
+    end if;
+end if;

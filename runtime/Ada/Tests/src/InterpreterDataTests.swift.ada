@@ -22,7 +22,7 @@ begin
         result : constant := stream.getText();
         expecting : constant := "abc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testLexerB (This : …) is
 begin
@@ -35,7 +35,7 @@ begin
         result : constant := stream.getText();
         expecting : constant := "x := 3 * 0 + 2 * 0;"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testCalculator (This : …) is
 begin
@@ -49,6 +49,6 @@ begin
 
         context : constant := parser.parse(parser.getRuleIndex("s"));
         XCTAssertEqual("(s (expr (expr 2) + (expr (expr 8) / (expr 2))) <EOF>)", context.toStringTree(parser))
-    end ;
+    end if;
 
-end ;
+end if;

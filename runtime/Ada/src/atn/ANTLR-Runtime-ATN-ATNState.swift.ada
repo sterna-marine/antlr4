@@ -120,7 +120,8 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- 
     -- Which ATN are we in?
     -- 
-    public final var atn: ATN? := null;
+    -- public final 
+     atn: ATN? := null;;
 
     -- public internal(set) final var
     stateNumber: Integer := INVALID_STATE_NUMBER;
@@ -147,13 +148,13 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     procedure hash (into hasher: inout Hasher) is
     begin
         hasher.combine(stateNumber)
-    end ;
+    end if;
 
     -- public
     function isNonGreedyExitState (This : …) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
 
     -- public
@@ -161,17 +162,17 @@ begin
     function description return String is
         --return "MyClass \(string)"
         return String(stateNumber)
-    end ;
+    end if;
     -- public final
     function getTransitions () return [Transition] {
         return transitions
-    end ;
+    end if;
 
     -- public final
     function getNumberOfTransitions (This : …) return Integer is
 begin
         return transitions.count
-    end ;
+    end if;
 
     public final procedure addTransition (e : Transition) {
         if transitions.isEmpty then
@@ -179,7 +180,7 @@ begin
         elsif epsilonOnlyTransitions /= e.isEpsilon() then
             print("ATN state %d has both epsilon and non-epsilon transitions.\n", String(stateNumber))
             epsilonOnlyTransitions := False;
-        end ;
+        end if;
 
         var alreadyPresent := False;
         for t in transitions loop
@@ -188,53 +189,53 @@ begin
 --                    print("Repeated transition upon \(eLabel) from \(stateNumber)->\(t.target.stateNumber)")
                     alreadyPresent := True;
                     exit when True;
-                end ;
+                end if;
                 elsif t.isEpsilon() and then e.isEpsilon() then
 --                    print("Repeated epsilon transition from \(stateNumber)->\(t.target.stateNumber)")
                     alreadyPresent := True;
                     exit when True;
-                end ;
-            end ;
+                end if;
+            end if;
         end loop;
 
         if not alreadyPresent then
             transitions.append(e);
         end if;
-    end ;
+    end if;
 
     -- public final
     function transition (i : Integer) return Transition is
 begin
         return transitions[i]
-    end ;
+    end if;
 
     public final procedure setTransition (i : Integer; e : Transition) {
         transitions[i] := e
-    end ;
+    end if;
 
     -- public final
     function removeTransition (index : Integer) return Transition is
 begin
 
         return transitions.remove(at: index)
-    end ;
+    end if;
 
     -- public
     function getStateType (This : …) return Integer is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- public final
     function onlyHasEpsilonTransitions (This : …) return Boolean is
 begin
         return epsilonOnlyTransitions
-    end ;
+    end if;
 
     public final procedure setRuleIndex (ruleIndex : Integer) {
         self.ruleIndex := ruleIndex
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: ATNState, rhs: ATNState) return Boolean is
@@ -245,5 +246,5 @@ begin
     -- are these states same object?
     return lhs.stateNumber = rhs.stateNumber
 
-end ;
+end if;
 

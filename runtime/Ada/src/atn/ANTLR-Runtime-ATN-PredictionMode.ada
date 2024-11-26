@@ -96,7 +96,7 @@ type PredictionMode is (
     -- Assuming combined SLL+LL parsing, an SLL configuration set with only
     -- conflicting subsets should fall back to full LL, even if the
     -- configuration sets don't resolve to the same alternative (e.g.
-    -- `{1,2`end ; and `{3,4`end ;. If there is at least one non-conflicting
+    -- `{1,2`end if; and `{3,4`}. If there is at least one non-conflicting
     -- configuration, SLL could continue with the hopes that more lookahead will
     -- resolve via one of those non-conflicting configurations.
     -- 
@@ -151,14 +151,14 @@ type PredictionMode is (
     -- semantic predicate contexts so we might see two configurations like the
     -- following.
     -- 
-    -- `(s, 1, x, {`), (s, 1, x', {pend ;)end ;
+    -- `(s, 1, x, {`), (s, 1, x', {pend if;)}
     -- 
     -- Before testing these configurations against others, we have to merge
     -- `x` and `x'` (without modifying the existing configurations).
     -- For example, we test `(x+x')==x''` when looking for conflicts in
     -- the following configurations.
     -- 
-    -- `(s, 1, x, {`), (s, 1, x', {pend ;), (s, 2, x'', {end ;)end ;
+    -- `(s, 1, x, {`), (s, 1, x', {pend if;), (s, 2, x'', {end if;)}
     -- 
     -- If the configuration set has predicates (as indicated by
     -- _org.antlr.v4.runtime.atn.ATNConfigSet#hasSemanticContext_), this algorithm makes a copy of
@@ -187,9 +187,9 @@ begin
             if configs.hasSemanticContext then
                 -- dup configs, tossing out semantic predicates
                 configs := configs.dupConfigsWithoutSemanticPredicates()
-            end ;
+            end if;
             -- now we have combined contexts for configs with dissimilar preds
-        end ;
+        end if;
 
         -- pure SLL or combined SLL+LL mode parsing
 
@@ -197,7 +197,7 @@ begin
 
         heuristic : constant := hasConflictingAltSet(altsets) and then not hasStateAssociatedWithOneAlt(configs)
         return heuristic
-    end ;
+    end if;
 
     -- 
     -- Checks if any configuration in `configs` is in a
@@ -214,7 +214,7 @@ begin
 begin
 
         return  configs.hasConfigInRuleStopState
-    end ;
+    end if;
 
     -- 
     -- Checks if all configurations in `configs` are in a
@@ -231,7 +231,7 @@ begin
 begin
 
         return configs.allConfigsInRuleStopStates
-    end ;
+    end if;
 
     -- 
     -- Full LL prediction termination.
@@ -255,7 +255,7 @@ begin
     -- Reduce these configuration subsets to the set of possible alternatives.
     -- You can compute the alternative subsets in one pass as follows:
     -- 
-    -- `A_s,ctx := {i | (s, i, ctx, _)`end ; for each configuration in
+    -- `A_s,ctx := {i | (s, i, ctx, _)`} for each configuration in
     -- `C` holding `s` and `ctx` fixed.
     -- 
     -- Or in pseudo-code, for each configuration `c` in `C`:
@@ -331,26 +331,26 @@ begin
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s, 3, z)`,
     -- `(s', 1, y)`, `(s', 2, y)` yields non-conflicting set
-    -- `{3`end ; U conflicting sets `min({1,2`)end ; U `min({1,2`)end ; =
-    -- `{1,3`end ; =&gt; continue
+    -- `{3`end if; U conflicting sets `min({1,2`)end if; U `min({1,2`)} =
+    -- `{1,3`} =&gt; continue
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
     -- `(s', 2, y)`, `(s'', 1, z)` yields non-conflicting set
-    -- `{1`end ; U conflicting sets `min({1,2`)end ; U `min({1,2`)end ; =
-    -- `{1`end ; =&gt; stop and predict 1
+    -- `{1`end if; U conflicting sets `min({1,2`)end if; U `min({1,2`)} =
+    -- `{1`} =&gt; stop and predict 1
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
-    -- `(s', 2, y)` yields conflicting, reduced sets `{1`end ; U
-    -- `{1`end ; := `{1`end ; =&gt; stop and predict 1, can announce
-    -- ambiguity `{1,2`end ;
+    -- `(s', 2, y)` yields conflicting, reduced sets `{1`} U
+    -- `{1`end if; := `{1`} =&gt; stop and predict 1, can announce
+    -- ambiguity `{1,2`}
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 2, y)`,
-    -- `(s', 3, y)` yields conflicting, reduced sets `{1`end ; U
-    -- `{2`end ; := `{1,2`end ; =&gt; continue
+    -- `(s', 3, y)` yields conflicting, reduced sets `{1`} U
+    -- `{2`end if; := `{1,2`} =&gt; continue
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 3, y)`,
-    -- `(s', 4, y)` yields conflicting, reduced sets `{1`end ; U
-    -- `{3`end ; := `{1,3`end ; =&gt; continue
+    -- `(s', 4, y)` yields conflicting, reduced sets `{1`} U
+    -- `{3`end if; := `{1,3`} =&gt; continue
     -- 
     -- 
     -- __EXACT AMBIGUITY DETECTION__
@@ -363,18 +363,18 @@ begin
     -- 
     -- In other words, we continue examining lookahead until all `A_i`
     -- have more than one alternative and all `A_i` are the same. If
-    -- `A={{1,2`, {1,3end ;end ;end ;, then regular LL prediction would terminate
-    -- because the resolved set is `{1`end ;. To determine what the real
+    -- `A={{1,2`, {1,3end if;end if;}, then regular LL prediction would terminate
+    -- because the resolved set is `{1`}. To determine what the real
     -- ambiguity is, we have to know whether the ambiguity is between one and
     -- two or one and three so we keep going. We can only stop prediction when
     -- we need exact ambiguity detection when the sets look like
-    -- `A={{1,2`end ;end ; or `{{1,2`,{1,2end ;end ;end ;, etc .. 
+    -- `A={{1,2`end if;end if; or `{{1,2`,{1,2end if;end if;}, etc .. 
     -- 
     -- public static
     function resolvesToJustOneViableAlt (altsets : [BitSet]) return Integer is
 begin
         return getSingleViableAlt(altsets)
-    end ;
+    end if;
 
     -- 
     -- Determines if every alternative subset in `altsets` contains more
@@ -388,7 +388,7 @@ begin
     function allSubsetsConflict (altsets : [BitSet]) return Boolean is
 begin
         return not hasNonConflictingAltSet(altsets)
-    end ;
+    end if;
 
     -- 
     -- Determines if any single alternative subset in `altsets` contains
@@ -407,7 +407,7 @@ begin
             end if;
         end loop;
         return False;
-    end ;
+    end if;
 
     -- 
     -- Determines if any single alternative subset in `altsets` contains
@@ -426,7 +426,7 @@ begin
             end if;
         end loop;
         return False;
-    end ;
+    end if;
 
     -- 
     -- Determines if every alternative subset in `altsets` is equivalent.
@@ -447,7 +447,7 @@ begin
 
         end loop;
         return True;
-    end ;
+    end if;
 
     -- 
     -- Returns the unique alternative predicted by all alternative subsets in
@@ -464,7 +464,7 @@ begin
             return all.firstSetBit();
         end if;
         return ATN.INVALID_ALT_NUMBER
-    end ;
+    end if;
 
     -- 
     -- Gets the complete set of represented alternatives for a collection of
@@ -480,9 +480,9 @@ begin
         let all: BitSet := BitSet()
         for alts: BitSet in altsets loop
             all.or(alts)
-        end ;
+        end if;
         return all
-    end ;
+    end if;
 
     -- 
     -- Get union of all alts from configs. - Since: 4.5.1
@@ -492,7 +492,7 @@ begin
 begin
         return configs.getAltBitSet()
 
-    end ;
+    end if;
 
     -- 
     -- This function gets the conflicting alt subsets from a configuration set.
@@ -507,7 +507,7 @@ begin
     -- public static
     function getConflictingAltSubsets (configs : ATNConfigSet) return [BitSet] {
         return configs.getConflictingAltSubsets()
-    end ;
+    end if;
 
     -- public static
     function hasStateAssociatedWithOneAlt (configs : ATNConfigSet) return Boolean is
@@ -519,7 +519,7 @@ begin
             end if;
         end loop;
         return False;
-    end ;
+    end if;
 
     -- public static
     function getSingleViableAlt (altsets : [BitSet]) return Integer is
@@ -531,10 +531,10 @@ begin
             if viableAlts.cardinality() > 1 then
                 -- more than 1 viable alt
                 return ATN.INVALID_ALT_NUMBER
-            end ;
+            end if;
         end loop;
         return viableAlts.firstSetBit()
-    end ;
+    end if;
 
 end PredictionMode;
 

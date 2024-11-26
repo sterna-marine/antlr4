@@ -17,15 +17,15 @@ begin
                         [TagChunk("ID"), TextChunk(" := "), TagChunk("e", "expr"), TextChunk(" ;")])
         doSplitTest("\\<ID\\> := <e:expr> ;",;
                         [TextChunk("<ID> := "), TagChunk("e", "expr"), TextChunk(" ;")])
-    end ;
-end ;
+    end if;
+end if;
 
 -- private
 procedure doSplitTest (input : String; expected : [Chunk]) is
 begin
     matcher : constant := makeMatcher();
     XCTAssertEqual(matcher.split(input), expected);
-end ;
+end if;
 
 -- private
 function makeMatcher (This : …) return ParseTreePatternMatcher is
@@ -37,4 +37,4 @@ begin
     ts : constant := BufferedTokenStream(lexer)
     parser : constant := Parser(ts);
     return ParseTreePatternMatcher(lexer, parser)
-end ;
+end if;

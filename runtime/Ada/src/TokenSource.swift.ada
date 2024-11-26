@@ -80,4 +80,4 @@ type TokenSource is interface;
     -- - Returns: The _org.antlr.v4.runtime.TokenFactory_ currently used by this token source.
     -- 
     function getTokenFactory () return TokenFactory
-end ;
+end if;

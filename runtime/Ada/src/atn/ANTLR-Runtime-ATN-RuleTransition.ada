@@ -36,26 +36,26 @@ type RuleTransition is new Transition with null record;
         self.followState := followState
 
         super.init(ruleStart)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.RULE
-    end ;
+    end if;
 
     override
     -- public
     function isEpsilon (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return False;
-    end ;
-end ;
+    end if;
+end if;

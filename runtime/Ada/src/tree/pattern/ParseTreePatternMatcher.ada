@@ -81,7 +81,7 @@ type ParseTreePatternMatcher is tagged record
     -- internal
     stop : String := ">"
     -- internal
-    escape : String := "\""
+    escape : String := """"
 
     -- 
     -- Constructs a _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ or from a _org.antlr.v4.runtime.Lexer_ and
@@ -93,7 +93,7 @@ type ParseTreePatternMatcher is tagged record
     procedure Init (Self : in out …; lexer : Lexer; parser : Parser) {
         self.lexer := lexer
         self.parser := parser
-    end ;
+    end if;
 
     -- 
     -- Set the delimiters used for marking rule and token tags within concrete
@@ -119,7 +119,7 @@ type ParseTreePatternMatcher is tagged record
         self.start := start
         self.stop := stop
         self.escape := escapeLeft
-    end ;
+    end if;
 
     -- 
     -- Does `pattern` matched as rule `patternRuleIndex` match `tree`?
@@ -129,7 +129,7 @@ type ParseTreePatternMatcher is tagged record
 begin
         let p: ParseTreePattern := compile(pattern, patternRuleIndex);
         return matches(tree, p);
-    end ;
+    end if;
 
     -- 
     -- Does `pattern` matched as rule patternRuleIndex match tree? Pass in a
@@ -141,7 +141,7 @@ begin
         let labels: MultiMap<String, ParseTree> := MultiMap<String, ParseTree> ()
         let mismatchedNode: ParseTree? := matchImpl(tree, pattern.getPatternTree(), labels);
         return mismatchedNode = null;
-    end ;
+    end if;
 
     -- 
     -- Compare `pattern` matched as rule `patternRuleIndex` against
@@ -153,7 +153,7 @@ begin
 begin
         let p: ParseTreePattern := compile(pattern, patternRuleIndex);
         return match(tree, p);
-    end ;
+    end if;
 
     -- 
     -- Compare `pattern` matched against `tree` and return a
@@ -167,7 +167,7 @@ begin
         let labels: MultiMap<String, ParseTree> := MultiMap<String, ParseTree> ()
         let mismatchedNode: ParseTree? := matchImpl(tree, pattern.getPatternTree(), labels);
         return ParseTreeMatch(tree, pattern, labels, mismatchedNode)
-    end ;
+    end if;
 
     -- 
     -- For repeated use of a tree pattern, compile it to a
@@ -195,7 +195,7 @@ begin
         end if;
 
         return ParseTreePattern(self, pattern, patternRuleIndex, tree)
-    end ;
+    end if;
 
     -- 
     -- Used to convert the tree pattern string into a series of tokens. The
@@ -205,7 +205,7 @@ begin
     function getLexer (This : …) return Lexer is
 begin
         return lexer
-    end ;
+    end if;
 
     -- 
     -- Used to collect to the grammar file name, token names, rule names for
@@ -215,7 +215,7 @@ begin
     function getParser (This : …) return Parser is
 begin
         return parser
-    end ;
+    end if;
 
     -- ---- SUPPORT CODE ----
 
@@ -256,16 +256,16 @@ begin
                         if mismatchedNode = null then
                             mismatchedNode := t1;
                         end if;
-                    end ;
-                end ;
+                    end if;
+                end if;
             else
                 if mismatchedNode = null then
                     mismatchedNode := t1;
                 end if;
-            end ;
+            end if;
 
             return mismatchedNode
-        end ;
+        end if;
 
         if tree is ParserRuleContext and then patternTree is ParserRuleContext then
             let r1: ParserRuleContext := tree as! ParserRuleContext
@@ -283,10 +283,10 @@ begin
                     if mismatchedNode = null then
                         mismatchedNode := r1;
                     end if;
-                end ;
+                end if;
 
                 return mismatchedNode
-            end ;
+            end if;
 
             -- (expr  .. ) and (expr  .. )
             if r1.getChildCount() /= r2.getChildCount() then
@@ -295,7 +295,7 @@ begin
                 end if;
 
                 return mismatchedNode
-            end ;
+            end if;
 
             for i in 0 ..< r1.getChildCount() loop
                 if childMatch : constant := matchImpl(r1[i], patternTree[i], labels) then;
@@ -304,7 +304,7 @@ begin
             end loop;
 
             return mismatchedNode
-        end ;
+        end if;
 
         -- if nodes aren't both tokens or both rule nodes, can't match
         return tree;
@@ -319,9 +319,9 @@ begin
             ruleTag : constant := terminalNode.getSymbol() as? RuleTagToken {
 --            print("rule tag subtree "+t.toStringTree(parser));
             return ruleTag
-        end ;
+        end if;
         return null;
-    end ;
+    end if;
 
     -- public
     function tokenize (pattern : String) return Array<Token> {
@@ -352,7 +352,7 @@ begin
                     else
                         raise ANTLRError.illegalArgument with "invalid tag: " + tagChunk.getTag() + " in pattern: " + pattern;
                     end if;
-                end ;
+                end if;
             else
                 textChunk : constant := chunk as! TextChunk
                 inputStream : constant := ANTLRInputStream(textChunk.getText())
@@ -362,12 +362,12 @@ begin
                     tokens.append(t)
                     t := lexer.nextToken();
                 end loop;
-            end ;
+            end if;
         end loop;
 
 --		print("tokens="+tokens);
         return tokens
-    end ;
+    end if;
 
     -- 
     -- Split `<ID> := <e:expr> ;` into 4 chunks for tokenizing by _#tokenize_.
@@ -392,7 +392,7 @@ begin
                 upperBound : constant := pattern.index(p, offsetBy: start.count)
                 starts.append(p ..< upperBound)
                 p := upperBound
-            end ;
+            end if;
             elsif slice.hasPrefix(stop) then
                 upperBound : constant := pattern.index(p, offsetBy: stop.count)
                 stops.append(p ..< upperBound)
@@ -421,13 +421,13 @@ begin
         if ntags = 0 then
             text : constant := String(pattern[ .. n - 1])
             chunks.append(TextChunk(text))
-        end ;
+        end if;
 
         if ntags > 0 and then starts[0].lowerBound > pattern.startIndex then
             -- copy text up to first tag into chunks
             text : constant := pattern[pattern.startIndex ..< starts[0].lowerBound]
             chunks.append(TextChunk(String(text)))
-        end ;
+        end if;
 
         for i in 0 ..< ntags loop
             -- copy inside of <tag>
@@ -441,13 +441,13 @@ begin
             else
                 label := null;
                 ruleOrToken := String(tag)
-            end ;
+            end if;
             chunks.append(TagChunk(label, ruleOrToken));
             if i + 1 < ntags then
                 -- copy from end of <tag> to start of next
                 text : constant := pattern[stops[i].upperBound ..< starts[i + 1].lowerBound]
                 chunks.append(TextChunk(String(text)))
-            end ;
+            end if;
         end loop;
         if ntags > 0 then
             afterLastTag : constant := stops[ntags - 1].upperBound
@@ -455,8 +455,8 @@ begin
                 -- copy text from end of last tag to end
                 text : constant := pattern[afterLastTag ..< n]
                 chunks.append(TextChunk(String(text)))
-            end ;
-        end ;
+            end if;
+        end if;
 
         -- strip out the escape sequences from text chunks but not tags
         for i in 0 ..< chunks.count loop
@@ -466,9 +466,9 @@ begin
                 if unescaped.count < tc.getText().count then
                     chunks[i] := TextChunk(unescaped);
                 end if;
-            end ;
+            end if;
         end loop;
 
         return chunks
-    end ;
-end ;
+    end if;
+end if;

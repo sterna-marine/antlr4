@@ -17,4 +17,4 @@ type WritableToken is interface and Token;
     procedure setChannel (channel : Integer)
 
     procedure setTokenIndex (index : Integer)
-end ;
+end if;

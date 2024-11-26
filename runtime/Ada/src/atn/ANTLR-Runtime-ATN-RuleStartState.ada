@@ -19,5 +19,5 @@ type RuleStartState is new ATNState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.RULE_START
-    end ;
-end ;
+    end if;
+end if;

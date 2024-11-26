@@ -81,7 +81,7 @@ type RuntimeMetaData is tagged record
     function getRuntimeVersion (This : …) return String is
 begin
         return RuntimeMetaData.VERSION
-    end ;
+    end if;
 
     -- 
     -- This method provides the ability to detect mismatches between the version
@@ -134,7 +134,8 @@ begin
     -- compiled against. This should always be passed using a direct reference
     -- to _#VERSION_.
     -- 
-    public static procedure checkVersion (generatingToolVersion : String; compileTimeVersion : String) {
+    -- public static 
+    procedure checkVersion (generatingToolVersion : String; compileTimeVersion : String) {
         let runtimeVersion: String := RuntimeMetaData.VERSION
         var runtimeConflictsWithGeneratingTool : Boolean := False;
         var runtimeConflictsWithCompileTimeTool : Boolean := False;
@@ -143,7 +144,7 @@ begin
         runtimeConflictsWithGeneratingTool =
                 !(runtimeVersion == (generatingToolVersion)) and
                 !(getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(generatingToolVersion)))
-        --end ;
+        --}
 
         runtimeConflictsWithCompileTimeTool =
                 !(runtimeVersion == (compileTimeVersion)) and
@@ -155,7 +156,7 @@ begin
         if runtimeConflictsWithCompileTimeTool then
             print("ANTLR Runtime version \(compileTimeVersion)used for parser compilation does not match the current runtime version \(runtimeVersion)");
         end if;
-    end ;
+    end if;
 
     -- 
     -- Gets the major and minor version numbers from a version string. For
@@ -178,5 +179,5 @@ begin
 
         dashBits : constant := result.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: False)
         return String(dashBits[0])
-    end ;
-end ;
+    end if;
+end if;

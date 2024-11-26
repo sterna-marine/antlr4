@@ -21,5 +21,5 @@ type LoopEndState is new ATNState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.LOOP_END
-    end ;
-end ;
+    end if;
+end if;

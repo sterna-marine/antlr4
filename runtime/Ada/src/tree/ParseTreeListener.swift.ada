@@ -26,4 +26,4 @@ type ParseTreeListener is interface;
     procedure enterEveryRule (ctx : ParserRuleContext);
 
     procedure exitEveryRule (ctx : ParserRuleContext);
-end ;
+end if;

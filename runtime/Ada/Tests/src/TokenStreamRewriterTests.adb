@@ -65,7 +65,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "0abc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testInsertAfterLastIndex (This : …) is
 begin
@@ -78,7 +78,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abcx"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure test2InsertBeforeAfterMiddleIndex (This : …) is
 begin
@@ -92,7 +92,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "axbxc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceIndex0 (This : …) is
 begin
@@ -105,7 +105,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "xbc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceLastIndex (This : …) is
 begin
@@ -118,7 +118,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abx"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceMiddleIndex (This : …) is
 begin
@@ -131,7 +131,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "axc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testToStringStartStop (This : …) is
 begin
@@ -162,7 +162,7 @@ begin
         result := tokens.getText(Interval.of(4, 8));
         expecting := "0"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testToStringStartStop2 (This : …) is
 begin
@@ -212,7 +212,7 @@ begin
         -- again after insert at end;
         expecting := "x := 0"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure test2ReplaceMiddleIndex (This : …) is
 begin
@@ -226,7 +226,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "ayc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure test2ReplaceMiddleIndex1InsertBefore (This : …) is
 begin
@@ -241,7 +241,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "_ayc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceThenDeleteMiddleIndex (This : …) is
 begin
@@ -255,7 +255,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "ac"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testInsertInPriorReplace (This : …) is
 begin
@@ -270,12 +270,12 @@ begin
         do {
             _ := tokens.getText();
             XCTFail("Expected exception not thrown.")
-        end ; catch ANTLRError.illegalArgument(let msg) {
+        end if; catch ANTLRError.illegalArgument(let msg) {
             expecting : constant := "insert op <InsertBeforeOp@[@1,1:1='b',<2>,1:1]:""0""> within boundaries of previous <ReplaceOp@[@0,0:0='a',<1>,1:0]..[@2,2:2='c',<3>,1:2]:""x"">"
 
             XCTAssertEqual(expecting, msg)
-        end ;
-    end ;
+        end if;
+    end if;
 
     procedure testInsertThenReplaceSameIndex (This : …) is
 begin
@@ -289,7 +289,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "0xbc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure test2InsertMiddleIndex (This : …) is
 begin
@@ -303,7 +303,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "ayxbc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure test2InsertThenReplaceIndex0 (This : …) is
 begin
@@ -318,7 +318,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "yxzbc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceThenInsertBeforeLastIndex (This : …) is
 begin
@@ -332,7 +332,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abyx"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testInsertThenReplaceLastIndex (This : …) is
 begin
@@ -346,7 +346,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abyx"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceThenInsertAfterLastIndex (This : …) is
 begin
@@ -360,7 +360,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abxy"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceThenInsertAtLeftEdge (This : …) is
 begin
@@ -374,7 +374,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abyxba"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceRangeThenInsertAtRightEdge (This : …) is
 begin
@@ -389,12 +389,12 @@ begin
         do {
             _ := tokens.getText();
             XCTFail("Expected exception not thrown.")
-        end ; catch ANTLRError.illegalArgument(let msg) {
+        end if; catch ANTLRError.illegalArgument(let msg) {
             expecting : constant := "insert op <InsertBeforeOp@[@4,4:4='c',<3>,1:4]:""y""> within boundaries of previous <ReplaceOp@[@2,2:2='c',<3>,1:2]..[@4,4:4='c',<3>,1:4]:""x"">"
 
             XCTAssertEqual(expecting, msg)
-        end ;
-    end ;
+        end if;
+    end if;
 
     procedure testReplaceRangeThenInsertAfterRightEdge (This : …) is
 begin
@@ -408,7 +408,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abxyba"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceAll (This : …) is
 begin
@@ -421,7 +421,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "x"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceSubsetThenFetch (This : …) is
 begin
@@ -434,7 +434,7 @@ begin
         result : constant := tokens.getText(Interval.of(0, 6));
         expecting : constant := "abxyzba"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testReplaceThenReplaceSuperset (This : …) is
 begin
@@ -449,11 +449,11 @@ begin
         do {
             _ := tokens.getText();
             XCTFail("Expected exception not thrown.")
-        end ; catch ANTLRError.illegalArgument(let msg) {
+        end if; catch ANTLRError.illegalArgument(let msg) {
             expecting : constant := "replace op boundaries of <ReplaceOp@[@3,3:3='c',<3>,1:3]..[@5,5:5='b',<2>,1:5]:""foo""> overlap with previous <ReplaceOp@[@2,2:2='c',<3>,1:2]..[@4,4:4='c',<3>,1:4]:""xyz"">"
             XCTAssertEqual(expecting, msg)
-        end ;
-    end ;
+        end if;
+    end if;
 
     procedure testReplaceThenReplaceLowerIndexedSuperset (This : …) is
 begin
@@ -468,11 +468,11 @@ begin
         do {
             _ := tokens.getText();
             XCTFail("Expected exception not thrown.")
-        end ; catch ANTLRError.illegalArgument(let msg) {
+        end if; catch ANTLRError.illegalArgument(let msg) {
             expecting : constant := "replace op boundaries of <ReplaceOp@[@1,1:1='b',<2>,1:1]..[@3,3:3='c',<3>,1:3]:""foo""> overlap with previous <ReplaceOp@[@2,2:2='c',<3>,1:2]..[@4,4:4='c',<3>,1:4]:""xyz"">"
             XCTAssertEqual(expecting, msg)
-        end ;
-    end ;
+        end if;
+    end if;
 
     procedure testReplaceSingleMiddleThenOverlappingSuperset (This : …) is
 begin
@@ -486,7 +486,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "fooa"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testCombineInserts (This : …) is
 begin
@@ -500,7 +500,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "yxabc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testCombine3Inserts (This : …) is
 begin
@@ -515,7 +515,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "yazxbc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testCombineInsertOnLeftWithReplace (This : …) is
 begin
@@ -531,7 +531,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "zfoo"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testCombineInsertOnLeftWithDelete (This : …) is
 begin
@@ -549,7 +549,7 @@ begin
         -- make sure combo is not znull
         stream.fill();
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testDisjointInserts (This : …) is
 begin
@@ -565,7 +565,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "zaxbyc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testOverlappingReplace (This : …) is
 begin
@@ -581,7 +581,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "bar"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testOverlappingReplace2 (This : …) is
 begin
@@ -598,11 +598,11 @@ begin
         do {
             _ := tokens.getText();
             XCTFail("Expected exception not thrown.")
-        end ; catch ANTLRError.illegalArgument(let msg) {
+        end if; catch ANTLRError.illegalArgument(let msg) {
             expecting : constant := "replace op boundaries of <ReplaceOp@[@1,1:1='b',<2>,1:1]..[@2,2:2='c',<3>,1:2]:""foo""> overlap with previous <ReplaceOp@[@0,0:0='a',<1>,1:0]..[@3,3:3='c',<3>,1:3]:""bar"">"
             XCTAssertEqual(expecting, msg)
-        end ;
-    end ;
+        end if;
+    end if;
 
     procedure testOverlappingReplace3 (This : …) is
 begin
@@ -618,7 +618,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "barc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testOverlappingReplace4 (This : …) is
 begin
@@ -634,7 +634,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "abar"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testDropIdenticalReplace (This : …) is
 begin
@@ -650,7 +650,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "afooc"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testDropPrevCoveredInsert (This : …) is
 begin
@@ -666,7 +666,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "afoofoo"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testLeaveAloneDisjointInsert (This : …) is
 begin
@@ -680,7 +680,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "axbfoo"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testLeaveAloneDisjointInsert2 (This : …) is
 begin
@@ -694,7 +694,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "axbfoo"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testInsertBeforeTokenThenDeleteThatToken (This : …) is
 begin
@@ -708,7 +708,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "aby"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testDistinguishBetweenInsertAfterAndInsertBeforeToPreserverOrder (This : …) is
 begin
@@ -724,7 +724,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "<b>a</b><b>a</b>" -- fails with <b>a<b></b>a</b>"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testDistinguishBetweenInsertAfterAndInsertBeforeToPreserverOrder2 (This : …) is
 begin
@@ -742,7 +742,7 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "<b><p>a</p></b><b>a</b>"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 
     procedure testPreservesOrderOfContiguousInserts (This : …) is
 begin
@@ -761,5 +761,5 @@ begin
         result : constant := tokens.getText();
         expecting : constant := "<div><b><p>a</p></b></div>!b"
         XCTAssertEqual(expecting, result)
-    end ;
+    end if;
 end TokenStreamRewriterTests;

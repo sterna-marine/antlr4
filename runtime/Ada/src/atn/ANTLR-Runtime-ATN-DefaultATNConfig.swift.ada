@@ -25,17 +25,17 @@ with Foundation;
 --        hashCode := 31 * hashCode + semanticContext.hashValue
 --        return hashCode
 --
---    end ;
+--    }
 --
 --
---end ;
+--}
 --
 --public function ==(lhs: DefaultATNConfig, rhs: DefaultATNConfig) return Boolean is
 begin
 --
 --    if lhs === rhs then
 --        return True;
---    end ;
+--    }
 --
 --    same : constant : Boolean =
 --    lhs.state.stateNumber = rhs.state.stateNumber and
@@ -44,7 +44,7 @@ begin
 --
 --    return same
 --
---end ;
+--}
 --public type DefaultATNConfig is new ATNConfig with null record;
 {
 --
@@ -57,17 +57,17 @@ begin
 --        hashCode := 31 * hashCode + semanticContext.hashValue
 --        return hashCode
 --
---    end ;
+--    }
 --
 --
---end ;
+--}
 --
 --public function ==(lhs: DefaultATNConfig, rhs: DefaultATNConfig) return Boolean is
 begin
 --
 --    if lhs === rhs then
 --        return True;
---    end ;
+--    }
 --
 --    same : constant : Boolean =
 --    lhs.state.stateNumber = rhs.state.stateNumber and
@@ -76,4 +76,4 @@ begin
 --
 --    return same
 --
---end ;
+--}

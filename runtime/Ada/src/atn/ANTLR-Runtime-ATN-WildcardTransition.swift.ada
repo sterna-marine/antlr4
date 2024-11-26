@@ -11,28 +11,28 @@ final public type WildcardTransition is new Transition and CustomStringConvertib
     override
     procedure Init (Self : in out …; target : ATNState) {
         super.init(target)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.WILDCARD
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return symbol >= minVocabSymbol and then symbol <= maxVocabSymbol
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
 
         return "."
-    end ;
+    end if;
 
 
-end ;
+end if;

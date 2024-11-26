@@ -54,7 +54,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     override
     procedure Init (Self : in out …; tokenSource : TokenSource) {
         super.init(tokenSource)
-    end ;
+    end if;
 
     -- 
     -- Constructs a new _org.antlr.v4.runtime.CommonTokenStream_ using the specified token
@@ -70,14 +70,14 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     procedure Init (Self : in out …; tokenSource : TokenSource; channel : Integer) {
         self.init(tokenSource)
         self.channel := channel
-    end ;
+    end if;
 
     override
     -- internal
     function adjustSeekIndex (i : Integer) return Integer is
 begin
         return nextTokenOnChannel(i, channel);
-    end ;
+    end if;
 
     override
     -- internal
@@ -98,7 +98,7 @@ begin
             return null;
         end if;
         return tokens[i]
-    end ;
+    end if;
 
     override
     -- public
@@ -140,5 +140,5 @@ begin
             exit when t.getType() = CommonToken.EOF;
         end loop;
         return n
-    end ;
-end ;
+    end if;
+end if;

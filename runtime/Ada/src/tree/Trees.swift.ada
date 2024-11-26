@@ -15,13 +15,13 @@ begin
     let psgen: TreePostScriptGenerator =
     TreePostScriptGenerator(ruleNames, t, fontName, fontSize)
     return psgen.getPS()
-    end ;
+    end if;
 
     -- public class
     function getPS (t: Tree, ruleNames : Array<String>) return String is
 begin
     return getPS(t, ruleNames, "Helvetica", 11)
-    end ;
+    end if;
     --TODO: write to file
 
     public class procedure writePS (t: Tree, ruleNames : Array<String>,
@@ -33,16 +33,16 @@ begin
     var bw: BufferedWriter := BufferedWriter(f)
     {;
     bw.write(ps)
-    end ;
+    end if;
     defer {
     bw.close()
-    end ;
-    end ;
+    end if;
+    end if;
 
     public class procedure writePS (t: Tree, ruleNames : Array<String>, fileName : String)
     {
     writePS(t, ruleNames, fileName, "Helvetica", 11)
-    end ;
+    end if;
    --
     -- Print out a whole tree in LISP form. _#getNodeText_ is used on the
     -- node payloads to get the text for the nodes.  Detect
@@ -53,7 +53,7 @@ begin
 begin
         let rulsName: Array<String>? := null;
         return toStringTree(t, rulsName)
-    end ;
+    end if;
 
     -- Print out a whole tree in LISP form. _#getNodeText_ is used on the
     -- node payloads to get the text for the nodes.  Detect
@@ -64,7 +64,7 @@ begin
 begin
         let ruleNamesList: [String]? := recog?.getRuleNames()
         return toStringTree(t, ruleNamesList)
-    end ;
+    end if;
 
     -- Print out a whole tree in LISP form. _#getNodeText_ is used on the
     -- node payloads to get the text for the nodes.  Detect
@@ -87,13 +87,13 @@ begin
         end loop;
         buf := @ + ")";
         return buf
-    end ;
+    end if;
 
     -- public static
     function getNodeText (t : Tree; recog : Parser?) return String is
 begin
         return getNodeText(t, recog?.getRuleNames())
-    end ;
+    end if;
 
     -- public static
     function getNodeText (t : Tree; ruleNames : Array<String>?) return String is
@@ -114,10 +114,10 @@ begin
                     if symbol : constant := terminalNode.getSymbol() then
                         let s: String := symbol.getText()!
                         return s
-                    end ;
-                end ;
-            end ;
-        end ;
+                    end if;
+                end if;
+            end if;
+        end if;
         -- no recog for rule names
         let payload: AnyObject := t.getPayload()
         if token : constant := payload as? Token then
@@ -125,7 +125,7 @@ begin
         end if;
         return "\(t.getPayload())"
 
-    end ;
+    end if;
 
     -- Return ordered list of all children of this node
     -- public static
@@ -136,7 +136,7 @@ begin
             kids.append(t.getChild(i)!)
         end loop;
         return kids
-    end ;
+    end if;
 
     -- Return a list of all ancestors of this node.  The first node of
     -- list is the root and the last is the parent of this node.
@@ -149,7 +149,7 @@ begin
 
             return ancestors
             --return Collections.emptyList();
-        end ;
+        end if;
 
         var tp := t.getParent()
         while tpWrap : constant := tp loop
@@ -158,26 +158,27 @@ begin
             tp := tpWrap.getParent()
         end loop;
         return ancestors
-    end ;
+    end if;
 
     -- public static
     function findAllTokenNodes (t : ParseTree; ttype : Integer) return Array<ParseTree> {
         return findAllNodes(t, ttype, True)
-    end ;
+    end if;
 
     -- public static
     function findAllRuleNodes (t : ParseTree; ruleIndex : Integer) return Array<ParseTree> {
         return findAllNodes(t, ruleIndex, False)
-    end ;
+    end if;
 
     -- public static
     function findAllNodes (t : ParseTree; index : Integer; findTokens  : Boolean) return Array<ParseTree> {
         var nodes: Array<ParseTree> := Array<ParseTree> ()
         _findAllNodes(t, index, findTokens, &nodes)
         return nodes
-    end ;
+    end if;
 
-    public static procedure _findAllNodes (t : ParseTree;
+    -- public static 
+    procedure _findAllNodes (t : ParseTree;
                                     index : Integer; findTokens : Boolean; nodes : inout Array<ParseTree>) {
         -- check this node (the root) first
         if tnode : constant := t as? TerminalNode , findTokens then
@@ -189,14 +190,14 @@ begin
                 if ctx.getRuleIndex() == index then
                     nodes.append(t);
                 end if;
-            end ;
-        end ;
+            end if;
+        end if;
         -- check children
         length : constant := t.getChildCount()
         for i in 0 .. length - 1 loop
             _findAllNodes(t.getChild(i) as! ParseTree, index, findTokens, &nodes)
         end loop;
-    end ;
+    end if;
 
     -- public static
     function descendants (t : ParseTree) return Array<ParseTree> {
@@ -212,14 +213,15 @@ begin
 
         end loop;
         return nodes
-    end ;
+    end if;
 
     -- Find smallest subtree of t enclosing range startTokenIndex .. stopTokenIndex
     -- inclusively using postorder traversal.  Recursive depth-first-search.
     -- 
     -- - Since: 4.5.1
     -- 
-    public static procedure getRootOfSubtreeEnclosingRegion (t : ParseTree;
+    -- public static 
+    procedure getRootOfSubtreeEnclosingRegion (t : ParseTree;
                                                       startTokenIndex : Integer;
                                                       stopTokenIndex : Integer) -> ParserRuleContext? {
         let n: Integer := t.getChildCount()
@@ -229,7 +231,7 @@ begin
             --Added by janyou
             guard child : constant := t.getChild(i) as? ParseTree else {
                 return null;
-            end ;
+            end if;
             if r : constant := getRootOfSubtreeEnclosingRegion(child, startTokenIndex, stopTokenIndex) then
                 return r;
             end if;
@@ -238,13 +240,13 @@ begin
             if startTokenIndex >= r.getStart()!.getTokenIndex() and then -- is range fully contained in t?
                     stopTokenIndex <= r.getStop()!.getTokenIndex() {
                 return r
-            end ;
-        end ;
+            end if;
+        end if;
         return null;
-    end ;
+    end if;
 
     -- private
     procedure Init (Self : …) is
 begin
-    end ;
-end ;
+    end if;
+end if;

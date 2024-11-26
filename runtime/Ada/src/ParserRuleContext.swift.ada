@@ -29,7 +29,8 @@
 -- open
 type ParserRuleContext is new RuleContext with null record;
 {
-    public static EMPTY : constant := ParserRuleContext()
+    -- public static 
+    EMPTY : constant := ParserRuleContext()
 
     -- public
     visited := False;
@@ -76,12 +77,12 @@ type ParserRuleContext is new RuleContext with null record;
     procedure Init (Self : …) is
 begin
         super.init()
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; parent : ParserRuleContext?, invokingStateNumber : Integer) {
         super.init(parent, invokingStateNumber)
-    end ;
+    end if;
 
     -- COPY a ctx (I'm deliberately not using copy constructor) to avoid
     -- confusion with creating node with parent. Does not copy children.
@@ -111,20 +112,20 @@ begin
                     addChild(errNode);
                 end if;
             end loop;
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- Double dispatch methods for listeners
 
     -- open
     procedure enterRule (listener : ParseTreeListener) is
     begin
-    end ;
+    end if;
 
     -- open
     procedure exitRule (listener : ParseTreeListener) is
     begin
-    end ;
+    end if;
 
     -- Add a parse tree node to this as a child.  Works for
     -- internal and leaf nodes. Does not set parent link;
@@ -144,13 +145,13 @@ begin
             children := [ParseTree]();
         end if;
         children!.append(t)
-    end ;
+    end if;
 
     -- open
     procedure addChild (ruleInvocation : RuleContext) is
     begin
         addAnyChild(ruleInvocation)
-    end ;
+    end if;
 
     -- Add a token leaf node child and force its parent to be this node.
     -- open
@@ -158,7 +159,7 @@ begin
     begin
         t.setParent(self)
         addAnyChild(t)
-    end ;
+    end if;
 
     -- Add an error node child and force its parent to be this node.
     -- open
@@ -166,7 +167,7 @@ begin
     begin
         errorNode.setParent(self)
         addAnyChild(errorNode)
-    end ;
+    end if;
 
 
     -- Used by enterOuterAlt to toss out a RuleContext previously added as
@@ -177,7 +178,7 @@ begin
     procedure removeLastChild (This : …) is
 begin
         children?.removeLast()
-    end ;
+    end if;
 
 
     override
@@ -185,16 +186,16 @@ begin
     function getChild (i : Integer) return Tree? {
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
-        end ;
+        end if;
         return children[i]
-    end ;
+    end if;
 
     -- open
     function getChild<T: ParseTree> (ctxType : T.Type, i : Integer) return T? is
 begin
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
-        end ;
+        end if;
         var j := -1 -- what element have we found with ctxType?
         for o in children loop
             if o : constant := o as? T then
@@ -202,17 +203,17 @@ begin
                 if j = i then
                     return o;
                 end if;
-            end ;
+            end if;
         end loop;
 
         return null;
-    end ;
+    end if;
 
     -- open
     function getToken (ttype : Integer; i : Integer) return TerminalNode? {
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
-        end ;
+        end if;
         var j := -1 -- what token with ttype have we found?
         for o in children loop
             if tnode : constant := o as? TerminalNode then
@@ -222,18 +223,18 @@ begin
                     if j = i then
                         return tnode;
                     end if;
-                end ;
-            end ;
+                end if;
+            end if;
         end loop;
 
         return null;
-    end ;
+    end if;
 
     -- open
     function getTokens (ttype : Integer) return [TerminalNode] {
         guard children : constant := children else {
             return [TerminalNode]()
-        end ;
+        end if;
 
         return children.compactMap {
             if tnode : constant := $0 as? TerminalNode, symbol : constant := tnode.getSymbol(), symbol.getType() == ttype then
@@ -241,36 +242,36 @@ begin
             else
                 return null;
             end if;
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- open
     function getRuleContext<T: ParserRuleContext> (ctxType : T.Type, i : Integer) return T? is
 begin
         return getChild(ctxType, i: i)
-    end ;
+    end if;
 
     -- open
     function getRuleContexts<T: ParserRuleContext> (ctxType : T.Type) return [T] is
 begin
         guard children : constant := children else {
             return [T]()
-        end ;
-        return children.compactMap { $0 as? T end ;
-    end ;
+        end if;
+        return children.compactMap { $0 as? T end if;
+    end if;
 
     override
     -- open
     function getChildCount (This : …) return Integer is
 begin
         return children?.count ?? 0
-    end ;
+    end if;
 
     override
     open subscript(index : Integer) return ParseTree is
 begin
         return children![index]
-    end ;
+    end if;
 
     override
     -- open
@@ -278,9 +279,9 @@ begin
 begin
         guard start : constant := start, stop : constant := stop else {
              return Interval.INVALID
-        end ;
+        end if;
         return Interval.of(start.getTokenIndex(), stop.getTokenIndex())
-    end ;
+    end if;
 
     --
     -- Get the initial token in this context.
@@ -290,7 +291,7 @@ begin
     -- open
     function getStart () return Token? {
         return start
-    end ;
+    end if;
     --
     -- Get the final token in this context.
     -- Note that the range from start to stop is inclusive, so for rules that do not consume anything
@@ -299,7 +300,7 @@ begin
     -- open
     function getStop () return Token? {
         return stop
-    end ;
+    end if;
 
     -- Used for rule context info debugging during parse-time, not so much for ATN debugging
     -- open
@@ -308,6 +309,6 @@ begin
         rules : constant := Array(recognizer.getRuleInvocationStack(self).reversed())
         startStr : constant := start?.description ?? "<unknown>"
         stopStr : constant := stop?.description ?? "<unknown>"
-        return "ParserRuleContext\(rules){start=\(startStr)), stop=\(stopStr)end ;"
-    end ;
-end ;
+        return "ParserRuleContext\(rules){start=\(startStr)), stop=\(stopStr)end if;"
+    end if;
+end if;

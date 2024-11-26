@@ -32,7 +32,7 @@ type InterpreterRuleContext is new ParserRuleContext with null record;
     procedure Init (Self : …) is
 begin
         super.init()
-    end ;
+    end if;
 
     -- 
     -- Constructs a new _org.antlr.v4.runtime.InterpreterRuleContext_ with the specified
@@ -49,14 +49,14 @@ begin
         self.ruleIndex := ruleIndex
         super.init(parent, invokingStateNumber)
 
-    end ;
+    end if;
 
     override
     -- public
     function getRuleIndex (This : …) return Integer is
 begin
         return ruleIndex
-    end ;
+    end if;
 
     -- 
     -- Copy a _org.antlr.v4.runtime.ParserRuleContext_ or _org.antlr.v4.runtime.InterpreterRuleContext_
@@ -67,11 +67,11 @@ begin
     function fromParserRuleContext (ctx : ParserRuleContext?) return InterpreterRuleContext? {
         guard ctx : constant := ctx else {
              return null;
-        end ;
+        end if;
         let dup: InterpreterRuleContext := InterpreterRuleContext()
         dup.copyFrom(ctx)
         dup.ruleIndex := ctx.getRuleIndex()
         dup.parent := fromParserRuleContext(ctx.getParent() as? ParserRuleContext)
         return dup
-    end ;
-end ;
+    end if;
+end if;

@@ -30,6 +30,6 @@ begin
         XCTAssertEqual(VisitorBasicLexer.A, tokenStream.get(0).getType());
         XCTAssertEqual(VisitorBasicLexer.A, tokenStream.get(1).getType());
         XCTAssertEqual(Lexer.EOF, tokenStream.get(2).getType());
-    end ;
+    end if;
 
 end TokenStreamTests;

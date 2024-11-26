@@ -57,7 +57,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
         self.pattern := pattern
         self.labels := labels
         self.mismatchedNode := mismatchedNode
-    end ;
+    end if;
 
     -- 
     -- Get the last node associated with a specific `label`.
@@ -84,7 +84,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
             return null;
         end if;
 
-    end ;
+    end if;
 
     -- 
     -- Return all nodes matching a rule or token tag with the specified label.
@@ -110,7 +110,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- public
     function getAll (label : String) return Array<ParseTree> {
         return labels.get(label) ?? []
-    end ;
+    end if;
 
     -- 
     -- Return a mapping from label &rarr; [list of nodes].
@@ -125,7 +125,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- public
     function getLabels () return MultiMap<String, ParseTree> {
         return labels
-    end ;
+    end if;
 
     -- 
     -- Get the node at which we first detected a mismatch.
@@ -136,7 +136,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- public
     function getMismatchedNode () return ParseTree? {
         return mismatchedNode
-    end ;
+    end if;
 
     -- 
     -- Gets a value indicating whether the match operation succeeded.
@@ -148,7 +148,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     function succeeded (This : …) return Boolean is
 begin
         return mismatchedNode = null;
-    end ;
+    end if;
 
     -- 
     -- Get the tree pattern we are matching against.
@@ -159,7 +159,7 @@ begin
     function getPattern (This : …) return ParseTreePattern is
 begin
         return pattern
-    end ;
+    end if;
 
     -- 
     -- Get the parse tree we are trying to match to a pattern.
@@ -170,12 +170,12 @@ begin
     function getTree (This : …) return ParseTree is
 begin
         return tree
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         info : constant := succeeded() ? "succeeded" : "failed"
         return "Match \(info); found \(getLabels().size()) labels"
-    end ;
-end ;
+    end if;
+end if;

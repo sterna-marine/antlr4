@@ -11,7 +11,7 @@
 -- a custom action is added to the generated code for the lexer in an override
 -- of _org.antlr.v4.runtime.Recognizer#action_ when the grammar is compiled.
 -- 
--- This class may represent embedded actions created with the { .. end ;
+-- This class may represent embedded actions created with the { … }
 -- syntax in ANTLR 4, as well as actions created for lexer commands where the
 -- command argument could not be evaluated when the grammar was compiled.
 -- 
@@ -38,7 +38,7 @@ type LexerCustomAction is new LexerAction with null record;
     procedure Init (Self : in out …; ruleIndex : Integer; actionIndex : Integer) {
         self.ruleIndex := ruleIndex
         self.actionIndex := actionIndex
-    end ;
+    end if;
 
     -- 
     -- Gets the rule index to use for calls to _org.antlr.v4.runtime.Recognizer#action_.
@@ -49,7 +49,7 @@ type LexerCustomAction is new LexerAction with null record;
     function getRuleIndex (This : …) return Integer is
 begin
         return ruleIndex
-    end ;
+    end if;
 
     -- 
     -- Gets the action index to use for calls to _org.antlr.v4.runtime.Recognizer#action_.
@@ -60,7 +60,7 @@ begin
     function getActionIndex (This : …) return Integer is
 begin
         return actionIndex
-    end ;
+    end if;
 
     -- 
     -- 
@@ -73,7 +73,7 @@ begin
     function getActionType (This : …) return LexerActionType is
 begin
         return LexerActionType.custom
-    end ;
+    end if;
 
     -- 
     -- Gets whether the lexer action is position-dependent. Position-dependent
@@ -91,7 +91,7 @@ begin
     function isPositionDependent (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -104,15 +104,15 @@ begin
     procedure execute (lexer : Lexer) is
     begin
         lexer.action(null, ruleIndex, actionIndex);
-    end ;
+    end if;
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
         hasher.combine(ruleIndex)
         hasher.combine(actionIndex)
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: LexerCustomAction, rhs: LexerCustomAction) return Boolean is
@@ -123,4 +123,4 @@ begin
 
     return lhs.ruleIndex = rhs.ruleIndex
             and then lhs.actionIndex = rhs.actionIndex
-end ;
+end if;

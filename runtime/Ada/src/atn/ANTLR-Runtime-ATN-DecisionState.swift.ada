@@ -12,4 +12,4 @@ type DecisionState is new ATNState with null record;
     decision : Integer := -1
     -- public
     nonGreedy : Boolean := False;
-end ;
+end if;

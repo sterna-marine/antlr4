@@ -21,7 +21,7 @@ type DFASerializer is new CustomStringConvertible with null record;
     procedure Init (Self : in out …; dfa : DFA; vocabulary : Vocabulary) {
         self.dfa := dfa
         self.vocabulary := vocabulary
-    end ;
+    end if;
 
     -- public
     description : String;
@@ -34,11 +34,11 @@ type DFASerializer is new CustomStringConvertible with null record;
         for s in states loop
             guard edges : constant := s.edges else {
                 continue
-            end ;
+            end if;
             for (i, t) in edges.enumerated() loop
                 guard t : constant := t, t.stateNumber /= Int.max else {
                     continue
-                end ;
+                end if;
                 edgeLabel : constant := getEdgeLabel(i)
                 buf := @ + getStateString(s);
                 buf := @ + "-\(edgeLabel)->";
@@ -48,13 +48,13 @@ type DFASerializer is new CustomStringConvertible with null record;
         end loop;
 
         return buf
-    end ;
+    end if;
 
     -- internal
     function getEdgeLabel (i : Integer) return String is
 begin
         return vocabulary.getDisplayName(i - 1)
-    end ;
+    end if;
 
 
     -- internal
@@ -74,5 +74,5 @@ begin
         else
             return baseStateStr;
         end if;
-    end ;
-end ;
+    end if;
+end if;

@@ -72,7 +72,7 @@ type ParserInterpreter is new Parser with null record;
         setInterpreter(ParserATNSimulator(self, atn,
                 decisionToDFA,
                 sharedContextCache))
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; grammarFileName : String; vocabulary : Vocabulary;
@@ -94,7 +94,7 @@ type ParserInterpreter is new Parser with null record;
                 if state.precedenceRuleDecision then
                     try! self.statesNeedingLeftRecursionContext.set(state.stateNumber);
                 end if;
-            end ;
+            end if;
 
         end loop;
         super.init(input);
@@ -102,34 +102,34 @@ type ParserInterpreter is new Parser with null record;
         setInterpreter(ParserATNSimulator(self, atn,
                 decisionToDFA,
                 sharedContextCache))
-    end ;
+    end if;
 
     override
     -- public
     function getATN (This : …) return ATN is
 begin
         return atn
-    end ;
+    end if;
 
     override
     -- public
     function getVocabulary (This : …) return Vocabulary is
 begin
         return vocabulary
-    end ;
+    end if;
 
     override
     -- public
     function getRuleNames () return [String] {
         return ruleNames
-    end ;
+    end if;
 
     override
     -- public
     function getGrammarFileName (This : …) return String is
 begin
         return grammarFileName
-    end ;
+    end if;
 
     -- Begin parsing at startRuleIndex
     -- public
@@ -146,38 +146,37 @@ begin
 
         loop
             p : constant := getATNState()!
-           case p.getStateType()  is
-            when ATNState.RULE_STOP =>
-                -- pop; return from rule
-                if _ctx!.isEmpty() then
-                    if startRuleStartState.isPrecedenceRule then
-                        let result: ParserRuleContext := _ctx!
-                        let parentContext: (ParserRuleContext?, Int) := _parentContextStack.pop()
-                        unrollRecursionContexts(parentContext.0!);
-                        return result
-                    else
-                        exitRule();
-                        return rootContext
-                    end ;
-                end ;
+            case p.getStateType() is
+               when ATNState.RULE_STOP =>
+                  -- pop; return from rule
+                  if _ctx!.isEmpty() then
+                     if startRuleStartState.isPrecedenceRule then
+                           let result: ParserRuleContext := _ctx!
+                           let parentContext: (ParserRuleContext?, Int) := _parentContextStack.pop()
+                           unrollRecursionContexts(parentContext.0!);
+                           return result
+                     else
+                           exitRule();
+                           return rootContext
+                     end if;
+                  end if;
 
-                visitRuleStopState(p);
+                  visitRuleStopState(p);
 
 
-            when others =>
-                do {
-                    self.visitState(p);
-                end ;
-                 catch ANTLRException.recognition(let e) {
-                    setState(self.atn.ruleToStopState[p.ruleIndex!].stateNumber)
-                    getContext()!.exception := e
-                    getErrorHandler().reportError(self, e)
-                    getErrorHandler().recover(self, e);
-                end ;
-
-            end ;
+               when others =>
+                  do {
+                     self.visitState(p);
+                  end if;
+                  catch ANTLRException.recognition(let e) {
+                     setState(self.atn.ruleToStopState[p.ruleIndex!].stateNumber)
+                     getContext()!.exception := e
+                     getErrorHandler().reportError(self, e)
+                     getErrorHandler().recover(self, e);
+                  end if;
+            end case;
         end loop;
-    end ;
+    end if;
 
     override
     -- public
@@ -186,12 +185,12 @@ begin
         let pair: (ParserRuleContext?, Int) := (_ctx, localctx.invokingState)
         _parentContextStack.push(pair)
         super.enterRecursionRule(localctx, state, ruleIndex, precedence);
-    end ;
+    end if;
 
     -- internal
     function getATNState () return ATNState? {
         return atn.states[getState()]
-    end ;
+    end if;
 
     -- internal
     procedure visitState (p : ATNState) is
@@ -210,7 +209,7 @@ begin
         end if;
 
         transition : constant := p.transition(altNum - 1)
-       case transition.getSerializationType() is
+        case transition.getSerializationType() is
         when Transition.EPSILON =>
             if statesNeedingLeftRecursionContext.get(p.stateNumber) and;
                     !(transition.target is LoopEndState) {
@@ -222,7 +221,7 @@ begin
 
                         _ctx!.getRuleIndex())
                   pushNewRecursionContext(ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, _ctx!.getRuleIndex())
-            end ;
+            end if;
 
         when Transition.ATOM =>
             match((transition as! AtomTransition).label);
@@ -266,10 +265,10 @@ begin
         when others =>
             raise ANTLRError.unsupportedOperation with "Unrecognized ATN transition type.";
 
-        end ;
+        end case;
 
         setState(transition.target.stateNumber)
-    end ;
+    end if;
 
     -- internal
     procedure visitRuleStopState (p : ATNState) is
@@ -285,7 +284,7 @@ begin
 
         ruleTransition : constant := atn.states[getState()]!.transition(0) as! RuleTransition
         setState(ruleTransition.followState.stateNumber)
-    end ;
+    end if;
 
     -- Override this parser interpreters normal decision-making process
     -- at a particular decision and input token index. Instead of
@@ -314,7 +313,7 @@ begin
     -- Rather than trying to optimize this and make
     -- some intelligent decisions for optimization purposes, I settled on
     -- just re-parsing the whole input and then using
-    -- {link Trees#getRootOfSubtreeEnclosingRegionend ; to find the minimal
+    -- {link Trees#getRootOfSubtreeEnclosingRegion} to find the minimal
     -- subtree that contains the ambiguous sequence. I originally tried to
     -- record the call stack at the point the parser detected and ambiguity but
     -- left recursive rules create a parse tree stack that does not reflect
@@ -333,5 +332,5 @@ begin
         overrideDecision := decision
         overrideDecisionInputIndex := tokenIndex
         overrideDecisionAlt := forcedAlt
-    end ;
-end ;
+    end if;
+end if;

@@ -16,26 +16,26 @@ public struct Stack<T> {
     var items := [T]()
     public mutating procedure push (item : T) {
         items.append(item)
-    end ;
+    end if;
     @discardableResult
     -- public mutating
     function pop (This : …) return T is
 begin
         return items.removeLast()
-    end ;
+    end if;
 
     public mutating procedure clear (This : …) is
 begin
         return items.removeAll()
-    end ;
+    end if;
 
     -- public
     function peek () return T? {
         return items.last
-    end ;
+    end if;
     -- public
     isEmpty : Boolean {
         return items.isEmpty
-    end ;
+    end if;
 
-end ;
+end if;

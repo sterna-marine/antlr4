@@ -19,7 +19,7 @@ type BaseErrorListener is new ANTLRErrorListener with null record;
     -- public
     procedure Init (Self : …) is
 begin
-    end ;
+    end if;
 
     -- open
     procedure syntaxError<T> (recognizer : Recognizer<T>,
@@ -29,7 +29,7 @@ begin
                              msg : String;
                              e : AnyObject?
     ) {
-    end ;
+    end if;
 
 
     -- open
@@ -40,7 +40,7 @@ begin
                                 exact : Boolean;
                                 ambigAlts : BitSet;
                                 configs : ATNConfigSet) {
-    end ;
+    end if;
 
 
     -- open
@@ -50,7 +50,7 @@ begin
                                             stopIndex : Integer;
                                             conflictingAlts : BitSet?,
                                             configs : ATNConfigSet) {
-    end ;
+    end if;
 
 
     -- open
@@ -60,5 +60,5 @@ begin
                                          stopIndex : Integer;
                                          prediction : Integer;
                                          configs : ATNConfigSet) {
-    end ;
-end ;
+    end if;
+end if;

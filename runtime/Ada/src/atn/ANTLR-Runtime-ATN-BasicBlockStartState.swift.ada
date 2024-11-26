@@ -19,5 +19,5 @@ type BasicBlockStartState is new BlockStartState with null record;
     function getStateType (This : …) return Integer is
 begin
         return BlockStartState.BLOCK_START
-    end ;
-end ;
+    end if;
+end if;

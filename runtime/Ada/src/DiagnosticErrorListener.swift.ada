@@ -39,10 +39,12 @@ type DiagnosticErrorListener is new BaseErrorListener with null record;
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_ which only
     -- reports exact ambiguities.
     -- 
-    public convenience override procedure Init (Self : …) is
+    -- public convenience 
+    override
+    procedure Init (Self : …) is
 begin
         self.init(True)
-    end ;
+    end if;
 
     -- 
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_, specifying
@@ -54,7 +56,7 @@ begin
     -- public 
     procedure Init (Self : in out …; exactOnly  : Boolean) {
         self.exactOnly := exactOnly
-    end ;
+    end if;
 
     override
     -- public
@@ -74,7 +76,7 @@ begin
             text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
             message : constant := "reportAmbiguity d=\(decision): ambigAlts=\(conflictingAlts), input='\(text)'"
             recognizer.notifyErrorListeners(message)
-    end ;
+    end if;
 
     override
     -- public
@@ -88,7 +90,7 @@ begin
             text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
             message : constant := "reportAttemptingFullContext d=\(decision), input='\(text)'"
             recognizer.notifyErrorListeners(message)
-    end ;
+    end if;
 
     override
     -- public
@@ -102,7 +104,7 @@ begin
             text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
             message : constant := "reportContextSensitivity d=\(decision), input='\(text)'"
             recognizer.notifyErrorListeners(message)
-    end ;
+    end if;
 
     -- internal
     function getDecisionDescription (recognizer : Parser; dfa : DFA) return String is
@@ -113,7 +115,7 @@ begin
         let ruleNames: [String] := recognizer.getRuleNames()
         guard ruleNames.indices.contains(ruleIndex) else {
             return String(decision)
-        end ;
+        end if;
 
         let ruleName: String := ruleNames[ruleIndex]
         --if (ruleName = null or else ruleName.isEmpty()) {
@@ -121,7 +123,7 @@ begin
             return String(decision);
         end if;
         return "\(decision) (\(ruleName))"
-    end ;
+    end if;
 
     -- 
     -- Computes the set of conflicting or ambiguous alternatives from a
@@ -138,8 +140,8 @@ begin
     function getConflictingAlts (reportedAlts : BitSet?, configs : ATNConfigSet) return BitSet is
 begin
         return reportedAlts ?? configs.getAltBitSet()
-    end ;
-end ;
+    end if;
+end if;
 
 
 -- fileprivate
@@ -147,8 +149,8 @@ function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex
 begin
     do {
         return recognizer.getTokenStream()?.getText(Interval.of(startIndex, stopIndex)) ?? "<unknown>";
-    end ;
+    end if;
     catch {
         return "<unknown>"
-    end ;
-end ;
+    end if;
+end if;

@@ -11,7 +11,7 @@ type LexerDFASerializer is new DFASerializer with null record;
     -- public 
     procedure Init (Self : in out …; dfa : DFA) {
         super.init(dfa, Vocabulary.EMPTY_VOCABULARY)
-    end ;
+    end if;
 
     override
 
@@ -19,5 +19,5 @@ type LexerDFASerializer is new DFASerializer with null record;
     function getEdgeLabel (i : Integer) return String is
 begin
         return "'\(Character(integerLiteral: i))'"
-    end ;
-end ;
+    end if;
+end if;

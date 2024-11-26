@@ -61,7 +61,7 @@ type ListTokenSource is new TokenSource with null record;
     -- public convenience
     procedure Init (Self : in out …; tokens : [Token]) {
         self.init(tokens, null)
-    end ;
+    end if;
 
     -- 
     -- Constructs a new _org.antlr.v4.runtime.ListTokenSource_ instance from the specified
@@ -78,7 +78,7 @@ type ListTokenSource is new TokenSource with null record;
     procedure Init (Self : in out …; tokens : [Token], sourceName : String?) {
         self.tokens := tokens
         self.sourceName := sourceName
-    end ;
+    end if;
 
     -- public
     function getCharPositionInLine (This : …) return Integer is
@@ -96,7 +96,7 @@ begin
                 if lastNewLine : constant := tokenText.lastIndex(of: "\n") then
                     return tokenText.distance(from: lastNewLine, to: tokenText.endIndex) - 1;
                 end if;
-            end ;
+            end if;
             return (lastToken.getCharPositionInLine() +
                     lastToken.getStopIndex() -
                     lastToken.getStartIndex() + 1)
@@ -104,8 +104,8 @@ begin
             -- only reach this if tokens is empty, meaning EOF occurs at the first
             -- position in the input
             return 0
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- public
     function nextToken (This : …) return Token is
@@ -118,15 +118,15 @@ begin
                     if previousStop /= -1 then
                         start := previousStop + 1;
                     end if;
-                end ;
+                end if;
 
                 stop : constant := max(-1, start - 1)
                 source : constant := TokenSourceAndStream(self, getInputStream())
                 eofToken := _factory.create(source, CommonToken.EOF, "EOF", CommonToken.DEFAULT_CHANNEL, start, stop, getLine(), getCharPositionInLine())
-            end ;
+            end if;
 
             return eofToken!
-        end ;
+        end if;
 
         t : constant := tokens[i]
         if i = tokens.count - 1 and then t.getType() == CommonToken.EOF then
@@ -135,7 +135,7 @@ begin
 
         i := @ + 1;
         return t
-    end ;
+    end if;
 
     -- public
     function getLine (This : …) return Integer is
@@ -156,7 +156,7 @@ begin
                         line := @ + 1;
                     end if;
                 end loop;
-            end ;
+            end if;
 
             -- if no text is available, assume the token did not contain any newline characters.
             return line
@@ -164,8 +164,8 @@ begin
             -- only reach this if tokens is empty, meaning EOF occurs at the first
             -- position in the input
             return 1
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- public
     function getInputStream () return CharStream? {
@@ -179,7 +179,7 @@ begin
 
         -- no input stream information is available
         return null;
-    end ;
+    end if;
 
     -- public
     function getSourceName (This : …) return String is
@@ -193,17 +193,17 @@ begin
         end if;
 
         return "List"
-    end ;
+    end if;
 
     -- public
     procedure setTokenFactory (factory : TokenFactory) is
     begin
         self._factory := factory
-    end ;
+    end if;
 
     -- public
     function getTokenFactory (This : …) return TokenFactory is
 begin
         return _factory
-    end ;
-end ;
+    end if;
+end if;

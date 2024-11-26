@@ -69,40 +69,40 @@ type BufferedTokenStream is new TokenStream with null record;
     -- public 
     procedure Init (Self : in out …; tokenSource : TokenSource) {
         self.tokenSource := tokenSource
-    end ;
+    end if;
 
 
     -- public
     function getTokenSource (This : …) return TokenSource is
 begin
         return tokenSource
-    end ;
+    end if;
 
 
     -- public
     function index (This : …) return Integer is
 begin
         return p
-    end ;
+    end if;
 
 
     -- public
     function mark (This : …) return Integer is
 begin
         return 0
-    end ;
+    end if;
 
     -- public
     procedure release (marker : Integer) is
     begin
         -- no resources to release
-    end ;
+    end if;
 
     -- public
     procedure reset (This : …) is
 begin
         seek(0);
-    end ;
+    end if;
 
 
     -- public
@@ -110,14 +110,14 @@ begin
     begin
         lazyInit();
         p := adjustSeekIndex(index);
-    end ;
+    end if;
 
 
     -- public
     function size (This : …) return Integer is
 begin
         return tokens.count
-    end ;
+    end if;
 
 
     -- public
@@ -136,7 +136,7 @@ begin
         else
             -- not yet initialized
             skipEofCheck := False;
-        end ;
+        end if;
 
         if not skipEofCheck and then LA(1) == BufferedTokenStream.EOF then;
             raise ANTLRError.illegalState with "cannot consume EOF";
@@ -145,7 +145,7 @@ begin
         if sync(p + 1) then;
             p := adjustSeekIndex(p + 1);
         end if;
-    end ;
+    end if;
 
     -- 
     -- Make sure index `i` in tokens has a token.
@@ -164,10 +164,10 @@ begin
         if n > 0 then
             fetched : constant := fetch(n);
             return fetched >= n
-        end ;
+        end if;
 
         return True;
-    end ;
+    end if;
 
     -- 
     -- Add `n` elements to buffer.
@@ -191,20 +191,20 @@ begin
             if t.getType() == BufferedTokenStream.EOF then
                 fetchedEOF := True;
                 return i + 1
-            end ;
+            end if;
         end loop;
 
         return n
-    end ;
+    end if;
 
     -- public
     function get (i : Integer) return Token is
 begin
         guard tokens.indices.contains(i) else {
             raise ANTLRError.indexOutOfBounds with "token index \(i) out of range 0 ..< \(tokens.count)";
-        end ;
+        end if;
         return tokens[i]
-    end ;
+    end if;
 
     -- 
     -- Get all tokens from start .. stop inclusively
@@ -224,15 +224,15 @@ begin
             t : constant := tokens[i]
             exit when t.getType() == BufferedTokenStream.EOF;
             subset.append(t)
-        end ;
+        end if;
         return subset
-    end ;
+    end if;
 
     -- public
     function LA (i : Integer) return Integer is
 begin
         return LT(i)!.getType();
-    end ;
+    end if;
 
     -- internal
     function LB (k : Integer) return Token? {
@@ -240,7 +240,7 @@ begin
             return null;
         end if;
         return tokens[p - k]
-    end ;
+    end if;
 
 
     -- public
@@ -259,9 +259,9 @@ begin
             -- return EOF token
             -- EOF must be last token
             return tokens.last!
-        end ;
+        end if;
         return tokens[i]
-    end ;
+    end if;
 
     -- 
     -- Allowed derived classes to modify the behavior of operations which change
@@ -280,21 +280,21 @@ begin
     function adjustSeekIndex (i : Integer) return Integer is
 begin
         return i
-    end ;
+    end if;
 
     internal final procedure lazyInit (Self : …) is
 begin
         if p == -1 then
             setup();
         end if;
-    end ;
+    end if;
 
     -- internal
     procedure setup (This : …) is
 begin
         sync(0);
         p := adjustSeekIndex(0);
-    end ;
+    end if;
 
     -- 
     -- Reset this token stream by setting its token source.
@@ -306,17 +306,17 @@ begin
         tokens.removeAll()
         p := -1
         fetchedEOF := False;
-    end ;
+    end if;
 
     -- public
     function getTokens () return [Token] {
         return tokens
-    end ;
+    end if;
 
     -- public
     function getTokens (start : Integer; stop : Integer) return [Token]? {
         return getTokens(start, stop, null);
-    end ;
+    end if;
 
     -- 
     -- Given a start and stop index, return a List of all tokens in
@@ -330,7 +330,7 @@ begin
               tokens.indices.contains(stop) else {
             raise ANTLRError.indexOutOfBounds with "start \(start) or stop \(stop) not in 0 ..< \(tokens.count)";
 
-        end ;
+        end if;
         if start > stop then
             return null;
         end if;
@@ -346,12 +346,12 @@ begin
             return null;
         end if;
         return filteredTokens
-    end ;
+    end if;
 
     -- public
     function getTokens (start : Integer; stop : Integer; ttype : Integer) return [Token]? {
         return getTokens(start, stop, [ttype]);
-    end ;
+    end if;
 
     -- 
     -- Given a starting index, return the index of the next token on channel.
@@ -380,7 +380,7 @@ begin
         end loop;
 
         return i
-    end ;
+    end if;
 
     -- 
     -- Given a starting index, return the index of the previous token on
@@ -400,7 +400,7 @@ begin
         if i >= size() then
             -- the EOF token is on every channel
             return size() - 1
-        end ;
+        end if;
 
         while i >= 0 loop
             token : constant := tokens[i]
@@ -412,7 +412,7 @@ begin
         end loop;
 
         return i
-    end ;
+    end if;
 
     -- 
     -- Collect all tokens on specified channel to the right of
@@ -424,7 +424,7 @@ begin
         lazyInit();
         guard tokens.indices.contains(tokenIndex) else {
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
-        end ;
+        end if;
 
         nextOnChannel : constant := nextTokenOnChannel(tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         from : constant := tokenIndex + 1
@@ -437,7 +437,7 @@ begin
         end if;
 
         return filterForChannel(from, to, channel)
-    end ;
+    end if;
 
     --
     -- Collect all tokens on specified channel to the left of
@@ -449,12 +449,12 @@ begin
         lazyInit();
         guard tokens.indices.contains(tokenIndex) else {
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
-        end ;
+        end if;
 
         if tokenIndex = 0 then
             -- obviously no tokens can appear before the first token
             return null;
-        end ;
+        end if;
 
         prevOnChannel : constant := previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         if prevOnChannel = tokenIndex - 1 then
@@ -464,7 +464,7 @@ begin
         from : constant := prevOnChannel + 1
         to : constant := tokenIndex - 1
         return filterForChannel(from, to, channel)
-    end ;
+    end if;
 
     -- internal
     function filterForChannel (from : Integer; to : Integer; channel : Integer) return [Token]? {
@@ -478,20 +478,20 @@ begin
                 if t.getChannel() == channel then
                     hidden.append(t);
                 end if;
-            end ;
+            end if;
         end loop;
         if hidden.isEmpty then
             return null;
         end if;
         return hidden
-    end ;
+    end if;
 
 
     -- public
     function getSourceName (This : …) return String is
 begin
         return tokenSource.getSourceName()
-    end ;
+    end if;
 
     -- 
     -- Get the text of all tokens in this buffer.
@@ -500,7 +500,7 @@ begin
     function getText (This : …) return String is
 begin
         return getText(Interval.of(0, size() - 1));
-    end ;
+    end if;
 
     -- public
     function getText (interval : Interval) return String is
@@ -517,14 +517,14 @@ begin
             buf := @ + t.getText()!;
         end loop;
         return buf
-    end ;
+    end if;
 
 
     -- public
     function getText (ctx : RuleContext) return String is
 begin
         return getText(ctx.getSourceInterval());
-    end ;
+    end if;
 
 
     -- public
@@ -535,7 +535,7 @@ begin
         end if;
 
         return ""
-    end ;
+    end if;
 
     -- 
     -- Get all tokens from lexer until EOF
@@ -551,5 +551,5 @@ begin
                 return;
             end if;
         end loop;
-    end ;
-end ;
+    end if;
+end if;

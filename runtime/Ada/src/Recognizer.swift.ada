@@ -16,7 +16,7 @@ type RecognizerProtocol is interface;
     function getState () return Integer;
     function getTokenType (tokenName : String) return Integer;
     function getVocabulary () return Vocabulary
-end ;
+end if;
 
 
 open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
@@ -32,7 +32,7 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
     -- open
     function getRuleNames () return [String] {
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     --
     -- Get the vocabulary used by the recognizer.
@@ -44,7 +44,7 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
     function getVocabulary (This : …) return Vocabulary is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Get a map from token names to token types.
@@ -54,7 +54,7 @@ begin
     -- public
     function getTokenTypeMap () return [String: Int] {
         return tokenTypeMap
-    end ;
+    end if;
 
     public lazy var tokenTypeMap: [String: Int] := {
         vocabulary : constant := getVocabulary()
@@ -74,7 +74,7 @@ begin
         result["EOF"] := CommonToken.EOF
 
         return result
-    end ;()
+    end if;()
 
 
     -- 
@@ -85,19 +85,19 @@ begin
     -- public
     function getRuleIndexMap () return [String : Int] {
         return ruleIndexMap
-    end ;
+    end if;
 
     public lazy var ruleIndexMap: [String: Int] := {
         ruleNames : constant := getRuleNames()
         return Utils.toMap(ruleNames)
-    end ;()
+    end if;()
 
 
     -- public
     function getTokenType (tokenName : String) return Integer is
 begin
         return getTokenTypeMap()[tokenName] ?? CommonToken.INVALID_TYPE
-    end ;
+    end if;
 
     -- 
     -- If this recognizer was generated, it will have a serialized ATN
@@ -109,7 +109,7 @@ begin
     -- open
     function getSerializedATN () return [Int] {
         fatalError("there is no serialized ATN")
-    end ;
+    end if;
 
     -- For debugging and other purposes, might want the grammar name.
     -- Have ANTLR generate an implementation for this method.
@@ -118,7 +118,7 @@ begin
     function getGrammarFileName (This : …) return String is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Get the _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.
@@ -129,7 +129,7 @@ begin
     function getATN (This : …) return ATN is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Get the ATN interpreter used by the recognizer for prediction.
@@ -140,7 +140,7 @@ begin
     function getInterpreter (This : …) return ATNInterpreter is
 begin
         return _interp
-    end ;
+    end if;
 
     -- If profiling during the parse/lex, this will return DecisionInfo records
     -- for each decision in recognizer in a ParseInfo object.
@@ -150,7 +150,7 @@ begin
     -- open
     function getParseInfo () return ParseInfo? {
         return null;
-    end ;
+    end if;
 
     -- 
     -- Set the ATN interpreter used by the recognizer for prediction.
@@ -162,7 +162,7 @@ begin
     procedure setInterpreter (interpreter : ATNInterpreter) is
     begin
         _interp := interpreter
-    end ;
+    end if;
 
     -- 
     -- What is the error header, normally line/character position information?
@@ -174,38 +174,38 @@ begin
         line : constant := offending.getLine()
         charPositionInLine : constant := offending.getCharPositionInLine()
         return "line \(line):\(charPositionInLine)"
-    end ;
+    end if;
 
     -- open
     procedure addErrorListener (listener : ANTLRErrorListener) is
     begin
         _listeners.append(listener)
-    end ;
+    end if;
 
     -- open
     procedure removeErrorListener (listener : ANTLRErrorListener) is
     begin
         _listeners := _listeners.filter() {
             $0 !== listener
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- open
     procedure removeErrorListeners (This : …) is
 begin
         _listeners.removeAll()
-    end ;
+    end if;
 
     -- open
     function getErrorListeners () return [ANTLRErrorListener] {
         return _listeners
-    end ;
+    end if;
 
     -- open
     function getErrorListenerDispatch (This : …) return ANTLRErrorListener is
 begin
         return ProxyErrorListener(getErrorListeners())
-    end ;
+    end if;
 
     -- subclass needs to override these if there are sempreds or actions
     -- that the ATN interp needs to execute
@@ -213,24 +213,24 @@ begin
     function sempred (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     -- open
     function precpred (localctx : RuleContext?, precedence : Integer) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     -- open
     procedure action (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) is
     begin
-    end ;
+    end if;
 
     -- public final
     function getState (This : …) return Integer is
 begin
         return _stateNumber
-    end ;
+    end if;
 
     -- Indicate that the recognizer has changed internal state that is
     -- consistent with the ATN state passed in.  This way we always know
@@ -243,28 +243,28 @@ begin
 --		System.err.println("setState "+atnState);
         _stateNumber := atnState
 --		if ( traceATNStates ) _ctx.trace(atnState);
-    end ;
+    end if;
 
     -- open
     function getInputStream () return IntStream? {
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- open
     procedure setInputStream (input : IntStream) is
     begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- open
     function getTokenFactory (This : …) return TokenFactory is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- open
     procedure setTokenFactory (input : TokenFactory) is
     begin
         fatalError(#function + " must be overridden")
-    end ;
-end ;
+    end if;
+end if;

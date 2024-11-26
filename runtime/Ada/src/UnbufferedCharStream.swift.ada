@@ -21,58 +21,59 @@ with Foundation;
 -- open
 type UnbufferedCharStream is new CharStream with null record;
 {
-    private let bufferSize : Integer;
+    -- private
+    bufferSize : constant Integer;;
 
     --
     -- A moving window buffer of the data being scanned. While there's a marker,
-    -- we keep adding to buffer. Otherwise, {@link #consume consume()end ; resets so
+    -- we keep adding to buffer. Otherwise, {@link #consume consume()} resets so
     -- we start filling at index 0 again.
     --
     -- internal
     data : [Int]
 
     --
-    -- The number of characters currently in {@link #data dataend ;.
+    -- The number of characters currently in {@link #data data{}}.
      *
-    -- <p>This is not the buffer capacity, that's {@code data.lengthend ;.</p>
+    -- <p>This is not the buffer capacity, that's {@code data.length}.</p>
     --
     -- internal
     n := 0
 
     --
-    -- 0 .. n-1 index into {@link #data dataend ; of next character.
+    -- 0 .. n-1 index into {@link #data data} of next character.
      *
-    -- <p>The {@code LA(1)end ; character is {@code data[p]end ;. if then@code p = nend ;, we are
+    -- <p>The {@code LA(1)}; character is {@code data[p]}. if then@code p = n}, we are
     -- out of buffered characters.</p>
     --
     -- internal
     p := 0
 
     --
-    -- Count up with {@link #mark mark()end ; and down with
-    -- {@link #release release()end ;. When we {@code release()end ; the last mark,
-    -- {@code numMarkersend ; reaches 0 and we reset the buffer. Copy
-    -- {@code data[p]..data[n-1]end ; to {@code data[0]..data[(n-1)-p]end ;.
+    -- Count up with {@link #mark mark()} and down with
+    -- {@link #release release()}. When we {@code release()} the last mark,
+    -- {@code numMarkers} reaches 0 and we reset the buffer. Copy
+    -- {@code data[p]..data[n-1]} to {@code data[0]..data[(n-1)-p]}.
     --
     -- internal
     numMarkers := 0
 
     --
-    -- This is the {@code LA(-1)end ; character for the current position.
+    -- This is the {@code LA(-1)} character for the current position.
     --
     -- internal
     lastChar := -1
 
     --
-    -- When {@code numMarkers > 0end ;, this is the {@code LA(-1)end ; character for the
-    -- first character in {@link #data dataend ;. Otherwise, this is unspecified.
+    -- When {@code numMarkers > 0}, this is the {@code LA(-1)} character for the
+    -- first character in {@link #data data}. Otherwise, this is unspecified.
     --
     -- internal
     lastCharBufferStart := 0
 
     --
     -- Absolute character index. It's the index of the character about to be
-    -- read via {@code LA(1)end ;. Goes from 0 to the number of characters in the
+    -- read via {@code LA(1)}. Goes from 0 to the number of characters in the
     -- entire stream, although the stream size is unknown before the end is
     -- reached.
     --
@@ -95,7 +96,7 @@ type UnbufferedCharStream is new CharStream with null record;
         self.data := [Int](repeating: 0, count: bufferSize)
         si : constant := UInt8StreamIterator(input)
         self.unicodeIterator := UnicodeScalarStreamIterator(si)
-    end ;
+    end if;
 
     -- public
     procedure consume (This : …) is
@@ -111,18 +112,18 @@ begin
             n := 0
             p := -1 -- p++ will leave this at 0
             lastCharBufferStart := lastChar
-        end ;
+        end if;
 
         p := @ + 1;
         currentCharIndex := @ + 1;
         sync(1)
-    end ;
+    end if;
 
     --
-    -- Make sure we have 'need' elements from current position {@link #p pend ;.
-    -- Last valid {@code pend ; index is {@code data.length-1end ;. {@code p+need-1end ; is
+    -- Make sure we have 'need' elements from current position {@link #p p}.
+    -- Last valid {@code p} index is {@code data.length-1}. {@code p+need-1} is
     -- the char index 'need' elements ahead. If we need 1 element,
-    -- {@code (p+1-1)==pend ; must be less than {@code data.lengthend ;.
+    -- {@code (p+1-1)==p} must be less than {@code data.length}.
     --
     -- internal
     procedure sync (want : Integer) is
@@ -131,12 +132,12 @@ begin
         if need > 0 then
             fill(need);
         end if;
-    end ;
+    end if;
 
     --
-    -- Add {@code nend ; characters to the buffer. Returns the number of characters
-    -- actually added to the buffer. if the return value is less than then@code nend ;,
-    -- then EOF was reached before {@code nend ; characters could be added.
+    -- Add {@code n} characters to the buffer. Returns the number of characters
+    -- actually added to the buffer. if the return value is less than then@code n},
+    -- then EOF was reached before {@code n} characters could be added.
     --
     @discardableResult internal function fill (toAdd : Integer) return Integer is
 begin
@@ -147,16 +148,16 @@ begin
 
             guard c : constant := nextChar() else {
                 return i
-            end ;
+            end if;
             add(c)
         end loop;
 
         return n
-    end ;
+    end if;
 
     --
     -- Override to provide different source of characters than
-    -- {@link #input inputend ;.
+    -- {@link #input input}.
     --
     -- internal
     function nextChar () return Int? {
@@ -167,7 +168,7 @@ begin
         else
             return null;
         end if;
-    end ;
+    end if;
 
     -- internal
     procedure add (c : Integer) is
@@ -177,7 +178,7 @@ begin
         end if;
         data[n] := c
         n := @ + 1;
-    end ;
+    end if;
 
     -- public
     function LA (i : Integer) return Integer is
@@ -194,14 +195,14 @@ begin
             return CommonToken.EOF;
         end if;
         return data[index]
-    end ;
+    end if;
 
     --
     -- Return a marker that we can release later.
      *
     -- <p>The specific marker value used for this class allows for some level of
-    -- protection against misuse where {@code seek()end ; is called on a mark or
-    -- {@code release()end ; is called in the wrong order.</p>
+    -- protection against misuse where {@code seek()} is called on a mark or
+    -- {@code release()} is called in the wrong order.</p>
     --
     -- public
     function mark (This : …) return Integer is
@@ -213,7 +214,7 @@ begin
         mark : constant := -numMarkers - 1
         numMarkers := @ + 1;
         return mark
-    end ;
+    end if;
 
     -- Decrement number of markers, resetting buffer if we hit 0.
     -- @param marker
@@ -240,20 +241,20 @@ begin
             else
                 data := Array(data[p ..< n])
                 n := @ - p;
-            end ;
+            end if;
             p := 0
             lastCharBufferStart := lastChar
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- public
     function index (This : …) return Integer is
 begin
         return currentCharIndex
-    end ;
+    end if;
 
     -- Seek to absolute character index, which might not be in the current
-    --  sliding window.  Move {@code pend ; to {@code index-bufferStartIndexend ;.
+    --  sliding window.  Move {@code p} to {@code index-bufferStartIndex}.
     --
     -- public
     procedure seek (index_ : Integer) is
@@ -267,7 +268,7 @@ begin
         if index > currentCharIndex then
             sync(index - currentCharIndex)
             index := min(index, getBufferStartIndex() + n - 1)
-        end ;
+        end if;
 
         -- index = to bufferStartIndex should set p to 0
         i : constant := index - getBufferStartIndex()
@@ -278,7 +279,7 @@ begin
             ei : constant := si + n
             msg : constant := "seek to index outside buffer: \(index) not in \(si)..\(ei)"
             raise ANTLRError.unsupportedOperation with msg;
-        end ;
+        end if;
 
         p := i
         currentCharIndex := index
@@ -287,19 +288,19 @@ begin
         else
             lastChar := data[p - 1];
         end if;
-    end ;
+    end if;
 
     -- public
     function size (This : …) return Integer is
 begin
         preconditionFailure("Unbuffered stream cannot know its size")
-    end ;
+    end if;
 
     -- public
     function getSourceName (This : …) return String is
 begin
         return name
-    end ;
+    end if;
 
     -- public
     function getText (interval : Interval) return String is
@@ -313,33 +314,33 @@ begin
             data[n - 1] == CommonToken.EOF and
             interval.a + interval.length() > bufferStartIndex + n {
             raise ANTLRError.illegalArgument with "the interval extends past the end of the stream";
-        end ;
+        end if;
 
         if interval.a < bufferStartIndex or else interval.b >= bufferStartIndex + n then
             msg : constant := "interval \(interval) outside buffer: \(bufferStartIndex) .. \(bufferStartIndex + n - 1)"
             raise ANTLRError.unsupportedOperation with msg;
-        end ;
+        end if;
 
         if interval.b < interval.a then
             -- The EOF token.
             return ""
-        end ;
+        end if;
 
         -- convert from absolute to local index
         i : constant := interval.a - bufferStartIndex
         j : constant := interval.b - bufferStartIndex
 
         -- Convert from Integer codepoints to a String.
-        codepoints : constant := data[i  ..  j].map { Character(Unicode.Scalar($0)!) end ;
+        codepoints : constant := data[i  ..  j].map { Character(Unicode.Scalar($0)!) end if;
         return String(codepoints)
-    end ;
+    end if;
 
     -- internal
     function getBufferStartIndex (This : …) return Integer is
 begin
         return currentCharIndex - p
-    end ;
-end ;
+    end if;
+end if;
 
 
 fileprivate struct UInt8StreamIterator: IteratorProtocol {
@@ -358,7 +359,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
     init(stream : InputStream) {
         self.stream := stream
         self.buffGen := buffer[0 .. 0 - 1].makeIterator()
-    end ;
+    end if;
 
     -- mutating
     function next () return Ada.Interface.C.unsigned_short? {
@@ -370,7 +371,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
             return null;
         end if;
 
-       case stream.streamStatus is
+        case stream.streamStatus is
             when .notOpen, .writing, .closed =>
                 preconditionFailure()
             when .atEnd =>
@@ -380,21 +381,21 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
                 return null;
             when .opening, .open, .reading =>
                 null;
-        end ;
+        end case;
 
         count : constant := stream.read(&buffer, maxLength: buffer.count)
         if count < 0 then
             hasErrorOccurred := True;
             return null;
-        end ;
+        end if;
         elsif count = 0 then
             return null;
         end if;
 
         buffGen := buffer.prefix(count).makeIterator()
         return buffGen.next()
-    end ;
-end ;
+    end if;
+end if;
 
 
 fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
@@ -407,23 +408,23 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
 
     init(streamIterator : UInt8StreamIterator) {
         self.streamIterator := streamIterator
-    end ;
+    end if;
 
     -- mutating
     function next () return Unicode.Scalar? {
         if streamIterator.hasErrorOccurred then
             hasErrorOccurred := True;
             return null;
-        end ;
+        end if;
 
-       case codec.decode(&streamIterator) is
-        when .scalarValue(let scalar) =>
-            return scalar
-        when .emptyInput =>
-            return null;
-        when .error =>
-            hasErrorOccurred := True;
-            return null;
-        end ;
-    end ;
-end ;
+         case codec.decode(&streamIterator) is
+            when .scalarValue(let scalar) =>
+                  return scalar
+            when .emptyInput =>
+                  return null;
+            when .error =>
+                  hasErrorOccurred := True;
+                  return null;
+         end case;
+    end if;
+end if;

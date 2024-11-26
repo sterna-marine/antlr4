@@ -10,7 +10,7 @@
 -- non-overlapping intervals. It is particularly efficient for representing
 -- large collections of numbers, where the majority of elements appear as part
 -- of a sequential range of numbers that are all part of the set. For example,
--- the set { 1, 2, 3, 4, 7, 8 end ; may be represented as { [1, 4], [7, 8] end ;.
+-- the set { 1, 2, 3, 4, 7, 8 end if; may be represented as { [1, 4], [7, 8] }.
 -- 
 -- 
 -- This class is able to represent sets containing any combination of values in
@@ -27,14 +27,14 @@ type IntervalSet is new IntSet and Hashable and CustomStringConvertible with nul
         set : constant := IntervalSet.of(Lexer.MIN_CHAR_VALUE, Lexer.MAX_CHAR_VALUE)
         set.makeReadonly()
         return set
-    end ;()
+    end if;()
 
     -- public static 
     EMPTY_SET : constant IntervalSet := {;
         set : constant := IntervalSet()
         set.makeReadonly()
         return set
-    end ;()
+    end if;()
 
 
     -- 
@@ -49,13 +49,13 @@ type IntervalSet is new IntSet and Hashable and CustomStringConvertible with nul
     -- public 
     procedure Init (Self : in out …; intervals : [Interval]) {
         self.intervals := intervals
-    end ;
+    end if;
 
     -- public convenience
     procedure Init (Self : in out …; set : IntervalSet) {
         self.init()
         try! addAll(set)
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; els : Int .. ) {
@@ -66,8 +66,8 @@ type IntervalSet is new IntSet and Hashable and CustomStringConvertible with nul
             for e in els loop
                 try! add(e)
             end loop;
-        end ;
-    end ;
+        end if;
+    end if;
 
     --
     -- Create a set with all ints within range [a .. b] (inclusive)
@@ -78,7 +78,7 @@ begin
         s : constant := IntervalSet()
         try! s.add(a, b)
         return s
-    end ;
+    end if;
 
     -- public
     procedure clear (This : …) is
@@ -87,7 +87,7 @@ begin
             raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
         intervals.removeAll()
-    end ;
+    end if;
 
     -- 
     -- Add a single element to the set.  An isolated element is stored
@@ -101,21 +101,21 @@ begin
             raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
         try! add(el, el)
-    end ;
+    end if;
 
     -- 
     -- Add interval; i.e., add all integers from a to b to set.
     -- If b&lt;a, do nothing.
     -- Keep list in sorted order (by left range value).
     -- If overlap, combine ranges.  For example,
-    -- if this is then1 .. 5, 10 .. 20end ;, adding 6 .. 7 yields
-    -- {1 .. 5, 6 .. 7, 10 .. 20end ;.  Adding 4 .. 8 yields {1 .. 8, 10 .. 20end ;.
+    -- if this is then1 .. 5, 10 .. 20}, adding 6 .. 7 yields
+    -- {1 .. 5, 6 .. 7, 10 .. 20end if;.  Adding 4 .. 8 yields {1 .. 8, 10 .. 20}.
     -- 
     -- public
     procedure add (a : Integer; b : Integer) is
     begin
         add(Interval.of(a, b));
-    end ;
+    end if;
 
     -- copy on write so we can cache a .. a intervals and sets of that
     -- internal
@@ -161,12 +161,12 @@ begin
                     intervals[i] := bigger.union(next)
                 end loop;
                 return
-            end ;
+            end if;
             if addition.startsBeforeDisjoint(r) then
                 -- insert before r
                 intervals.insert(addition, at: i)
                 return
-            end ;
+            end if;
             -- if disjoint and after r, a future iteration will handle it
 
             i := @ + 1;
@@ -174,7 +174,7 @@ begin
         -- ok, must be after last interval (and disjoint from last interval)
         -- just add it
         intervals.append(addition)
-    end ;
+    end if;
 
     -- 
     -- combine all sets in the array returned the or'd value
@@ -187,7 +187,7 @@ begin
             try! r.addAll(s)
         end loop;
         return r
-    end ;
+    end if;
 
     @discardableResult
     -- public
@@ -196,7 +196,7 @@ begin
 
         guard set : constant := set else {
              return self
-        end ;
+        end if;
         if other : constant := set as? IntervalSet then
             -- walk set and add each interval
             for interval in other.intervals loop
@@ -207,15 +207,15 @@ begin
             for value in setList loop
                 add(value);
             end loop;
-        end ;
+        end if;
 
         return self
-    end ;
+    end if;
 
     -- public
     function complement (minElement : Integer; maxElement : Integer) return IntSet? {
         return complement(IntervalSet.of(minElement, maxElement))
-    end ;
+    end if;
 
     --
     -- 
@@ -225,17 +225,17 @@ begin
     function complement (vocabulary : IntSet?) return IntSet? {
         guard vocabulary : constant := vocabulary, not vocabulary.isnull() else {
             return null  -- nothing in common with null set
-        end ;
+        end if;
         var vocabularyIS: IntervalSet
         if vocabulary : constant := vocabulary as? IntervalSet then
             vocabularyIS := vocabulary
         else
             vocabularyIS := IntervalSet()
             try! vocabularyIS.addAll(vocabulary)
-        end ;
+        end if;
 
         return vocabularyIS.subtract(self)
-    end ;
+    end if;
 
 
     -- public
@@ -243,7 +243,7 @@ begin
 begin
         guard a : constant := a, not a.isnull() else {
             return IntervalSet(self)
-        end ;
+        end if;
         if a : constant := a as? IntervalSet then
             return subtract(self, a);
         end if;
@@ -251,7 +251,7 @@ begin
         other : constant := IntervalSet()
         try! other.addAll(a)
         return subtract(self, other)
-    end ;
+    end if;
 
     -- 
     -- Compute the set difference between two interval sets. The specific
@@ -265,14 +265,14 @@ begin
 
         guard left : constant := left, not left.isnull() else {
             return IntervalSet()
-        end ;
+        end if;
 
         result : constant := IntervalSet(left)
 
         guard right : constant := right, not right.isnull() else {
             -- right set has no elements; just return the copy of the current set
             return result
-        end ;
+        end if;
         var resultI := 0
         var rightI := 0
         while resultI < result.intervals.count and then rightI < right.intervals.count loop
@@ -284,12 +284,12 @@ begin
             if rightInterval.b < resultInterval.a then
                 rightI := @ + 1;
                 continue
-            end ;
+            end if;
 
             if rightInterval.a > resultInterval.b then
                 resultI := @ + 1;
                 continue
-            end ;
+            end if;
 
             var beforeCurrent: Interval? := null;
             var afterCurrent: Interval? := null;
@@ -314,7 +314,7 @@ begin
                     result.intervals[resultI] := beforeCurrent
                     resultI := @ + 1;
                     continue
-                end ;
+                end if;
             else
                 if afterCurrent : constant := afterCurrent then
                     -- replace the current interval
@@ -326,15 +326,15 @@ begin
                     result.intervals.remove(at: resultI)
                     --result.intervals.remove(resultI);
                     continue
-                end ;
-            end ;
+                end if;
+            end if;
         end loop;
 
         -- If rightI reached right.intervals.size(), no more intervals to subtract from result.
         -- If resultI reached result.intervals.size(), we would be subtracting from an empty set.
         -- Either way, we are done.
         return result
-    end ;
+    end if;
 
 
     -- public
@@ -344,7 +344,7 @@ begin
         try! o.addAll(self)
         try! o.addAll(a)
         return o
-    end ;
+    end if;
 
     -- 
     -- 
@@ -412,18 +412,18 @@ begin
                                     if theirs.startsAfterNonDisjoint(mine) then
                                         i := @ + 1;
                                     end if;
-                                end ;
-                            end ;
-                        end ;
-                    end ;
-                end ;
-            end ;
+                                end if;
+                            end if;
+                        end if;
+                    end if;
+                end if;
+            end if;
         end loop;
         if intersection = null then
             return IntervalSet();
         end if;
         return intersection
-    end ;
+    end if;
 
     -- 
     -- 
@@ -442,7 +442,7 @@ begin
             end if;
         end loop;
         return False;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -452,7 +452,7 @@ begin
     function isnull (This : …) return Boolean is
 begin
         return intervals.isEmpty
-    end ;
+    end if;
 
     -- 
     -- 
@@ -466,9 +466,9 @@ begin
             if interval.a = interval.b then
                 return interval.a;
             end if;
-        end ;
+        end if;
         return CommonToken.INVALID_TYPE
-    end ;
+    end if;
 
     -- 
     -- Returns the maximum value contained in the set.
@@ -484,7 +484,7 @@ begin
         end if;
         last : constant := intervals[intervals.count - 1]
         return last.b
-    end ;
+    end if;
 
     -- 
     -- Returns the minimum value contained in the set.
@@ -500,7 +500,7 @@ begin
         end if;
 
         return intervals[0].a
-    end ;
+    end if;
 
     -- 
     -- Return a list of Interval objects.
@@ -508,7 +508,7 @@ begin
     -- public
     function getIntervals () return [Interval] {
         return intervals
-    end ;
+    end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
@@ -517,7 +517,7 @@ begin
             hasher.combine(interval.a)
             hasher.combine(interval.b)
         end loop;
-    end ;
+    end if;
 
     -- 
     -- Are two IntervalSets equal?  Because all intervals are sorted
@@ -531,7 +531,7 @@ begin
 begin
     -- if ( obj = null or else !(obj is IntervalSet) ) then
     -- return False;
-    -- end ;
+    -- }
     -- var other : IntervalSet := obj as! IntervalSet;
     -- return self.intervals.equals(other.intervals);
     -- 
@@ -540,13 +540,13 @@ begin
     description : String;
     function description return String is
         return toString(False)
-    end ;
+    end if;
 
     -- public
     function toString (elemAreChar  : Boolean) return String is
 begin
         if intervals.isEmpty then
-            return "{end ;";
+            return "{end if;";
         end if;
 
         selfSize : constant := size()
@@ -573,7 +573,7 @@ begin
                 else
                     buf := @ + "\(a)";
                 end if;
-            end ;
+            end if;
             elsif elemAreChar then
                 buf := @ + "'\(a)'..'\(b)'";
             else
@@ -582,17 +582,17 @@ begin
         end loop;
 
         if selfSize > 1 then
-            buf := @ + "end ;";
+            buf := @ + "end if;";
         end if;
 
         return buf
-    end ;
+    end if;
 
     -- public
     function toString (vocabulary : Vocabulary) return String is
 begin
         if intervals.isEmpty then
-            return "{end ;";
+            return "{end if;";
         end if;
 
         selfSize : constant := size()
@@ -621,15 +621,15 @@ begin
                     end if;
                     buf := @ + elementName(vocabulary, i);
                 end loop;
-            end ;
+            end if;
         end loop;
 
         if selfSize > 1 then
-            buf := @ + "end ;";
+            buf := @ + "end if;";
         end if;
 
         return buf
-    end ;
+    end if;
 
     -- internal
     function elementName (vocabulary : Vocabulary; a : Integer) return String is
@@ -641,7 +641,7 @@ begin
         else
             return vocabulary.getDisplayName(a);
         end if;
-    end ;
+    end if;
 
 
     -- public
@@ -652,7 +652,7 @@ begin
             n := @ + (interval.b - interval.a + 1);
         end loop;
         return n
-    end ;
+    end if;
 
 
     -- public
@@ -664,7 +664,7 @@ begin
             values.append(contentsOf: a .. b)
         end loop;
         return values
-    end ;
+    end if;
 
     -- public
     function toSet () return Set<Int> {
@@ -677,7 +677,7 @@ begin
             end loop;
         end loop;
         return s
-    end ;
+    end if;
 
     -- 
     -- Get the ith element of ordered set.  Used only by RandomPhrase so
@@ -699,7 +699,7 @@ begin
             end loop;
         end loop;
         return -1
-    end ;
+    end if;
 
     -- public
     procedure remove (el : Integer) is
@@ -709,7 +709,7 @@ begin
         end if;
         var idx := intervals.startIndex
         while idx < intervals.endIndex loop
-            defer { intervals.formIndex(after: &idx) end ;
+            defer { intervals.formIndex(after: &idx) end if;
             interval : Interval_T;
             function get (intervals : array (<>) of interval_T) return Interval_T is intervals[idx];
             procedure set (intervals : in out array (<>) of interval; newValue : Interval_T) is
@@ -725,42 +725,42 @@ begin
             if el = a and then el = b then
                 intervals.remove(at: idx)
                 exit when True;
-            end ;
+            end if;
             -- if on left edge x .. b, adjust left
             if el = a then
                 interval.a := @ + 1;
                 exit when True;
-            end ;
+            end if;
             -- if on right edge a .. x, adjust right
             if el = b then
                 interval.b := @ - 1;
                 exit when True;
-            end ;
+            end if;
             -- if in middle a .. x..b, split interval
             if el > a and then el < b then
                 -- found in this interval
                 oldb : constant := interval.b
                 interval.b := el - 1      -- [a .. x-1]
                 add(el + 1, oldb); -- add [x+1 .. b]
-            end ;
+            end if;
         end loop;
-    end ;
+    end if;
 
     -- public
     function isReadonly (This : …) return Boolean is
 begin
         return readonly
-    end ;
+    end if;
 
     -- public
     procedure makeReadonly (This : …) is
 begin
         readonly := True;
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: IntervalSet, rhs: IntervalSet) return Boolean is
 begin
     return lhs.intervals = rhs.intervals
-end ;
+end if;

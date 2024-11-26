@@ -48,7 +48,7 @@ type RecognitionException is tagged record
         if recognizer : constant := recognizer then
             self.offendingState := recognizer.getState();
         end if;
-    end ;
+    end if;
 
     -- 
     -- Get the ATN state number the parser was in at the time the error
@@ -63,11 +63,11 @@ type RecognitionException is tagged record
     function getOffendingState (This : …) return Integer is
 begin
         return offendingState
-    end ;
+    end if;
 
     internal final procedure setOffendingState (offendingState : Integer) {
         self.offendingState := offendingState
-    end ;
+    end if;
 
     -- 
     -- Gets the set of input symbols which could potentially follow the
@@ -85,7 +85,7 @@ begin
             return try? recognizer.getATN().getExpectedTokens(offendingState, ctx!);
         end if;
         return null;
-    end ;
+    end if;
 
     -- 
     -- Gets the _org.antlr.v4.runtime.RuleContext_ at the time this exception was thrown.
@@ -98,7 +98,7 @@ begin
     -- public
     function getCtx () return RuleContext? {
         return ctx
-    end ;
+    end if;
 
     -- 
     -- Gets the input stream which is the symbol source for the recognizer where
@@ -113,23 +113,23 @@ begin
     -- public
     function getInputStream () return IntStream? {
         return input
-    end ;
+    end if;
 
     -- public
     procedure clearInputStream (This : …) is
 begin
         input := null;
-    end ;
+    end if;
 
     -- public
     function getOffendingToken (This : …) return Token is
 begin
         return offendingToken
-    end ;
+    end if;
 
     internal final procedure setOffendingToken (offendingToken : Token) {
         self.offendingToken := offendingToken
-    end ;
+    end if;
 
     -- 
     -- Gets the _org.antlr.v4.runtime.Recognizer_ where this exception occurred.
@@ -142,11 +142,11 @@ begin
     -- public
     function getRecognizer () return RecognizerProtocol? {
         return recognizer
-    end ;
+    end if;
 
     -- public
     procedure clearRecognizer (This : …) is
 begin
         self.recognizer := null;
-    end ;
-end ;
+    end if;
+end if;

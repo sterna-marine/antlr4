@@ -43,7 +43,7 @@ type LexerIndexedCustomAction is new LexerAction with null record;
     procedure Init (Self : in out …; offset : Integer; action : LexerAction) {
         self.offset := offset
         self.action := action
-    end ;
+    end if;
 
     -- 
     -- Gets the location in the input _org.antlr.v4.runtime.CharStream_ at which the lexer
@@ -57,7 +57,7 @@ type LexerIndexedCustomAction is new LexerAction with null record;
     function getOffset (This : …) return Integer is
 begin
         return offset
-    end ;
+    end if;
 
     -- 
     -- Gets the lexer action to execute.
@@ -68,7 +68,7 @@ begin
     function getAction (This : …) return LexerAction is
 begin
         return action
-    end ;
+    end if;
 
     -- 
     -- 
@@ -82,7 +82,7 @@ begin
     function getActionType (This : …) return LexerActionType is
 begin
         return action.getActionType()
-    end ;
+    end if;
 
     -- 
     -- 
@@ -94,7 +94,7 @@ begin
     function isPositionDependent (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -108,7 +108,7 @@ begin
     procedure execute (lexer : Lexer) {
         -- assume the input stream position was properly set by the calling code
         action.execute(lexer);
-    end ;
+    end if;
 
 
     -- public
@@ -116,8 +116,8 @@ begin
     procedure hash (into hasher: inout Hasher) {
         hasher.combine(offset)
         hasher.combine(action)
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: LexerIndexedCustomAction, rhs: LexerIndexedCustomAction) return Boolean is
@@ -128,4 +128,4 @@ begin
 
     return lhs.offset = rhs.offset
             and then lhs.action = rhs.action
-end ;
+end if;

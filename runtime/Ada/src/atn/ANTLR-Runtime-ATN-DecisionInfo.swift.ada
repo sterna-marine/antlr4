@@ -124,7 +124,8 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- 
     -- - seealso: org.antlr.v4.runtime.atn.ContextSensitivityInfo
     -- 
-    public final var contextSensitivities: Array<ContextSensitivityInfo> := Array<ContextSensitivityInfo> ()
+    -- public final 
+     contextSensitivities: Array<ContextSensitivityInfo> := Array<ContextSensitivityInfo> ();
 
     -- 
     -- A collection of _org.antlr.v4.runtime.atn.ErrorInfo_ instances describing the parse errors
@@ -133,7 +134,8 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- 
     -- - seealso: org.antlr.v4.runtime.atn.ErrorInfo
     -- 
-    public final var errors: Array<ErrorInfo> := Array<ErrorInfo> ()
+    -- public final 
+     errors: Array<ErrorInfo> := Array<ErrorInfo> ();
 
     -- 
     -- A collection of _org.antlr.v4.runtime.atn.AmbiguityInfo_ instances describing the
@@ -141,7 +143,8 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- 
     -- - seealso: org.antlr.v4.runtime.atn.AmbiguityInfo
     -- 
-    public final var ambiguities: Array<AmbiguityInfo> := Array<AmbiguityInfo> ()
+    -- public final 
+     ambiguities: Array<AmbiguityInfo> := Array<AmbiguityInfo> ();
 
     -- 
     -- A collection of _org.antlr.v4.runtime.atn.PredicateEvalInfo_ instances describing the
@@ -150,7 +153,8 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- 
     -- - seealso: org.antlr.v4.runtime.atn.PredicateEvalInfo
     -- 
-    public final var predicateEvals: Array<PredicateEvalInfo> := Array<PredicateEvalInfo> ()
+    -- public final 
+     predicateEvals: Array<PredicateEvalInfo> := Array<PredicateEvalInfo> ();
 
     -- 
     -- The total number of ATN transitions required during SLL prediction for
@@ -239,7 +243,7 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- public 
     procedure Init (Self : in out …; decision : Integer) {
         self.decision := decision
-    end ;
+    end if;
 
 
     -- public
@@ -258,9 +262,9 @@ type DecisionInfo is new CustomStringConvertible with null record;
         desc := @ + ", LL_Fallback=\(LL_Fallback)";
         desc := @ + ", LL_lookahead=\(LL_TotalLook)";
         desc := @ + ", LL_ATNTransitions=\(LL_ATNTransitions)";
-        desc := @ + "end ;";
+        desc := @ + "end if;";
 
         return desc
-    end ;
+    end if;
 
-end ;
+end if;

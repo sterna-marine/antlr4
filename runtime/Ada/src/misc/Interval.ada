@@ -22,7 +22,7 @@ public struct Interval: Hashable {
     procedure Init (Self : in out …; a : Integer; b : Integer) {
         self.a := a
         self.b := b
-    end ;
+    end if;
 
     -- 
     -- Interval objects are used readonly so share all with the
@@ -35,7 +35,7 @@ public struct Interval: Hashable {
     function of (a : Integer; b : Integer) return Interval is
 begin
         return Interval(a, b)
-    end ;
+    end if;
 
     -- 
     -- return number of elements between a and b inclusively. x .. x is length 1.
@@ -48,7 +48,7 @@ begin
             return 0;
         end if;
         return b - a + 1
-    end ;
+    end if;
 
 
     -- public
@@ -56,7 +56,7 @@ begin
     begin
         hasher.combine(a)
         hasher.combine(b)
-    end ;
+    end if;
 
     --
     -- Does this start completely before other? Disjoint
@@ -65,7 +65,7 @@ begin
     function startsBeforeDisjoint (other : Interval) return Boolean is
 begin
         return self.a < other.a and then self.b < other.a
-    end ;
+    end if;
 
     -- 
     -- Does this start at or before other? Nondisjoint
@@ -74,7 +74,7 @@ begin
     function startsBeforeNonDisjoint (other : Interval) return Boolean is
 begin
         return self.a <= other.a and then self.b >= other.a
-    end ;
+    end if;
 
     -- 
     -- Does this.a start after other.b? May or may not be disjoint
@@ -83,7 +83,7 @@ begin
     function startsAfter (other : Interval) return Boolean is
 begin
         return self.a > other.a
-    end ;
+    end if;
 
     -- 
     -- Does this start completely after other? Disjoint
@@ -92,7 +92,7 @@ begin
     function startsAfterDisjoint (other : Interval) return Boolean is
 begin
         return self.a > other.b
-    end ;
+    end if;
 
     -- 
     -- Does this start after other? NonDisjoint
@@ -101,7 +101,7 @@ begin
     function startsAfterNonDisjoint (other : Interval) return Boolean is
 begin
         return self.a > other.a and then self.a <= other.b -- this.b>=other.b implied
-    end ;
+    end if;
 
     -- 
     -- Are both ranges disjoint? I.e., no overlap?
@@ -110,7 +110,7 @@ begin
     function disjoint (other : Interval) return Boolean is
 begin
         return startsBeforeDisjoint(other) or else startsAfterDisjoint(other)
-    end ;
+    end if;
 
     -- 
     -- Are two intervals adjacent such as 0 .. 41 and 42 .. 42?
@@ -119,13 +119,13 @@ begin
     function adjacent (other : Interval) return Boolean is
 begin
         return self.a = other.b + 1 or else self.b = other.a - 1
-    end ;
+    end if;
 
     -- public
     function properlyContains (other : Interval) return Boolean is
 begin
         return other.a >= self.a and then other.b <= self.b
-    end ;
+    end if;
 
     -- 
     -- Return the interval computed from combining this and other
@@ -134,7 +134,7 @@ begin
     function union (other : Interval) return Interval is
 begin
         return Interval.of(min(a, other.a), max(b, other.b))
-    end ;
+    end if;
 
     -- 
     -- Return the interval in common between this and o
@@ -143,7 +143,7 @@ begin
     function intersection (other : Interval) return Interval is
 begin
         return Interval.of(max(a, other.a), min(b, other.b))
-    end ;
+    end if;
 
     -- 
     -- Return the interval with elements from this not in other;
@@ -158,27 +158,27 @@ begin
         if other.startsBeforeNonDisjoint(self) then
             diff := Interval.of(max(self.a, other.b + 1),
                     self.b)
-        end ;
+        end if;
 
                 -- other.a to right of this.a
         else {
             if other.startsAfterNonDisjoint(self) then
                 diff := Interval.of(self.a, other.a - 1);
             end if;
-        end ;
+        end if;
         return diff
-    end ;
+    end if;
 
 
    -- public
    description : String;
    function description return String is
         return "\(a)..\(b)"
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: Interval, rhs: Interval) return Boolean is
 begin
     return lhs.a = rhs.a and then lhs.b = rhs.b
-end ;
+end if;

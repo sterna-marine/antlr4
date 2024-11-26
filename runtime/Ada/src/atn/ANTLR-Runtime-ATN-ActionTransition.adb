@@ -17,7 +17,7 @@ type ActionTransition is new Transition and CustomStringConvertible with null re
     -- public convenience
     procedure Init (Self : in out …; target : ATNState; ruleIndex : Integer) {
         self.init(target, ruleIndex, -1, False)
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; target : ATNState; ruleIndex : Integer; actionIndex : Integer; isCtxDependent  : Boolean) {
@@ -26,33 +26,33 @@ type ActionTransition is new Transition and CustomStringConvertible with null re
         self.actionIndex := actionIndex
         self.isCtxDependent := isCtxDependent
         super.init(target)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.ACTION
-    end ;
+    end if;
 
     override
     -- public
     function isEpsilon (This : …) return Boolean is
 begin
         return True -- we are to be ignored by analysis 'cept for predicates
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "action_\(ruleIndex):\(actionIndex)"
-    end ;
+    end if;
 
 end ANTLR.Runtime.ATN.ActionTransition;

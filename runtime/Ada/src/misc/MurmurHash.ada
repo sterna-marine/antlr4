@@ -33,7 +33,7 @@ type MurmurHash is tagged record
     function initialize (This : …) return UInt32 is
 begin
         return initialize(DEFAULT_SEED)
-    end ;
+    end if;
 
     -- 
     -- Initialize the hash using the specified `seed`.
@@ -45,7 +45,7 @@ begin
     function initialize (seed : UInt32) return UInt32 is
 begin
         return seed
-    end ;
+    end if;
 
     -- private static
     function calcK (value : UInt32) return UInt32 is
@@ -55,7 +55,7 @@ begin
         k := (k << r1) | (k >> (32 - r1))
         k := k &* c2
         return k
-     end ;
+     end if;
 
     -- 
     -- Update the intermediate hash value for the next input `value`.
@@ -68,7 +68,7 @@ begin
     function update2 (hashIn : UInt32; value : Integer) return UInt32 is
 begin
         return updateInternal(hashIn, UInt32(truncatingIfNeeded: value))
-    end ;
+    end if;
 
 
     -- private static
@@ -81,7 +81,7 @@ begin
         hash := hash &* m &+ n
         -- print("murmur update2 : \(hash)")
         return hash
-    end ;
+    end if;
 
     -- 
     -- Update the intermediate hash value for the next input `value`.
@@ -94,7 +94,7 @@ begin
     function update<T:Hashable> (hash : UInt32; value : T?) return UInt32 is
 begin
         return update2(hash, value?.hashValue ?? 0)
-    end ;
+    end if;
 
     -- 
     -- Apply the final computation steps to the intermediate value `hash`
@@ -108,7 +108,7 @@ begin
     function finish (hashin : UInt32; numberOfWords : Integer) return Integer is
 begin
         return Integer (finish(hashin, byteCount: (numberOfWords &* 4)))
-    end ;
+    end if;
 
     -- private static
     function finish (hashin : UInt32; byteCount byteCountInt : Integer) return UInt32 is
@@ -123,7 +123,7 @@ begin
         hash ^= (hash >> 16)
         --print("murmur finish : \(hash)")
         return hash
-    end ;
+    end if;
 
     -- 
     -- Utility function to compute the hash code of an array using the
@@ -143,7 +143,7 @@ begin
         end loop;
 
         return finish(hash, data.count)
-    end ;
+    end if;
 
     --
     -- Compute a hash for the given String and seed.  The String is encoded
@@ -162,7 +162,7 @@ begin
 begin
         bytes : constant := Array(s.utf8)
         return hashBytesLittleEndian(bytes, seed)
-    end ;
+    end if;
 
     -- private static
     function hashBytesLittleEndian (bytes : [UInt8], seed : UInt32) return UInt32 is
@@ -187,13 +187,13 @@ begin
 
             k : constant := calcK(lastWord)
             hash ^= k
-        end ;
+        end if;
 
         return finish(hash, byteCount: byteCount)
-    end ;
+    end if;
 
     -- private
     procedure Init (Self : …) is
 begin
-    end ;
-end ;
+    end if;
+end if;

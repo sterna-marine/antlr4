@@ -14,7 +14,8 @@ type ParseTreePattern is tagged record
     -- 
     -- This is the backing field for _#getPatternRuleIndex()_.
     -- 
-    private let patternRuleIndex : Integer;
+    -- private
+    patternRuleIndex : constant Integer;;
 
     -- 
     -- This is the backing field for _#getPattern()_.
@@ -53,7 +54,7 @@ type ParseTreePattern is tagged record
         self.patternRuleIndex := patternRuleIndex
         self.pattern := pattern
         self.patternTree := patternTree
-    end ;
+    end if;
 
     -- 
     -- Match a specific parse tree against this tree pattern.
@@ -68,7 +69,7 @@ type ParseTreePattern is tagged record
     function match (tree : ParseTree) return ParseTreeMatch is
 begin
         return matcher.match(tree, self);
-    end ;
+    end if;
 
     -- 
     -- Determine whether or not a parse tree matches this tree pattern.
@@ -81,7 +82,7 @@ begin
     function matches (tree : ParseTree) return Boolean is
 begin
         return matcher.match(tree, self).succeeded();
-    end ;
+    end if;
 
     -- 
     -- Find all nodes using XPath and then to match those subtrees against;
@@ -105,7 +106,7 @@ begin
             end if;
         end loop;
         return matches;
-    end ;*/
+    end if;*/
 
     -- 
     -- Get the _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ which created this tree pattern.
@@ -118,7 +119,7 @@ begin
     function getMatcher (This : …) return ParseTreePatternMatcher is
 begin
         return matcher
-    end ;
+    end if;
 
     -- 
     -- Get the tree pattern in concrete syntax form.
@@ -130,7 +131,7 @@ begin
     function getPattern (This : …) return String is
 begin
         return pattern
-    end ;
+    end if;
 
     -- 
     -- Get the parser rule which serves as the outermost rule for the tree
@@ -143,7 +144,7 @@ begin
     function getPatternRuleIndex (This : …) return Integer is
 begin
         return patternRuleIndex
-    end ;
+    end if;
 
     -- 
     -- Get the tree pattern as a _org.antlr.v4.runtime.tree.ParseTree_. The rule and token tags from
@@ -157,5 +158,5 @@ begin
     function getPatternTree (This : …) return ParseTree is
 begin
         return patternTree
-    end ;
-end ;
+    end if;
+end if;

@@ -18,7 +18,7 @@ begin
     
     --
     -- This test verifies the basic behavior of visitors, with an emphasis on
-    -- {@link AbstractParseTreeVisitor#visitTerminalend ;.
+    -- {@link AbstractParseTreeVisitor#visitTerminal}.
     --
     procedure testVisitTerminalNode (This : …) is
 begin
@@ -33,18 +33,18 @@ begin
             override
             function visitTerminal (node : TerminalNode) return String? {
                 return "\(node.getSymbol()!)\n"
-            end ;
+            end if;
 
             override
             function defaultResult () return String? {
                 return ""
-            end ;
+            end if;
 
             override
             function aggregateResult (aggregate : String?, nextResult : String?) return String? {
                 return aggregate! + nextResult!
-            end ;
-        end ;
+            end if;
+        end if;
 
         visitor : constant := Visitor()
         result : constant := visitor.visit(context)
@@ -52,11 +52,11 @@ begin
         "[@0,0:0='A',<1>,1:0]\n" +
         "[@1,1:0='<EOF>',<-1>,1:1]\n"
         XCTAssertEqual(expected, result)
-    end ;
+    end if;
 
     --
     -- This test verifies the basic behavior of visitors, with an emphasis on
-    -- {@link AbstractParseTreeVisitor#visitErrorNodeend ;.
+    -- {@link AbstractParseTreeVisitor#visitErrorNode}.
     --
     procedure testVisitErrorNode (This : …) is
 begin
@@ -69,7 +69,7 @@ begin
             procedure Init (Self : …) is
 begin
                 super.init()
-            end ;
+            end if;
 
             var errors := [String]()
 
@@ -79,8 +79,8 @@ begin
                                          line : Integer; charPositionInLine : Integer;
                                          msg : String; e : AnyObject?) {
                 errors.append("line \(line):\(charPositionInLine) \(msg)")
-            end ;
-        end ;
+            end if;
+        end if;
 
         parser.removeErrorListeners()
         errorListener : constant := ErrorListener()
@@ -97,29 +97,29 @@ begin
             override
             function visitErrorNode (node : ErrorNode) return String? {
                 return "Error encountered: \(node.getSymbol()!)"
-            end ;
+            end if;
 
             override
             function defaultResult () return String? {
                 return ""
-            end ;
+            end if;
 
             override
             function aggregateResult (aggregate : String?, nextResult : String?) return String? {
                 return aggregate! + nextResult!
-            end ;
-        end ;
+            end if;
+        end if;
 
         visitor : constant := Visitor()
         result : constant := visitor.visit(context)
         expected : constant := "Error encountered: [@-1,-1:-1='<missing 'A'>',<1>,1:0]"
         XCTAssertEqual(expected, result)
-    end ;
+    end if;
 
     --
-    -- This test verifies that {@link AbstractParseTreeVisitor#visitChildrenend ; does not call
-    -- {@link ParseTreeVisitor#visitend ; after {@link AbstractParseTreeVisitor#shouldVisitNextChildend ; returns
-    -- {@code Falseend ;.
+    -- This test verifies that {@link AbstractParseTreeVisitor#visitChildren} does not call
+    -- {@link ParseTreeVisitor#visitend if; after {@link AbstractParseTreeVisitor#shouldVisitNextChild} returns
+    -- {@code False}.
     --
     procedure testShouldNotVisitEOF (This : …) is
 begin
@@ -135,24 +135,24 @@ begin
             override
             function visitTerminal (node : TerminalNode) return String? {
                 return "\(node.getSymbol()!)\n"
-            end ;
+            end if;
 
             override
             function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
 begin
                 return currentResult = null or else currentResult!.isEmpty
-            end ;
-        end ;
+            end if;
+        end if;
 
         visitor : constant := Visitor()
         result : constant := visitor.visit(context)
         expected : constant := "[@0,0:0='A',<1>,1:0]\n"
         XCTAssertEqual(expected, result)
-    end ;
+    end if;
 
     --
-    -- This test verifies that {@link AbstractParseTreeVisitor#shouldVisitNextChildend ; is called before visiting the first
-    -- child. It also verifies that {@link AbstractParseTreeVisitor#defaultResultend ; provides the default return value for
+    -- This test verifies that {@link AbstractParseTreeVisitor#shouldVisitNextChild} is called before visiting the first
+    -- child. It also verifies that {@link AbstractParseTreeVisitor#defaultResult} provides the default return value for
     -- visiting a tree.
     --
     procedure testShouldNotVisitTerminal (This : …) is
@@ -170,25 +170,25 @@ begin
             function visitTerminal (node : TerminalNode) return String? {
                 XCTFail()
                 return null;
-            end ;
+            end if;
 
             override
             function defaultResult () return String? {
                 return "default result"
-            end ;
+            end if;
 
             override
             function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
 begin
                 return False;
-            end ;
-        end ;
+            end if;
+        end if;
 
         visitor : constant := Visitor()
         result : constant := visitor.visit(context)
         expected : constant := "default result"
         XCTAssertEqual(expected, result)
-    end ;
+    end if;
 
     --
     -- This test verifies that the visitor correctly dispatches calls for labeled outer alternatives.
@@ -207,12 +207,12 @@ begin
             override
             function visitS (ctx : VisitorCalcParser.SContext) return Int? {
                 return visit(ctx.expr()!)
-            end ;
+            end if;
 
             override
             function visitNumber (ctx : VisitorCalcParser.NumberContext) return Int? {
                 return Integer ((ctx.INT()?.getText())!)
-            end ;
+            end if;
 
             override
             function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Int? {
@@ -223,7 +223,7 @@ begin
                 else
                     return left / right;
                 end if;
-            end ;
+            end if;
 
             override
             function visitAdd (ctx : VisitorCalcParser.AddContext) return Int? {
@@ -234,13 +234,13 @@ begin
                 else
                     return left - right;
                 end if;
-            end ;
-        end ;
+            end if;
+        end if;
 
         visitor : constant := Visitor()
         result : constant := visitor.visit(context)
         expected : constant := 6
         XCTAssertEqual(expected, result!)
-    end ;
+    end if;
 
 end VisitorTests;

@@ -36,7 +36,7 @@ type TokenTagToken is new CommonToken with null record;
     -- public convenience
     procedure Init (Self : in out …; tokenName : String; type : Integer) {
         self.init(tokenName, type, null)
-    end ;
+    end if;
 
     -- 
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.TokenTagToken_ with the specified
@@ -53,7 +53,7 @@ type TokenTagToken is new CommonToken with null record;
         self.tokenName := tokenName
         self.label := label
         super.init(type)
-    end ;
+    end if;
 
     -- 
     -- Gets the token name.
@@ -64,7 +64,7 @@ type TokenTagToken is new CommonToken with null record;
     function getTokenName (This : …) return String is
 begin
         return tokenName
-    end ;
+    end if;
 
     -- 
     -- Gets the label associated with the rule tag.
@@ -76,7 +76,7 @@ begin
     -- public final
     function getLabel () return String? {
         return label
-    end ;
+    end if;
 
     -- 
     -- 
@@ -93,7 +93,7 @@ begin
         end if;
 
         return "<" + tokenName + ">"
-    end ;
+    end if;
 
     -- 
     -- 
@@ -107,5 +107,5 @@ begin
     description : String;
     function description return String is
         return tokenName + ":" + String(type)
-    end ;
-end ;
+    end if;
+end if;

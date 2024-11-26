@@ -44,5 +44,5 @@ type ContextSensitivityInfo is new DecisionEventInfo with null record;
                 configs : ATNConfigSet;
                 input : TokenStream; startIndex : Integer; stopIndex : Integer) {
         super.init(decision, configs, input, startIndex, stopIndex, True)
-    end ;
-end ;
+    end if;
+end if;

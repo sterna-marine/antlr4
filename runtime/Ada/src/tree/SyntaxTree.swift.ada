@@ -21,4 +21,4 @@ type SyntaxTree is interface and Tree;
     -- 
 
     function getSourceInterval () return Interval
-end ;
+end if;

@@ -37,7 +37,7 @@ type SemanticContext is new Hashable and CustomStringConvertible with null recor
     function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     --
     -- Evaluate the precedence predicates for the context and reduce the result.
@@ -58,26 +58,26 @@ begin
     -- public
     function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return SemanticContext? {
         return self
-    end ;
+    end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- public
     type Empty is new SemanticContext with null record;
 {
         --
         -- The default _org.antlr.v4.runtime.atn.SemanticContext_, which is semantically equivalent to
-        -- a predicate of the form `{True?end ;.
+        -- a predicate of the form `{True?}.
         --
         -- public static 
         Instance : constant Empty := Empty();
@@ -85,15 +85,15 @@ begin
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
-        end ;
+        end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return "{Trueend ;?"
-        end ;
-    end ;
+            return "{Trueend if;?"
+        end if;
+    end if;
 
     -- public
     type Predicate is new SemanticContext with null record;
@@ -110,14 +110,14 @@ begin
             self.ruleIndex := -1
             self.predIndex := -1
             self.isCtxDependent := False;
-        end ;
+        end if;
 
         -- public 
         procedure Init (Self : in out …; ruleIndex : Integer; predIndex : Integer; isCtxDependent  : Boolean) {
             self.ruleIndex := ruleIndex
             self.predIndex := predIndex
             self.isCtxDependent := isCtxDependent
-        end ;
+        end if;
 
         override
         -- public
@@ -125,7 +125,7 @@ begin
 begin
             localctx : constant := isCtxDependent ? parserCallStack : null;
             return parser.sempred(localctx, ruleIndex, predIndex);
-        end ;
+        end if;
 
         -- public
         override
@@ -133,16 +133,16 @@ begin
             hasher.combine(ruleIndex)
             hasher.combine(predIndex)
             hasher.combine(isCtxDependent)
-        end ;
+        end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return "{\(ruleIndex):\(predIndex)end ;?"
-        end ;
+            return "{\(ruleIndex):\(predIndex)end if;?"
+        end if;
 
-    end ;
+    end if;
 
 
     -- public
@@ -153,19 +153,19 @@ begin
         procedure Init (Self : …) is
 begin
             self.precedence := 0
-        end ;
+        end if;
 
         -- public 
         procedure Init (Self : in out …; precedence : Integer) {
             self.precedence := precedence
-        end ;
+        end if;
 
         override
         -- public
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
             return parser.precpred(parserCallStack, precedence)
-        end ;
+        end if;
 
         override
         -- public
@@ -175,23 +175,23 @@ begin
             else
                 return null;
             end if;
-        end ;
+        end if;
 
 
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
             hasher.combine(precedence)
-        end ;
+        end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return "{" + String(precedence) + ">=precend ;?"
+            return "{" + String(precedence) + ">=precend if;?"
 
-        end ;
-    end ;
+        end if;
+    end if;
 
     --
     -- This is the base class for semantic context "operators", which operate on
@@ -215,8 +215,8 @@ begin
         -- public
         function getOperands () return Array<SemanticContext> {
             fatalError(#function + " must be overridden")
-        end ;
-    end ;
+        end if;
+    end if;
 
     --
     -- A semantic context which is True whenever none of the contained contexts
@@ -249,25 +249,25 @@ begin
 
                 reduced : constant := precedencePredicates.sorted {
                     $0.precedence < $1.precedence
-                end ;
+                end if;
                 operands.insert(reduced[0])
-            end ;
+            end if;
 
             opnds := Array(operands)
-        end ;
+        end if;
 
         override
         -- public
         function getOperands () return [SemanticContext] {
             return opnds
-        end ;
+        end if;
 
 
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
             hasher.combine(opnds)
-        end ;
+        end if;
 
         --
         --
@@ -286,7 +286,7 @@ begin
                 end if;
             end loop;
             return True;
-        end ;
+        end if;
 
         override
         -- public
@@ -305,7 +305,7 @@ begin
                 elsif evaluated /= SemanticContext.Empty.Instance then
                     -- Reduce the result by skipping True elements
                     operands.append(evaluated!)
-                end ;
+                end if;
             end loop;
 
             if not differs then
@@ -313,16 +313,16 @@ begin
             end if;
 
             return operands.reduce(SemanticContext.Empty.Instance, SemanticContext.and)
-        end ;
+        end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return opnds.map({ $0.description end ;).joined(separator: "&&")
+            return opnds.map({ $0.description end if;).joined(separator: "&&")
 
-        end ;
-    end ;
+        end if;
+    end if;
 
     --
     -- A semantic context which is True whenever at least one of the contained
@@ -332,7 +332,8 @@ begin
     -- public
     type OR is new Operator with null record;
 {
-        public final var opnds: [SemanticContext]
+        -- public final 
+         opnds: [SemanticContext];
 
         -- public 
         procedure Init (Self : in out …; a : SemanticContext; b : SemanticContext) {
@@ -354,24 +355,24 @@ begin
 
                 reduced : constant := precedencePredicates.sorted {
                     $0.precedence > $1.precedence
-                end ;
+                end if;
                 operands.insert(reduced[0])
-            end ;
+            end if;
 
             self.opnds := Array(operands)
-        end ;
+        end if;
 
         override
         -- public
         function getOperands () return [SemanticContext] {
             return opnds
-        end ;
+        end if;
 
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
             hasher.combine(opnds)
-        end ;
+        end if;
 
         --
         --
@@ -390,7 +391,7 @@ begin
                 end if;
             end loop;
             return False;
-        end ;
+        end if;
 
         override
         -- public
@@ -406,7 +407,7 @@ begin
                 elsif evaluated : constant := evaluated then
                     -- Reduce the result by skipping False elements
                     operands.append(evaluated)
-                end ;
+                end if;
             end loop;
 
             if not differs then
@@ -414,16 +415,16 @@ begin
             end if;
 
             return operands.reduce(null, SemanticContext.or)
-        end ;
+        end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return opnds.map({ $0.description end ;).joined(separator: "||")
+            return opnds.map({ $0.description end if;).joined(separator: "||")
 
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- public static
     function and (a : SemanticContext?, b : SemanticContext?) return SemanticContext is
@@ -440,7 +441,7 @@ begin
         end if;
 
         return result
-    end ;
+    end if;
 
     --
     --
@@ -464,19 +465,19 @@ begin
         end if;
 
         return result
-    end ;
+    end if;
 
     -- private static
     function filterPrecedencePredicates (collection : inout Set<SemanticContext>) return [PrecedencePredicate] {
         result : constant := collection.compactMap {
             $0 as? PrecedencePredicate
-        end ;
+        end if;
         collection := Set<SemanticContext> (collection.filter {
             !($0 is PrecedencePredicate)
-        end ;)
+        end if;)
         return result
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: SemanticContext, rhs: SemanticContext) return Boolean is
@@ -503,7 +504,7 @@ begin
 
 
     return False;
-end ;
+end if;
 
 -- public
 function "=" (lhs: SemanticContext.Predicate, rhs: SemanticContext.Predicate) return Boolean is
@@ -514,7 +515,7 @@ begin
     return lhs.ruleIndex = rhs.ruleIndex and
             lhs.predIndex = rhs.predIndex and
             lhs.isCtxDependent = rhs.isCtxDependent
-end ;
+end if;
 
 -- public
 function "=" (lhs: SemanticContext.PrecedencePredicate, rhs: SemanticContext.PrecedencePredicate) return Boolean is
@@ -523,7 +524,7 @@ begin
         return True;
     end if;
     return lhs.precedence = rhs.precedence
-end ;
+end if;
 
 
 -- public
@@ -533,7 +534,7 @@ begin
         return True;
     end if;
     return lhs.opnds = rhs.opnds
-end ;
+end if;
 
 -- public
 function "=" (lhs: SemanticContext.OR, rhs: SemanticContext.OR) return Boolean is
@@ -542,4 +543,4 @@ begin
         return True;
     end if;
     return lhs.opnds = rhs.opnds
-end ;
+end if;

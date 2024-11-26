@@ -13,11 +13,11 @@ type ATNSimulator is tagged record
     -- Must distinguish between missing edge and edge we know leads nowhere
     -- 
     -- public static 
-    ERROR : constant DFAState := {;
+    ERROR : constant DFAState := {
         error : constant := DFAState(ATNConfigSet())
         error.stateNumber := Int.max
         return error
-    end ;()
+    }()
 
     -- public 
     atn : constant ATN;
@@ -51,13 +51,13 @@ type ATNSimulator is tagged record
 
         self.atn := atn
         self.sharedContextCache := sharedContextCache
-    end ;
+    end if;
 
     -- open
     procedure reset (This : …) is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Clear the DFA cache used by the current instance. Since the DFA cache may
@@ -74,13 +74,13 @@ begin
     procedure clearDFA (This : …) is
 begin
         raise ANTLRError.unsupportedOperation with "This ATN simulator does not support clearing the DFA. ";
-    end ;
+    end if;
 
     -- open
     function getSharedContextCache (This : …) return PredictionContextCache is
 begin
         return sharedContextCache
-    end ;
+    end if;
 
     -- open
     function getCachedContext (context : PredictionContext) return PredictionContext is
@@ -91,13 +91,14 @@ begin
         return PredictionContext.getCachedContext(context,
                 sharedContextCache,
                 &visited)
-    end ;
+    end if;
 
-    public static procedure edgeFactory (atn : ATN;
+    -- public static 
+    procedure edgeFactory (atn : ATN;
                                   type : Integer; src : Integer; trg : Integer;
                                   arg1 : Integer; arg2 : Integer; arg3 : Integer;
                                   sets : Array<IntervalSet>) return Transition is
 begin
         return ATNDeserializer().edgeFactory(atn, type, src, trg, arg1, arg2, arg3, sets);
-    end ;
-end ;
+    end if;
+end if;

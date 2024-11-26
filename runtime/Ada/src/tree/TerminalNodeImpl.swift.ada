@@ -14,94 +14,94 @@ type TerminalNodeImpl is new TerminalNode with null record;
     -- public 
     procedure Init (Self : in out …; symbol : Token) {
         self.symbol := symbol
-    end ;
+    end if;
 
 
     -- public
     function getChild (i : Integer) return Tree? {
         return null;
-    end ;
+    end if;
 
     open subscript(index : Integer) return ParseTree is
 begin
         preconditionFailure("Index out of range (TerminalNode never has children)")
-    end ;
+    end if;
 
     -- public
     function getSymbol () return Token? {
         return symbol
-    end ;
+    end if;
 
     -- public
     function getParent () return Tree? {
         return parent
-    end ;
+    end if;
 
     -- public
     procedure setParent (parent : RuleContext) is
     begin
         self.parent := parent
-    end ;
+    end if;
 
     -- public
     function getPayload (This : …) return AnyObject is
 begin
         return symbol
-    end ;
+    end if;
 
     -- public
     function getSourceInterval (This : …) return Interval is
 begin
-        --if   symbol = null   { return Interval.INVALID; end ;
+        --if   symbol = null   { return Interval.INVALID; }
 
         let tokenIndex: Integer := symbol.getTokenIndex()
         return Interval(tokenIndex, tokenIndex)
-    end ;
+    end if;
 
     -- public
     function getChildCount (This : …) return Integer is
 begin
         return 0
-    end ;
+    end if;
 
 
     -- public
     function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
         return visitor.visitTerminal(self)
-    end ;
+    end if;
 
     -- public
     function getText (This : …) return String is
 begin
         return (symbol.getText())!
-    end ;
+    end if;
 
     -- public
     function toStringTree (parser : Parser) return String is
 begin
         return description
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         --TODO: symbol = null?
-        --if    symbol = null   {return "<null>"; end ;
+        --if    symbol = null   {return "<null>"; }
         if symbol.getType() == CommonToken.EOF then
             return "<EOF>";
         end if;
         return symbol.getText()!
-    end ;
+    end if;
 
     -- public
     debugDescription : String;
     function debugDescription return String is
         return description
-    end ;
+    end if;
 
     -- public
     function toStringTree (This : …) return String is
 begin
         return description
-    end ;
-end ;
+    end if;
+end if;

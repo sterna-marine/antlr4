@@ -17,32 +17,32 @@ type RangeTransition is new Transition and CustomStringConvertible with null rec
         self.from := from
         self.to := to
         super.init(target)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.RANGE
-    end ;
+    end if;
 
     override
     -- public
     function labelIntervalSet () return IntervalSet? {
         return IntervalSet.of(from, to)
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return symbol >= from and then symbol <= to
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "'" + String(from) + "'..'" + String(to) + "'"
 
-    end ;
-end ;
+    end if;
+end if;

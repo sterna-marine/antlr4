@@ -18,5 +18,5 @@ type TokensStartState is new DecisionState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.TOKEN_START
-    end ;
-end ;
+    end if;
+end if;

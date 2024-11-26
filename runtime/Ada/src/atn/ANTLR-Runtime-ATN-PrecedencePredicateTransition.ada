@@ -21,37 +21,37 @@ type PrecedencePredicateTransition is new AbstractPredicateTransition and Custom
 
         self.precedence := precedence
         super.init(target)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.PRECEDENCE
-    end ;
+    end if;
 
     override
     -- public
     function isEpsilon (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- public
     function getPredicate () return SemanticContext.PrecedencePredicate {
         return SemanticContext.PrecedencePredicate(precedence)
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "\(precedence)  >= _p"
-    end ;
-end ;
+    end if;
+end if;

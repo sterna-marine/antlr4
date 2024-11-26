@@ -12,40 +12,41 @@ type EmptyPredictionContext is new SingletonPredictionContext with null record;
     -- Represents `$` in local context prediction, which means wildcard.
     -- `+x := *`.
     --
-    public static Instance : constant := EmptyPredictionContext()
+    -- public static 
+    Instance : constant := EmptyPredictionContext()
 
     -- public
     procedure Init (Self : …) is
 begin
         super.init(null, PredictionContext.EMPTY_RETURN_STATE)
-    end ;
+    end if;
 
     override
     -- public
     function isEmpty (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     override
     -- public
     function size (This : …) return Integer is
 begin
         return 1
-    end ;
+    end if;
 
     override
     -- public
     function getParent (index : Integer) return PredictionContext? {
         return null;
-    end ;
+    end if;
 
     override
     -- public
     function getReturnState (index : Integer) return Integer is
 begin
         return returnState
-    end ;
+    end if;
 
 
     override
@@ -53,8 +54,8 @@ begin
     description : String;
     function description return String is
         return "$"
-    end ;
-end ;
+    end if;
+end if;
 
 
 -- public
@@ -65,4 +66,4 @@ begin
     end if;
 
     return False;
-end ;
+end if;

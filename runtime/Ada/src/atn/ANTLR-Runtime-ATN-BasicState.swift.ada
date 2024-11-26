@@ -20,6 +20,6 @@ type BasicState is new ATNState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.BASIC
-    end ;
+    end if;
 
-end ;
+end if;

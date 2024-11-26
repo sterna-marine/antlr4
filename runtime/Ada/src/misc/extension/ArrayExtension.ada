@@ -12,7 +12,7 @@ extension Array {
     -- mutating
     function concat (addArray : [Element]) return [Element] {
         return self + addArray
-    end ;
+    end if;
 
     mutating func removeObject<T:Equatable> (object : T) {
         var index: Int?
@@ -22,15 +22,15 @@ extension Array {
                 if object = to then
                     index := idx;
                 end if;
-            end ;
+            end if;
         end loop;
 
         if index /= null then
 
             self.remove(at: index!)
-        end ;
+        end if;
 
-    end ;
+    end if;
 
     -- 
     -- Removes the last element from self and returns it.
@@ -41,7 +41,7 @@ extension Array {
     function pop (This : …) return Element is
 begin
         return removeLast()
-    end ;
+    end if;
     -- 
     -- Same as append.
     -- 
@@ -51,7 +51,7 @@ begin
     procedure push (newElement : Element) is
     begin
         return append(newElement)
-    end ;
+    end if;
 
     function all (test : (Element) -> Bool) return Boolean is
 begin
@@ -62,7 +62,7 @@ begin
         end loop;
 
         return True;
-    end ;
+    end if;
 
 
     -- 
@@ -80,7 +80,7 @@ begin
         end loop;
 
         return True;
-    end ;
+    end if;
 
     -- 
     -- Checks if test returns True for any element of self.
@@ -97,7 +97,7 @@ begin
         end loop;
 
         return False;
-    end ;
+    end if;
 
 
 
@@ -114,7 +114,7 @@ begin
 
         return self[startIndex  ..  endIndex]
 
-    end ;
+    end if;
     -- procedure slice (index:Int,isClose : Boolean := False) ->(first:Slice<Element> ,second:Slice<Element>){
     function slice (index : Integer; isClose : Boolean := False) return (first:ArraySlice<Element>, second:ArraySlice<Element>) {
         var first := self[0  ..  index]
@@ -123,13 +123,13 @@ begin
         if isClose then
             first := second + first
             second := []
-        end ;
+        end if;
 
         return (first, second)
 
-    end ;
+    end if;
 
 
-end ;
+end if;
 
 

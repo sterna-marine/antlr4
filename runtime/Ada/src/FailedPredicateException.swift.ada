@@ -22,14 +22,13 @@ type FailedPredicateException is new RecognitionException with null record;
 		s : constant := recognizer.getInterpreter().atn.states[recognizer.getState()]!
 
 		trans : constant := s.transition(0) as! AbstractPredicateTransition
-		if predex : constant := trans as? PredicateTransition {
+		if predex : constant := trans as? PredicateTransition then
 			self.ruleIndex := predex.ruleIndex
 			self.predicateIndex := predex.predIndex
-		end ;
-		else {
+		else
 			self.ruleIndex := 0
 			self.predicateIndex := 0
-		end ;
+		end if;
 
 		self.predicate := predicate
 
@@ -37,30 +36,30 @@ type FailedPredicateException is new RecognitionException with null record;
         if token : constant := try? recognizer.getCurrentToken() then
             setOffendingToken(token);
         end if;
-	end ;
+	end if;
 
 	public function getRuleIndex (This : …) return Integer is
 begin
 		return ruleIndex
-	end ;
+	end if;
 
 	public function getPredIndex (This : …) return Integer is
 begin
 		return predicateIndex
-	end ;
+	end if;
 
 	public function getPredicate () return String? {
 		return predicate
-	end ;
+	end if;
 
 
 	private static function formatMessage (predicate : String?, message : String?) return String is
 begin
 		if message : constant := message {
 			return message
-		end ;
+		end if;
 
         predstr : constant := predicate ?? "<unknown>"
-		return "failed predicate: {\(predstr)end ;?"
-	end ;
-end ;
+		return "failed predicate: {\(predstr)end if;?"
+	end if;
+end if;

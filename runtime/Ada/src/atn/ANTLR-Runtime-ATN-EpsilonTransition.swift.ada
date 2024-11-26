@@ -9,18 +9,21 @@
 type EpsilonTransition is new Transition and CustomStringConvertible with null record;
 {
 
-    private let outermostPrecedenceReturnInside : Integer;
+    -- private
+    outermostPrecedenceReturnInside : constant Integer;;
 
-    public convenience override init(target : ATNState) {
+    -- public convenience 
+    override
+    init(target : ATNState) {
         self.init(target, -1)
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; target : ATNState; outermostPrecedenceReturn : Integer) {
 
         self.outermostPrecedenceReturnInside := outermostPrecedenceReturn
         super.init(target)
-    end ;
+    end if;
 
     -- 
     -- - returns: the rule index of a precedence rule for which this transition is
@@ -34,33 +37,33 @@ type EpsilonTransition is new Transition and CustomStringConvertible with null r
     function outermostPrecedenceReturn (This : …) return Integer is
 begin
         return outermostPrecedenceReturnInside
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.EPSILON
-    end ;
+    end if;
 
     override
     -- public
     function isEpsilon (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
 
     -- public
     description : String;
     function description return String is
         return "epsilon"
-    end ;
-end ;
+    end if;
+end if;

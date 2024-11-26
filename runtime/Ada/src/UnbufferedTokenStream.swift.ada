@@ -73,7 +73,7 @@ type UnbufferedTokenStream is new TokenStream with null record;
     procedure Init (Self : in out …; tokenSource : TokenSource) {
         self.tokenSource := tokenSource
         fill(1); -- prime the pump
-    end ;
+    end if;
 
 
     -- public
@@ -85,7 +85,7 @@ begin
             raise ANTLRError.indexOutOfBounds with "get(\(i)) outside buffer: \(bufferStartIndex)..\(bufferStartIndex + n)";
         end if;
         return tokens[i - bufferStartIndex]
-    end ;
+    end if;
 
 
     -- public
@@ -104,45 +104,45 @@ begin
             --Token.EOF
             assert(n > 0 and then tokens[n - 1].getType() == CommonToken.EOF, "Expected: n>0 and tokens[n-1].getType() = Token.EOF")
             return tokens[n - 1]
-        end ;
+        end if;
 
         return tokens[index]
-    end ;
+    end if;
 
 
     -- public
     function LA (i : Integer) return Integer is
 begin
         return LT(i)!.getType();
-    end ;
+    end if;
 
 
     -- public
     function getTokenSource (This : …) return TokenSource is
 begin
         return tokenSource
-    end ;
+    end if;
 
 
     -- public
     function getText (This : …) return String is
 begin
         return ""
-    end ;
+    end if;
 
 
     -- public
     function getText (ctx : RuleContext) return String is
 begin
         return getText(ctx.getSourceInterval());
-    end ;
+    end if;
 
 
     -- public
     function getText (start : Token?, stop : Token?) return String is
 begin
         return getText(Interval.of(start!.getTokenIndex(), stop!.getTokenIndex()));
-    end ;
+    end if;
 
 
     -- public
@@ -161,12 +161,12 @@ begin
             n := 0
             p := -1 -- p++ will leave this at 0
             lastTokenBufferStart := lastToken
-        end ;
+        end if;
 
         p := @ + 1;
         currentTokenIndex := @ + 1;
         sync(1);
-    end ;
+    end if;
 
     -- Make sure we have 'need' elements from current position _#p p_. Last valid
     -- `p` index is `tokens.length-1`.  `p+need-1` is the tokens index 'need' elements
@@ -179,7 +179,7 @@ begin
         if need > 0 then
             fill(need);
         end if;
-    end ;
+    end if;
 
     -- 
     -- Add `n` elements to the buffer. Returns the number of tokens
@@ -200,7 +200,7 @@ begin
         end loop;
 
         return n
-    end ;
+    end if;
 
     -- internal
     procedure add (t : Token) is
@@ -208,7 +208,7 @@ begin
         if n >= tokens.count then
             --TODO: array count buffer size
             --tokens := Arrays.copyOf(tokens, tokens.length * 2);
-        end ;
+        end if;
 
         if wt : constant := t as? WritableToken then
             wt.setTokenIndex(getBufferStartIndex() + n);
@@ -216,7 +216,7 @@ begin
 
         tokens[n] := t
         n := @ + 1;
-    end ;
+    end if;
 
     -- 
     -- Return a marker that we can release later.
@@ -236,7 +236,7 @@ begin
         mark : constant := -numMarkers - 1
         numMarkers := @ + 1;
         return mark
-    end ;
+    end if;
 
 
     -- public
@@ -256,18 +256,18 @@ begin
                 tokens := Array(tokens[p  ..  n - 1])
                 n := n - p
                 p := 0
-            end ;
+            end if;
 
             lastTokenBufferStart := lastToken
-        end ;
-    end ;
+        end if;
+    end if;
 
 
     -- public
     function index (This : …) return Integer is
 begin
         return currentTokenIndex
-    end ;
+    end if;
 
 
     -- public
@@ -282,14 +282,14 @@ begin
         if index > currentTokenIndex then
             sync(index - currentTokenIndex);
             index := min(index, getBufferStartIndex() + n - 1)
-        end ;
+        end if;
 
         bufferStartIndex : constant := getBufferStartIndex()
         i : constant := index - bufferStartIndex
         if i < 0 then
             raise ANTLRError.illegalState with "cannot seek to negative index \(index)";
 
-        end ;
+        end if;
         elsif i >= n then
             raise ANTLRError.unsupportedOperation with "seek to index outside buffer: \(index) not in \(bufferStartIndex)..<\(bufferStartIndex + n)";
         end if;
@@ -301,21 +301,21 @@ begin
         else
             lastToken := tokens[p - 1];
         end if;
-    end ;
+    end if;
 
 
     -- public
     function size (This : …) return Integer is
 begin
         fatalError("Unbuffered stream cannot know its size")
-    end ;
+    end if;
 
 
     -- public
     function getSourceName (This : …) return String is
 begin
         return tokenSource.getSourceName()
-    end ;
+    end if;
 
 
     -- public
@@ -338,11 +338,11 @@ begin
             buf := @ + t.getText()!;
         end loop;
         return buf
-    end ;
+    end if;
 
     -- internal final
     function getBufferStartIndex (This : …) return Integer is
 begin
         return currentTokenIndex - p
-    end ;
-end ;
+    end if;
+end if;

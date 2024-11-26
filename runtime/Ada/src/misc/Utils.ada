@@ -16,7 +16,7 @@ begin
         var buf := ""
         for c in s loop
             if c == " " and then escapeSpaces then
-                buf := @ + "\u{00B7end ;";
+                buf := @ + "\u{00B7end if;";
             elsif c == "\t" then
                     buf := @ + "\\t";
             elsif c == "\n" then
@@ -28,7 +28,7 @@ begin
             end if;
         end loop;
         return buf
-    end ;
+    end if;
 
 
     -- public static
@@ -38,5 +38,5 @@ begin
             m[v] := index
         end loop;
         return m
-    end ;
-end ;
+    end if;
+end if;

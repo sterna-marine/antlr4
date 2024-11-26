@@ -54,7 +54,7 @@ type CommonTokenFactory is new TokenFactory with null record;
     -- public 
     procedure Init (Self : in out …; copyText  : Boolean) {
         self.copyText := copyText
-    end ;
+    end if;
 
     -- 
     -- Constructs a _org.antlr.v4.runtime.CommonTokenFactory_ with _#copyText_ set to
@@ -64,10 +64,11 @@ type CommonTokenFactory is new TokenFactory with null record;
     -- The _#DEFAULT_ instance should be used instead of calling this
     -- directly.
     -- 
-    public convenience procedure Init (Self : …) is
+    -- public convenience 
+    procedure Init (Self : …) is
 begin
         self.init(False)
-    end ;
+    end if;
 
 
     -- public
@@ -85,12 +86,12 @@ begin
         end if;
 
         return t
-    end ;
+    end if;
 
 
     -- public
     function create (type : Integer; text : String) return Token is
 begin
         return CommonToken(type, text)
-    end ;
-end ;
+    end if;
+end if;

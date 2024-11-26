@@ -25,7 +25,7 @@ type LexerTypeAction is new LexerAction and CustomStringConvertible with null re
     -- public 
     procedure Init (Self : in out …; type : Integer) {
         self.type := type
-    end ;
+    end if;
 
     -- 
     -- Gets the type to assign to a token created by the lexer.
@@ -35,7 +35,7 @@ type LexerTypeAction is new LexerAction and CustomStringConvertible with null re
     function getType (This : …) return Integer is
 begin
         return type
-    end ;
+    end if;
 
     -- 
     -- 
@@ -47,7 +47,7 @@ begin
     function getActionType (This : …) return LexerActionType is
 begin
         return LexerActionType.type
-    end ;
+    end if;
 
     -- 
     -- 
@@ -58,7 +58,7 @@ begin
     function isPositionDependent (This : …) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -71,21 +71,21 @@ begin
     override
     procedure execute (lexer : Lexer) {
         lexer.setType(type)
-    end ;
+    end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
         hasher.combine(type)
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "type(\(type))"
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: LexerTypeAction, rhs: LexerTypeAction) return Boolean is
@@ -94,4 +94,4 @@ begin
         return True;
     end if;
     return lhs.type = rhs.type
-end ;
+end if;

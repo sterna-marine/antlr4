@@ -17,7 +17,7 @@ type ATNDeserializer is tagged record
     -- public 
     procedure Init (Self : in out …; deserializationOptions : ATNDeserializationOptions? := null) {
         self.deserializationOptions := deserializationOptions ?? ATNDeserializationOptions()
-    end ;
+    end if;
 
     -- public
     function deserialize (data : [Int]) return ATN is
@@ -29,7 +29,7 @@ begin
         if version /= ATNDeserializer.SERIALIZED_VERSION then
             reason : constant := "Could not deserialize ATN with version \(version) (expected \(ATNDeserializer.SERIALIZED_VERSION))."
             raise ANTLRError.unsupportedOperation with reason;
-        end ;
+        end if;
 
         grammarType : constant := ATNType(rawValue: data[p])!
         p := @ + 1;
@@ -51,7 +51,7 @@ begin
             if stype = ATNState.INVALID_TYPE then
                 atn.addState(null)
                 continue
-            end ;
+            end if;
 
             ruleIndex : constant := data[p]
             p := @ + 1;
@@ -61,18 +61,18 @@ begin
                 loopBackStateNumber : constant := data[p]
                 p := @ + 1;
                 loopBackStateNumbers.append((s as! LoopEndState, loopBackStateNumber))
-            end ; elsif s : constant := s as? BlockStartState then
+            end if; elsif s : constant := s as? BlockStartState then
                 endStateNumber : constant := data[p]
                 p := @ + 1;
                 endStateNumbers.append((s, endStateNumber))
-            end ;
+            end if;
             atn.addState(s)
         end loop;
 
         -- delay the assignment of loop back and end states until we know all the state instances have been initialized
         for pair in loopBackStateNumbers loop
             pair.0.loopBackState := atn.states[pair.1]
-        end ;
+        end if;
 
         for pair in endStateNumbers loop
             pair.0.endState := atn.states[pair.1] as? BlockEndState
@@ -111,7 +111,7 @@ begin
                 tokenType : constant := data[p]
                 p := @ + 1;
                 ruleToTokenType.append(tokenType)
-            end ;
+            end if;
         end loop;
         atn.ruleToStartState := ruleToStartState
         if atn.grammarType = ATNType.lexer then
@@ -173,7 +173,7 @@ begin
                 atn.appendDecisionToState(decState)
                 decState.decision := i - 1
             end loop;
-        end ;
+        end if;
 
         --
         -- LEXER ACTIONS
@@ -193,11 +193,11 @@ begin
                 lexerActions.append(lexerAction)
             end loop;
             atn.lexerActions := lexerActions
-        end ;
+        end if;
 
         finalizeATN(atn);
         return atn
-    end ;
+    end if;
 
     -- private
     function readInt (data : [Int], p : inout Int) return Integer is
@@ -205,7 +205,7 @@ begin
         result : constant := data[p]
         p := @ + 1;
         return result
-    end ;
+    end if;
 
     -- private
     function readSets (data : [Int], p : inout Int, sets : inout [IntervalSet], readUnicode : ([Int], inout Int) return Int) {
@@ -227,7 +227,7 @@ begin
                 try! set.add(readUnicode(data, &p), readUnicode(data, &p))
             end loop;
         end loop;
-    end ;
+    end if;
 
     -- private
     procedure fillRuleToStopState (atn : ATN) is
@@ -240,8 +240,8 @@ begin
                 atn.ruleToStopState[index] := stopState
                 atn.ruleToStartState[index].stopState := stopState
             end loop;
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- edges for rule stop states can be derived, so they aren't serialized
     -- private
@@ -250,27 +250,27 @@ begin
         for state in atn.states loop
             guard state : constant := state else {
                 continue
-            end ;
+            end if;
             length : constant := state.getNumberOfTransitions()
             for i in 0 .. length - 1 loop
                 t : constant := state.transition(i)
                 guard ruleTransition : constant := t as? RuleTransition else {
                     continue
-                end ;
+                end if;
                 var outermostPrecedenceReturn := -1
                 if targetRuleIndex : constant := ruleTransition.target.ruleIndex then
                     if atn.ruleToStartState[targetRuleIndex].isPrecedenceRule then
                         if ruleTransition.precedence = 0 then
                             outermostPrecedenceReturn := targetRuleIndex;
                         end if;
-                    end ;
+                    end if;
 
                     returnTransition : constant := EpsilonTransition(ruleTransition.followState, outermostPrecedenceReturn)
                     atn.ruleToStopState[targetRuleIndex].addTransition(returnTransition)
-                end ;
+                end if;
             end loop;
         end loop;
-    end ;
+    end if;
 
     -- private
     procedure validateStates (atn : ATN) is
@@ -287,7 +287,7 @@ begin
                 else
                     raise ANTLRError.illegalState with "state.endState = null";
                 end if;
-            end ;
+            end if;
             elsif loopbackState : constant := state as? PlusLoopbackState then
                 length : constant := loopbackState.getNumberOfTransitions()
                 for i in 0 .. length - 1 loop
@@ -296,7 +296,7 @@ begin
                         startState.loopBackState := loopbackState;
                     end if;
                 end loop;
-            end ;
+            end if;
             elsif loopbackState : constant := state as? StarLoopbackState then
                 length : constant := loopbackState.getNumberOfTransitions()
                 for i in 0 .. length - 1 loop
@@ -307,7 +307,7 @@ begin
                 end loop;
             end if;
         end loop;
-    end ;
+    end if;
 
 
     -- private
@@ -323,9 +323,9 @@ begin
             if deserializationOptions.verifyATN then
                 -- reverify after modification
                 verifyATN(atn);
-            end ;
-        end ;
-    end ;
+            end if;
+        end if;
+    end if;
 
 
     --
@@ -346,20 +346,20 @@ begin
             --
             guard state : constant := state as? StarLoopEntryState, stateRuleIndex : constant := state.ruleIndex, atn.ruleToStartState[stateRuleIndex].isPrecedenceRule else {
                 continue
-            end ;
+            end if;
             maybeLoopEndState : constant := state.transition(state.getNumberOfTransitions() - 1).target
             if maybeLoopEndState is LoopEndState and then maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
                 state.precedenceRuleDecision := True;
             end if;
         end loop;
-    end ;
+    end if;
 
 
     -- private
     procedure generateRuleBypassTransitions (atn : ATN) is
     begin
         length : constant := atn.ruleToStartState.count
-        atn.ruleToTokenType := (0 .. length - 1).map { atn.maxTokenType + $0 + 1 end ;
+        atn.ruleToTokenType := (0 .. length - 1).map { atn.maxTokenType + $0 + 1 end if;
 
         for i in 0 .. length - 1 loop
             bypassStart : constant := BasicBlockStartState()
@@ -383,7 +383,7 @@ begin
                 for state in atn.states loop
                     guard state : constant := state, state.ruleIndex = i, state is StarLoopEntryState else {
                         continue
-                    end ;
+                    end if;
 
                     maybeLoopEndState : constant := state.transition(state.getNumberOfTransitions() - 1).target
                     if !(maybeLoopEndState is LoopEndState) then
@@ -393,7 +393,7 @@ begin
                     if maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
                         endState := state
                         exit when True;
-                    end ;
+                    end if;
                 end loop;
 
                 if endState = null then
@@ -409,7 +409,7 @@ begin
             for state in atn.states loop
                 guard state : constant := state else {
                     continue
-                end ;
+                end if;
                 for transition in state.transitions loop
                     if transition === excludeTransition! then
                         continue;
@@ -436,7 +436,7 @@ begin
             matchState.addTransition(AtomTransition(bypassStop, atn.ruleToTokenType[i]))
             bypassStart.addTransition(EpsilonTransition(matchState))
         end loop;
-    end ;
+    end if;
 
 
     -- internal
@@ -446,7 +446,7 @@ begin
         for state in atn.states loop
             guard state : constant := state else {
                 continue
-            end ;
+            end if;
 
             checkCondition(state.onlyHasEpsilonTransitions() or else state.getNumberOfTransitions() <= 1);
 
@@ -468,13 +468,13 @@ begin
                     else
                         raise ANTLRError.illegalState with "IllegalStateException";
                     end if;
-                end ;
-            end ;
+                end if;
+            end if;
 
             if state : constant := state as? StarLoopbackState then
                 checkCondition(state.getNumberOfTransitions() == 1);
                 checkCondition(state.transition(0).target is StarLoopEntryState);
-            end ;
+            end if;
 
             if state is LoopEndState then
                 checkCondition((state as! LoopEndState).loopBackState /= null);
@@ -498,13 +498,13 @@ begin
                 checkCondition(state.getNumberOfTransitions() <= 1 or else state is RuleStopState);
             end if;
         end loop;
-    end ;
+    end if;
 
     -- internal
     procedure checkCondition (condition  : Boolean) is
     begin
         checkCondition(condition, null);
-    end ;
+    end if;
 
     -- internal
     procedure checkCondition (condition : Boolean; message : String?) is
@@ -512,8 +512,8 @@ begin
         if not condition then
             raise ANTLRError.illegalState with message ?? "";
 
-        end ;
-    end ;
+        end if;
+    end if;
 
 
     -- internal
@@ -523,93 +523,93 @@ begin
                               sets : [IntervalSet]) return Transition is
 begin
         target : constant := atn.states[trg]!
-       case type is
-        when Transition.EPSILON => return EpsilonTransition(target);
-        when Transition.RANGE =>
-            if arg3 /= 0 then
-                return RangeTransition(target, CommonToken.EOF, arg2)
-            else
-                return RangeTransition(target, arg1, arg2);
-            end if;
-        when Transition.RULE =>
-            rt : constant := RuleTransition(atn.states[arg1] as! RuleStartState, arg2, arg3, target)
-            return rt
-        when Transition.PREDICATE =>
-            pt : constant := PredicateTransition(target, arg1, arg2, arg3 /= 0)
-            return pt
-        when Transition.PRECEDENCE =>
-            return PrecedencePredicateTransition(target, arg1)
-        when Transition.ATOM =>
-            if arg3 /= 0 then
-                return AtomTransition(target, CommonToken.EOF)
-            else
-                return AtomTransition(target, arg1);
-            end if;
-        when Transition.ACTION =>
-            return ActionTransition(target, arg1, arg2, arg3 /= 0)
+         case type is
+            when Transition.EPSILON => return EpsilonTransition(target);
+            when Transition.RANGE =>
+                  if arg3 /= 0 then
+                     return RangeTransition(target, CommonToken.EOF, arg2)
+                  else
+                     return RangeTransition(target, arg1, arg2);
+                  end if;
+            when Transition.RULE =>
+                  rt : constant := RuleTransition(atn.states[arg1] as! RuleStartState, arg2, arg3, target)
+                  return rt
+            when Transition.PREDICATE =>
+                  pt : constant := PredicateTransition(target, arg1, arg2, arg3 /= 0)
+                  return pt
+            when Transition.PRECEDENCE =>
+                  return PrecedencePredicateTransition(target, arg1)
+            when Transition.ATOM =>
+                  if arg3 /= 0 then
+                     return AtomTransition(target, CommonToken.EOF)
+                  else
+                     return AtomTransition(target, arg1);
+                  end if;
+            when Transition.ACTION =>
+                  return ActionTransition(target, arg1, arg2, arg3 /= 0)
 
-        when Transition.SET => return SetTransition(target, sets[arg1]);
-        when Transition.NOT_SET => return NotSetTransition(target, sets[arg1]);
-        when Transition.WILDCARD => return WildcardTransition(target);
-        when others =>
-            raise ANTLRError.illegalState with "The specified transition type is not valid.";
-        end ;
-    end ;
+            when Transition.SET => return SetTransition(target, sets[arg1]);
+            when Transition.NOT_SET => return NotSetTransition(target, sets[arg1]);
+            when Transition.WILDCARD => return WildcardTransition(target);
+            when others =>
+                  raise ANTLRError.illegalState with "The specified transition type is not valid.";
+         end case;
+    end if;
 
     -- internal
     function stateFactory (type : Integer; ruleIndex : Integer) return ATNState? {
         var s: ATNState
-       case type is
-        when ATNState.INVALID_TYPE => return null;
-        when ATNState.BASIC => s := BasicState();
-        when ATNState.RULE_START => s := RuleStartState();
-        when ATNState.BLOCK_START => s := BasicBlockStartState();
-        when ATNState.PLUS_BLOCK_START => s := PlusBlockStartState();
-        when ATNState.STAR_BLOCK_START => s := StarBlockStartState();
-        when ATNState.TOKEN_START => s := TokensStartState();
-        when ATNState.RULE_STOP => s := RuleStopState();
-        when ATNState.BLOCK_END => s := BlockEndState();
-        when ATNState.STAR_LOOP_BACK => s := StarLoopbackState();
-        when ATNState.STAR_LOOP_EN=> s := StarLoopEntryState();
-        when ATNState.PLUS_LOOP_BACK => s := PlusLoopbackState();
-        when ATNState.LOOP_END => s := LoopEndState();
-        when others =>
-            let message: String := "The specified state type \(type) is not valid."
+         case type is
+            when ATNState.INVALID_TYPE => return null;
+            when ATNState.BASIC => s := BasicState();
+            when ATNState.RULE_START => s := RuleStartState();
+            when ATNState.BLOCK_START => s := BasicBlockStartState();
+            when ATNState.PLUS_BLOCK_START => s := PlusBlockStartState();
+            when ATNState.STAR_BLOCK_START => s := StarBlockStartState();
+            when ATNState.TOKEN_START => s := TokensStartState();
+            when ATNState.RULE_STOP => s := RuleStopState();
+            when ATNState.BLOCK_END => s := BlockEndState();
+            when ATNState.STAR_LOOP_BACK => s := StarLoopbackState();
+            when ATNState.STAR_LOOP_EN=> s := StarLoopEntryState();
+            when ATNState.PLUS_LOOP_BACK => s := PlusLoopbackState();
+            when ATNState.LOOP_END => s := LoopEndState();
+            when others =>
+                  let message: String := "The specified state type \(type) is not valid."
 
-            raise ANTLRError.illegalArgument with message;
-        end ;
+                  raise ANTLRError.illegalArgument with message;
+         end case;
 
         s.ruleIndex := ruleIndex
         return s
-    end ;
+    end if;
 
     -- internal
     function lexerActionFactory (type : LexerActionType; data1 : Integer; data2 : Integer) return LexerAction is
 begin
-       case type is
-        when .channel =>
-            return LexerChannelAction(data1)
+         case type is
+            when .channel =>
+                  return LexerChannelAction(data1)
 
-        when .custom =>
-            return LexerCustomAction(data1, data2)
+            when .custom =>
+                  return LexerCustomAction(data1, data2)
 
-        when .mode =>
-            return LexerModeAction(data1)
+            when .mode =>
+                  return LexerModeAction(data1)
 
-        when .more =>
-            return LexerMoreAction.INSTANCE
+            when .more =>
+                  return LexerMoreAction.INSTANCE
 
-        when .popMode =>
-            return LexerPopModeAction.INSTANCE
+            when .popMode =>
+                  return LexerPopModeAction.INSTANCE
 
-        when .pushMode =>
-            return LexerPushModeAction(data1)
+            when .pushMode =>
+                  return LexerPushModeAction(data1)
 
-        when .skip =>
-            return LexerSkipAction.INSTANCE
+            when .skip =>
+                  return LexerSkipAction.INSTANCE
 
-        when .type =>
-            return LexerTypeAction(data1)
-        end ;
-    end ;
+            when .type =>
+                  return LexerTypeAction(data1)
+         end case;
+    end if;
 end ANTLR.Runtime.ATNDeserializer;

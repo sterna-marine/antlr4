@@ -23,7 +23,7 @@ type LookupATNConfig is new Hashable with null record;
     procedure Init (Self : in out …; old : ATNConfig) {
         -- dup
         config := old
-    end ;
+    end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
@@ -31,8 +31,8 @@ type LookupATNConfig is new Hashable with null record;
         hasher.combine(config.state.stateNumber)
         hasher.combine(config.alt)
         hasher.combine(config.semanticContext)
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: LookupATNConfig, rhs: LookupATNConfig) return Boolean is
@@ -44,4 +44,4 @@ begin
     return lhs.config.state.stateNumber = rhs.config.state.stateNumber and
             lhs.config.alt = rhs.config.alt and
             lhs.config.semanticContext = rhs.config.semanticContext
-end ;
+end if;

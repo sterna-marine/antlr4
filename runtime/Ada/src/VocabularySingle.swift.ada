@@ -53,7 +53,7 @@ type Vocabulary is new Hashable with null record;
     -- public convenience
     procedure Init (Self : in out …; literalNames : [String?], symbolicNames : [String?]) {
         self.init(literalNames, symbolicNames, null)
-    end ;
+    end if;
 
     -- 
     -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
@@ -77,7 +77,7 @@ type Vocabulary is new Hashable with null record;
         self.literalNames := literalNames ?? Vocabulary.EMPTY_NAMES
         self.symbolicNames := symbolicNames ?? Vocabulary.EMPTY_NAMES
         self.displayNames := displayNames ?? Vocabulary.EMPTY_NAMES
-    end ;
+    end if;
 
     -- 
     -- Returns a _org.antlr.v4.runtime.Vocabulary_ instance from the specified set of token
@@ -98,7 +98,7 @@ type Vocabulary is new Hashable with null record;
 begin
         guard tokenNames : constant := tokenNames, tokenNames.count > 0 else {
             return EMPTY_VOCABULARY
-        end ;
+        end if;
 
         var literalNames := tokenNames
         var symbolicNames := tokenNames
@@ -106,17 +106,17 @@ begin
         for i in 0 .. length - 1 loop
             guard tokenName : constant := tokenNames[i] else {
                 continue
-            end ;
+            end if;
             if firstChar : constant := tokenName.first then
                 if firstChar == "\'" then
                     symbolicNames[i] := null;
                     continue
-                end ;
+                end if;
                 elsif String(firstChar).uppercased() /= String(firstChar) then
                     literalNames[i] := null;
                     continue
-                end ;
-            end ;
+                end if;
+            end if;
 
             -- wasn't a literal or symbolic name
             literalNames[i] := null;
@@ -124,7 +124,7 @@ begin
         end loop;
 
         return Vocabulary(literalNames, symbolicNames, tokenNames)
-    end ;
+    end if;
 
 
     -- public
@@ -134,7 +134,7 @@ begin
         end if;
 
         return null;
-    end ;
+    end if;
 
 
     -- public
@@ -147,7 +147,7 @@ begin
         end if;
 
         return null;
-    end ;
+    end if;
 
 
     -- public
@@ -157,7 +157,7 @@ begin
             if displayName : constant := displayNames[tokenType] then
                 return displayName;
             end if;
-        end ;
+        end if;
 
         if literalName : constant := getLiteralName(tokenType) then
             return literalName;
@@ -168,17 +168,17 @@ begin
         end if;
 
         return String(tokenType)
-    end ;
+    end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
         hasher.combine(ObjectIdentifier(self))
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: Vocabulary, rhs: Vocabulary) return Boolean is
 begin
     return lhs === rhs
-end ;
+end if;

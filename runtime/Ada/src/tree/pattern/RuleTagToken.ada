@@ -22,7 +22,8 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- The token type for the current token. This is the token type assigned to
     -- the bypass alternative for the rule during ATN deserialization.
     -- 
-    private let bypassTokenType : Integer;
+    -- private
+    bypassTokenType : constant Integer;;
     -- 
     -- This is the backing field for _#getLabel_.
     -- 
@@ -45,7 +46,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- public convenience
     procedure Init (Self : in out …; ruleName : String; bypassTokenType : Integer) {
         self.init(ruleName, bypassTokenType, null)
-    end ;
+    end if;
 
     -- 
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ with the specified rule
@@ -64,7 +65,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
         self.ruleName := ruleName
         self.bypassTokenType := bypassTokenType
         self.label := label
-    end ;
+    end if;
 
     -- 
     -- Gets the name of the rule associated with this rule tag.
@@ -75,7 +76,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     function getRuleName (This : …) return String is
 begin
         return ruleName
-    end ;
+    end if;
 
     -- 
     -- Gets the label associated with the rule tag.
@@ -86,7 +87,7 @@ begin
     -- public final
     function getLabel () return String? {
         return label
-    end ;
+    end if;
 
     -- 
     -- Rule tag tokens are always placed on the _#DEFAULT_CHANNEL_.
@@ -95,7 +96,7 @@ begin
     function getChannel (This : …) return Integer is
 begin
         return RuleTagToken.DEFAULT_CHANNEL
-    end ;
+    end if;
 
     -- 
     -- This method returns the rule tag formatted with `<` and `>`
@@ -107,7 +108,7 @@ begin
             return "<\(label):\(ruleName)>";
         end if;
         return "<\(ruleName)>"
-    end ;
+    end if;
 
     -- 
     -- Rule tag tokens have types assigned according to the rule bypass
@@ -117,7 +118,7 @@ begin
     function getType (This : …) return Integer is
 begin
         return bypassTokenType
-    end ;
+    end if;
 
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns 0.
@@ -126,7 +127,7 @@ begin
     function getLine (This : …) return Integer is
 begin
         return 0
-    end ;
+    end if;
 
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
@@ -135,7 +136,7 @@ begin
     function getCharPositionInLine (This : …) return Integer is
 begin
         return -1
-    end ;
+    end if;
 
     -- 
     -- 
@@ -146,7 +147,7 @@ begin
     function getTokenIndex (This : …) return Integer is
 begin
         return -1
-    end ;
+    end if;
 
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
@@ -155,7 +156,7 @@ begin
     function getStartIndex (This : …) return Integer is
 begin
         return -1
-    end ;
+    end if;
 
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
@@ -164,7 +165,7 @@ begin
     function getStopIndex (This : …) return Integer is
 begin
         return -1
-    end ;
+    end if;
 
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns `null`.
@@ -172,7 +173,7 @@ begin
     -- public
     function getTokenSource () return TokenSource? {
         return null;
-    end ;
+    end if;
 
     --
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns `null`.
@@ -180,13 +181,13 @@ begin
     -- public
     function getInputStream () return CharStream? {
         return null;
-    end ;
+    end if;
 
     -- public
     function getTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
         return TokenSourceAndStream.EMPTY
-    end ;
+    end if;
 
     --
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ returns a string of the form
@@ -196,8 +197,8 @@ begin
     description : String;
     function description return String is
         return ruleName + ":" + String(bypassTokenType)
-    end ;
+    end if;
 
 
-end ;
+end if;
 

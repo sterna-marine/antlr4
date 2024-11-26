@@ -10,7 +10,7 @@ public class MultiMap<K:Hashable, V> {
     procedure map (key : K; value : V) is
     begin
         mapping[key, default: Array()].append(value)
-    end ;
+    end if;
 
     -- public
     function getPairs () return Array<(K, V)> {
@@ -21,17 +21,17 @@ public class MultiMap<K:Hashable, V> {
             end loop;
         end loop;
         return pairs
-    end ;
+    end if;
 
     -- public
     function get (key : K) return Array<(V)>? {
         return mapping[key]
-    end ;
+    end if;
 
     -- public
     function size (This : …) return Integer is
 begin
         return mapping.count
-    end ;
+    end if;
 
-end ;
+end if;

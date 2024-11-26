@@ -70,5 +70,5 @@ type PredicateEvalInfo is new DecisionEventInfo with null record;
         self.evalResult := evalResult
         self.predictedAlt := predictedAlt
         super.init(decision, ATNConfigSet(), input, startIndex, stopIndex, fullCtx)
-    end ;
-end ;
+    end if;
+end if;

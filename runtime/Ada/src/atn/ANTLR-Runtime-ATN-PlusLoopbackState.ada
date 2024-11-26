@@ -20,5 +20,5 @@ type PlusLoopbackState is new DecisionState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.PLUS_LOOP_BACK
-    end ;
-end ;
+    end if;
+end if;

@@ -22,33 +22,33 @@ type SetTransition is new Transition and CustomStringConvertible with null recor
 
         self.set := set
         super.init(target)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.SET
-    end ;
+    end if;
 
     override
     -- public
     function labelIntervalSet () return IntervalSet? {
         return set
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return set.contains(symbol)
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return set.description
-    end ;
+    end if;
 
 
-end ;
+end if;

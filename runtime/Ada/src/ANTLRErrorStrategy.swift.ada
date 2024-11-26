@@ -88,7 +88,7 @@ type ANTLRErrorStrategy is interface;
     procedure sync (recognizer : Parser);
 
     -- 
-    -- Tests whether or not recognizerend ; is in the process of recovering
+    -- Tests whether or not recognizer is in the process of recovering
     -- from an error. In error recovery mode, _org.antlr.v4.runtime.Parser#consume_ adds
     -- symbols to the parse tree by calling
     -- _Parser#createErrorNode(ParserRuleContext, Token)_ then
@@ -117,4 +117,4 @@ type ANTLRErrorStrategy is interface;
     -- - parameter e: the recognition exception to report
     -- 
     procedure reportError (recognizer : Parser; e : RecognitionException)
-end ;
+end if;

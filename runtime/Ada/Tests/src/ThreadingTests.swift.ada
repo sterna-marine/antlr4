@@ -36,11 +36,11 @@ begin
                 _ : constant := try? parser?.s()
 
                 exp.fulfill()
-            end ;
+            end if;
         end loop;
 
         waitForExpectations(timeout: 30.0) { (_) in
             print("Completed")
-        end ;
-    end ;
-end ;
+        end if;
+    end if;
+end if;

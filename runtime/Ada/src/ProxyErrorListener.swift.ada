@@ -20,7 +20,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
     -- public 
     procedure Init (Self : in out …; delegates : [ANTLRErrorListener]) {
         self.delegates := delegates
-    end ;
+    end if;
 
     -- public
     procedure syntaxError<T> (recognizer : Recognizer<T>,
@@ -33,7 +33,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
         for listener in delegates loop
             listener.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         end loop;
-    end ;
+    end if;
 
 
     -- public
@@ -47,7 +47,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
         for listener in delegates loop
             listener.reportAmbiguity(recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs)
         end loop;
-    end ;
+    end if;
 
 
     -- public
@@ -60,7 +60,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
         for listener in delegates loop
             listener.reportAttemptingFullContext(recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs)
         end loop;
-    end ;
+    end if;
 
 
     -- public
@@ -73,5 +73,5 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
         for listener in delegates loop
             listener.reportContextSensitivity(recognizer, dfa, startIndex, stopIndex, prediction, configs)
         end loop;
-    end ;
-end ;
+    end if;
+end if;

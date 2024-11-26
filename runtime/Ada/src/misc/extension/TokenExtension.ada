@@ -17,7 +17,7 @@ extension Token {
 
     static public var INVALID_TYPE: Integer {
         return 0
-    end ;
+    end if;
 
     -- 
     -- During lookahead operations, this "token" signifies we hit rule end ATN state
@@ -25,16 +25,16 @@ extension Token {
     -- 
     static public var EPSILON: Integer {
         return -2
-    end ;
+    end if;
 
 
     static public var MIN_USER_TOKEN_TYPE: Integer {
         return 1
-    end ;
+    end if;
 
     static public var EOF: Integer {
         return -1
-    end ;
+    end if;
     
     --
     -- All tokens go to the parser (unless skip() is called in that rule)
@@ -43,7 +43,7 @@ extension Token {
     --
     static public var DEFAULT_CHANNEL: Integer {
         return 0
-    end ;
+    end if;
     
     -- 
     -- Anything on different channel than DEFAULT_CHANNEL is not parsed
@@ -51,7 +51,7 @@ extension Token {
     --
     static public var HIDDEN_CHANNEL: Integer {
         return 1
-    end ;
+    end if;
     
     -- 
     -- This is the minimum constant value which can be assigned to a
@@ -66,5 +66,5 @@ extension Token {
     -- 
     static public var MIN_USER_CHANNEL_VALUE: Integer {
         return 2
-    end ;
-end ;
+    end if;
+end if;

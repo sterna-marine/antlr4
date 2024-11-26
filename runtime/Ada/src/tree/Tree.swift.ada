@@ -37,4 +37,4 @@ type Tree is interface;
     -- 
     function toStringTree () return String
 
-end ;
+end if;

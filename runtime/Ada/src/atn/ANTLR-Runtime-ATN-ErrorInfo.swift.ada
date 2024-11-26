@@ -41,5 +41,5 @@ type ErrorInfo is new DecisionEventInfo with null record;
                 input : TokenStream; startIndex : Integer; stopIndex : Integer;
                 fullCtx  : Boolean) {
         super.init(decision, configs, input, startIndex, stopIndex, fullCtx)
-    end ;
-end ;
+    end if;
+end if;

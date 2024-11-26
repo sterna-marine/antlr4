@@ -25,5 +25,5 @@ type InputMismatchException is new RecognitionException with null record;
         if (state /= ATNState.INVALID_STATE_NUMBER) then
             setOffendingState(state);
         end if;
-    end ;
-end ;
+    end if;
+end if;

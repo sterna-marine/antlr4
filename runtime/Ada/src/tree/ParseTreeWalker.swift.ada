@@ -6,12 +6,13 @@
 
 -- public
 type ParseTreeWalker is tagged record
-    public static DEFAULT : constant := ParseTreeWalker()
+    -- public static 
+    DEFAULT : constant := ParseTreeWalker()
 
     -- public
     procedure Init (Self : …) is
 begin
-    end ;
+    end if;
 
     --
 	 * Performs a walk on the given parse tree starting at the root and going down recursively
@@ -38,7 +39,7 @@ begin
         else
             preconditionFailure();
         end if;
-    end ;
+    end if;
 
     --
 	 * Enters a grammar rule by first triggering the generic event ParseTreeListener.enterEveryRule
@@ -52,7 +53,7 @@ begin
         ctx : constant := r.getRuleContext() as! ParserRuleContext
         listener.enterEveryRule(ctx);
         ctx.enterRule(listener)
-    end ;
+    end if;
 
     --
 	 * Exits a grammar rule by first triggering the event specific to the given parse tree node
@@ -66,5 +67,5 @@ begin
         ctx : constant := r.getRuleContext() as! ParserRuleContext
         ctx.exitRule(listener)
         listener.exitEveryRule(ctx);
-    end ;
-end ;
+    end if;
+end if;

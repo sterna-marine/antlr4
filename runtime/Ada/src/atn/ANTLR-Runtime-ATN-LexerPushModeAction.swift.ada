@@ -26,7 +26,7 @@ type LexerPushModeAction is new LexerAction and CustomStringConvertible with nul
     -- public 
     procedure Init (Self : in out …; mode : Integer) {
         self.mode := mode
-    end ;
+    end if;
 
     -- 
     -- Get the lexer mode this action should transition the lexer to.
@@ -37,7 +37,7 @@ type LexerPushModeAction is new LexerAction and CustomStringConvertible with nul
     function getMode (This : …) return Integer is
 begin
         return mode
-    end ;
+    end if;
 
     -- 
     -- 
@@ -49,7 +49,7 @@ begin
     function getActionType (This : …) return LexerActionType is
 begin
         return LexerActionType.pushMode
-    end ;
+    end if;
 
     -- 
     -- 
@@ -61,7 +61,7 @@ begin
     function isPositionDependent (This : …) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -74,20 +74,20 @@ begin
     procedure execute (lexer : Lexer) is
     begin
         lexer.pushMode(mode)
-    end ;
+    end if;
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
         hasher.combine(mode)
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "pushMode(\(mode))"
-    end ;
-end ;
+    end if;
+end if;
 
 
 -- public
@@ -97,4 +97,4 @@ begin
         return True;
     end if;
     return lhs.mode = rhs.mode
-end ;
+end if;

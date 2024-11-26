@@ -108,7 +108,7 @@ type BitSet is new Hashable and CustomStringConvertible with null record;
     function wordIndex (bitIndex : Integer) return Integer is
 begin
         return bitIndex >> ADDRESS_BITS_PER_WORD
-    end ;
+    end if;
 
     -- 
     -- Every public method must preserve these invariants.
@@ -119,7 +119,7 @@ begin
         assert((wordsInUse >= 0 and then wordsInUse <= words.count), "Expected: (wordsInUse >=0 and wordsInUse <= words.length)")
         -- print("\(wordsInUse),\(words.count),\(words[wordsInUse])")
         assert((wordsInUse = words.count or else words[wordsInUse] == 0), "Expected: (wordsInUse = words.count or words[wordsInUse ]= 0)")
-    end ;
+    end if;
 
     -- 
     -- Sets the field wordsInUse to the logical size in words of the bit set.
@@ -137,7 +137,7 @@ begin
         end loop;
 
         wordsInUse := i + 1 -- The new logical size
-    end ;
+    end if;
 
     -- 
     -- Creates a new bit set. All bits are initially `False`.
@@ -149,7 +149,7 @@ begin
         words := [Int64](repeating: Int64(0), count: BitSet.wordIndex(BitSet.BITS_PER_WORD - 1) + 1)
         --initWords(BitSet.BITS_PER_WORD);
 
-    end ;
+    end if;
 
     -- 
     -- Creates a bit set whose initial size is large enough to explicitly
@@ -170,16 +170,16 @@ begin
         if nbits < 0 then
             raise ANTLRError.negativeArraySize with "nbits < 0:\(nbits) ";
 
-        end ;
+        end if;
         -- initWords(nbits);
-    end ;
+    end if;
 
     -- private
     procedure initWords (nbits : Integer) is
     begin
         -- words :=  [Int64](count: BitSet.wordIndex(BitSet.BITS_PER_WORD-1) + 1, repeatedValue: Int64(0));
         --  words := [BitSet.wordIndex(nbits-1) + 1];
-    end ;
+    end if;
 
     -- 
     -- Creates a bit set using words as the internal representation.
@@ -190,7 +190,7 @@ begin
         self.words := words
         self.wordsInUse := words.count
         checkInvariants()
-    end ;
+    end if;
 
 
     -- 
@@ -208,7 +208,7 @@ begin
     -- public
     function toLongArray () return [Int64] {
         return copyOf(words, wordsInUse)
-    end ;
+    end if;
 
     -- private
     function copyOf (words : [Int64], newLength : Integer) return [Int64] {
@@ -216,7 +216,7 @@ begin
         length : constant := min(words.count, newLength)
         newWords[0 ..< length] := words[0 ..< length]
         return newWords
-    end ;
+    end if;
     -- 
     -- Ensures that the BitSet can hold enough words.
     -- - parameter wordsRequired: the minimum acceptable number of words.
@@ -229,8 +229,8 @@ begin
             let request: Integer := max(2 * words.count, wordsRequired)
             words := copyOf(words, request)
             sizeIsSticky := False;
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- 
     -- Ensures that the BitSet can accommodate a given wordIndex,
@@ -246,8 +246,8 @@ begin
         if wordsInUse < wordsRequired then
             ensureCapacity(wordsRequired)
             wordsInUse := wordsRequired
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- 
     -- Checks that fromIndex  ..  toIndex is a valid range of bit indices.
@@ -256,17 +256,17 @@ begin
         if fromIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
 
-        end ;
+        end if;
 
         if toIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "toIndex < 0: \(toIndex)";
 
-        end ;
+        end if;
         if fromIndex > toIndex then
             raise ANTLRError.indexOutOfBounds with "fromInde: \(fromIndex) > toIndex: \(toIndex)";
 
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- 
     -- Sets the bit at the specified index to the complement of its
@@ -282,7 +282,7 @@ begin
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
 
-        end ;
+        end if;
         let index: Integer := BitSet.wordIndex(bitIndex)
         expandTo(index)
 
@@ -290,7 +290,7 @@ begin
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Sets each bit from the specified `fromIndex` (inclusive) to the
@@ -335,11 +335,11 @@ begin
 
             -- Handle last word
             words[endWordIndex] ^= lastWordMask
-        end ;
+        end if;
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Sets the bit at the specified index to `True`.
@@ -353,7 +353,7 @@ begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
-        end ;
+        end if;
         let index: Integer := BitSet.wordIndex(bitIndex)
         expandTo(index)
 
@@ -361,7 +361,7 @@ begin
         words[index] := @ or (Int64(1) << Int64(bitIndex % 64))  -- Restores invariants
 
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Sets the bit at the specified index to the specified value.
@@ -378,7 +378,7 @@ begin
         else
             clear(bitIndex);
         end if;
-    end ;
+    end if;
 
     -- 
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
@@ -423,10 +423,10 @@ begin
 
             -- Handle last word (restores invariants)
             words[endWordIndex] := @ or lastWordMask
-        end ;
+        end if;
 
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
@@ -447,7 +447,7 @@ begin
         else
             clear(fromIndex, toIndex);
         end if;
-    end ;
+    end if;
 
     -- 
     -- Sets the bit specified by the index to `False`.
@@ -471,7 +471,7 @@ begin
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
@@ -502,7 +502,7 @@ begin
         if endWordIndex >= wordsInUse then
             toIndex := length()
             endWordIndex := wordsInUse - 1
-        end ;
+        end if;
 
         let firstWordMask: Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64)
         -- ar lastWordMask : Int64  := WORD_MASK >>> Int64((-toIndex);
@@ -523,11 +523,11 @@ begin
 
             -- Handle last word
             words[endWordIndex] := @ and not lastWordMask
-        end ;
+        end if;
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Sets all of the bits in this BitSet to `False`.
@@ -539,7 +539,7 @@ begin
             wordsInUse := @ - 1;
             words[wordsInUse] := 0
         end loop;
-    end ;
+    end if;
 
     -- 
     -- Returns the value of the bit with the specified index. The value
@@ -557,14 +557,14 @@ begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
-        end ;
+        end if;
         checkInvariants()
 
         let index: Integer := BitSet.wordIndex(bitIndex)
 
         return (index < wordsInUse)
                 and then ((words[index] & ((Int64(1) << Int64(bitIndex % 64)))) /= 0)
-    end ;
+    end if;
 
     -- 
     -- Returns a new `BitSet` composed of bits from this `BitSet`
@@ -637,7 +637,7 @@ begin
         result.checkInvariants()
 
         return result
-    end ;
+    end if;
 
     --
     -- Equivalent to nextSetBit(0), but guaranteed not to raise an exception.
@@ -646,7 +646,7 @@ begin
     function firstSetBit (This : …) return Integer is
 begin
         return try! nextSetBit(0)
-    end ;
+    end if;
 
     --
     -- Returns the index of the first bit that is set to `True`
@@ -672,7 +672,7 @@ begin
         if fromIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
 
-        end ;
+        end if;
         checkInvariants()
 
         var u: Integer := BitSet.wordIndex(fromIndex)
@@ -686,14 +686,14 @@ begin
             if word /= 0 then
                 bit : constant := (u * BitSet.BITS_PER_WORD) + word.trailingZeroBitCount
                 return bit
-            end ;
+            end if;
             u := @ + 1;
             if u = wordsInUse then
                 return -1;
             end if;
             word := words[u]
         end loop;
-    end ;
+    end if;
 
     -- 
     -- Returns the index of the first bit that is set to `False`
@@ -711,7 +711,7 @@ begin
         if fromIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
 
-        end ;
+        end if;
         checkInvariants()
 
         var u: Integer := BitSet.wordIndex(fromIndex)
@@ -732,7 +732,7 @@ begin
 
             word := not words[u]
         end loop;
-    end ;
+    end if;
 
     -- 
     -- Returns the index of the nearest bit that is set to `True`
@@ -764,7 +764,7 @@ begin
             end if;
             raise ANTLRError.indexOutOfBounds with "fromIndex < -1: \(fromIndex)";
 
-        end ;
+        end if;
 
         checkInvariants()
 
@@ -784,7 +784,7 @@ begin
             u := @ - 1;
             word := words[u]
         end loop;
-    end ;
+    end if;
 
     -- 
     -- Returns the index of the nearest bit that is set to `False`
@@ -808,7 +808,7 @@ begin
             end if;
             raise ANTLRError.indexOutOfBounds with "fromIndex < -1: \(fromIndex)";
 
-        end ;
+        end if;
 
         checkInvariants()
 
@@ -830,7 +830,7 @@ begin
             u := @ - 1;
             word := not words[u]
         end loop;
-    end ;
+    end if;
     -- 
     -- Returns the "logical size" of this `BitSet`: the index of
     -- the highest set bit in the `BitSet` plus one. Returns zero
@@ -847,7 +847,7 @@ begin
 
         return BitSet.BITS_PER_WORD * (wordsInUse - 1) +
                 (BitSet.BITS_PER_WORD - words[wordsInUse - 1].leadingZeroBitCount)
-    end ;
+    end if;
 
     -- 
     -- Returns True if this `BitSet` contains no bits that are set
@@ -859,7 +859,7 @@ begin
     function isEmpty (This : …) return Boolean is
 begin
         return wordsInUse = 0
-    end ;
+    end if;
 
     -- 
     -- Returns True if the specified `BitSet` has any bits set to
@@ -880,7 +880,7 @@ begin
             i := @ - 1;
         end loop;
         return False;
-    end ;
+    end if;
 
     -- 
     -- Returns the number of bits set to `True` in this `BitSet`.
@@ -895,7 +895,7 @@ begin
             sum := @ + words[i].nonzeroBitCount;
         end loop;
         return sum
-    end ;
+    end if;
 
     -- 
     -- Performs a logical __AND__ of this target bit set with the
@@ -925,7 +925,7 @@ begin
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Performs a logical __OR__ of this bit set with the bit set
@@ -948,7 +948,7 @@ begin
         if wordsInUse < set.wordsInUse then
             ensureCapacity(set.wordsInUse)
             wordsInUse := set.wordsInUse
-        end ;
+        end if;
 
         -- Perform logical OR on words in common
         for i in 0 .. wordsInCommon - 1 loop
@@ -959,11 +959,11 @@ begin
         if wordsInCommon < set.wordsInUse then
             words[wordsInCommon ..< wordsInUse] := set.words[wordsInCommon ..< wordsInUse]
 
-        end ;
+        end if;
 
         -- recalculateWordsInUse() is unnecessary
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Performs a logical __XOR__ of this bit set with the bit set
@@ -986,7 +986,7 @@ begin
         if wordsInUse < set.wordsInUse then
             ensureCapacity(set.wordsInUse)
             wordsInUse := set.wordsInUse
-        end ;
+        end if;
 
         -- Perform logical XOR on words in common
         for i in 0 .. wordsInCommon - 1 loop
@@ -998,11 +998,11 @@ begin
             words[wordsInCommon ..< wordsInUse] := set.words[wordsInCommon ..< wordsInUse]
 
 
-        end ;
+        end if;
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Clears all of the bits in this `BitSet` whose corresponding
@@ -1023,7 +1023,7 @@ begin
 
         recalculateWordsInUse()
         checkInvariants()
-    end ;
+    end if;
 
     -- 
     -- Returns the hash code value for this bit set. The hash code depends
@@ -1038,7 +1038,7 @@ begin
     -- for (int i := words.length; --i >= 0; )
     -- h ^= words[i] * (i + 1);
     -- return (int)((h >> 32) ^ h);
-    -- `end ;
+    -- `}
     -- Note that the hash code changes if the set of bits is altered.
     -- 
     -- - returns: the hash code value for this bit set
@@ -1054,13 +1054,13 @@ begin
         end loop;
 
         return Integer (Int32((h >> 32) ^ h))
-    end ;
+    end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
         hasher.combine(hashCode)
-    end ;
+    end if;
 
     -- 
     -- Returns the number of bits of space actually in use by this
@@ -1073,7 +1073,7 @@ begin
     function size (This : …) return Integer is
 begin
         return words.count * BitSet.BITS_PER_WORD
-    end ;
+    end if;
 
 
 
@@ -1090,8 +1090,8 @@ begin
         if wordsInUse /= words.count then
             words := copyOf(words, wordsInUse)
             checkInvariants()
-        end ;
-    end ;
+        end if;
+    end if;
 
 
     -- 
@@ -1106,14 +1106,14 @@ begin
     -- Example:
     -- 
     -- `BitSet drPepper := new BitSet();`
-    -- Now `drPepper.description` returns `"{end ;"`.
+    -- Now `drPepper.description` returns `"{}"`.
     -- 
     -- `drPepper.set(2);`
-    -- Now `drPepper.description` returns `"{2end ;"`.
+    -- Now `drPepper.description` returns `"{2}"`.
     -- 
     -- `drPepper.set(4);`
     -- `drPepper.set(10);`
-    -- Now `drPepper.description` returns `"{2, 4, 10end ;"`.
+    -- Now `drPepper.description` returns `"{2, 4, 10}"`.
     -- 
     -- - returns: a string representation of this bit set
     -- 
@@ -1138,12 +1138,12 @@ begin
                 end loop;
                 i := try! nextSetBit(i + 1)
             end loop;
-        end ;
-        b := @ + "end ;";
+        end if;
+        b := @ + "end if;";
         return b
 
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: BitSet, rhs: BitSet) return Boolean is
@@ -1171,4 +1171,4 @@ begin
 
     return True;
 
-end ;
+end if;

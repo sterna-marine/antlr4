@@ -20,13 +20,14 @@ type ArrayPredictionContext is new PredictionContext with null record;
     -- Sorted for merge, no duplicates; if present,
     -- _#EMPTY_RETURN_STATE_ is always last.
     -- 
-    public final let returnStates: [Int]
+    -- public final 
+     returnStates : constant [Int];
 
     -- public convenience
     procedure Init (Self : in out …; a : SingletonPredictionContext) {
         parents : constant := [a.parent]
         self.init(parents, [a.returnState])
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; parents : [PredictionContext?], returnStates : [Int]) {
@@ -34,7 +35,7 @@ type ArrayPredictionContext is new PredictionContext with null record;
         self.parents := parents
         self.returnStates := returnStates
         super.init(PredictionContext.calculateHashCode(parents, returnStates))
-    end ;
+    end if;
 
     override
     -- final public
@@ -43,27 +44,27 @@ begin
         -- since EMPTY_RETURN_STATE can only appear in the last position, we
         -- don't need to verify that size = 1
         return returnStates[0] == PredictionContext.EMPTY_RETURN_STATE
-    end ;
+    end if;
 
     override
     -- final public
     function size (This : …) return Integer is
 begin
         return returnStates.count
-    end ;
+    end if;
 
     override
     -- final public
     function getParent (index : Integer) return PredictionContext? {
         return parents[index]
-    end ;
+    end if;
 
     override
     -- final public
     function getReturnState (index : Integer) return Integer is
 begin
         return returnStates[index]
-    end ;
+    end if;
 
     override
     -- public
@@ -80,7 +81,7 @@ begin
             if returnState = PredictionContext.EMPTY_RETURN_STATE then
                 buf := @ + "$";
                 continue
-            end ;
+            end if;
             buf := @ + "\(returnState)";
             if parent : constant := parents[i] then
                 buf := @ + " \(parent)";
@@ -90,7 +91,7 @@ begin
         end loop;
         buf := @ + "]";
         return buf
-    end ;
+    end if;
 
     internal final procedure combineCommonParents (This : …) is
 begin
@@ -104,7 +105,7 @@ begin
                 if uniqueParents[parent] == null then
                     uniqueParents[parent] := parent;  -- don't replace
                 end if;
-            end ;
+            end if;
         end loop;
 
         for p in 0 .. length - 1 loop
@@ -113,8 +114,8 @@ begin
             end if;
         end loop;
 
-    end ;
-end ;
+    end if;
+end if;
 
 
 -- public
@@ -128,6 +129,6 @@ begin
     end if;
 
     return lhs.returnStates = rhs.returnStates and then lhs.parents = rhs.parents
-end ;
+end if;
 
 end ANTLR.Runtime.ArrayPredictionContext;

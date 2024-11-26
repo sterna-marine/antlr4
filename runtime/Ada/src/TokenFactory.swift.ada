@@ -22,7 +22,7 @@ type TokenFactory is interface;
     -- Generically useful
     function create (type : Integer; text : String) return Token
 
-end ;
+end if;
 
 
 --
@@ -37,7 +37,8 @@ type TokenSourceAndStream is tagged record
     -- An empty TokenSourceAndStream which is used as the default value of
     -- _#source_ for tokens that do not have a source.
     --
-    public static EMPTY : constant := TokenSourceAndStream()
+    -- public static 
+    EMPTY : constant := TokenSourceAndStream()
 
     public weak var tokenSource: TokenSource?
     public weak var stream: CharStream?
@@ -46,5 +47,5 @@ type TokenSourceAndStream is tagged record
     procedure Init (Self : in out …; tokenSource : TokenSource? := null, stream : CharStream? := null) {
         self.tokenSource := tokenSource
         self.stream := stream
-    end ;
-end ;
+    end if;
+end if;

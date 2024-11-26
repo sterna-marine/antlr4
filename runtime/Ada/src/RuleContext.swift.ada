@@ -22,10 +22,10 @@
 -- public final SContext s() RecognitionException {
 -- SContext _localctx := new SContext(_ctx, getState()); <-- create new node
 -- enterRule(_localctx, 0, RULE_s);                     <-- push it
---  .. 
+-- …
 -- exitRule();                                          <-- pop back to _localctx
 -- return _localctx;
--- end ;
+-- end;
 --
 -- A subsequent rule invocation of r from the start rule s pushes a
 -- new context object for r whose parent points at s and use invoking
@@ -72,12 +72,14 @@ type RuleContext is new RuleNode with null record;
     -- public
     procedure Init (Self : …) is
 begin
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; parent : RuleContext?, invokingState : Integer) {
         self.parent := parent
-        --if ( parent /= null ) { print("invoke "+stateNumber+" from "+parent)end ;
+        -- if parent /= null then 
+        --    print("invoke " & stateNumber & " from " & parent);
+        -- }
         self.invokingState := invokingState;
     end if;
 
@@ -91,7 +93,7 @@ begin
             n := @ + 1;
         end loop;
         return n
-    end ;
+    end if;
 
     -- A context is empty if there is no invoking state; meaning nobody called
     -- current context.
@@ -100,7 +102,7 @@ begin
     function isEmpty (This : …) return Boolean is
 begin
         return invokingState = ATNState.INVALID_STATE_NUMBER
-    end ;
+    end if;
 
     -- satisfy the ParseTree / SyntaxTree interface
 
@@ -108,30 +110,30 @@ begin
     function getSourceInterval (This : …) return Interval is
 begin
         return Interval.INVALID
-    end ;
+    end if;
 
     -- open
     function getRuleContext (This : …) return RuleContext is
 begin
         return self
-    end ;
+    end if;
 
     -- open
     function getParent () return Tree? {
         return parent
-    end ;
+    end if;
 
     -- open
     procedure setParent (parent : RuleContext) is
     begin
         self.parent := parent
-    end ;
+    end if;
 
     -- open
     function getPayload (This : …) return AnyObject is
 begin
         return self
-    end ;
+    end if;
 
     -- Return the combined text of all child nodes. This method only considers
     -- tokens which have been added to the parse tree.
@@ -155,44 +157,46 @@ begin
         end loop;
 
         return builder
-    end ;
+    end if;
 
     -- open
     function getRuleIndex (This : …) return Integer is
 begin
         return -1
-    end ;
+    end if;
 
     -- open
     function getAltNumber (This : …) return Integer is
-begin return ATN.INVALID_ALT_NUMBER end ;
+begin return ATN.INVALID_ALT_NUMBER end if;
     -- open
     procedure setAltNumber (altNumber : Integer) is
-    begin end ;
+    begin 
+      null;
+    end if;
 
     -- open
     function getChild (i : Integer) return Tree? {
         return null;
-    end ;
+    end if;
 
 
     -- open
     function getChildCount (This : …) return Integer is
 begin
         return 0
-    end ;
+    end if;
 
 
     open subscript(index : Integer) return ParseTree is
 begin
         preconditionFailure("Index out of range (RuleContext never has children, though its subclasses may).")
-    end ;
+    end if;
 
 
     -- open
     function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
         return visitor.visitChildren(self)
-    end ;
+    end if;
 
     -- Print out a whole tree, not just a node, in LISP format
     -- (root child1 .. childN). Print just a node if this is a leaf.
@@ -202,7 +206,7 @@ begin
     function toStringTree (recog : Parser) return String is
 begin
         return Trees.toStringTree(self, recog)
-    end ;
+    end if;
 
     -- Print out a whole tree, not just a node, in LISP format
     -- (root child1 .. childN). Print just a node if this is a leaf.
@@ -211,35 +215,35 @@ begin
     function toStringTree (ruleNames : [String]?) return String is
 begin
         return Trees.toStringTree(self, ruleNames)
-    end ;
+    end if;
 
     -- open
     function toStringTree (This : …) return String is
 begin
         return toStringTree(null)
-    end ;
+    end if;
 
     -- open
     description : String {
         return toString(null, null)
-    end ;
+    end if;
 
      -- open
      debugDescription : String {
          return description
-    end ;
+    end if;
 
     -- public final
     function toString<T> (recog : Recognizer<T>) return String is
 begin
         return toString(recog, ParserRuleContext.EMPTY)
-    end ;
+    end if;
 
     -- public final
     function toString (ruleNames : [String]) return String is
 begin
         return toString(ruleNames, null)
-    end ;
+    end if;
 
     -- recog null unless ParserRuleContext, in which case we use subclass toString( .. )
     -- open
@@ -247,7 +251,7 @@ begin
 begin
         ruleNames : constant := recog?.getRuleNames()
         return toString(ruleNames, stop)
-    end ;
+    end if;
 
     -- open
     function toString (ruleNames : [String]?, stop : RuleContext?) return String is
@@ -265,7 +269,7 @@ begin
                 if not pWrap.isEmpty() then
                     buf := @ + String(pWrap.invokingState);
                 end if;
-            end ;
+            end if;
 
             if pWp : constant := pWrap.parent, (ruleNames /= null or else not pWp.isEmpty()) then
                 buf := @ + " ";
@@ -276,12 +280,12 @@ begin
 
         buf := @ + "]";
         return buf
-    end ;
+    end if;
 
     -- open
     function castdown<T> (subType : T.Type) return T is
 begin
         return self as! T
-    end ;
+    end if;
 
-end ;
+end if;

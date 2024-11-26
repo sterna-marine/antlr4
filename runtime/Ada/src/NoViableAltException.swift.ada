@@ -36,7 +36,7 @@ type NoViableAltException is new RecognitionException with null record;
                 token,
                 null,
                 recognizer._ctx)
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; recognizer : Parser?,
@@ -53,19 +53,19 @@ type NoViableAltException is new RecognitionException with null record;
         if offendingToken : constant := offendingToken then
             setOffendingToken(offendingToken);
         end if;
-    end ;
+    end if;
 
 
     -- public
     function getStartToken (This : …) return Token is
 begin
         return startToken
-    end ;
+    end if;
 
 
     -- public
     function getDeadEndConfigs () return ATNConfigSet? {
         return deadEndConfigs
-    end ;
+    end if;
 
-end ;
+end if;

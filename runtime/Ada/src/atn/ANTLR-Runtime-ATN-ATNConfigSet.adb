@@ -78,7 +78,7 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     procedure Init (Self : in out …; fullCtx  : Boolean := True, isOrdered : Boolean := False) {
         configLookup := isOrdered ? LookupDictionary(type: LookupDictionaryType.ordered) : LookupDictionary()
         self.fullCtx := fullCtx
-    end ;
+    end if;
 
     --override
     @discardableResult
@@ -87,7 +87,7 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
 begin
         var mergeCache : DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>? := null;
         return add(config, &mergeCache);
-    end ;
+    end if;
 
     --
     -- Adding a new config means merging contexts with existing configs for
@@ -121,7 +121,7 @@ begin
                 cachedHashCode := -1
                 configs.append(config)  -- track order here
                 return True;
-            end ;
+            end if;
             -- a previous (s,i,pi,_), merge with it and save result
             rootIsWildcard : constant := not fullCtx
 
@@ -140,14 +140,14 @@ begin
 
             existing.context := merged -- replace context; no need to alt mapping
             return True;
-    end ;
+    end if;
 
     -- public
     function getOrAdd (config : ATNConfig) return ATNConfig is
 begin
 
         return configLookup.getOrAdd(config)
-    end ;
+    end if;
 
 
     --
@@ -156,7 +156,7 @@ begin
     -- public
     function elements () return [ATNConfig] {
         return configs
-    end ;
+    end if;
 
     -- public
     function getStates () return Set<ATNState> {
@@ -165,7 +165,7 @@ begin
             states.insert(config.state)
         end loop;
         return states
-    end ;
+    end if;
 
     --
     -- Gets the complete set of represented alternatives for the configuration
@@ -183,7 +183,7 @@ begin
             try! alts.set(config.alt)
         end loop;
         return alts
-    end ;
+    end if;
 
     -- public
     function getPredicates () return [SemanticContext] {
@@ -194,13 +194,13 @@ begin
             end if;
         end loop;
         return preds
-    end ;
+    end if;
 
     -- public
     function get (i : Integer) return ATNConfig is
 begin
         return configs[i]
-    end ;
+    end if;
 
     -- public
     procedure optimizeConfigs (interpreter : ATNSimulator) is
@@ -215,7 +215,7 @@ begin
             config.context := interpreter.getCachedContext(config.context!)
 
         end loop;
-    end ;
+    end if;
 
     @discardableResult
     -- public
@@ -225,7 +225,7 @@ begin
             add(c);
         end loop;
         return False;
-    end ;
+    end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
@@ -238,7 +238,7 @@ begin
         else
             hasher.combine(configsHashValue);
         end if;
-    end ;
+    end if;
 
     -- private
     configsHashValue : Integer {
@@ -247,33 +247,33 @@ begin
             hashCode := hashCode &* 3 &+ item.hashValue
         end loop;
         return hashCode
-    end ;
+    end if;
 
     -- public
     count : Integer;
     function count return Integer is
         return configs.count
-    end ;
+    end if;
 
     -- public
     function size (This : …) return Integer is
 begin
         return configs.count
-    end ;
+    end if;
 
 
     -- public
     function isEmpty (This : …) return Boolean is
 begin
         return configs.isEmpty
-    end ;
+    end if;
 
 
     -- public
     function contains (o : ATNConfig) return Boolean is
 begin
         return configLookup.contains(o)
-    end ;
+    end if;
 
 
     -- public
@@ -285,13 +285,13 @@ begin
         configs.removeAll()
         cachedHashCode := -1
         configLookup.removeAll()
-    end ;
+    end if;
 
     -- public
     function isReadonly (This : …) return Boolean is
 begin
         return readonly
-    end ;
+    end if;
 
     -- public
     procedure setReadonly (readonly  : Boolean) is
@@ -299,7 +299,7 @@ begin
         self.readonly := readonly
         configLookup.removeAll()
 
-    end ;
+    end if;
 
     -- public
     description : String;
@@ -319,7 +319,7 @@ begin
             buf := @ + ",dipsIntoOuterContext";
         end if;
         return buf
-    end ;
+    end if;
 
     --
     -- override
@@ -332,7 +332,7 @@ begin
         hashCode := MurmurHash.update(hashCode, stateNumber)
         hashCode := MurmurHash.update(hashCode, context)
         return MurmurHash.finish(hashCode, 2)
-    end ;
+    end if;
 
     -- public
     function getConflictingAltSubsets () return [BitSet] {
@@ -346,13 +346,13 @@ begin
             else
                 alts := BitSet()
                 configToAlts[hash] := alts
-            end ;
+            end if;
 
             try! alts.set(cfg.alt)
         end loop;
 
         return Array(configToAlts.values)
-    end ;
+    end if;
 
     -- public
     function getStateToAltMap () return [Int: BitSet] {
@@ -365,12 +365,12 @@ begin
             else
                 alts := BitSet()
                 m[cfg.state.stateNumber] := alts
-            end ;
+            end if;
 
             try! alts.set(cfg.alt)
         end loop;
         return m
-    end ;
+    end if;
 
     --for DFAState
     -- public
@@ -383,7 +383,7 @@ begin
             alts.insert(config.alt)
         end loop;
         return alts
-    end ;
+    end if;
 
     --for DiagnosticErrorListener
     -- public
@@ -393,7 +393,7 @@ begin
             try! result.set(config.alt)
         end loop;
         return result
-    end ;
+    end if;
 
     --LexerATNSimulator
     -- public
@@ -406,7 +406,7 @@ begin
         end loop;
 
         return null;
-    end ;
+    end if;
 
     --ParserATNSimulator
 
@@ -422,7 +422,7 @@ begin
             end if;
         end loop;
         return alt
-    end ;
+    end if;
 
     -- public
     function removeAllConfigsNotInRuleStopState (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
@@ -436,19 +436,19 @@ begin
             if config.state is RuleStopState then
                 try! result.add(config, &mergeCache)
                 continue
-            end ;
+            end if;
 
             if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions() then
                 nextTokens : constant := atn.nextTokens(config.state)
                 if nextTokens.contains(CommonToken.EPSILON) then
                     endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
                     try! result.add(ATNConfig(config, endOfRuleState), &mergeCache)
-                end ;
-            end ;
+                end if;
+            end if;
         end loop;
 
         return result
-    end ;
+    end if;
 
     -- public
     function applyPrecedenceFilter (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
@@ -466,7 +466,7 @@ begin
             if updatedContext = null then
                 -- the configuration was eliminated
                 continue
-            end ;
+            end if;
 
             statesFromAlt1[config.state.stateNumber] := config.context
             if updatedContext /= config.semanticContext then
@@ -480,7 +480,7 @@ begin
             if config.alt = 1 then
                 -- already handled
                 continue
-            end ;
+            end if;
 
             if not config.isPrecedenceFilterSuppressed() then
                 --
@@ -492,14 +492,14 @@ begin
                 if context /= null and then context = config.context then
                     -- eliminated
                     continue
-                end ;
-            end ;
+                end if;
+            end if;
 
             try! configSet.add(config, &mergeCache)
         end loop;
 
         return configSet
-    end ;
+    end if;
 
     -- internal
     function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return [SemanticContext?]? {
@@ -526,7 +526,7 @@ begin
 
         -- nonambig alts are null in altToPred
         return (nPredAlts = 0 ? null : altToPred)
-    end ;
+    end if;
 
     -- public
     function getAltThatFinishedDecisionEntryRule (This : …) return Integer is
@@ -537,13 +537,13 @@ begin
                 (config.state is RuleStopState and
                     config.context!.hasEmptyPath()) {
                 try! alts.add(config.alt)
-            end ;
+            end if;
         end loop;
         if alts.size() == 0 then
             return ATN.INVALID_ALT_NUMBER;
         end if;
         return alts.getMinElement()
-    end ;
+    end if;
 
     --
     -- Walk the list of configurations and split them according to
@@ -574,7 +574,7 @@ begin
             end if;
         end loop;
         return (succeeded, failed)
-    end ;
+    end if;
 
     -- public
     function dupConfigsWithoutSemanticPredicates (This : …) return ATNConfigSet is
@@ -585,18 +585,18 @@ begin
             try! dup.add(c)
         end loop;
         return dup
-    end ;
+    end if;
 
     -- public
     hasConfigInRuleStopState : Boolean {
-        return configs.contains(where: { $0.state is RuleStopState end ;)
-    end ;
+        return configs.contains(where: { $0.state is RuleStopState end if;)
+    end if;
 
     -- public
     allConfigsInRuleStopStates : Boolean {
-        return not configs.contains(where: { !($0.state is RuleStopState) end ;)
-    end ;
-end ;
+        return not configs.contains(where: { !($0.state is RuleStopState) end if;)
+    end if;
+end if;
 
 
 -- public
@@ -613,6 +613,6 @@ begin
         lhs.conflictingAlts = rhs.conflictingAlts and
         lhs.hasSemanticContext = rhs.hasSemanticContext and
         lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext
-end ;
+end if;
 
 end ANTLR.Runtime.ATNConfigSet;

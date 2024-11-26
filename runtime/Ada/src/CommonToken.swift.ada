@@ -92,7 +92,7 @@ type CommonToken is new WritableToken with null record;
     procedure Init (Self : in out …; type : Integer) {
         self.type := type
         self.source := TokenSourceAndStream.EMPTY
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; source : TokenSourceAndStream; type : Integer; channel : Integer; start : Integer; stop : Integer) {
@@ -104,8 +104,8 @@ type CommonToken is new WritableToken with null record;
         if tsource : constant := source.tokenSource then
             self.line := tsource.getLine()
             self.charPositionInLine := tsource.getCharPositionInLine()
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- 
     -- Constructs a new _org.antlr.v4.runtime.CommonToken_ with the specified token type and
@@ -120,7 +120,7 @@ type CommonToken is new WritableToken with null record;
         self.channel := CommonToken.DEFAULT_CHANNEL
         self.text := text
         self.source := TokenSourceAndStream.EMPTY
-    end ;
+    end if;
 
     -- 
     -- Constructs a new _org.antlr.v4.runtime.CommonToken_ as a copy of another _org.antlr.v4.runtime.Token_.
@@ -138,21 +138,21 @@ type CommonToken is new WritableToken with null record;
         stop := oldToken.getStopIndex()
         text := oldToken.getText()
         source := oldToken.getTokenSourceAndStream()
-    end ;
+    end if;
 
 
     -- public
     function getType (This : …) return Integer is
 begin
         return type
-    end ;
+    end if;
 
 
     -- public
     procedure setLine (line : Integer) is
     begin
         self.line := line
-    end ;
+    end if;
 
 
     -- public
@@ -166,21 +166,21 @@ begin
             if start < n and then stop < n then
                 do {
                     return input.getText(Interval.of(start, stop));
-                end ;
+                end if;
                 catch {
                     return null;
-                end ;
+                end if;
             else
                 return "<EOF>";
             end if;
-        end ;
+        end if;
 
         return null;
 
-    end ;
+    end if;
 
     -- 
-    -- Explicitly set the text for this token. if thencode textend ; is not
+    -- Explicitly set the text for this token. if thencode text} is not
     -- `null`, then _#getText_ will return this value rather than
     -- extracting the text from the input.
     -- 
@@ -193,112 +193,112 @@ begin
     procedure setText (text : String) is
     begin
         self.text := text
-    end ;
+    end if;
 
     -- public
     function getLine (This : …) return Integer is
 begin
         return line
-    end ;
+    end if;
 
 
     -- public
     function getCharPositionInLine (This : …) return Integer is
 begin
         return charPositionInLine
-    end ;
+    end if;
 
 
     -- public
     procedure setCharPositionInLine (charPositionInLine : Integer) is
     begin
         self.charPositionInLine := charPositionInLine
-    end ;
+    end if;
 
 
     -- public
     function getChannel (This : …) return Integer is
 begin
         return channel
-    end ;
+    end if;
 
 
     -- public
     procedure setChannel (channel : Integer) is
     begin
         self.channel := channel
-    end ;
+    end if;
 
 
     -- public
     procedure setType (type : Integer) is
     begin
         self.type := type
-    end ;
+    end if;
 
 
     -- public
     function getStartIndex (This : …) return Integer is
 begin
         return start
-    end ;
+    end if;
 
     -- public
     procedure setStartIndex (start : Integer) is
     begin
         self.start := start
-    end ;
+    end if;
 
 
     -- public
     function getStopIndex (This : …) return Integer is
 begin
         return stop
-    end ;
+    end if;
 
     -- public
     procedure setStopIndex (stop : Integer) is
     begin
         self.stop := stop
-    end ;
+    end if;
 
 
     -- public
     function getTokenIndex (This : …) return Integer is
 begin
         return index
-    end ;
+    end if;
 
 
     -- public
     procedure setTokenIndex (index : Integer) is
     begin
         self.index := index
-    end ;
+    end if;
 
 
     -- public
     function getTokenSource () return TokenSource? {
         return source.tokenSource
-    end ;
+    end if;
 
 
     -- public
     function getInputStream () return CharStream? {
         return source.stream
-    end ;
+    end if;
 
     -- public
     function getTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
         return source
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return toString(null)
-    end ;
+    end if;
 
     -- public
     function toString (r : Recognizer<ATNSimulator>?) return String is
@@ -320,16 +320,16 @@ begin
             typeString := "\(type)";
         end if;
        return "[@\(getTokenIndex()),\(start):\(stop)='\(txt)',<\(typeString)>\(channelStr),\(line):\(getCharPositionInLine())]"
-    end ;
+    end if;
 
     -- public
     visited : Boolean {
         get {
             return _visited
-        end ;
+        end if;
 
         set {
             _visited := newValue
-        end ;
-    end ;
-end ;
+        end if;
+    end if;
+end if;

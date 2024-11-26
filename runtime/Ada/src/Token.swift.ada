@@ -101,5 +101,10 @@ type Token is interface and CustomStringConvertible;
 
     function getTokenSourceAndStream () return TokenSourceAndStream
 
-    var visited : Boolean { get set end ;
-end ;
+   visited : Boolean;
+   function get (is_visited : Boolean) is visited;
+   procedure set (is_visited : Boolean) is
+   begin
+      visited := is_visited;
+   end set;
+end if;

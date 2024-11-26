@@ -39,7 +39,7 @@ type BailErrorStrategy is new DefaultErrorStrategy with null record;
     override
     procedure Init (Self : …) is
 begin
-    end ;
+    end if;
 
     -- 
     -- Instead of recovering from exception `e`, re-throw it wrapped
@@ -57,7 +57,7 @@ begin
         end loop;
 
         raise ANTLRException.parseCancellation with e;
-    end ;
+    end if;
 
     -- 
     -- Make sure we don't attempt to recover inline; if the parser
@@ -75,7 +75,7 @@ begin
         end loop;
 
         raise ANTLRException.parseCancellation with e;
-    end ;
+    end if;
 
     -- 
     -- Make sure we don't attempt to recover from problems in subrules.
@@ -84,6 +84,6 @@ begin
     -- open
     procedure sync (recognizer : Parser) is
     begin
-    end ;
+    end if;
 
-end ;
+end if;

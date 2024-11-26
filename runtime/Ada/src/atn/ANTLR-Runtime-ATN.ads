@@ -7,7 +7,8 @@
 
 -- public
 type ATN is tagged record
-    public static INVALID_ALT_NUMBER : constant := 0
+    -- public static 
+    INVALID_ALT_NUMBER : constant := 0
 
     public private(set) final var states := [ATNState?]()
 
@@ -67,7 +68,7 @@ type ATN is tagged record
     procedure Init (Self : in out …; grammarType : ATNType; maxTokenType : Integer) {
         self.grammarType := grammarType
         self.maxTokenType := maxTokenType
-    end ;
+    end if;
 
     -- 
     -- Compute the set of valid tokens that can occur starting in state `s`.
@@ -81,7 +82,7 @@ begin
         anal : constant := LL1Analyzer(self)
         next : constant := anal.LOOK(s, ctx)
         return next
-    end ;
+    end if;
 
     -- 
     -- Compute the set of valid tokens that can occur starting in `s` and
@@ -98,7 +99,7 @@ begin
         s.nextTokenWithinRule := intervalSet
         intervalSet.makeReadonly()
         return intervalSet
-    end ;
+    end if;
 
     -- public
     procedure addState (state : ATNState?) is
@@ -106,17 +107,17 @@ begin
         if state : constant := state then
             state.atn := self
             state.stateNumber := states.count
-        end ;
+        end if;
 
         states.append(state)
-    end ;
+    end if;
 
     -- public
     procedure removeState (state : ATNState) is
     begin
         states[state.stateNumber] := null;
         --states.set(state.stateNumber, null); -- just free mem, don't shift states in list
-    end ;
+    end if;
     @discardableResult
     -- public
     function defineDecisionState (s : DecisionState) return Integer is
@@ -124,7 +125,7 @@ begin
         decisionToState.append(s)
         s.decision := decisionToState.count-1
         return s.decision
-    end ;
+    end if;
 
     -- public
     function getDecisionState (decision : Integer) return DecisionState? {
@@ -132,13 +133,13 @@ begin
             return decisionToState[decision];
         end if;
         return null;
-    end ;
+    end if;
 
     -- public
     function getNumberOfDecisions (This : …) return Integer is
 begin
         return decisionToState.count
-    end ;
+    end if;
 
     -- 
     -- Computes the set of input symbols which could follow ATN state number
@@ -164,7 +165,7 @@ begin
 begin
         guard states.indices.contains(stateNumber) else {
             raise ANTLRError.illegalArgument with "Invalid state number.";
-        end ;
+        end if;
 
         var ctx: RuleContext? := context
         s : constant := states[stateNumber]!
@@ -191,14 +192,14 @@ begin
         end if;
 
         return expected
-    end ;
+    end if;
 
     public final procedure appendDecisionToState (state : DecisionState) {
         decisionToState.append(state)
-    end ;
+    end if;
     public final procedure appendModeToStartState (state : TokensStartState) {
         modeToStartState.append(state)
-    end ;
+    end if;
 
 
-end ;
+end if;

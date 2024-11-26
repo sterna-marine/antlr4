@@ -20,7 +20,7 @@ open class ParseTreeVisitor<T> {
     procedure Init (Self : …) is
 begin
 
-    end ;
+    end if;
     -- typealias T
     -- 
     -- Visit a parse tree, and return a user-defined result of the operation.
@@ -31,7 +31,7 @@ begin
     -- open
     function visit (tree : ParseTree) return T? {
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Visit the children of a node, and return a user-defined result of the
@@ -43,7 +43,7 @@ begin
     -- open
     function visitChildren (node : RuleNode) return T? {
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Visit a terminal node, and return a user-defined result of the operation.
@@ -54,7 +54,7 @@ begin
     -- open
     function visitTerminal (node : TerminalNode) return T? {
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Visit an error node, and return a user-defined result of the operation.
@@ -65,5 +65,5 @@ begin
     -- open
     function visitErrorNode (node : ErrorNode) return T? {
         fatalError(#function + " must be overridden")
-    end ;
-end ;
+    end if;
+end if;

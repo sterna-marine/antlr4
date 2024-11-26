@@ -42,7 +42,7 @@ type ANTLRInputStream is new CharStream with null record;
 begin
         n := 0
         data := []
-    end ;
+    end if;
 
     -- 
     -- Copy data in string to a local char array
@@ -51,7 +51,7 @@ begin
     procedure Init (Self : in out …; input : String) {
         self.data := Array(input.unicodeScalars)
         self.n := data.count
-    end ;
+    end if;
 
     -- 
     -- This is the preferred constructor for strings as no data is copied
@@ -60,7 +60,7 @@ begin
     procedure Init (Self : in out …; data : [UnicodeScalar], numberOfActualUnicodeScalarsInArray : Integer) {
         self.data := data
         self.n := numberOfActualUnicodeScalarsInArray
-    end ;
+    end if;
 
     --
     -- This is only for backward compatibility that accepts array of `Character`.
@@ -71,13 +71,13 @@ begin
         string : constant := String(data)
         self.data := Array(string.unicodeScalars)
         self.n := numberOfActualUnicodeScalarsInArray
-    end ;
+    end if;
 
     -- public
     procedure reset (This : …) is
 begin
         p := 0
-    end ;
+    end if;
 
     -- public
     procedure consume (This : …) is
@@ -87,14 +87,14 @@ begin
 
             raise ANTLRError.illegalState with "cannot consume EOF";
 
-        end ;
+        end if;
 
         -- print("prev p="+p+", c="+(char)data[p]);
         if p < n then
             p := @ + 1;
             --print("p moves to "+p+" (c='"+(char)data[p]+"')");
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- public
     function LA (i : Integer) return Integer is
@@ -108,22 +108,22 @@ begin
             if (p + i - 1) < 0 then
                 return ANTLRInputStream.EOF;  -- invalid; no char before first char
             end if;
-        end ;
+        end if;
 
         if (p + i - 1) >= n then
             --print("char LA("+i+")=EOF; p="+p);
             return ANTLRInputStream.EOF
-        end ;
+        end if;
         --print("char LA("+i+")="+(char)data[p+i-1]+"; p="+p);
         --print("LA("+i+"); p="+p+" n="+n+" data.length="+data.length);
         return Integer (data[p + i - 1].value)
-    end ;
+    end if;
 
     -- public
     function LT (i : Integer) return Integer is
 begin
         return LA(i)
-    end ;
+    end if;
 
     -- 
     -- Return the current input symbol index 0 .. n where n indicates the
@@ -134,13 +134,13 @@ begin
     function index (This : …) return Integer is
 begin
         return p
-    end ;
+    end if;
 
     -- public
     function size (This : …) return Integer is
 begin
         return n
-    end ;
+    end if;
 
     -- 
     -- mark/release do nothing; we have entire buffer
@@ -150,12 +150,12 @@ begin
     function mark (This : …) return Integer is
 begin
         return -1
-    end ;
+    end if;
 
     -- public
     procedure release (marker : Integer) is
     begin
-    end ;
+    end if;
 
     -- 
     -- consume() ahead until p = index; can't just set p=index as we must
@@ -169,13 +169,13 @@ begin
         if index <= p then
             p := index -- just jump; don't update stream state (line,  .. )
             return
-        end ;
+        end if;
         -- seek forward, consume until p hits index or n (whichever comes first)
         index := min(index, n)
         while p < index loop
             consume();
         end loop;
-    end ;
+    end if;
 
     -- public
     function getText (interval : Interval) return String is
@@ -189,13 +189,13 @@ begin
         var unicodeScalarView := String.UnicodeScalarView()
         unicodeScalarView.append(contentsOf: data[start ..< stop])
         return String(unicodeScalarView)
-    end ;
+    end if;
 
     -- public
     function getSourceName (This : …) return String is
 begin
         return name ?? ANTLRInputStream.UNKNOWN_SOURCE_NAME
-    end ;
+    end if;
 
     -- public
     function toString (This : …) return String is
@@ -203,5 +203,5 @@ begin
         var unicodeScalarView := String.UnicodeScalarView()
         unicodeScalarView.append(contentsOf: data)
         return String(unicodeScalarView)
-    end ;
-end ;
+    end if;
+end if;

@@ -17,13 +17,13 @@ type ErrorNode is new TerminalNodeImpl with null record;
     override
     procedure Init (Self : in out …; token : Token) {
         super.init(token)
-    end ;
+    end if;
 
 
     override
     -- public
     function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
         return visitor.visitErrorNode(self)
-    end ;
+    end if;
 
-end ;
+end if;

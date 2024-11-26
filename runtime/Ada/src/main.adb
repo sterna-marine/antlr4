@@ -1,4 +1,4 @@
-with ANTLR.Runtime;
+with ANTLR.Runtime.ATN.AbstractPredicateTransition;
 
 procedure Main is
 begin

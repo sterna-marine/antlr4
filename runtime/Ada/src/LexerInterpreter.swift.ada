@@ -41,49 +41,49 @@ type LexerInterpreter is new Lexer with null record;
         if atn.grammarType /= ATNType.lexer then
             raise ANTLRError.illegalArgument with "The ATN must be a lexer ATN.";
 
-        end ;
-    end ;
+        end if;
+    end if;
 
     public required init(input : CharStream) {
         fatalError("Use the other initializer")
-    end ;
+    end if;
 
     override
     -- public
     function getATN (This : …) return ATN is
 begin
         return atn
-    end ;
+    end if;
 
     override
     -- public
     function getGrammarFileName (This : …) return String is
 begin
         return grammarFileName
-    end ;
+    end if;
 
     override
     -- public
     function getRuleNames () return [String] {
         return ruleNames
-    end ;
+    end if;
 
     override
     -- public
     function getChannelNames () return [String] {
         return channelNames
-    end ;
+    end if;
 
     override
     -- public
     function getModeNames () return [String] {
         return modeNames
-    end ;
+    end if;
 
     override
     -- public
     function getVocabulary (This : …) return Vocabulary is
 begin
         return vocabulary ?? super.getVocabulary()
-    end ;
-end ;
+    end if;
+end if;

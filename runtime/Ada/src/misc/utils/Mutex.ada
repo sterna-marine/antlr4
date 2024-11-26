@@ -24,9 +24,9 @@ class Mutex {
         semaphore.wait()
         defer {
             semaphore.signal()
-        end ;
+        end if;
         return closure();
    exception
       when others => raise; -- rethrows
-    end synchronized;
-end ;
+   end synchronized;
+end if;

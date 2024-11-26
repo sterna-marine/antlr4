@@ -19,12 +19,12 @@ type ANTLRFileStream is new ANTLRInputStream with null record;
         fileContents : constant := String(contentsOfFile: fileName, encoding: encoding ?? .utf8);
         data : constant := Array(fileContents.unicodeScalars)
         super.init(data, data.count)
-    end ;
+    end if;
 
     override
     -- public
     function getSourceName (This : …) return String is
 begin
         return fileName
-    end ;
-end ;
+    end if;
+end if;

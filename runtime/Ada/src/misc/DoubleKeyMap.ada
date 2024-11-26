@@ -31,17 +31,17 @@ public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
                 k2 : v
             ]
             data[k1] := data2
-        end ;
+        end if;
         return prev
-    end ;
+    end if;
 
     -- public
     function get (k1 : Key1; k2 : Key2) return Value? {
         return data[k1]?[k2]
-    end ;
+    end if;
 
     -- public
     function get (k1 : Key1) return [Key2: Value]? {
         return data[k1]
-    end ;
-end ;
+    end if;
+end if;

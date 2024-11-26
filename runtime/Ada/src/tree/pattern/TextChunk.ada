@@ -27,7 +27,7 @@ type TextChunk is new Chunk and CustomStringConvertible with null record;
     -- public 
     procedure Init (Self : in out …; text : String) {
         self.text := text
-    end ;
+    end if;
 
     -- 
     -- Gets the raw text of this chunk.
@@ -39,7 +39,7 @@ type TextChunk is new Chunk and CustomStringConvertible with null record;
     function getText (This : …) return String is
 begin
         return text
-    end ;
+    end if;
 
     --
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.TextChunk_ returns the result of
@@ -49,7 +49,7 @@ begin
     description : String;
     function description return String is
         return "'\(text)'"
-    end ;
+    end if;
 
 
     -- override public
@@ -57,7 +57,7 @@ begin
 begin
         guard other : constant := other as? TextChunk else {
             return False;
-        end ;
+        end if;
         return text = other.text
-    end ;
-end ;
+    end if;
+end if;

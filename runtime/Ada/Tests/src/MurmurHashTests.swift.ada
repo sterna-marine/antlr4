@@ -41,11 +41,11 @@ begin
         doMurmurHashTest("abc", 0, 0xB3DD93FA)
         doMurmurHashTest("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 0, 0xEE925B90)
         doMurmurHashTest("The quick brown fox jumps over the lazy dog", 0x9747b28c, 0x2FA826CD)
-    end ;
-end ;
+    end if;
+end if;
 
 -- private
 procedure doMurmurHashTest (input : String; seed : UInt32; expected : UInt32) is
 begin
     XCTAssertEqual(MurmurHash.hashString(input, seed), expected)
-end ;
+end if;

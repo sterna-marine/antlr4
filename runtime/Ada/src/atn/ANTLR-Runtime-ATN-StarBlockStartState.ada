@@ -19,5 +19,5 @@ type StarBlockStartState is new BlockStartState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.STAR_BLOCK_START
-    end ;
-end ;
+    end if;
+end if;

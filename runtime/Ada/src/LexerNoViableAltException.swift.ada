@@ -11,7 +11,8 @@ type LexerNoViableAltException is new RecognitionException and CustomStringConve
     -- 
     -- Matching attempted at what input index?
     -- 
-    private let startIndex : Integer;
+    -- private
+    startIndex : constant Integer;
 
     -- 
     -- Which configurations did we at input.index() that couldn't match input.LA(1)?;
@@ -29,19 +30,19 @@ type LexerNoViableAltException is new RecognitionException and CustomStringConve
         self.deadEndConfigs := deadEndConfigs
         super.init(lexer, input as IntStream, ctx)
 
-    end ;
+    end if;
 
     -- public
     function getStartIndex (This : …) return Integer is
 begin
         return startIndex
-    end ;
+    end if;
 
     -- public
     function getDeadEndConfigs (This : …) return ATNConfigSet is
 begin
         return deadEndConfigs
-    end ;
+    end if;
 
     -- public
     description : String;
@@ -51,8 +52,8 @@ begin
             interval : constant := Interval.of(startIndex, startIndex)
             symbol := try! charStream.getText(interval)
             symbol := Utils.escapeWhitespace(symbol, False)
-        end ;
+        end if;
 
         return "\(LexerNoViableAltException.self)('\(symbol)')"
-    end ;
-end ;
+    end if;
+end if;

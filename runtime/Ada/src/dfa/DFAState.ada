@@ -100,19 +100,19 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
         procedure Init (Self : in out …; pred : SemanticContext; alt : Integer) {
             self.alt := alt
             self.pred := pred
-        end ;
+        end if;
 
         -- public
         description : String;
         function description return String is
             return "(\(pred),\(alt))"
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; configs : ATNConfigSet) {
         self.configs := configs
-    end ;
+    end if;
 
     --
     -- Get the set of all alts mentioned by all ATN configurations in this
@@ -121,14 +121,14 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     -- public
     function getAltSet () return Set<Int>? {
         return configs.getAltSet()
-    end ;
+    end if;
 
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
         hasher.combine(configs)
-    end ;
+    end if;
 
     -- public
     description : String;
@@ -141,10 +141,10 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
             else
                 buf := @ + String(prediction);
             end if;
-        end ;
+        end if;
         return buf
-    end ;
-end ;
+    end if;
+end if;
 
 --
 -- Two _org.antlr.v4.runtime.dfa.DFAState_ instances are equal if their ATN configuration sets
@@ -166,4 +166,4 @@ begin
         return True;
     end if;
     return (lhs.configs = rhs.configs)
-end ;
+end if;

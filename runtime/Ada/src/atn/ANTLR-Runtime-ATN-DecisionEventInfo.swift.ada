@@ -75,5 +75,5 @@ type DecisionEventInfo is tagged record
         self.input := input
         self.startIndex := startIndex
         self.configs := configs
-    end ;
-end ;
+    end if;
+end if;

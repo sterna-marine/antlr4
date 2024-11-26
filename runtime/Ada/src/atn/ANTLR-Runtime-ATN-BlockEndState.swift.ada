@@ -21,5 +21,5 @@ type BlockEndState is new ATNState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.BLOCK_END
-    end ;
-end ;
+    end if;
+end if;

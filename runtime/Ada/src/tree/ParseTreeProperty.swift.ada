@@ -9,14 +9,16 @@ public class ParseTreeProperty<V> {
   
   -- public
   procedure Init (Self : …) is
-beginend ;
+   begin
+         null;
+   end if;
   
   -- open
-  function get (node : ParseTree) return V? { return annotations[ObjectIdentifier(node)] end ;
+  function get (node : ParseTree) return V? { return annotations[ObjectIdentifier(node)] end if;
   -- open
   procedure put (node : ParseTree; value : V) is
-  begin annotations[ObjectIdentifier(node)] := value end ;
+  begin annotations[ObjectIdentifier(node)] := value end if;
   -- open
   procedure removeFrom (node : ParseTree) is
-  begin annotations.removeValue(forKey: ObjectIdentifier(node)) end ;
-end ;
+  begin annotations.removeValue(forKey: ObjectIdentifier(node)) end if;
+end if;

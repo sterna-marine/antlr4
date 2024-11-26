@@ -25,7 +25,7 @@ type LexerChannelAction is new LexerAction and CustomStringConvertible with null
     -- public 
     procedure Init (Self : in out …; channel : Integer) {
         self.channel := channel
-    end ;
+    end if;
 
     -- 
     -- Gets the channel to use for the _org.antlr.v4.runtime.Token_ created by the lexer.
@@ -36,7 +36,7 @@ type LexerChannelAction is new LexerAction and CustomStringConvertible with null
     function getChannel (This : …) return Integer is
 begin
         return channel
-    end ;
+    end if;
 
     -- 
     -- 
@@ -48,7 +48,7 @@ begin
     function getActionType (This : …) return LexerActionType is
 begin
         return LexerActionType.channel
-    end ;
+    end if;
 
     -- 
     -- 
@@ -60,7 +60,7 @@ begin
     function isPositionDependent (This : …) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -73,7 +73,7 @@ begin
     override
     procedure execute (lexer : Lexer) {
         lexer.setChannel(channel)
-    end ;
+    end if;
 
 
     -- public
@@ -81,15 +81,15 @@ begin
     procedure hash (into hasher: inout Hasher) {
         hasher.combine(getActionType())
         hasher.combine(channel)
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "channel\(channel)"
-    end ;
+    end if;
 
-end ;
+end if;
 
 
 -- public
@@ -102,4 +102,4 @@ begin
 
 
     return lhs.channel = rhs.channel
-end ;
+end if;

@@ -108,18 +108,18 @@ type IntStream is interface;
     -- marked region, then restore the stream position to its original value and
     -- release the mark.
     -- 
-    -- IntStream stream :=  .. ;
-    -- Integer index := -1;
-    -- Integer mark := stream.mark();
-    -- {;
-    -- index := stream.index();
-    -- -- perform work here .. 
-    -- end ; finally {
-    -- if (index /= -1) then
-    -- stream.seek(index);
-    -- end ;
+    -- stream : IntStream := … ;
+    -- index : Integer := -1;
+    -- mark  : Integer := stream.mark();
+    -- begin
+    --    index := stream.index();
+    --    -- perform work here .. 
+    -- end;
+    -- -- finally
+    -- if index /= -1 then
+    --    stream.seek(index);
+    -- }
     -- stream.release(mark);
-    -- end ;
     -- 
     -- 
     -- - returns: An opaque marker which should be passed to
@@ -194,4 +194,4 @@ type IntStream is interface;
     -- returns _#UNKNOWN_SOURCE_NAME_.
     -- 
     function getSourceName () return String
-end ;
+end if;

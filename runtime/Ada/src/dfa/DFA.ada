@@ -29,7 +29,8 @@ type DFA is new CustomStringConvertible with null record;
     -- `True` if this DFA is for a precedence decision; otherwise,
     -- `False`. This is the backing field for _#isPrecedenceDfa_.
     -- 
-    private let precedenceDfa : Boolean;
+    -- private
+    precedenceDfa : constant Boolean;
     
     --
     -- mutex for states changes.
@@ -39,7 +40,7 @@ type DFA is new CustomStringConvertible with null record;
     -- public convenience
     procedure Init (Self : in out …; atnStartState : DecisionState) {
         self.init(atnStartState, 0)
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; atnStartState : DecisionState; decision : Integer) {
@@ -57,8 +58,8 @@ type DFA is new CustomStringConvertible with null record;
         else
             precedenceDfa := False;
             s0 := null;
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- 
     -- Gets whether this DFA is a precedence DFA. Precedence DFAs use a special
@@ -75,7 +76,7 @@ type DFA is new CustomStringConvertible with null record;
     function isPrecedenceDfa (This : …) return Boolean is
 begin
         return precedenceDfa
-    end ;
+    end if;
 
     -- 
     -- Get the start state for a specific precedence value.
@@ -92,14 +93,14 @@ begin
         if not isPrecedenceDfa() then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
 
-        end ;
+        end if;
 
         guard s0 : constant := s0, edges : constant := s0.edges, precedence >= 0, precedence < edges.count else {
             return null;
-        end ;
+        end if;
 
         return edges[precedence]
-    end ;
+    end if;
 
     -- 
     -- Set the start state for a specific precedence value.
@@ -118,7 +119,7 @@ begin
 
         guard s0 : constant := s0, edges : constant := s0.edges, precedence >= 0 else {
             return
-        end ;
+        end if;
 
         -- synchronization on s0 here is ok. when the DFA is turned into a
         -- precedence DFA, s0 will be initialized once and not updated again
@@ -127,11 +128,11 @@ begin
             if precedence >= edges.count then
                 increase : constant := [DFAState?](repeating: null, count: (precedence + 1 - edges.count))
                 s0.edges := edges + increase
-            end ;
+            end if;
 
             s0.edges[precedence] := startState
-        end ;
-    end ;
+        end if;
+    end if;
 
     --
     -- Return a list of all states in this DFA, ordered by state number.
@@ -142,16 +143,16 @@ begin
 
         result := result.sorted {
             $0.stateNumber < $1.stateNumber
-        end ;
+        end if;
 
         return result
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return toString(Vocabulary.EMPTY_VOCABULARY)
-    end ;
+    end if;
 
     -- public
     function toString (vocabulary : Vocabulary) return String is
@@ -162,7 +163,7 @@ begin
 
         serializer : constant := DFASerializer(self, vocabulary)
         return serializer.description
-    end ;
+    end if;
 
     -- public
     function toLexerString (This : …) return String is
@@ -172,6 +173,6 @@ begin
         end if;
         serializer : constant := LexerDFASerializer(self)
         return serializer.description
-    end ;
+    end if;
 
-end ;
+end if;

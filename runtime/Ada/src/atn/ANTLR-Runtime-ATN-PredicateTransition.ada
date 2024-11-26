@@ -29,37 +29,37 @@ type PredicateTransition is new AbstractPredicateTransition and CustomStringConv
         self.predIndex := predIndex
         self.isCtxDependent := isCtxDependent
         super.init(target)
-    end ;
+    end if;
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return PredicateTransition.PREDICATE
-    end ;
+    end if;
 
     override
     -- public
     function isEpsilon (This : …) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
     override
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- public
     function getPredicate () return SemanticContext.Predicate {
         return SemanticContext.Predicate(ruleIndex, predIndex, isCtxDependent)
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "pred_\(ruleIndex):\(predIndex)"
-    end ;
-end ;
+    end if;
+end if;

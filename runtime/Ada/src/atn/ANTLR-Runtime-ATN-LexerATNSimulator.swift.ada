@@ -13,11 +13,14 @@
 -- open
 type LexerATNSimulator is new ATNSimulator with null record;
 {
-    public static debug : constant := False;
+    -- public static 
+    debug : constant := False;
     public dfa_debug : constant := False;
 
-    public static MIN_DFA_EDGE : constant := 0
-    public static MAX_DFA_EDGE : constant := 127  -- forces unicode to stay in ATN
+    -- public static 
+    MIN_DFA_EDGE : constant := 0
+    -- public static 
+    MAX_DFA_EDGE : constant := 127  -- forces unicode to stay in ATN
 
     --
     -- When we hit an accept state in either the DFA or the ATN, we
@@ -54,8 +57,8 @@ begin
             line := 0
             charPos := -1
             dfaState := null;
-        end ;
-    end ;
+        end if;
+    end if;
 
 
     internal weak var recog: Lexer?
@@ -96,7 +99,7 @@ begin
     procedure Init (Self : in out …; atn : ATN; decisionToDFA : [DFA],
         sharedContextCache : PredictionContextCache) {
             self.init(null, atn, decisionToDFA, sharedContextCache)
-    end ;
+    end if;
 
     -- public 
     procedure Init (Self : in out …; recog : Lexer?, atn : ATN;
@@ -106,7 +109,7 @@ begin
             self.decisionToDFA := decisionToDFA
             self.recog := recog
             super.init(atn, sharedContextCache)
-    end ;
+    end if;
 
     -- open
     procedure copyState (simulator : LexerATNSimulator) is
@@ -115,7 +118,7 @@ begin
         self.line := simulator.line
         self.mode := simulator.mode
         self.startIndex := simulator.startIndex
-    end ;
+    end if;
 
     -- open
     function match (input : CharStream; mode : Integer) return Integer is
@@ -124,7 +127,7 @@ begin
         mark : constant := input.mark()
         defer {
             try! input.release(mark)
-        end ;
+        end if;
 
         self.startIndex := input.index()
         self.prevAccept.reset()
@@ -135,7 +138,7 @@ begin
         else
             return matchATN(input);
         end if;
-    end ;
+    end if;
 
     override
     -- open
@@ -146,7 +149,7 @@ begin
         line := 1
         charPositionInLine := 0
         mode := Lexer.DEFAULT_MODE
-    end ;
+    end if;
 
     override
     -- open
@@ -155,7 +158,7 @@ begin
         for d in 0 .. decisionToDFA - 1.count loop
             decisionToDFA[d] := DFA(atn.getDecisionState(d)!, d)
         end loop;
-    end ;
+    end if;
 
     -- internal
     function matchATN (input : CharStream) return Integer is
@@ -184,7 +187,7 @@ begin
         end if;
 
         return predict
-    end ;
+    end if;
 
     -- internal
     function execATN (input : CharStream; ds0 : DFAState) return Integer is
@@ -197,7 +200,7 @@ begin
         if ds0.isAcceptState then
             -- allow zero-length tokens
             captureSimState(prevAccept, input, ds0)
-        end ;
+        end if;
 
         var t := input.LA(1);
 
@@ -245,14 +248,14 @@ begin
             if target.isAcceptState then
                 captureSimState(prevAccept, input, target)
                 exit when t = BufferedTokenStream.EOF;
-            end ;
+            end if;
 
             t := input.LA(1);
             s := target -- flip; current DFA target becomes new src/from state
         end loop;
 
         return failOrAccept(prevAccept, input, s.configs, t);
-    end ;
+    end if;
 
     --
     -- Get an existing target state for an edge in the DFA. If the target state
@@ -278,7 +281,7 @@ begin
         end if;
 
         return target
-    end ;
+    end if;
 
     --
     -- Compute a target state for an edge in the DFA, and attempt to add the
@@ -309,15 +312,15 @@ begin
                 -- we got nowhere on t, don't raise out this knowledge; it'd
                 -- cause a failover from DFA later.
                 addDFAEdge(s, t, ATNSimulator.ERROR)
-            end ;
+            end if;
 
             -- stop when we can't match any more char
             return ATNSimulator.ERROR
-        end ;
+        end if;
 
         -- Add an edge from s to target DFA found/created for reach
         return addDFAEdge(s, t, reach)
-    end ;
+    end if;
 
     -- internal
     procedure failOrAccept (prevAccept : SimState; input : CharStream;
@@ -334,8 +337,8 @@ begin
                     return CommonToken.EOF;
                 end if;
                 raise ANTLRException.recognition with LexerNoViableAltException(recog, input, startIndex, reach);
-            end ;
-    end ;
+            end if;
+    end if;
 
     --
     -- Given a starting configuration set, figure out all ATN configurations
@@ -351,7 +354,7 @@ begin
         for c in closureConfig.configs loop
             guard c : constant := c as? LexerATNConfig else {
                 continue
-            end ;
+            end if;
             currentAltReachedAcceptState : constant := (c.alt = skipAlt)
             if currentAltReachedAcceptState and then c.hasPassedThroughNonGreedyDecision() then
                 continue;
@@ -360,7 +363,7 @@ begin
             if LexerATNSimulator.debug then
                 print("testing \(getTokenName(t)) at \(c.toString(recog, True))\n")
 
-            end ;
+            end if;
 
             n : constant := c.state.getNumberOfTransitions()
             for ti in 0 .. n - 1 loop
@@ -383,11 +386,11 @@ begin
                             -- the one that just reached an accept state.
                             skipAlt := c.alt
                             exit when True;
-                    end ;
-                end ;
+                    end if;
+                end if;
             end loop;
         end loop;
-    end ;
+    end if;
 
     -- internal
     procedure accept (input : CharStream; lexerActionExecutor : LexerActionExecutor?,
@@ -404,7 +407,7 @@ begin
             if lexerActionExecutor : constant := lexerActionExecutor, recog : constant := recog then
                 lexerActionExecutor.execute(recog, input, startIndex);
             end if;
-    end ;
+    end if;
 
 
     -- internal
@@ -414,7 +417,7 @@ begin
         end if;
 
         return null;
-    end ;
+    end if;
 
 
     -- final
@@ -430,7 +433,7 @@ begin
                 closure(input, c, configs, False, False, False);
             end loop;
             return configs
-    end ;
+    end if;
 
     --
     -- Since the alternatives within any lexer decision are ordered by
@@ -458,7 +461,7 @@ begin
                 else
                     print("closure at rule stop \(config)\n");
                 end if;
-            end ;
+            end if;
 
             if config.context?.hasEmptyPath() ?? True then
                 if config.context?.isEmpty() ?? True then
@@ -467,8 +470,8 @@ begin
                 else
                     configs.add(LexerATNConfig(config, config.state, EmptyPredictionContext.Instance));
                     currentAltReachedAcceptState := True;
-                end ;
-            end ;
+                end if;
+            end if;
 
             if configContext : constant := config.context , not configContext.isEmpty() then
                 length : constant := configContext.size()
@@ -478,19 +481,19 @@ begin
                         returnState : constant := atn.states[configContext.getReturnState(i)]
                         c : constant := LexerATNConfig(config, returnState!, newContext)
                         currentAltReachedAcceptState := closure(input, c, configs, currentAltReachedAcceptState, speculative, treatEofAsEpsilon);
-                    end ;
+                    end if;
                 end loop;
-            end ;
+            end if;
 
             return currentAltReachedAcceptState
-        end ;
+        end if;
 
         -- optimization
         if not config.state.onlyHasEpsilonTransitions() then
             if not currentAltReachedAcceptState or else not config.hasPassedThroughNonGreedyDecision() then
                 configs.add(config);
             end if;
-        end ;
+        end if;
 
         p : constant := config.state
         length : constant := p.getNumberOfTransitions()
@@ -502,7 +505,7 @@ begin
         end loop;
 
         return currentAltReachedAcceptState
-    end ;
+    end if;
 
     -- side-effect: can alter configs.hasSemanticContext
 
@@ -513,85 +516,86 @@ begin
         configs : ATNConfigSet;
         speculative : Boolean;
         treatEofAsEpsilon  : Boolean) return LexerATNConfig? {
+
             var c: LexerATNConfig? := null;
-           case t.getSerializationType() is
-            when Transition.RULE =>
-                ruleTransition : constant := t as! RuleTransition
-                newContext : constant := SingletonPredictionContext.create(config.context, ruleTransition.followState.stateNumber)
-                c := LexerATNConfig(config, t.target, newContext)
+            case t.getSerializationType() is
+               when Transition.RULE =>
+                  ruleTransition : constant := t as! RuleTransition
+                  newContext : constant := SingletonPredictionContext.create(config.context, ruleTransition.followState.stateNumber)
+                  c := LexerATNConfig(config, t.target, newContext)
 
-            when Transition.PRECEDENCE =>
-                raise ANTLRError.unsupportedOperation with "Precedence predicates are not supported in lexers.";
+               when Transition.PRECEDENCE =>
+                  raise ANTLRError.unsupportedOperation with "Precedence predicates are not supported in lexers.";
 
 
-            when Transition.PREDICATE =>
-                --
-                -- Track traversing semantic predicates. If we traverse,
-                -- we cannot add a DFA state for this "reach" computation
-                -- because the DFA would not test the predicate again in the
-                -- future. Rather than creating collections of semantic predicates
-                -- like v3 and testing them on prediction, v4 will test them on the
-                -- fly all the time using the ATN not the DFA. This is slower but
-                -- semantically it's not used that often. One of the key elements to
-                -- this predicate mechanism is not adding DFA states that see
-                -- predicates immediately afterwards in the ATN. For example,
-                --
-                -- a : ID {p1end ;? | ID {p2end ;? ;
-                --
-                -- should create the start state for rule 'a' (to save start state
-                -- competition), but should not create target of ID state. The
-                -- collection of ATN states the following ID references includes
-                -- states reached by traversing predicates. Since this is when we
-                -- test them, we cannot cash the DFA state target of ID.
-                --
-                pt : constant := t as! PredicateTransition
-                if LexerATNSimulator.debug then
-                    print("EVAL rule \(pt.ruleIndex):\(pt.predIndex)");
-                end if;
-                configs.hasSemanticContext := True;
-                if evaluatePredicate(input, pt.ruleIndex, pt.predIndex, speculative) then;
-                    c := LexerATNConfig(config, t.target);
-                end if;
+               when Transition.PREDICATE =>
+                  --
+                  -- Track traversing semantic predicates. If we traverse,
+                  -- we cannot add a DFA state for this "reach" computation
+                  -- because the DFA would not test the predicate again in the
+                  -- future. Rather than creating collections of semantic predicates
+                  -- like v3 and testing them on prediction, v4 will test them on the
+                  -- fly all the time using the ATN not the DFA. This is slower but
+                  -- semantically it's not used that often. One of the key elements to
+                  -- this predicate mechanism is not adding DFA states that see
+                  -- predicates immediately afterwards in the ATN. For example,
+                  --
+                  -- a : ID {p1end if;? | ID {p2}? ;
+                  --
+                  -- should create the start state for rule 'a' (to save start state
+                  -- competition), but should not create target of ID state. The
+                  -- collection of ATN states the following ID references includes
+                  -- states reached by traversing predicates. Since this is when we
+                  -- test them, we cannot cash the DFA state target of ID.
+                  --
+                  pt : constant := t as! PredicateTransition
+                  if LexerATNSimulator.debug then
+                     print("EVAL rule \(pt.ruleIndex):\(pt.predIndex)");
+                  end if;
+                  configs.hasSemanticContext := True;
+                  if evaluatePredicate(input, pt.ruleIndex, pt.predIndex, speculative) then;
+                     c := LexerATNConfig(config, t.target);
+                  end if;
 
-            when Transition.ACTION =>
-                if config.context = null or else config.context!.hasEmptyPath() then
-                    -- execute actions anywhere in the start rule for a token.
-                    --
-                    -- TODO: if the enrule is invoked recursively, some;
-                    -- actions may be executed during the recursive call. The
-                    -- problem can appear when hasEmptyPath() is True but
-                    -- isEmpty() is False. In this case, the config needs to be
-                    -- split into two contexts - one with just the empty path
-                    -- and another with everything but the empty path.
-                    -- Unfortunately, the current algorithm does not allow
-                    -- getEpsilonTarget to return two configurations, so
-                    -- additional modifications are needed before we can support
-                    -- the split operation.
-                    lexerActionExecutor : constant := LexerActionExecutor.append(config.getLexerActionExecutor(), atn.lexerActions[(t as! ActionTransition).actionIndex])
-                    c := LexerATNConfig(config, t.target, lexerActionExecutor)
-                else
-                    -- ignore actions in referenced rules
-                    c := LexerATNConfig(config, t.target)
-                end ;
+               when Transition.ACTION =>
+                  if config.context = null or else config.context!.hasEmptyPath() then
+                     -- execute actions anywhere in the start rule for a token.
+                     --
+                     -- TODO: if the enrule is invoked recursively, some;
+                     -- actions may be executed during the recursive call. The
+                     -- problem can appear when hasEmptyPath() is True but
+                     -- isEmpty() is False. In this case, the config needs to be
+                     -- split into two contexts - one with just the empty path
+                     -- and another with everything but the empty path.
+                     -- Unfortunately, the current algorithm does not allow
+                     -- getEpsilonTarget to return two configurations, so
+                     -- additional modifications are needed before we can support
+                     -- the split operation.
+                     lexerActionExecutor : constant := LexerActionExecutor.append(config.getLexerActionExecutor(), atn.lexerActions[(t as! ActionTransition).actionIndex])
+                     c := LexerATNConfig(config, t.target, lexerActionExecutor)
+                  else
+                     -- ignore actions in referenced rules
+                     c := LexerATNConfig(config, t.target)
+                  end if;
 
-            when Transition.EPSILON =>
-                c := LexerATNConfig(config, t.target)
+               when Transition.EPSILON =>
+                  c := LexerATNConfig(config, t.target)
 
-            when Transition.ATOM => fallthrough;
-            when Transition.RANGE => fallthrough;
-            when Transition.SET =>
-                if treatEofAsEpsilon then
-                    if t.matches(BufferedTokenStream.EOF, Character.MIN_VALUE, Character.MAX_VALUE) then
-                        c := LexerATNConfig(config, t.target)
-                    end ;
-                end ;
+               when Transition.ATOM => fallthrough;
+               when Transition.RANGE => fallthrough;
+               when Transition.SET =>
+                  if treatEofAsEpsilon then
+                     if t.matches(BufferedTokenStream.EOF, Character.MIN_VALUE, Character.MAX_VALUE) then
+                           c := LexerATNConfig(config, t.target)
+                     end if;
+                  end if;
 
-            when others =>
-                return c
-            end ;
+               when others =>
+                  return c
+            end case;
 
             return c
-    end ;
+      end if;
 
     --
     -- Evaluate a predicate specified in the lexer.
@@ -620,7 +624,7 @@ begin
         -- assume True if no recognizer was provided
         guard recog : constant := recog else {
             return True;
-        end ;
+        end if;
         if not speculative then
             return recog.sempred(null, ruleIndex, predIndex);
         end if;
@@ -637,12 +641,12 @@ begin
                 line := savedLine
                 try! input.seek(index)
                 try! input.release(marker)
-            end ;
+            end if;
 
             return recog.sempred(null, ruleIndex, predIndex);
-        end ;
+        end if;
 
-    end ;
+    end if;
 
     -- final
     procedure captureSimState (settings : SimState;
@@ -652,7 +656,7 @@ begin
             settings.line := line
             settings.charPos := charPositionInLine
             settings.dfaState := dfaState
-    end ;
+    end if;
 
 
     private final procedure addDFAEdge (from : DFAState;
@@ -681,13 +685,13 @@ begin
 
             addDFAEdge(from, t, to)
             return to
-    end ;
+    end if;
 
     private final procedure addDFAEdge (p : DFAState; t : Integer; q : DFAState) {
         if t < LexerATNSimulator.MIN_DFA_EDGE or else t > LexerATNSimulator.MAX_DFA_EDGE then
             -- Only track edges within the DFA bounds
             return
-        end ;
+        end if;
 
         if LexerATNSimulator.debug then
             print("EDGE \(p) -> \(q) upon \(t)");
@@ -697,10 +701,10 @@ begin
             if p.edges = null then
                 --  make room for tokens 1 .. n and -1 masquerading as index 0
                 p.edges := [DFAState?](repeating: null, count: LexerATNSimulator.MAX_DFA_EDGE - LexerATNSimulator.MIN_DFA_EDGE + 1)
-            end ;
+            end if;
             p.edges[t - LexerATNSimulator.MIN_DFA_EDGE] := q -- connect
-        end ;
-    end ;
+        end if;
+    end if;
 
     --
     -- Add a new DFA state if there isn't one with this set of
@@ -724,7 +728,7 @@ begin
             proposed.isAcceptState := True;
             proposed.lexerActionExecutor := (rss as! LexerATNConfig).getLexerActionExecutor()
             proposed.prediction := atn.ruleToTokenType[rss.state.ruleIndex!]
-        end ;
+        end if;
 
         dfa : constant := decisionToDFA[mode]
 
@@ -739,15 +743,15 @@ begin
             newState.configs := configs
             dfa.states[newState] := newState
             return newState
-        end ;
-    end ;
+        end if;
+    end if;
 
 
     -- public final
     function getDFA (mode : Integer) return DFA is
 begin
         return decisionToDFA[mode]
-    end ;
+    end if;
 
     --
     -- Get the text matched so far for the current token.
@@ -758,31 +762,31 @@ begin
 begin
         -- index is first lookahead char, don't include.
         return try! input.getText(Interval.of(startIndex, input.index() - 1))
-    end ;
+    end if;
 
     -- public
     function getLine (This : …) return Integer is
 begin
         return line
-    end ;
+    end if;
 
     -- public
     procedure setLine (line : Integer) is
     begin
         self.line := line
-    end ;
+    end if;
 
     -- public
     function getCharPositionInLine (This : …) return Integer is
 begin
         return charPositionInLine
-    end ;
+    end if;
 
     -- public
     procedure setCharPositionInLine (charPositionInLine : Integer) is
     begin
         self.charPositionInLine := charPositionInLine
-    end ;
+    end if;
 
     -- public
     procedure consume (input : CharStream) is
@@ -795,7 +799,7 @@ begin
             charPositionInLine := @ + 1;
         end if;
         input.consume()
-    end ;
+    end if;
 
 
     -- public
@@ -807,4 +811,4 @@ begin
         --if ( atn.g /= null ) return atn.g.getTokenDisplayName(t);
         return "'" + String(Character(integerLiteral: t)) + "'";
     end if;
-end ;
+end if;

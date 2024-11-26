@@ -9,8 +9,11 @@
 -- public
 type SingletonPredictionContext is new PredictionContext with null record;
 {
-    public final let parent: PredictionContext?
-    public final let returnState : Integer;
+    -- public final
+    parent : constant PredictionContext?;
+
+    -- public final
+    returnState : constant Integer;
 
     init(parent : PredictionContext?, returnState : Integer) {
 
@@ -20,8 +23,8 @@ type SingletonPredictionContext is new PredictionContext with null record;
         self.returnState := returnState
 
 
-        super.init(parent.map { PredictionContext.calculateHashCode($0, returnState) end ; ?? PredictionContext.calculateEmptyHashCode())
-    end ;
+        super.init(parent.map { PredictionContext.calculateHashCode($0, returnState) end if; ?? PredictionContext.calculateEmptyHashCode())
+    end if;
 
     -- public static
     function create (parent : PredictionContext?, returnState : Integer) return SingletonPredictionContext is
@@ -29,23 +32,23 @@ begin
         if returnState = PredictionContext.EMPTY_RETURN_STATE and then parent = null then
             -- someone can pass in the bits of an array ctx that mean $
             return EmptyPredictionContext.Instance
-        end ;
+        end if;
         return SingletonPredictionContext(parent, returnState)
-    end ;
+    end if;
 
     override
     -- public
     function size (This : …) return Integer is
 begin
         return 1
-    end ;
+    end if;
 
     override
     -- public
     function getParent (index : Integer) return PredictionContext? {
         assert(index = 0, "Expected: index = 0")
         return parent
-    end ;
+    end if;
 
     override
     -- public
@@ -53,7 +56,7 @@ begin
 begin
         assert(index = 0, "Expected: index = 0")
         return returnState
-    end ;
+    end if;
 
 
     override
@@ -66,10 +69,10 @@ begin
                 return "$";
             end if;
             return String(returnState)
-        end ;
+        end if;
         return String(returnState) + " " + up
-    end ;
-end ;
+    end if;
+end if;
 
 
 -- public
@@ -86,6 +89,6 @@ begin
     end if;
 
     return lhs.parent = rhs.parent
-end ;
+end if;
 
 

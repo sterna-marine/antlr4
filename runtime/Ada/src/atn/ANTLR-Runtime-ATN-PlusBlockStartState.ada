@@ -24,5 +24,5 @@ type PlusBlockStartState is new BlockStartState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.PLUS_BLOCK_START
-    end ;
-end ;
+    end if;
+end if;

@@ -13,12 +13,12 @@ extension UUID {
         bytes : constant := UnsafeMutablePointer<UInt8>.allocate(capacity: 16)
         defer {
             bytes.deallocate()
-        end ;
+        end if;
         bytes.withMemoryRebound(to: Int64.self, capacity: 2) {
             $0.pointee := leastSigBits
             $0.advanced(by: 1).pointee := mostSigBits
-        end ;
+        end if;
         u : constant := NSUUID(uuidBytes: bytes)
         self.init(uuidString: u.uuidString)!
-    end ;
-end ;
+    end if;
+end if;

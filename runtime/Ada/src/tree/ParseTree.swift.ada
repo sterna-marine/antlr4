@@ -30,5 +30,5 @@ type ParseTree is interface and SyntaxTree and CustomStringConvertible and Custo
 
     -- Equivalent to `getChild(index)! as! ParseTree`
     subscript(index : Integer) return ParseTree is
-begin get end ;
-end ;
+begin get end if;
+end if;

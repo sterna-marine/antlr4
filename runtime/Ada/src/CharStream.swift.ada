@@ -27,4 +27,4 @@ type CharStream is interface and IntStream;
     -- getting the text of the specified interval
     -- 
     function getText (interval : Interval) return String
-end ;
+end if;

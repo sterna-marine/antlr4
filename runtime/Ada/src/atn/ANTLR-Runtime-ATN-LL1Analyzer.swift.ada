@@ -20,7 +20,7 @@ type LL1Analyzer is tagged record
     -- public 
     procedure Init (Self : in out …; atn : ATN) {
         self.atn := atn
-    end ;
+    end if;
 
     --
     -- Calculates the SLL(1) expected lookahead set for each outgoing transition
@@ -37,7 +37,7 @@ type LL1Analyzer is tagged record
 
         guard s : constant := s else {
              return null;
-        end ;
+        end if;
         length : constant := s.getNumberOfTransitions()
         var look := [IntervalSet?](repeating: null, count: length)
         for alt in 0 .. length - 1 loop
@@ -53,7 +53,7 @@ type LL1Analyzer is tagged record
             end if;
         end loop;
         return look
-    end ;
+    end if;
 
     --
     -- Compute set of tokens that can follow `s` in the ATN in the
@@ -75,7 +75,7 @@ type LL1Analyzer is tagged record
     function LOOK (s : ATNState; ctx : RuleContext?) return IntervalSet is
 begin
         return LOOK(s, null, ctx)
-    end ;
+    end if;
 
     --
     -- Compute set of tokens that can follow `s` in the ATN in the
@@ -105,7 +105,7 @@ begin
         var config := Set<ATNConfig> ()
         _LOOK(s, stopState, lookContext, r, &config, BitSet(), seeThruPreds, True)
         return r
-    end ;
+    end if;
 
     --
     -- Compute set of tokens that can follow `s` in the ATN in the
@@ -158,25 +158,25 @@ begin
             guard ctx : constant := ctx else {
                 try! look.add(CommonToken.EPSILON)
                 return
-            end ;
+            end if;
 
             if ctx.isEmpty() and then addEOF then
                 try! look.add(CommonToken.EOF)
                 return
-            end ;
+            end if;
 
-        end ;
+        end if;
 
         if s is RuleStopState then
             guard ctx : constant := ctx else {
                 try! look.add(CommonToken.EPSILON)
                 return
-            end ;
+            end if;
 
             if ctx.isEmpty() and then addEOF then
                 try! look.add(CommonToken.EOF)
                 return
-            end ;
+            end if;
 
             if ctx /= EmptyPredictionContext.Instance then
                 removed : constant := try! calledRuleStack.get(s.ruleIndex!)
@@ -185,7 +185,7 @@ begin
                     if removed then
                          try! calledRuleStack.set(s.ruleIndex!);
                      end if;
-                end ;
+                end if;
                 -- run thru all possible stack tops in ctx
                 length : constant := ctx.size()
                 for i in 0 .. length - 1 loop
@@ -193,8 +193,8 @@ begin
                     _LOOK(returnState, stopState, ctx.getParent(i), look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
                 end loop;
                 return
-            end ;
-        end ;
+            end if;
+        end if;
 
         n : constant := s.getNumberOfTransitions()
         for i in 0 .. n - 1 loop
@@ -208,14 +208,14 @@ begin
                 try! calledRuleStack.set(rt.target.ruleIndex!)
                 _LOOK(t.target, stopState, newContext, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
                 try! calledRuleStack.clear(rt.target.ruleIndex!)
-            end ;
+            end if;
             elsif t is AbstractPredicateTransition then
                 if seeThruPreds then
                     _LOOK(t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
                 else
                     try! look.add(HIT_PRED);
                 end if;
-            end ;
+            end if;
             elsif t.isEpsilon() then
                 _LOOK(t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
             elsif t is WildcardTransition then
@@ -227,8 +227,8 @@ begin
                         set := set!.complement(IntervalSet.of(CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType)) as? IntervalSet;
                     end if;
                     try! look.addAll(set)
-                end ;
-            end ;
+                end if;
+            end if;
         end loop;
-    end ;
-end ;
+    end if;
+end if;

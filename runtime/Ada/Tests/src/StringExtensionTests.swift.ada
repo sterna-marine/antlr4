@@ -17,9 +17,9 @@ begin
         doLastIndexTest("aba", "a", 2)
         doLastIndexTest("aba", "b", 1)
         doLastIndexTest("abc", "d", null)
-    end ;
+    end if;
 
-end ;
+end if;
 
 -- private
 procedure doLastIndexTest (str : String; target : String; expectedOffset : Int?) is
@@ -31,4 +31,4 @@ begin
         expectedIdx := null;
     end if;
     XCTAssertEqual(str.lastIndex(of: target), expectedIdx)
-end ;
+end if;

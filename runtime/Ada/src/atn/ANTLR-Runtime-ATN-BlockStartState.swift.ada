@@ -14,4 +14,4 @@ type BlockStartState is new DecisionState with null record;
 {
     -- public
     endState : BlockEndState?
-end ;
+end if;

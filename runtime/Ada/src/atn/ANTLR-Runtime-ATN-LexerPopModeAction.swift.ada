@@ -32,7 +32,7 @@ type LexerPopModeAction is new LexerAction and CustomStringConvertible with null
     override
     procedure Init (Self : …) is
 begin
-    end ;
+    end if;
 
     -- 
     -- 
@@ -43,7 +43,7 @@ begin
     function getActionType (This : …) return LexerActionType is
 begin
         return LexerActionType.popMode
-    end ;
+    end if;
 
     -- 
     -- 
@@ -55,7 +55,7 @@ begin
     function isPositionDependent (This : …) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
     -- 
     -- 
@@ -67,24 +67,24 @@ begin
     override
     procedure execute (lexer : Lexer) {
         lexer.popMode();
-    end ;
+    end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
-    end ;
+    end if;
 
     -- public
     description : String;
     function description return String is
         return "popMode"
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: LexerPopModeAction, rhs: LexerPopModeAction) return Boolean is
 begin
     return lhs === rhs
-end ;
+end if;

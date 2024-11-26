@@ -29,5 +29,5 @@ type StarLoopEntryState is new DecisionState with null record;
     function getStateType (This : …) return Integer is
 begin
         return ATNState.STAR_LOOP_ENTRY
-    end ;
-end ;
+    end if;
+end if;

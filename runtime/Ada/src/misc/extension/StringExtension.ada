@@ -16,12 +16,12 @@ extension String {
         loop
             guard targetRange : constant := substring.range(of: target) else {
                 return result
-            end ;
+            end if;
             result := targetRange.lowerBound
             nextChar : constant := substring.index(after: targetRange.lowerBound)
             substring := self[nextChar .. ]
         end loop;
-    end ;
+    end if;
 
     subscript(integerRange: Range<Int>) return String is
 begin
@@ -29,8 +29,8 @@ begin
         end : constant := index(startIndex, offsetBy: integerRange.upperBound)
         range : constant := start ..< end
         return String(self[range])
-    end ;
-end ;
+    end if;
+end if;
 
 
 -- Implement Substring.hasPrefix, which is not currently in the Linux stdlib.
@@ -40,6 +40,6 @@ extension Substring {
     function hasPrefix (prefix : String) return Boolean is
 begin
         return String(self).hasPrefix(prefix)
-    end ;
-end ;
+    end if;
+end if;
 #endif

@@ -42,7 +42,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- public convenience
     procedure Init (Self : in out …; tag : String) {
         self.init(null, tag);
-    end ;
+    end if;
 
     -- 
     -- Construct a new instance of _org.antlr.v4.runtime.tree.pattern.TagChunk_ using the specified label
@@ -65,7 +65,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
         if tag.isEmpty then
             raise ANTLRError.illegalArgument with "tag cannot be null or empty";
         end if;
-    end ;
+    end if;
 
     -- 
     -- Get the tag for this chunk.
@@ -76,7 +76,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     function getTag (This : …) return String is
 begin
         return tag
-    end ;
+    end if;
 
     -- 
     -- Get the label, if any, assigned to this chunk.
@@ -87,7 +87,7 @@ begin
     -- public final
     function getLabel () return String? {
         return label
-    end ;
+    end if;
 
     -- 
     -- This method returns a text representation of the tag chunk. Labeled tags
@@ -102,7 +102,7 @@ begin
         else
             return tag;
         end if;
-    end ;
+    end if;
 
 
     -- override public
@@ -110,7 +110,7 @@ begin
 begin
         guard other : constant := other as? TagChunk else {
             return False;
-        end ;
+        end if;
         return tag = other.tag and then label = other.label
-    end ;
-end ;
+    end if;
+end if;

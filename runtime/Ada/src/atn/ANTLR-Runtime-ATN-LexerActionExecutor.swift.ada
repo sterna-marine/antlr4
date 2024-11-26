@@ -45,7 +45,7 @@ type LexerActionExecutor is new Hashable with null record;
         end loop;
 
         self.hashCode := MurmurHash.finish(hash, lexerActions.count)
-    end ;
+    end if;
 
     -- 
     -- Creates a _org.antlr.v4.runtime.atn.LexerActionExecutor_ which executes the actions for
@@ -67,14 +67,14 @@ type LexerActionExecutor is new Hashable with null record;
 begin
         guard lexerActionExecutor : constant := lexerActionExecutor else {
             return LexerActionExecutor([lexerAction])
-        end ;
+        end if;
 
         --var lexerActions : [LexerAction] := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
         var lexerActions: [LexerAction] := lexerActionExecutor.lexerActions
         lexerActions.append(lexerAction)
         --lexerActions[lexerActions.length - 1] := lexerAction;
         return LexerActionExecutor(lexerActions)
-    end ;
+    end if;
 
     -- 
     -- Creates a _org.antlr.v4.runtime.atn.LexerActionExecutor_ which encodes the current offset
@@ -117,7 +117,7 @@ begin
                 end if;
 
                 updatedLexerActions![i] := LexerIndexedCustomAction(offset, lexerActions[i])
-            end ;
+            end if;
         end loop;
 
         if updatedLexerActions = null then
@@ -125,7 +125,7 @@ begin
         end if;
 
         return LexerActionExecutor(updatedLexerActions!)
-    end ;
+    end if;
 
     -- 
     -- Gets the lexer actions to be executed by this executor.
@@ -134,7 +134,7 @@ begin
     -- public
     function getLexerActions () return [LexerAction] {
         return lexerActions
-    end ;
+    end if;
 
     -- 
     -- Execute the actions encapsulated by this executor within the context of a
@@ -164,7 +164,7 @@ begin
             if requiresSeek then
                 try! input.seek(stopIndex);
             end if;
-        end ;
+        end if;
         --{;
         -- for
         lexerAction : LexerAction in self.lexerActions loop
@@ -177,22 +177,22 @@ begin
                 if lexerAction.isPositionDependent() then
                     input.seek(stopIndex);
                     requiresSeek := False;
-                end ;
-            end ;
+                end if;
+            end if;
 
             lexerAction.execute(lexer);
         end loop;
-        --end ;
+        --}
 
-    end ;
+    end if;
 
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
         hasher.combine(hashCode)
-    end ;
-end ;
+    end if;
+end if;
 
 -- public
 function "=" (lhs: LexerActionExecutor, rhs: LexerActionExecutor) return Boolean is
@@ -213,4 +213,4 @@ begin
 
     return lhs.hashCode = rhs.hashCode
 
-end ;
+end if;

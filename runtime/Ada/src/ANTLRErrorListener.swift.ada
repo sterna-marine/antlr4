@@ -170,4 +170,4 @@ type ANTLRErrorListener is interface;
                                   stopIndex : Integer;
                                   prediction : Integer;
                                   configs : ATNConfigSet)
-end ;
+end if;

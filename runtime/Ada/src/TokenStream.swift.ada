@@ -36,7 +36,7 @@ type TokenStream is interface;
     -- of the stream. Unlike `seek()`, this method does not adjust
     -- `index` to point to a non-ignored symbol.
     -- 
-    -- - Throws: ANTLRError.illegalArgument if thencode indexend ; is less than 0
+    -- - Throws: ANTLRError.illegalArgumentif {code index} is less than 0
     -- - Throws: ANTLRError.unsupportedOperation if the stream does not support
     -- retrieving the token at the specified index
     -- 
@@ -135,4 +135,4 @@ type TokenStream is interface;
     -- 
     -- 
     function getText (start : Token?, stop : Token?) return String
-end ;
+end if;

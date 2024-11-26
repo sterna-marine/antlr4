@@ -20,7 +20,7 @@ type ParseInfo is tagged record
     -- public 
     procedure Init (Self : in out …; atnSimulator : ProfilingATNSimulator) {
         self.atnSimulator := atnSimulator
-    end ;
+    end if;
 
     -- 
     -- Gets an array of _org.antlr.v4.runtime.atn.DecisionInfo_ instances containing the profiling
@@ -32,7 +32,7 @@ type ParseInfo is tagged record
     -- public
     function getDecisionInfo () return [DecisionInfo] {
         return atnSimulator.getDecisionInfo()
-    end ;
+    end if;
 
     -- 
     -- Gets the decision numbers for decisions that required one or more
@@ -52,10 +52,10 @@ type ParseInfo is tagged record
             if fallBack > 0 then
                 LL.append(i)
                 -- LL.add(i);
-            end ;
+            end if;
         end loop;
         return LL
-    end ;
+    end if;
 
     -- 
     -- Gets the total time spent during prediction across all decisions made
@@ -71,7 +71,7 @@ begin
             t := @ + d.timeInPrediction;
         end loop;
         return t
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of SLL lookahead operations across all decisions
@@ -87,7 +87,7 @@ begin
             k := @ + d.SLL_TotalLook;
         end loop;
         return k
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of LL lookahead operations across all decisions
@@ -103,7 +103,7 @@ begin
             k := @ + d.LL_TotalLook;
         end loop;
         return k
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of ATN lookahead operations for SLL prediction
@@ -118,7 +118,7 @@ begin
             k := @ + d.SLL_ATNTransitions;
         end loop;
         return k
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of ATN lookahead operations for LL prediction
@@ -133,7 +133,7 @@ begin
             k := @ + d.LL_ATNTransitions;
         end loop;
         return k
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of ATN lookahead operations for SLL and LL
@@ -153,7 +153,7 @@ begin
             k := @ + d.LL_ATNTransitions;
         end loop;
         return k
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of DFA states stored in the DFA cache for all
@@ -169,7 +169,7 @@ begin
             n := @ + getDFASize(i);
         end loop;
         return n
-    end ;
+    end if;
 
     -- 
     -- Gets the total number of DFA states stored in the DFA cache for a
@@ -180,5 +180,5 @@ begin
 begin
         let decisionToDFA: DFA := atnSimulator.decisionToDFA[decision]
         return decisionToDFA.states.count
-    end ;
-end ;
+    end if;
+end if;

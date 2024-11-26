@@ -41,11 +41,11 @@ begin
         doGetMajorMinorVersionTest("4.13.0-SNAPSHOT", "4.13")
         doGetMajorMinorVersionTest("4.13.0", "4.13")
         doGetMajorMinorVersionTest("4.13.1", "4.13")
-    end ;
-end ;
+    end if;
+end if;
 
 -- private
 procedure doGetMajorMinorVersionTest (input : String; expected : String) is
 begin
     XCTAssertEqual(RuntimeMetaData.getMajorMinorVersion(input), expected)
-end ;
+end if;

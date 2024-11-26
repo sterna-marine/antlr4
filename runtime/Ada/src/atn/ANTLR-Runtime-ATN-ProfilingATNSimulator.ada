@@ -58,7 +58,7 @@ type ProfilingATNSimulator is new ParserATNSimulator with null record;
         end loop;
 
 
-    end ;
+    end if;
 
     override
     -- public
@@ -81,7 +81,7 @@ begin
             decisions[decision].SLL_MaxLook := SLL_k
             decisions[decision].SLL_MaxLookEvent =
                     LookaheadEventInfo(decision, null, input, _startIndex, _sllStopIndex, False)
-        end ;
+        end if;
 
         if _llStopIndex >= 0 then
             let LL_k: Int64 := Int64(_llStopIndex - _startIndex + 1)
@@ -91,16 +91,16 @@ begin
                 decisions[decision].LL_MaxLook := LL_k
                 decisions[decision].LL_MaxLookEvent =
                         LookaheadEventInfo(decision, null, input, _startIndex, _llStopIndex, True)
-            end ;
-        end ;
+            end if;
+        end if;
 
         defer {
             self.currentDecision := -1
-        end ;
+        end if;
         return alt
 
 
-    end ;
+    end if;
 
     override
     -- internal
@@ -116,12 +116,12 @@ begin
                 decisions[currentDecision].errors.append(
                 ErrorInfo(currentDecision, previousD.configs, _input, _startIndex, _sllStopIndex, False)
                 )
-            end ;
-        end ;
+            end if;
+        end if;
 
         currentState := existingTargetState
         return existingTargetState
-    end ;
+    end if;
 
     override
     -- internal
@@ -130,7 +130,7 @@ begin
         state : constant := super.computeTargetState(dfa, previousD, t);
         currentState := state
         return state
-    end ;
+    end if;
 
     override
     -- internal
@@ -139,7 +139,7 @@ begin
             -- this method is called after each time the input position advances
             -- during full context prediction
             _llStopIndex := _input.index()
-        end ;
+        end if;
 
         reachConfigs : constant := super.computeReachSet(closure, t, fullCtx);
         if fullCtx then
@@ -151,7 +151,7 @@ begin
                 decisions[currentDecision].errors.append(
                 ErrorInfo(currentDecision, closure, _input, _startIndex, _llStopIndex, True)
                 )
-            end ;
+            end if;
         else
             decisions[currentDecision].SLL_ATNTransitions := @ + 1;
             if reachConfigs /= null then
@@ -160,10 +160,10 @@ begin
                 decisions[currentDecision].errors.append(
                 ErrorInfo(currentDecision, closure, _input, _startIndex, _sllStopIndex, False)
                 )
-            end ;
-        end ;
+            end if;
+        end if;
         return reachConfigs
-    end ;
+    end if;
 
     override
     -- internal
@@ -176,10 +176,10 @@ begin
             decisions[currentDecision].predicateEvals.append(
                 PredicateEvalInfo(currentDecision, _input, _startIndex, stopIndex, pred, result, alt, fullCtx)
             )
-        end ;
+        end if;
 
         return result
-    end ;
+    end if;
 
     override
     -- internal
@@ -190,10 +190,10 @@ begin
         else
             configAlts : constant := configs.getAlts()
             conflictingAltResolvedBySLL := configAlts.firstSetBit()
-        end ;
+        end if;
         decisions[currentDecision].LL_Fallback := @ + 1;
         super.reportAttemptingFullContext(dfa, conflictingAlts, configs, startIndex, stopIndex)
-    end ;
+    end if;
 
     override
     -- internal
@@ -203,9 +203,9 @@ begin
             decisions[currentDecision].contextSensitivities.append(
             ContextSensitivityInfo(currentDecision, configs, _input, startIndex, stopIndex)
             )
-        end ;
+        end if;
         super.reportContextSensitivity(dfa, prediction, configs, startIndex, stopIndex)
-    end ;
+    end if;
 
     override
     -- internal
@@ -217,7 +217,7 @@ begin
         else
             configAlts : constant := configs.getAlts()
             prediction := configAlts.firstSetBit()
-        end ;
+        end if;
         if configs.fullCtx and then prediction /= conflictingAltResolvedBySLL then
             -- Even though this is an ambiguity we are reporting, we can
             -- still detect some context sensitivities.  Both SLL and LL
@@ -227,17 +227,17 @@ begin
             decisions[currentDecision].contextSensitivities.append(
             ContextSensitivityInfo(currentDecision, configs, _input, startIndex, stopIndex)
             )
-        end ;
+        end if;
         decisions[currentDecision].ambiguities.append(
         AmbiguityInfo(currentDecision, configs, ambigAlts!,
                 _input, startIndex, stopIndex, configs.fullCtx)
         )
         super.reportAmbiguity(dfa, D, startIndex, stopIndex, exact, ambigAlts!, configs)
-    end ;
+    end if;
 
 
     -- public
     function getDecisionInfo () return [DecisionInfo] {
         return decisions
-    end ;
-end ;
+    end if;
+end if;

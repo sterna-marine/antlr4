@@ -12,7 +12,7 @@ type AbstractParseTreeVisitor<T> is new ParseTreeVisitor<T> with null record;
     procedure Init (Self : …) is
 begin
         super.init()
-    end ;
+    end if;
 
     -- 
     -- The default implementation calls _org.antlr.v4.runtime.tree.ParseTree#accept_ on the
@@ -22,7 +22,7 @@ begin
     override
     function visit (tree : ParseTree) return T? {
         return tree.accept(self)
-    end ;
+    end if;
 
     --
     -- The default implementation initializes the aggregate result to
@@ -52,7 +52,7 @@ begin
         end loop;
 
         return result
-    end ;
+    end if;
 
     --
     -- The default implementation returns the result of
@@ -62,7 +62,7 @@ begin
     override
     function visitTerminal (node : TerminalNode) return T? {
         return defaultResult()
-    end ;
+    end if;
 
     --
     -- The default implementation returns the result of
@@ -72,7 +72,7 @@ begin
     -- open
     function visitErrorNode (node : ErrorNode) return T? {
         return defaultResult()
-    end ;
+    end if;
 
     -- 
     -- Gets the default value returned by visitor methods. This value is
@@ -88,7 +88,7 @@ begin
     -- open
     function defaultResult () return T? {
         return null;
-    end ;
+    end if;
 
     -- 
     -- Aggregates the results of visiting multiple children of a node. After
@@ -112,7 +112,7 @@ begin
     -- open
     function aggregateResult (aggregate : T?, nextResult : T?) return T? {
         return nextResult
-    end ;
+    end if;
 
     -- 
     -- This method is called after visiting each child in
@@ -142,6 +142,6 @@ begin
     function shouldVisitNextChild (node : RuleNode; currentResult : T?) return Boolean is
 begin
         return True;
-    end ;
+    end if;
 
-end ;
+end if;

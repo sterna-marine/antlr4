@@ -40,6 +40,6 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
         if Parser.ConsoleError then
             errPrint("line \(line):\(charPositionInLine) \(msg)");
         end if;
-    end ;
+    end if;
 
-end ;
+end if;

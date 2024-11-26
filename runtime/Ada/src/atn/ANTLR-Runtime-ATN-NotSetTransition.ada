@@ -10,14 +10,14 @@ type NotSetTransition is new SetTransition with null record;
 {
 --	public override init(_ target : ATNState; inout _ set : IntervalSet?) {
 --		super.init(target, &set);
---	end ;
+--	}
 
     override
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         return Transition.NOT_SET
-    end ;
+    end if;
 
     override
     -- public
@@ -26,12 +26,12 @@ begin
         return symbol >= minVocabSymbol
                 and then symbol <= maxVocabSymbol
                 and then not super.matches(symbol, minVocabSymbol, maxVocabSymbol)
-    end ;
+    end if;
 
     override
     -- public
     description : String;
     function description return String is
         return "~" + super.description
-    end ;
-end ;
+    end if;
+end if;

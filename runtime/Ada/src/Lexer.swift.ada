@@ -15,17 +15,24 @@
 with Foundation;
 
 -- open
-type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null record;
-{
-    public static EOF : constant := -1
-    public static DEFAULT_MODE : constant := 0
-    public static MORE : constant := -2
-    public static SKIP : constant := -3
+type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
+    -- public static 
+    EOF : constant := -1
+    -- public static 
+    DEFAULT_MODE : constant := 0
+    -- public static 
+    MORE : constant := -2
+    -- public static 
+    SKIP : constant := -3
 
-    public static DEFAULT_TOKEN_CHANNEL : constant := CommonToken.DEFAULT_CHANNEL
-    public static HIDDEN : constant := CommonToken.HIDDEN_CHANNEL
-    public static MIN_CHAR_VALUE : constant := Character.MIN_VALUE;
-    public static MAX_CHAR_VALUE : constant := Character.MAX_VALUE;
+    -- public static 
+    DEFAULT_TOKEN_CHANNEL : constant := CommonToken.DEFAULT_CHANNEL
+    -- public static 
+    HIDDEN : constant := CommonToken.HIDDEN_CHANNEL
+    -- public static 
+    MIN_CHAR_VALUE : constant := Character.MIN_VALUE;
+    -- public static 
+    MAX_CHAR_VALUE : constant := Character.MAX_VALUE;
 
     -- public
     _input : CharStream?
@@ -89,7 +96,8 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null record
     -- public
     _type := CommonToken.INVALID_TYPE
 
-    public final var _modeStack := Stack<Int> ()
+    -- public final 
+     _modeStack := Stack<Int> ();
     -- public
     _mode := Lexer.DEFAULT_MODE
 
@@ -99,6 +107,7 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null record
     -- 
     -- public
     _text : String?
+   end record;
 
     -- public
     override
@@ -107,7 +116,7 @@ begin
         self._tokenFactorySourcePair := TokenSourceAndStream()
         super.init()
         self._tokenFactorySourcePair.tokenSource := self
-    end ;
+    end if;
 
     public required init(input : CharStream) {
         self._input := input
@@ -115,7 +124,7 @@ begin
         super.init()
         self._tokenFactorySourcePair.tokenSource := self
         self._tokenFactorySourcePair.stream := input
-    end ;
+    end if;
 
     -- open
     procedure reset (This : …) is
@@ -137,7 +146,7 @@ begin
         _modeStack.clear()
 
         getInterpreter().reset()
-    end ;
+    end if;
 
     -- 
     -- Return a token from this source; i.e., match a token on the char
@@ -149,7 +158,7 @@ begin
 begin
         guard _input : constant := _input else {
             raise ANTLRError.illegalState with "nextToken requires a non-null input stream.";
-        end ;
+        end if;
 
         -- Mark start location in char stream so unbuffered streams are
         -- guaranteed at least have text of current token
@@ -158,7 +167,7 @@ begin
             -- make sure we release marker after match or
             -- unbuffered char stream will keep buffering
             try! _input.release(tokenStartMarker)
-        end ;
+        end if;
         declare
         begin
             OUTER:
@@ -166,7 +175,7 @@ begin
                 if _hitEOF then
                     emitEOF()
                     return _token!
-                end ;
+                end if;
 
                 _token := null;
                 _channel := CommonToken.DEFAULT_CHANNEL
@@ -179,12 +188,12 @@ begin
                     var ttype : Integer;
                     do {
                         ttype := getInterpreter().match(_input, _mode);
-                    end ;
+                    end if;
                     catch  ANTLRException.recognition(let e) {
                         notifyListeners(e as! LexerNoViableAltException, recognizer: self)
                         recover(e as! LexerNoViableAltException);
                         ttype := Lexer.SKIP
-                    end ;
+                    end if;
                     if _input.LA(1) == BufferedTokenStream.EOF then;
                         _hitEOF := True;
                     end if;
@@ -203,7 +212,7 @@ begin
             end loop OUTER;
         end;
 
-    end ;
+    end if;
 
     -- 
     -- Instruct the lexer to skip creating a token for current lexer rule
@@ -216,19 +225,19 @@ begin
     procedure skip (This : …) is
 begin
         _type := Lexer.SKIP
-    end ;
+    end if;
 
     -- open
     procedure more (This : …) is
 begin
         _type := Lexer.MORE
-    end ;
+    end if;
 
     -- open
     procedure mode (m : Integer) is
     begin
         _mode := m
-    end ;
+    end if;
 
     -- open
     procedure pushMode (m : Integer) is
@@ -238,7 +247,7 @@ begin
         end if;
         _modeStack.push(_mode)
         mode(m)
-    end ;
+    end if;
     @discardableResult
     -- open
     function popMode (This : …) return Integer is
@@ -252,14 +261,14 @@ begin
         end if;
         mode(_modeStack.pop())
         return _mode
-    end ;
+    end if;
 
 
     -- open
     override
     procedure setTokenFactory (factory : TokenFactory) {
         self._factory := factory
-    end ;
+    end if;
 
 
     --open
@@ -267,7 +276,7 @@ begin
     function getTokenFactory (This : …) return TokenFactory is
 begin
         return _factory
-    end ;
+    end if;
 
     -- 
     -- Set the char stream and reset the lexer
@@ -281,20 +290,20 @@ begin
         reset();
         self._input := input as? CharStream
         self._tokenFactorySourcePair := makeTokenSourceAndStream()
-    end ;
+    end if;
 
 
     -- open
     function getSourceName (This : …) return String is
 begin
         return _input!.getSourceName()
-    end ;
+    end if;
 
 
     -- open
     function getInputStream () return CharStream? {
         return _input
-    end ;
+    end if;
 
     -- 
     -- By default does not support multiple emits per nextToken invocation
@@ -307,7 +316,7 @@ begin
     begin
         --System.err.println("emit "+token);
         self._token := token
-    end ;
+    end if;
 
     -- 
     -- The standard method called to automatically emit a token at the
@@ -323,7 +332,7 @@ begin
         t : constant := _factory.create(_tokenFactorySourcePair, _type, _text, _channel, _tokenStartCharIndex, getCharIndex() - 1, _tokenStartLine, _tokenStartCharPositionInLine)
         emit(t)
         return t
-    end ;
+    end if;
 
     @discardableResult
     -- open
@@ -343,33 +352,33 @@ begin
             cpos)
         emit(eof)
         return eof
-    end ;
+    end if;
 
 
     -- open
     function getLine (This : …) return Integer is
 begin
         return getInterpreter().getLine()
-    end ;
+    end if;
 
 
     -- open
     function getCharPositionInLine (This : …) return Integer is
 begin
         return getInterpreter().getCharPositionInLine()
-    end ;
+    end if;
 
     -- open
     procedure setLine (line : Integer) is
     begin
         getInterpreter().setLine(line)
-    end ;
+    end if;
 
     -- open
     procedure setCharPositionInLine (charPositionInLine : Integer) is
     begin
         getInterpreter().setCharPositionInLine(charPositionInLine)
-    end ;
+    end if;
 
     -- 
     -- What is the index of the current character of lookahead?
@@ -378,7 +387,7 @@ begin
     function getCharIndex (This : …) return Integer is
 begin
         return _input!.index()
-    end ;
+    end if;
 
     -- 
     -- Return the text matched so far for the current token or any
@@ -391,7 +400,7 @@ begin
             return _text!;
         end if;
         return getInterpreter().getText(_input!)
-    end ;
+    end if;
 
     -- 
     -- Set the complete text of this token; it wipes any previous
@@ -401,7 +410,7 @@ begin
     procedure setText (text : String) is
     begin
         self._text := text
-    end ;
+    end if;
 
     -- 
     -- Override if emitting multiple tokens.
@@ -410,47 +419,47 @@ begin
     function getToken (This : …) return Token is
 begin
         return _token!
-    end ;
+    end if;
 
     -- open
     procedure setToken (_token : Token) is
     begin
         self._token := _token
-    end ;
+    end if;
 
     -- open
     procedure setType (ttype : Integer) is
     begin
         _type := ttype
-    end ;
+    end if;
 
     -- open
     function getType (This : …) return Integer is
 begin
         return _type
-    end ;
+    end if;
 
     -- open
     procedure setChannel (channel : Integer) is
     begin
         _channel := channel
-    end ;
+    end if;
 
     -- open
     function getChannel (This : …) return Integer is
 begin
         return _channel
-    end ;
+    end if;
 
     -- open
     function getChannelNames () return [String]? {
         return null;
-    end ;
+    end if;
 
     -- open
     function getModeNames () return [String]? {
         return null;
-    end ;
+    end if;
 
     -- 
     -- Return a list of all Token objects in input char stream.
@@ -465,7 +474,7 @@ begin
             t := nextToken();
         end loop;
         return tokens
-    end ;
+    end if;
 
     -- open
     procedure recover (e : LexerNoViableAltException) is
@@ -473,8 +482,8 @@ begin
         if _input!.LA(1) /= BufferedTokenStream.EOF then;
             -- skip a char and again;
             getInterpreter().consume(_input!);
-        end ;
-    end ;
+        end if;
+    end if;
 
     -- open
     procedure notifyListeners<T> (e : LexerNoViableAltException; recognizer: Recognizer<T>) is
@@ -483,15 +492,15 @@ begin
         text : constant String;
         do {
             text := _input!.getText(Interval.of(_tokenStartCharIndex, _input!.index()));
-        end ;
+        end if;
         catch {
             text := "<unknown>"
-        end ;
+        end if;
         msg : constant := "token recognition error at: '\(getErrorDisplay(text))'"
 
         listener : constant := getErrorListenerDispatch()
         listener.syntaxError(recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e)
-    end ;
+    end if;
 
     -- open
     function getErrorDisplay (s : String) return String is
@@ -501,7 +510,7 @@ begin
             buf := @ + getErrorDisplay(c);
         end loop;
         return buf
-    end ;
+    end if;
 
     -- open
     function getErrorDisplay (c : Character) return String is
@@ -509,24 +518,24 @@ begin
         if c.integerValue = CommonToken.EOF then
             return "<EOF>";
         end if;
-       case c  is
-        when "\n" =>
-            return "\\n"
-        when "\t" =>
-            return "\\t"
-        when "\r" =>
-            return "\\r"
-        when others =>
-            return String(c)
-        end ;
-    end ;
+         case c is
+            when "\n" =>
+                  return "\\n"
+            when "\t" =>
+                  return "\\t"
+            when "\r" =>
+                  return "\\r"
+            when others =>
+                  return String(c)
+            end case;
+    end getErrorDisplay;
 
     -- open
     function getCharErrorDisplay (c : Character) return String is
 begin
         let s: String := getErrorDisplay(c)
         return "'\(s)'"
-    end ;
+    end if;
 
     -- 
     -- Lexers can normally match any char in it's vocabulary after matching
@@ -539,11 +548,11 @@ begin
     begin
         -- TODO: Do we lose character or line position information?
         _input!.consume();
-    end ;
+    end if;
 
     -- internal
     function makeTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
         return TokenSourceAndStream(self, _input)
-    end ;
-end ;
+    end if;
+end if;

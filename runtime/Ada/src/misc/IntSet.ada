@@ -147,4 +147,4 @@ type IntSet is interface;
     -- in ascending numerical order.
     -- 
     function toList () return [Int]
-end ;
+end if;

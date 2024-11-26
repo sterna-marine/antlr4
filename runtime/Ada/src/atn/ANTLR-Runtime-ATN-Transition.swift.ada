@@ -32,7 +32,7 @@ type Transition is tagged record
     RULE : constant Integer := 3;
     -- public static 
     PREDICATE : constant Integer := 4;
-    -- e.g., {isType(input.LT(1))end ;?
+    -- e.g., {isType(input.LT(1))}?
     -- public static 
     ATOM : constant Integer := 5;
     -- public static 
@@ -93,13 +93,13 @@ type Transition is tagged record
 
 
         self.target := target
-    end ;
+    end if;
 
     -- public
     function getSerializationType (This : …) return Integer is
 begin
         fatalError(#function + " must be overridden")
-    end ;
+    end if;
 
     -- 
     -- Determines if the transition is an "epsilon" transition.
@@ -114,17 +114,17 @@ begin
     function isEpsilon (This : …) return Boolean is
 begin
         return False;
-    end ;
+    end if;
 
 
     -- public
     function labelIntervalSet () return IntervalSet? {
         return null;
-    end ;
+    end if;
 
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
         fatalError(#function + " must be overridden")
-    end ;
-end ;
+    end if;
+end if;

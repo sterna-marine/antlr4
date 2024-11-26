@@ -12,12 +12,12 @@ type StarLoopbackState is new ATNState with null record;
     function getLoopEntryState (This : …) return StarLoopEntryState is
 begin
         return transition(0).target as! StarLoopEntryState
-    end ;
+    end if;
 
     override
     -- public
     function getStateType (This : …) return Integer is
 begin
         return ATNState.STAR_LOOP_BACK
-    end ;
-end ;
+    end if;
+end if;

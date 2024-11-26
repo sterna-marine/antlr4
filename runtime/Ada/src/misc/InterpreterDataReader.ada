@@ -65,53 +65,53 @@ type InterpreterDataReader is tagged record
             if line == "" then
                 part := .partName;
             end if;
-           case part is
-            when .partName =>
-               case line is
-                when "token literal names:" =>
-                    part := .tokenLiteralNames
-                when "token symbolic names:" =>
-                    part := .tokenSymbolicNames
-                when "rule names:" =>
-                    part := .ruleNames
-                when "channel names:" =>
-                    part := .channelNames
-                when "mode names:" =>
-                    part := .modeNames
-                when "atn:" =>
-                    part := .atn
-                when "" =>
-                    null;
-                when others =>
-                    fail := Error.dataError("Unrecognized interpreter data part at "+line)
-                end ;
-            when .tokenLiteralNames =>
-                literalNames.append((line == "null") ? "" : line)
-            when .tokenSymbolicNames =>
-                symbolicNames.append((line == "null") ? "" : line)
-            when .ruleNames =>
-                ruleNames.append(line)
-            when .channelNames =>
-                channelNames.append(line)
-            when .modeNames =>
-                modeNames.append(line)
-            when .atn =>
-                if line.prefix(1) == "[" and then line.suffix(1) == "]" then
-                    atnText := line.dropFirst().dropLast().split(separator:",")
-                else
-                    fail := Error.dataError("Missing bracket(s) at "+line);
-                end if;
-                part := .partName
-            end ;
-        end ;
-        if fail : constant := fail then raise fail end ;
+            case part is
+               when .partName =>
+                  case line is
+                     when "token literal names:" =>
+                        part := .tokenLiteralNames
+                     when "token symbolic names:" =>
+                        part := .tokenSymbolicNames
+                     when "rule names:" =>
+                        part := .ruleNames
+                     when "channel names:" =>
+                        part := .channelNames
+                     when "mode names:" =>
+                        part := .modeNames
+                     when "atn:" =>
+                        part := .atn
+                     when "" =>
+                        null;
+                     when others =>
+                        fail := Error.dataError("Unrecognized interpreter data part at "+line)
+                  end case;
+               when .tokenLiteralNames =>
+                  literalNames.append((line == "null") ? "" : line)
+               when .tokenSymbolicNames =>
+                  symbolicNames.append((line == "null") ? "" : line)
+               when .ruleNames =>
+                  ruleNames.append(line)
+               when .channelNames =>
+                  channelNames.append(line)
+               when .modeNames =>
+                  modeNames.append(line)
+               when .atn =>
+                  if line.prefix(1) == "[" and then line.suffix(1) == "]" then
+                     atnText := line.dropFirst().dropLast().split(separator:",")
+                  else
+                     fail := Error.dataError("Missing bracket(s) at "+line);
+                  end if;
+                  part := .partName
+            end case;
+        end if;
+        if fail : constant := fail then raise fail end if;
         vocabulary := Vocabulary(literalNames, symbolicNames)
         self.ruleNames := ruleNames
         self.channelNames := channelNames
         self.modeNames := modeNames
-        atnSerialized : constant := atnText.map{Int($0.trimmingCharacters(in:.whitespaces))!end ;
+        atnSerialized : constant := atnText.map{Int($0.trimmingCharacters(in:.whitespaces))!end if;
         atn := ATNDeserializer().deserialize(atnSerialized);
-    end ;
+    end if;
         
     -- public
     procedure createLexer (input: CharStream)throws->LexerInterpreter is
@@ -123,7 +123,7 @@ type InterpreterDataReader is tagged record
                                     modeNames,
                                     atn,
                                     input)
-    end ;
+    end if;
     
     -- public
     procedure createParser (input: TokenStream)throws->ParserInterpreter is
@@ -133,6 +133,6 @@ type InterpreterDataReader is tagged record
                                     ruleNames,
                                     atn,
                                     input)
-    end ;
+    end if;
 
-end ;
+end if;
