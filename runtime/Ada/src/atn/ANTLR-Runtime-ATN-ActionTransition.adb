@@ -8,9 +8,12 @@ package body ANTLR.Runtime.ATN.ActionTransition is
 
 -- public final
 type ActionTransition is new Transition and CustomStringConvertible with null record;
-    public let ruleIndex : Integer;
-    public let actionIndex : Integer;
-    public let isCtxDependent : Boolean;
+    -- public
+    ruleIndex : constant Integer;
+    -- public
+    actionIndex : constant Integer;
+    -- public
+    isCtxDependent : constant Boolean;
     -- e.g., $i ref in action
 
 

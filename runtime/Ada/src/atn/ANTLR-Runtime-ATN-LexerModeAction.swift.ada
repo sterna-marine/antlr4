@@ -17,7 +17,8 @@
 -- public final
 type LexerModeAction is new LexerAction and CustomStringConvertible with null record;
 {
-    fileprivate let mode : Integer;
+    -- fileprivate
+    mode : constant Integer;
 
     -- 
     -- Constructs a new `mode` action with the specified mode value.

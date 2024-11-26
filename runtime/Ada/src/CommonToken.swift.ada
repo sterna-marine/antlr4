@@ -47,7 +47,8 @@ type CommonToken is new WritableToken with null record;
     -- _org.antlr.v4.runtime.misc.Pair_ containing these values.
     -- 
 
-    internal let source: TokenSourceAndStream
+    -- internal
+    source : constant TokenSourceAndStream;
 
     -- 
     -- This is the backing field for _#getText_ when the token text is

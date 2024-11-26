@@ -154,7 +154,7 @@ begin
     -- public
     function differenceNotProperlyContained (other : Interval) return Optional_Interval is
    begin
-        var diff: Optional_Interval; := null;
+        diff : Optional_Interval; := null;
         -- other.a to left of this.a (or same)
         if other.startsBeforeNonDisjoint(self) then
             diff := Interval.of(max(self.a, other.b + 1),

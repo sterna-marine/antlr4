@@ -136,7 +136,7 @@ begin
     -- 
     -- public static 
     procedure checkVersion (generatingToolVersion : String; compileTimeVersion : String) {
-        let runtimeVersion: String := RuntimeMetaData.VERSION
+        runtimeVersion : constant String := RuntimeMetaData.VERSION;
         var runtimeConflictsWithGeneratingTool : Boolean := False;
         var runtimeConflictsWithCompileTimeTool : Boolean := False;
 

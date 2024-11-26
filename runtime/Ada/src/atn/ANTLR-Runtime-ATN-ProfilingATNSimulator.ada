@@ -14,7 +14,8 @@ with Foundation;
 -- public
 type ProfilingATNSimulator is new ParserATNSimulator with null record;
 {
-    private(set) var decisions: [DecisionInfo]
+    -- private(set)
+    decisions: [DecisionInfo]
     -- internal
     numDecisions : Integer := 0
 
@@ -69,12 +70,12 @@ begin
         self._llStopIndex := -1
         self.currentDecision := decision
         start : constant := ProcessInfo.processInfo.systemUptime --System.nanoTime(); -- expensive but useful info
-        let alt: Integer := super.adaptivePredict(input, decision, outerContext)
+        alt : constant Integer := super.adaptivePredict(input, decision, outerContext);
         stop : constant := ProcessInfo.processInfo.systemUptime  --System.nanoTime();
         decisions[decision].timeInPrediction := @ + Int64((stop - start) * TimeInterval(1_000_000_000)); -- Nanoseconds per 1 Second
         decisions[decision].invocations := @ + 1;
 
-        let SLL_k: Int64 := Int64(_sllStopIndex - _startIndex + 1)
+        SLL_k : constant Int64 := Int64(_sllStopIndex - _startIndex + 1);
         decisions[decision].SLL_TotalLook := @ + SLL_k;
         decisions[decision].SLL_MinLook := decisions[decision].SLL_MinLook = 0 ? SLL_k : min(decisions[decision].SLL_MinLook, SLL_k)
         if SLL_k > decisions[decision].SLL_MaxLook then
@@ -84,7 +85,7 @@ begin
         end if;
 
         if _llStopIndex >= 0 then
-            let LL_k: Int64 := Int64(_llStopIndex - _startIndex + 1)
+            LL_k : constant Int64 := Int64(_llStopIndex - _startIndex + 1);
             decisions[decision].LL_TotalLook := @ + LL_k;
             decisions[decision].LL_MinLook := decisions[decision].LL_MinLook = 0 ? LL_k : min(decisions[decision].LL_MinLook, LL_k)
             if LL_k > decisions[decision].LL_MaxLook then
@@ -110,7 +111,7 @@ begin
         -- during SLL prediction
         _sllStopIndex := _input.index()
 
-        let existingTargetState: Optional_DFAState; := super.getExistingTargetState(previousD, t)
+        existingTargetState : constant Optional_DFAState; := super.getExistingTargetState(previousD, t);
         if existingTargetState /= null then
             decisions[currentDecision].SLL_DFATransitions := @ + 1; -- count only if we transition over a DFA state
             if existingTargetState = ATNSimulator.ERROR then

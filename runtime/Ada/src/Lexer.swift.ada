@@ -118,7 +118,8 @@ begin
         self._tokenFactorySourcePair.tokenSource := self
     end if;
 
-    public required init(input : CharStream) {
+    -- public required 
+    init(input : CharStream) {
         self._input := input
         self._tokenFactorySourcePair := TokenSourceAndStream()
         super.init()
@@ -534,7 +535,7 @@ begin
     -- open
     function getCharErrorDisplay (c : Character) return String is
 begin
-        let s: String := getErrorDisplay(c)
+        s : constant String := getErrorDisplay(c);
         return "'\(s)'"
     end if;
 

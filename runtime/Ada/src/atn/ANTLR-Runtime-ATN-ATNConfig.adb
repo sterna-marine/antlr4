@@ -57,7 +57,7 @@ package body ANTLR.Runtime.ATNConfig is
       -- What alt (or lexer rule) is predicted by this configuration
 
 -- public internal(set) final var 
-      context : Optional_PredictionContext;;
+      context : Optional_PredictionContext;
       -- The stack of invoking states leading to the rule/states associated
       -- with this config.  We track only those contexts pushed during
       -- execution of the ATN simulator.
@@ -139,7 +139,7 @@ package body ANTLR.Runtime.ATNConfig is
    procedure Init (Self : in out ATNConfig;
                    c : ATNConfig;
                    state : ATNState;
-                   context : Optional_PredictionContext;;
+                   context : Optional_PredictionContext;
                    semanticContext : SemanticContext) is
    begin
         self.state := state;

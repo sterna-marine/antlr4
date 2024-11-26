@@ -17,7 +17,8 @@ type ANTLRInputStream is new CharStream with null record;
     --
     -- The data being scanned
     -- 
-    internal let data: [UnicodeScalar]
+    -- internal
+    data : constant [UnicodeScalar];
 
     -- 
     -- How many unicode scalars are actually in the buffer

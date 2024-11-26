@@ -14,7 +14,7 @@ public class MultiMap<K:Hashable, V> {
 
     -- public
     function getPairs () return Array<(K, V)> {
-        var pairs: Array<(K, V)> := Array<(K, V)>()
+        pairs : Array<(K, V)> := Array<(K, V)>();
         for key: K in mapping.keys loop
             for value: V in mapping[key]! loop
                 pairs.append((key, value))

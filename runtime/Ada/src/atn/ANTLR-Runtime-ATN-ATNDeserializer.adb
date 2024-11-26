@@ -375,8 +375,8 @@ begin
 
             bypassStop.startState := bypassStart
 
-            var endState: Optional_ATNState;
-            var excludeTransition: Optional_Transition; := null;
+            endState : Optional_ATNState;
+            excludeTransition : Optional_Transition; := null;
             if atn.ruleToStartState[i].isPrecedenceRule then
                 -- wrap from the beginning of the rule to the StarLoopEntryState
                 endState := null;
@@ -559,7 +559,7 @@ begin
     -- internal
     function stateFactory (type : Integer; ruleIndex : Integer) return Optional_ATNState is
    begin
-        var s: ATNState
+        s : ATNState;
          case type is
             when ATNState.INVALID_TYPE => return null;
             when ATNState.BASIC => s := BasicState();
@@ -575,7 +575,7 @@ begin
             when ATNState.PLUS_LOOP_BACK => s := PlusLoopbackState();
             when ATNState.LOOP_END => s := LoopEndState();
             when others =>
-                  let message: String := "The specified state type \(type) is not valid."
+                  message : constant String := "The specified state type \(type) is not valid.";
 
                   raise ANTLRError.illegalArgument with message;
          end case;

@@ -30,14 +30,14 @@ extension Character {
     procedure Init (Self : in out …; integerLiteral value: IntegerLiteralType) {
         self := Character(UnicodeScalar(value)!)
     end if;
-    var utf8Value: Ada.Interface.C.unsigned_short {
+    utf8Value : Ada.Interface.C.unsigned_short {;
         for s in String(self).utf8 loop
             return s
         end loop;
         return 0
     end if;
 
-    var utf16Value: Ada.Interface.C.unsigned {
+    utf16Value : Ada.Interface.C.unsigned {;
         for s in String(self).utf16 loop
             return s
         end loop;
@@ -45,18 +45,18 @@ extension Character {
     end if;
 
     --char ->  int
-    var unicodeValue: Integer {
+    unicodeValue : Integer {;
         return Integer (String(self).unicodeScalars.first?.value ?? 0)
     end if;
 
     -- public static 
-    var MAX_VALUE: Integer {
-        let c: Character := To_Unicode (16#10FFFF#)
+    MAX_VALUE : Integer {;
+        c : constant Character := To_Unicode (16#10FFFF#);
         return c.unicodeValue
     end if;
     -- public static 
-    var MIN_VALUE: Integer {
-        let c: Character := To_Unicode (16#0000#)
+    MIN_VALUE : Integer {;
+        c : constant Character := To_Unicode (16#0000#);
         return c.unicodeValue
     end if;
 

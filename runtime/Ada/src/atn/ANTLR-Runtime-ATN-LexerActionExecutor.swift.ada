@@ -24,12 +24,14 @@
 type LexerActionExecutor is new Hashable with null record;
 {
 
-    fileprivate final var lexerActions: [LexerAction]
+    -- fileprivate final
+    lexerActions : [LexerAction];
     -- 
     -- Caches the result of _#hashCode_ since the hash code is an element
     -- of the performance-critical _org.antlr.v4.runtime.atn.LexerATNConfig#hashCode_ operation.
     -- 
-    fileprivate final var hashCode : Integer;
+    -- fileprivate final
+    hashCode : Integer;
 
     -- 
     -- Constructs an executor for a sequence of _org.antlr.v4.runtime.atn.LexerAction_ actions.
@@ -70,7 +72,7 @@ begin
         end if;
 
         --var lexerActions : [LexerAction] := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
-        var lexerActions: [LexerAction] := lexerActionExecutor.lexerActions
+        lexerActions : [LexerAction] := lexerActionExecutor.lexerActions;
         lexerActions.append(lexerAction)
         --lexerActions[lexerActions.length - 1] := lexerAction;
         return LexerActionExecutor(lexerActions)
@@ -108,7 +110,7 @@ begin
     -- public
     function fixOffsetBeforeMatch (offset : Integer) return LexerActionExecutor is
 begin
-        var updatedLexerActions: [LexerAction]? := null;
+        updatedLexerActions : [LexerAction]? := null;
         length : constant := lexerActions.count
         for i in 0 .. length - 1 loop
             if lexerActions[i].isPositionDependent() and then !(lexerActions[i] is LexerIndexedCustomAction) then
@@ -159,7 +161,7 @@ begin
     procedure execute (lexer : Lexer; input : CharStream; startIndex : Integer) is
     begin
         var requiresSeek : Boolean := False;
-        let stopIndex: Integer := input.index()
+        stopIndex : constant Integer := input.index();
         defer {
             if requiresSeek then
                 try! input.seek(stopIndex);
@@ -169,7 +171,7 @@ begin
         -- for
         lexerAction : LexerAction in self.lexerActions loop
             if runLexerAction : constant := lexerAction as? LexerIndexedCustomAction then
-                let offset: Integer := runLexerAction.getOffset()
+                offset : constant Integer := runLexerAction.getOffset();
                 input.seek(startIndex + offset);
                 lexerAction := runLexerAction.getAction()
                 requiresSeek := (startIndex + offset) /= stopIndex

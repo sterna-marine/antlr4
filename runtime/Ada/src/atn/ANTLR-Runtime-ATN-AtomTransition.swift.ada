@@ -15,7 +15,8 @@ type AtomTransition is new Transition and CustomStringConvertible with null reco
     -- 
     -- The token type or character value; or, signifies special label.
     -- 
-    public let label : Integer;
+    -- public
+    label : constant Integer;
 
     -- public 
     procedure Init (Self : in out …; target : ATNState; label : Integer) {

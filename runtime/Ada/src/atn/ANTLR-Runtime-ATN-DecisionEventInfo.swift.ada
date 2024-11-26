@@ -29,7 +29,8 @@ type DecisionEventInfo is tagged record
     -- 
     -- - seealso: org.antlr.v4.runtime.atn.ATN#decisionToState
     -- 
-    public let decision : Integer;
+    -- public
+    decision : constant Integer;
 
     -- 
     -- The configuration set containing additional information relevant to the
@@ -49,18 +50,21 @@ type DecisionEventInfo is tagged record
     -- The token index in the input stream at which the current prediction was
     -- originally invoked.
     -- 
-    public let startIndex : Integer;
+    -- public
+    startIndex : constant Integer;
 
     -- 
     -- The token index in the input stream at which the current event occurred.
     -- 
-    public let stopIndex : Integer;
+    -- public
+    stopIndex : constant Integer;
 
     -- 
     -- `True` if the current event occurred during LL prediction;
     -- otherwise, `False` if the input occurred during SLL prediction.
     -- 
-    public let fullCtx : Boolean;
+    -- public
+    fullCtx : constant Boolean;
 
     -- public 
     procedure Init (Self : in out …; decision : Integer;

@@ -228,7 +228,7 @@ begin
         guard vocabulary : constant := vocabulary, not vocabulary.isnull() else {
             return null  -- nothing in common with null set
         end if;
-        var vocabularyIS: IntervalSet
+        vocabularyIS : IntervalSet;
         if vocabulary : constant := vocabulary as? IntervalSet then
             vocabularyIS := vocabulary
         else
@@ -293,8 +293,8 @@ begin
                 continue
             end if;
 
-            var beforeCurrent: Optional_Interval; := null;
-            var afterCurrent: Optional_Interval; := null;
+            beforeCurrent : Optional_Interval; := null;
+            afterCurrent : Optional_Interval; := null;
             if rightInterval.a > resultInterval.a then
                 beforeCurrent := Interval(resultInterval.a, rightInterval.a - 1);
             end if;
@@ -361,7 +361,7 @@ begin
 
         myIntervals : constant := self.intervals
         theirIntervals : constant := (other as! IntervalSet).intervals
-        var intersection: Optional_IntervalSet; := null;
+        intersection : Optional_IntervalSet; := null;
         mySize : constant := myIntervals.count
         theirSize : constant := theirIntervals.count
         var i := 0

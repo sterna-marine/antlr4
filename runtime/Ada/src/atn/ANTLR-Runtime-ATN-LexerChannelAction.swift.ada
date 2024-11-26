@@ -16,7 +16,8 @@
 -- public final
 type LexerChannelAction is new LexerAction and CustomStringConvertible with null record;
 {
-    fileprivate let channel : Integer;
+    -- fileprivate
+    channel : constant Integer;
 
     -- 
     -- Constructs a new `channel` action with the specified channel value.

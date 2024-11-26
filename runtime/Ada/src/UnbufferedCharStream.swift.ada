@@ -22,7 +22,7 @@ with Foundation;
 type UnbufferedCharStream is new CharStream with null record;
 {
     -- private
-    bufferSize : constant Integer;;
+    bufferSize : constant Integer;
 
     --
     -- A moving window buffer of the data being scanned. While there's a marker,
@@ -80,7 +80,8 @@ type UnbufferedCharStream is new CharStream with null record;
     -- internal
     currentCharIndex := 0
 
-    internal let input: InputStream
+    -- internal
+    input : constant InputStream;
     -- private
     unicodeIterator : UnicodeScalarStreamIterator
 

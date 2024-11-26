@@ -14,7 +14,8 @@
 -- public final
 type PrecedencePredicateTransition is new AbstractPredicateTransition and CustomStringConvertible with null record;
 {
-    public let precedence : Integer;
+    -- public
+    precedence : constant Integer;
 
     -- public 
     procedure Init (Self : in out …; target : ATNState; precedence : Integer) {

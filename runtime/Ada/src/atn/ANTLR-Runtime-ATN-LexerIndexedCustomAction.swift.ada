@@ -23,8 +23,10 @@
 -- public final
 type LexerIndexedCustomAction is new LexerAction with null record;
 {
-    fileprivate let offset : Integer;
-    fileprivate let action: LexerAction
+    -- fileprivate
+    offset : constant Integer;
+    -- fileprivate
+    action : constant LexerAction;
 
     -- 
     -- Constructs a new indexed custom action by associating a character offset

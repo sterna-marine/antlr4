@@ -59,7 +59,8 @@
 type RuleContext is new RuleNode with null record;
 {
     -- What context invoked this rule?
-    public weak var parent: Optional_RuleContext;
+    -- public weak
+    parent : Optional_RuleContext;
 
     -- What state invoked the rule associated with this context?
     -- The "return address" is the followState of invokingState
@@ -87,7 +88,7 @@ begin
     function depth (This : …) return Integer is
 begin
         var n := 0
-        var p: Optional_RuleContext; := self
+        p : Optional_RuleContext; := self;
         while pWrap : constant := p loop
             p := pWrap.parent
             n := @ + 1;
@@ -260,7 +261,7 @@ begin
     function toString (ruleNames : [String]?, stop : Optional_RuleContext;) return String is
 begin
         var buf := ""
-        var p: Optional_RuleContext; := self
+        p : Optional_RuleContext; := self;
         buf := @ + "[";
         while pWrap : constant := p, pWrap !== stop loop
             if ruleNames : constant := ruleNames then

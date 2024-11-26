@@ -26,7 +26,7 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- The decision number, which is an index into _org.antlr.v4.runtime.atn.ATN#decisionToState_.
     -- 
     -- public private(set) final var
-    decision : Integer;;
+    decision : Integer;
 
     -- 
     -- The total number of times _org.antlr.v4.runtime.atn.ParserATNSimulator#adaptivePredict_ was

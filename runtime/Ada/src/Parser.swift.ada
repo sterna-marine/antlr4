@@ -559,7 +559,9 @@ begin
     end if;
 
     override
-    public final procedure setInputStream (This : Parser; input : IntStream) {
+    -- public final
+    procedure setInputStream (This : Parser; input : IntStream) is
+    begin
         setTokenStream(input as! TokenStream);
     end if;
 
@@ -589,7 +591,9 @@ begin
         return _input.LT(1)!;
     end if;
 
-    public final procedure notifyErrorListeners (This : Parser; msg : String) {
+    -- public final
+    procedure notifyErrorListeners (This : Parser; msg : String) is
+    begin
         token : constant := try? getCurrentToken()
         notifyErrorListeners(token, msg, null)
     end if;
@@ -634,7 +638,7 @@ begin
     -- public
     function consume (This : Parser; ) return Token is
 begin
-        o : constant Token := getCurrentToken();;
+        o : constant Token := getCurrentToken();
         if o.getType() /= Parser.EOF then
             getInputStream()!.consume();
         end if;
@@ -1000,7 +1004,7 @@ begin
     function isExpectedToken (This : Parser; symbol : Integer) return Boolean is
 begin
         atn : constant := getInterpreter().atn
-        var ctx: Optional_ParserRuleContext; := _ctx
+        ctx : Optional_ParserRuleContext; := _ctx;
         s : constant := atn.states[getState()]!
         var following := atn.nextTokens(s)
         if following.contains(symbol) then

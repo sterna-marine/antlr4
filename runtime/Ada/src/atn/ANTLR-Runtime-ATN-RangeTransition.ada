@@ -8,8 +8,10 @@
 -- public final
 type RangeTransition is new Transition and CustomStringConvertible with null record;
 {
-    public let from : Integer;
-    public let to : Integer;
+    -- public
+    from : constant Integer;
+    -- public
+    to : constant Integer;
 
     -- public 
     procedure Init (Self : in out …; target : ATNState; from : Integer; to : Integer) {

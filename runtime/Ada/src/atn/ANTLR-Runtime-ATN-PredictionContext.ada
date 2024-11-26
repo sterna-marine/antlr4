@@ -51,7 +51,8 @@ type PredictionContext is new Hashable and CustomStringConvertible with null rec
     -- }
     --
     --
-    public let cachedHashCode : Integer;
+    -- public
+    cachedHashCode : constant Integer;
 
     init(cachedHashCode : Integer) {
         self.cachedHashCode := cachedHashCode
@@ -269,7 +270,7 @@ begin
             else
                 -- a /= b payloads differ
                 -- see if we can collapse parents due to $+x parents if local ctx
-                var singleParent: Optional_PredictionContext; := null;
+                singleParent : Optional_PredictionContext; := null;
                 --added by janyou
                 if a === b or else (a.parent /= null and then a.parent! == b.parent) then
                     -- ax + bx := [a,b]x
@@ -630,7 +631,7 @@ begin
             return context
         end if;
 
-        let updated: PredictionContext
+        updated : constant PredictionContext;
         if parents.isEmpty then
             updated := EmptyPredictionContext.Instance;
         elsif parents.count = 1 then

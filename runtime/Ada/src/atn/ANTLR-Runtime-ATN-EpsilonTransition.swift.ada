@@ -10,7 +10,7 @@ type EpsilonTransition is new Transition and CustomStringConvertible with null r
 {
 
     -- private
-    outermostPrecedenceReturnInside : constant Integer;;
+    outermostPrecedenceReturnInside : constant Integer;
 
     -- public convenience 
     override

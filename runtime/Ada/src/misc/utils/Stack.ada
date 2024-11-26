@@ -14,7 +14,9 @@ with Foundation;
 
 public struct Stack<T> {
     var items := [T]()
-    public mutating procedure push (item : T) {
+    -- public mutating
+    procedure push (item : T) is
+    begin
         items.append(item)
     end if;
     @discardableResult

@@ -56,7 +56,8 @@ begin
         return tokenTypeMap
     end if;
 
-    public lazy var tokenTypeMap: [String: Int] := {
+    -- public lazy
+    tokenTypeMap : [String: Int] := {;
         vocabulary : constant := getVocabulary()
 
         var result := [String: Int]()
@@ -87,7 +88,8 @@ begin
         return ruleIndexMap
     end if;
 
-    public lazy var ruleIndexMap: [String: Int] := {
+    -- public lazy
+    ruleIndexMap : [String: Int] := {;
         ruleNames : constant := getRuleNames()
         return Utils.toMap(ruleNames)
     end if;()
@@ -240,7 +242,9 @@ begin
     -- invoking rules. Combine this and we have complete ATN
     -- configuration information.
     -- 
-    public final procedure setState (atnState : Integer) {
+    -- public final
+    procedure setState (atnState : Integer) is
+    begin
 --		System.err.println("setState "+atnState);
         _stateNumber := atnState
 --		if ( traceATNStates ) _ctx.trace(atnState);

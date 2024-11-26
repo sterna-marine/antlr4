@@ -82,7 +82,8 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     --
     -- mutex for states changes.
     --
-    internal private(set) var mutex := Mutex()
+    -- internal private(set)
+    mutex := Mutex()
 
     --
     -- Map a predicate to a predicted alternative.
@@ -94,7 +95,8 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
         -- public 
         pred : constant SemanticContext;
         -- never null; at least SemanticContext.Empty.Instance
-        public let alt : Integer;
+        -- public
+        alt : constant Integer;
 
         -- public 
         procedure Init (Self : in out …; pred : SemanticContext; alt : Integer) {

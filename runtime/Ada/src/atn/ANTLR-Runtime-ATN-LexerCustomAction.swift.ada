@@ -22,8 +22,10 @@
 -- public final
 type LexerCustomAction is new LexerAction with null record;
 {
-    fileprivate let ruleIndex : Integer;
-    fileprivate let actionIndex : Integer;
+    -- fileprivate
+    ruleIndex : constant Integer;
+    -- fileprivate
+    actionIndex : constant Integer;
 
     -- 
     -- Constructs a custom lexer action with the specified rule and action

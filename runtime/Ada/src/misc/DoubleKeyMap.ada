@@ -20,7 +20,7 @@ public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
     function put (k1 : Key1; k2 : Key2; v : Value) return Optional_Value is
    begin
 
-        let prev: Optional_Value;
+        prev : constant Optional_Value;
         -- if
         data2 := data[k1] then
             prev := data2[k2]

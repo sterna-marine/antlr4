@@ -15,7 +15,7 @@ type ParseTreePattern is tagged record
     -- This is the backing field for _#getPatternRuleIndex()_.
     -- 
     -- private
-    patternRuleIndex : constant Integer;;
+    patternRuleIndex : constant Integer;
 
     -- 
     -- This is the backing field for _#getPattern()_.

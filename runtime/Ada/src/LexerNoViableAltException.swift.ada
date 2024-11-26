@@ -25,7 +25,7 @@ type LexerNoViableAltException is new RecognitionException and CustomStringConve
                 input : CharStream;
                 startIndex : Integer;
                 deadEndConfigs : ATNConfigSet) {
-        let ctx: Optional_ParserRuleContext; := null;
+        ctx : constant Optional_ParserRuleContext; := null;
         self.startIndex := startIndex
         self.deadEndConfigs := deadEndConfigs
         super.init(lexer, input as IntStream, ctx)

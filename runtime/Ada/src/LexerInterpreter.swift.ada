@@ -9,16 +9,21 @@
 type LexerInterpreter is new Lexer with null record;
 {
     internal grammarFileName : constant String;
-    internal let atn: ATN
+    -- internal
+    atn : constant ATN;
 
-    internal let ruleNames: [String]
-    internal let channelNames: [String]
-    internal let modeNames: [String]
+    -- internal
+    ruleNames : constant [String];
+    -- internal
+    channelNames : constant [String];
+    -- internal
+    modeNames : constant [String];
 
     -- private 
     vocabulary : constant Vocabulary?;
 
-    internal final var _decisionToDFA: [DFA]
+    -- internal final
+    _decisionToDFA : [DFA];
     internal _sharedContextCache : constant := PredictionContextCache()
 
     -- public 
@@ -44,7 +49,8 @@ type LexerInterpreter is new Lexer with null record;
         end if;
     end if;
 
-    public required init(input : CharStream) {
+    -- public required 
+    init(input : CharStream) {
         fatalError("Use the other initializer")
     end if;
 

@@ -42,7 +42,8 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     --
     -- Track the elements as they are added to the set; supports get(i)
     --
-    public private(set) var configs := [ATNConfig]()
+    -- public private(set)
+    configs := [ATNConfig]()
 
     -- TODO: these fields make me pretty uncomfortable but nice to pack up info together, saves recomputation
     -- TODO: can we track conflicts as they are added to save scanning configs later?
@@ -69,7 +70,8 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     -- LL prediction. It will be used to determine how to merge $. With SLL
     -- it's a wildcard whereas it is not for LL context merge.
     --
-    public let fullCtx : Boolean;
+    -- public
+    fullCtx : constant Boolean;
 
     -- private
     cachedHashCode := -1
@@ -115,7 +117,7 @@ begin
             if config.getOuterContextDepth() > 0 then
                 dipsIntoOuterContext := True;
             end if;
-            let existing: ATNConfig := getOrAdd(config)
+            existing : constant ATNConfig := getOrAdd(config);
             if existing === config then
                 -- we added this new one
                 cachedHashCode := -1
@@ -340,7 +342,7 @@ begin
 
         for cfg in configs loop
             hash : constant := configHash(cfg.state.stateNumber, cfg.context)
-            var alts: BitSet
+            alts : BitSet;
             if configToAlt : constant := configToAlts[hash] then
                 alts := configToAlt
             else
@@ -359,7 +361,7 @@ begin
         var m := [Int: BitSet]()
 
         for cfg in configs loop
-            var alts: BitSet
+            alts : BitSet;
             if mAlts : constant :=  m[cfg.state.stateNumber] then
                 alts := mAlts
             else
@@ -397,7 +399,7 @@ begin
 
     --LexerATNSimulator
     -- public
-    firstConfigWithRuleStopState : Optional_ATNConfig;;
+    firstConfigWithRuleStopState : Optional_ATNConfig;
     function firstConfigWithRuleStopState return ATNConfig? is
         for config in configs loop
             if config.state is RuleStopState then

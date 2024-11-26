@@ -275,7 +275,8 @@ type ParserATNSimulator is new ATNSimulator with null record;
     -- the merge if we ever see a and b again.  Note that (b,a)&rarr;c should
     -- also be examined during cache lookup.
     --
-    internal final var mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?
+    -- internal final
+    mergeCache : DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?;
 
     -- LAME globals to avoid parameters!!!!! I need these down deep in predTransition
     -- internal
@@ -348,7 +349,7 @@ begin
         -- But, do we still need an initial state?
         --TODO: exception handler
         do {
-            var s0: Optional_DFAState;
+            s0 : Optional_DFAState;
             if dfa.isPrecedenceDfa() then
                 -- the start state for a precedence DFA depends on the current
                 -- parser precedence, and is provided by a DFA method.
@@ -455,7 +456,7 @@ begin
 
             loop
                 -- while more work
-                var D: DFAState
+                D : DFAState;
                 if dState : constant := getExistingTargetState(previousD, t) then
                     D := dState
                 else
@@ -666,7 +667,7 @@ begin
         end if;
         fullCtx : constant := True;
         var foundExactAmbig := False;
-        var reach: Optional_ATNConfigSet; := null;
+        reach : Optional_ATNConfigSet; := null;
         var previous := s0
         input.seek(startIndex);
         var t := input.LA(1);
@@ -798,7 +799,7 @@ begin
         -- ensure that the alternative matching the longest overall sequence is
         -- chosen when multiple such configurations can match the input.
         --
-        var skippedStopStates: [ATNConfig]? := null;
+        skippedStopStates : [ATNConfig]? := null;
 
         -- First figure out where we can reach on input t
         configs : constant := closureConfigSet.configs
@@ -831,7 +832,7 @@ begin
 
         -- Now figure out where the reach operation can take us .. 
 
-        var reach: Optional_ATNConfigSet; := null;
+        reach : Optional_ATNConfigSet; := null;
 
         --
         -- This block optimizes the reach operation for intermediate sets which
@@ -1389,9 +1390,9 @@ begin
                             end if;
                             continue
                         end if;
-                        let returnState: ATNState := atn.states[configContext.getReturnState(i)]!
-                        let newContext: Optional_PredictionContext; := configContext.getParent(i) -- "pop" return state
-                        let c: ATNConfig := ATNConfig(returnState, config.alt, newContext,
+                        returnState : constant ATNState := atn.states[configContext.getReturnState(i)]!;
+                        newContext : constant Optional_PredictionContext; := configContext.getParent(i) -- "pop" return state;
+                        c : constant ATNConfig := ATNConfig(returnState, config.alt, newContext,;
                             config.semanticContext)
                         -- While we have context to pop back from, we may have
                         -- gotten that context AFTER having falling off a rule.
@@ -1460,7 +1461,7 @@ begin
                         -- come in handy and we avoid evaluating context dependent
                         -- preds if this is > 0.
                         if _dfa : constant := _dfa , _dfa.isPrecedenceDfa() then
-                            let outermostPrecedenceReturn: Integer := (t as! EpsilonTransition).outermostPrecedenceReturn()
+                            outermostPrecedenceReturn : constant Integer := (t as! EpsilonTransition).outermostPrecedenceReturn();
                             if outermostPrecedenceReturn = _dfa.atnStartState.ruleIndex then
                                 c.setPrecedenceFilterSuppressed(True);
                             end if;
@@ -1757,7 +1758,7 @@ begin
             -- }
         end if;
 
-        var c: Optional_ATNConfig; := null;
+        c : Optional_ATNConfig; := null;
         if collectPredicates and then inContext then
             if fullCtx then
                 -- In full context mode, we can evaluate predicates on-the-fly
@@ -1800,7 +1801,7 @@ begin
             --}
         end if;
 
-        var c: Optional_ATNConfig; := null;
+        c : Optional_ATNConfig; := null;
         if collectPredicates and
             (!pt.isCtxDependent or else (pt.isCtxDependent and then inContext)) {
             if fullCtx then
@@ -1897,7 +1898,7 @@ begin
     -- final
     function getConflictingAltsOrUniqueAlt (configs : ATNConfigSet) return BitSet is
 begin
-        var conflictingAlts: BitSet
+        conflictingAlts : BitSet;
         if configs.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
             conflictingAlts := BitSet()
             try! conflictingAlts.set(configs.uniqueAlt)
@@ -1934,7 +1935,9 @@ begin
     -- it out for clarity now that alg. works well. We can leave this
     -- "dead" code for a bit.
     --
-    public final procedure dumpDeadEndConfigs (nvae : NoViableAltException) {
+    -- public final
+    procedure dumpDeadEndConfigs (nvae : NoViableAltException) is
+    begin
         errPrint("dead end configs: ")
         for c in nvae.getDeadEndConfigs()!.configs loop
             var trans := "no edges"
@@ -1959,7 +1962,7 @@ begin
                            startIndex : Integer) return NoViableAltException is
 begin
         startToken : constant := try! input.get(startIndex)
-        var offendingToken: Optional_Token; := null;
+        offendingToken : Optional_Token; := null;
         do {
             offendingToken := input.LT(1);
         end if;
@@ -2115,7 +2118,9 @@ begin
         end if;
     end if;
 
-    public final procedure setPredictionMode (mode : PredictionMode) {
+    -- public final
+    procedure setPredictionMode (mode : PredictionMode) is
+    begin
         self.mode := mode
     end if;
 

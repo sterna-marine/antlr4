@@ -14,7 +14,8 @@ type LexerATNConfig is new ATNConfig with null record;
     -- private 
     lexerActionExecutor : constant LexerActionExecutor?;
 
-    fileprivate let passedThroughNonGreedyDecision : Boolean;
+    -- fileprivate
+    passedThroughNonGreedyDecision : constant Boolean;
 
     -- public 
     procedure Init (Self : in out …; state : ATNState;

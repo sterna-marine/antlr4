@@ -23,7 +23,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- the bypass alternative for the rule during ATN deserialization.
     -- 
     -- private
-    bypassTokenType : constant Integer;;
+    bypassTokenType : constant Integer;
     -- 
     -- This is the backing field for _#getLabel_.
     -- 

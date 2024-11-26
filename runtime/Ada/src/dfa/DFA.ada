@@ -17,7 +17,8 @@ type DFA is new CustomStringConvertible with null record;
     -- public
     s0 : Optional_DFAState;
 
-    public let decision : Integer;
+    -- public
+    decision : constant Integer;
 
     -- 
     -- From which ATN state did we create this DFA?
@@ -35,7 +36,8 @@ type DFA is new CustomStringConvertible with null record;
     --
     -- mutex for states changes.
     --
-    internal private(set) var statesMutex := Mutex()
+    -- internal private(set)
+    statesMutex := Mutex()
 
     -- public convenience
     procedure Init (Self : in out …; atnStartState : DecisionState) {
@@ -113,7 +115,9 @@ begin
     -- - throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
     -- - seealso: #isPrecedenceDfa()
     -- 
-    public final procedure setPrecedenceStartState (precedence : Integer; startState : DFAState) {
+    -- public final
+    procedure setPrecedenceStartState (precedence : Integer; startState : DFAState) is
+    begin
         if not isPrecedenceDfa() then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
         end if;

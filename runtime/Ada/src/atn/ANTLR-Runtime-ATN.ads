@@ -118,7 +118,7 @@ begin
             raise ANTLRError.illegalArgument with "Invalid state number.";
         end if;
 
-        var ctx: Optional_RuleContext; := context
+        ctx : Optional_RuleContext; := context;
         s : constant := states[stateNumber]!
         var following := nextTokens(s)
         if not following.contains(CommonToken.EPSILON) then
@@ -145,24 +145,30 @@ begin
         return expected
     end if;
 
-    public final procedure appendDecisionToState (state : DecisionState) {
+    -- public final
+    procedure appendDecisionToState (state : DecisionState) is
+    begin
         decisionToState.append(state)
     end if;
-    public final procedure appendModeToStartState (state : TokensStartState) {
+    -- public final
+    procedure appendModeToStartState (state : TokensStartState) is
+    begin
         modeToStartState.append(state)
     end if;
 
 private 
-   type ATN is tagged record with private;
+   type ATN is tagged record with record
 
-    public private(set) final var states := [ATNState?]()
+    -- public private(set) final
+    states := [ATNState?]()
 
     -- 
     -- Each subrule/rule is a decision point and we must track them so we
     -- can go back later and build DFA predictors for them.  This includes
     -- all the rules, subrules, optional blocks, ()+, ()* etc .. 
     -- 
-    public private(set) final var decisionToState := [DecisionState]()
+    -- public private(set) final
+    decisionToState := [DecisionState]()
 
     -- 
     -- Maps from rule index to starting state number.
@@ -185,7 +191,8 @@ private
     -- 
     -- The maximum value for any symbol recognized by a transition in the ATN.
     -- 
-    public let maxTokenType : Integer;
+    -- public
+    maxTokenType : constant Integer;
 
     -- 
     -- For lexer ATNs, this maps the rule index to the resulting token type.
@@ -206,4 +213,4 @@ private
     -- public internal(set) final var
     modeToStartState := [TokensStartState]();
 
-end ANTLR.Runtime.ATN;;
+end ANTLR.Runtime.ATN;

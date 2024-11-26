@@ -15,7 +15,8 @@
 
 -- public
 type ParseInfo is tagged record
-    internal let atnSimulator: ProfilingATNSimulator
+    -- internal
+    atnSimulator : constant ProfilingATNSimulator;
 
     -- public 
     procedure Init (Self : in out …; atnSimulator : ProfilingATNSimulator) {
@@ -44,11 +45,11 @@ type ParseInfo is tagged record
     -- 
     -- public
     function getLLDecisions () return Array<Int> {
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var LL: Array<Int> := Array<Int> ()
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        LL : Array<Int> := Array<Int> ();
         length : constant := decisions.count
         for i in 0 .. length - 1 loop
-            let fallBack: Int64 := decisions[i].LL_Fallback
+            fallBack : constant Int64 := decisions[i].LL_Fallback;
             if fallBack > 0 then
                 LL.append(i)
                 -- LL.add(i);
@@ -65,8 +66,8 @@ type ParseInfo is tagged record
     -- public
     function getTotalTimeInPrediction (This : …) return Int64 is
 begin
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var t: Int64 := 0
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        t : Int64 := 0;
         for d in decisions loop
             t := @ + d.timeInPrediction;
         end loop;
@@ -81,8 +82,8 @@ begin
     -- public
     function getTotalSLLLookaheadOps (This : …) return Int64 is
 begin
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var k: Int64 := 0
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        k : Int64 := 0;
         for d in decisions loop
             k := @ + d.SLL_TotalLook;
         end loop;
@@ -97,8 +98,8 @@ begin
     -- public
     function getTotalLLLookaheadOps (This : …) return Int64 is
 begin
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var k: Int64 := 0
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        k : Int64 := 0;
         for d in decisions loop
             k := @ + d.LL_TotalLook;
         end loop;
@@ -112,8 +113,8 @@ begin
     -- public
     function getTotalSLLATNLookaheadOps (This : …) return Int64 is
 begin
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var k: Int64 := 0
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        k : Int64 := 0;
         for d in decisions loop
             k := @ + d.SLL_ATNTransitions;
         end loop;
@@ -127,8 +128,8 @@ begin
     -- public
     function getTotalLLATNLookaheadOps (This : …) return Int64 is
 begin
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var k: Int64 := 0
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        k : Int64 := 0;
         for d in decisions loop
             k := @ + d.LL_ATNTransitions;
         end loop;
@@ -146,8 +147,8 @@ begin
     -- public
     function getTotalATNLookaheadOps (This : …) return Int64 is
 begin
-        let decisions: [DecisionInfo] := atnSimulator.getDecisionInfo()
-        var k: Int64 := 0
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        k : Int64 := 0;
         for d in decisions loop
             k := @ + d.SLL_ATNTransitions;
             k := @ + d.LL_ATNTransitions;
@@ -162,8 +163,8 @@ begin
     -- public
     function getDFASize (This : …) return Integer is
 begin
-        var n: Integer := 0
-        let decisionToDFA: [DFA] := atnSimulator.decisionToDFA
+        n : Integer := 0;
+        decisionToDFA : constant [DFA] := atnSimulator.decisionToDFA;
         length : constant := decisionToDFA.count
         for i in 0 .. length - 1 loop
             n := @ + getDFASize(i);
@@ -178,7 +179,7 @@ begin
     -- public
     function getDFASize (decision : Integer) return Integer is
 begin
-        let decisionToDFA: DFA := atnSimulator.decisionToDFA[decision]
+        decisionToDFA : constant DFA := atnSimulator.decisionToDFA[decision];
         return decisionToDFA.states.count
     end if;
 end if;

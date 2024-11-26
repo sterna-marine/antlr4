@@ -130,7 +130,7 @@ begin
     procedure recalculateWordsInUse (This : …) is
 begin
         -- Traverse the bitset until a used word is found
-        var i: Integer := wordsInUse - 1
+        i : Integer := wordsInUse - 1;
         while i >= 0 loop
             exit when words[i] /= 0;
             i := @ - 1;
@@ -226,7 +226,7 @@ begin
     begin
         if words.count < wordsRequired then
             -- Allocate larger of doubled size or required size
-            let request: Integer := max(2 * words.count, wordsRequired)
+            request : constant Integer := max(2 * words.count, wordsRequired);
             words := copyOf(words, request)
             sizeIsSticky := False;
         end if;
@@ -242,7 +242,7 @@ begin
     -- private
     procedure expandTo (wordIndex : Integer) is
     begin
-        let wordsRequired: Integer := wordIndex + 1
+        wordsRequired : constant Integer := wordIndex + 1;
         if wordsInUse < wordsRequired then
             ensureCapacity(wordsRequired)
             wordsInUse := wordsRequired
@@ -252,7 +252,9 @@ begin
     -- 
     -- Checks that fromIndex  ..  toIndex is a valid range of bit indices.
     -- 
-    private static procedure checkRange (fromIndex : Integer; toIndex : Integer) {
+    -- private static
+    procedure checkRange (fromIndex : Integer; toIndex : Integer) is
+    begin
         if fromIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
 
@@ -283,7 +285,7 @@ begin
 
 
         end if;
-        let index: Integer := BitSet.wordIndex(bitIndex)
+        index : constant Integer := BitSet.wordIndex(bitIndex);
         expandTo(index)
 
         words[index] ^= (Int64(1) << Int64(bitIndex % 64))
@@ -312,12 +314,12 @@ begin
             return;
         end if;
 
-        let startWordIndex: Integer := BitSet.wordIndex(fromIndex)
-        let endWordIndex: Integer := BitSet.wordIndex(toIndex - 1)
+        startWordIndex : constant Integer := BitSet.wordIndex(fromIndex);
+        endWordIndex : constant Integer := BitSet.wordIndex(toIndex - 1);
         expandTo(endWordIndex)
 
-        let firstWordMask: Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64)
-        let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
+        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64);
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
         --var lastWordMask : Int64  := WORD_MASK >>> Int64(-toIndex);
         if startWordIndex = endWordIndex then
             -- when 1 => One word;
@@ -354,7 +356,7 @@ begin
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
         end if;
-        let index: Integer := BitSet.wordIndex(bitIndex)
+        index : constant Integer := BitSet.wordIndex(bitIndex);
         expandTo(index)
 
         -- print(words.count)
@@ -400,12 +402,12 @@ begin
         end if;
 
         -- Increase capacity if necessary
-        let startWordIndex: Integer := BitSet.wordIndex(fromIndex)
-        let endWordIndex: Integer := BitSet.wordIndex(toIndex - 1)
+        startWordIndex : constant Integer := BitSet.wordIndex(fromIndex);
+        endWordIndex : constant Integer := BitSet.wordIndex(toIndex - 1);
         expandTo(endWordIndex)
 
-        let firstWordMask: Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64)
-        let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
+        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64);
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
         --var lastWordMask : Int64  := WORD_MASK >>>Int64( -toIndex);
         if startWordIndex = endWordIndex then
             -- when 1 => One word;
@@ -462,7 +464,7 @@ begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
         end if;
-        let index: Integer := BitSet.wordIndex(bitIndex)
+        index : constant Integer := BitSet.wordIndex(bitIndex);
         if index >= wordsInUse then
             return;
         end if;
@@ -493,20 +495,20 @@ begin
             return;
         end if;
 
-        let startWordIndex: Integer := BitSet.wordIndex(fromIndex)
+        startWordIndex : constant Integer := BitSet.wordIndex(fromIndex);
         if startWordIndex >= wordsInUse then
             return;
         end if;
 
-        var endWordIndex: Integer := BitSet.wordIndex(toIndex - 1)
+        endWordIndex : Integer := BitSet.wordIndex(toIndex - 1);
         if endWordIndex >= wordsInUse then
             toIndex := length()
             endWordIndex := wordsInUse - 1
         end if;
 
-        let firstWordMask: Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64)
+        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64);
         -- ar lastWordMask : Int64  := WORD_MASK >>> Int64((-toIndex);
-        let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
         if startWordIndex = endWordIndex then
             -- when 1 => One word;
             words[startWordIndex] := @ and not (firstWordMask & lastWordMask)
@@ -560,7 +562,7 @@ begin
         end if;
         checkInvariants()
 
-        let index: Integer := BitSet.wordIndex(bitIndex)
+        index : constant Integer := BitSet.wordIndex(bitIndex);
 
         return (index < wordsInUse)
                 and then ((words[index] & ((Int64(1) << Int64(bitIndex % 64)))) /= 0)
@@ -585,7 +587,7 @@ begin
 
         checkInvariants()
 
-        let len: Integer := length()
+        len : constant Integer := length();
 
         -- If no set bits in range return empty bitset
         if len <= fromIndex or else fromIndex = toIndex then
@@ -597,16 +599,16 @@ begin
             toIndex := len;
         end if;
 
-        let result: BitSet := BitSet(toIndex - fromIndex);
-        let targetWords: Integer := BitSet.wordIndex(toIndex - fromIndex - 1) + 1
-        var sourceIndex: Integer := BitSet.wordIndex(fromIndex)
+        result : constant BitSet := BitSet(toIndex - fromIndex);
+        targetWords : constant Integer := BitSet.wordIndex(toIndex - fromIndex - 1) + 1;
+        sourceIndex : Integer := BitSet.wordIndex(fromIndex);
         wordAligned : constant : Boolean := (fromIndex & BitSet.BIT_INDEX_MASK) == 0
 
         -- Process all words but the last word
-        var i: Integer := 0;
+        i : Integer := 0;
         while i < targetWords - 1 loop
-            let wordOption1: Int64 := (words[sourceIndex] >>> Int64(fromIndex))
-            let wordOption2: Int64 := (words[sourceIndex + 1] << Int64(-fromIndex % 64))
+            wordOption1 : constant Int64 := (words[sourceIndex] >>> Int64(fromIndex));
+            wordOption2 : constant Int64 := (words[sourceIndex + 1] << Int64(-fromIndex % 64));
             wordOption : constant := wordOption1 | wordOption2
             result.words[i] := wordAligned ? words[sourceIndex] : wordOption
 
@@ -615,13 +617,13 @@ begin
         end loop;
         -- Process the last word
         -- var lastWordMask : Int64 := WORD_MASK >>> Int64(-toIndex);
-        let lastWordMask: Int64 := BitSet.WORD_MASK >>> Int64(-toIndex)
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
         toIndexTest : constant := ((toIndex - 1) & BitSet.BIT_INDEX_MASK)
         fromIndexTest : constant := (fromIndex & BitSet.BIT_INDEX_MASK)
 
-        let wordOption1: Int64 := (words[sourceIndex] >>> Int64(fromIndex))
-        let wordOption2: Int64 := (words[sourceIndex + 1] & lastWordMask)
-        let wordOption3: Int64 := (64 + Int64(-fromIndex % 64))
+        wordOption1 : constant Int64 := (words[sourceIndex] >>> Int64(fromIndex));
+        wordOption2 : constant Int64 := (words[sourceIndex + 1] & lastWordMask);
+        wordOption3 : constant Int64 := (64 + Int64(-fromIndex % 64));
         wordOption : constant := wordOption1 | wordOption2 << wordOption3
 
         wordOption4 : constant := (words[sourceIndex] & lastWordMask)
@@ -675,12 +677,12 @@ begin
         end if;
         checkInvariants()
 
-        var u: Integer := BitSet.wordIndex(fromIndex)
+        u : Integer := BitSet.wordIndex(fromIndex);
         if u >= wordsInUse then
             return -1;
         end if;
 
-        var word: Int64 := words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64))
+        word : Int64 := words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64));
 
         loop
             if word /= 0 then
@@ -714,12 +716,12 @@ begin
         end if;
         checkInvariants()
 
-        var u: Integer := BitSet.wordIndex(fromIndex)
+        u : Integer := BitSet.wordIndex(fromIndex);
         if u >= wordsInUse then
             return fromIndex;
         end if;
 
-        var word: Int64 := not words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64))
+        word : Int64 := not words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64));
 
         loop
             if word /= 0 then
@@ -768,12 +770,12 @@ begin
 
         checkInvariants()
 
-        var u: Integer := BitSet.wordIndex(fromIndex)
+        u : Integer := BitSet.wordIndex(fromIndex);
         if u >= wordsInUse then
             return length() - 1;
         end if;
 
-        var word: Int64 := words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)))
+        word : Int64 := words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)));
         loop
             if word /= 0 then
                 return (u + 1) * BitSet.BITS_PER_WORD - 1 - word.leadingZeroBitCount;
@@ -812,12 +814,12 @@ begin
 
         checkInvariants()
 
-        var u: Integer := BitSet.wordIndex(fromIndex)
+        u : Integer := BitSet.wordIndex(fromIndex);
         if u >= wordsInUse then
             return fromIndex;
         end if;
 
-        var word: Int64 := not words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)))
+        word : Int64 := not words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)));
         -- var word : Int64 := not words[u] & (WORD_MASK >>> -(fromIndex+1));
 
         loop
@@ -872,7 +874,7 @@ begin
     -- public
     function intersects (set : BitSet) return Boolean is
 begin
-        var i: Integer := min(wordsInUse, set.wordsInUse) - 1
+        i : Integer := min(wordsInUse, set.wordsInUse) - 1;
         while i >= 0 loop
             if (words[i] & set.words[i]) /= 0 then
                 return True;
@@ -890,7 +892,7 @@ begin
     -- public
     function cardinality (This : …) return Integer is
 begin
-        var sum: Integer := 0
+        sum : Integer := 0;
         for i in 0 .. wordsInUse - 1 loop
             sum := @ + words[i].nonzeroBitCount;
         end loop;
@@ -943,7 +945,7 @@ begin
             return;
         end if;
 
-        let wordsInCommon: Integer := min(wordsInUse, set.wordsInUse)
+        wordsInCommon : constant Integer := min(wordsInUse, set.wordsInUse);
 
         if wordsInUse < set.wordsInUse then
             ensureCapacity(set.wordsInUse)
@@ -981,7 +983,7 @@ begin
     -- public
     procedure xor (set : BitSet) is
     begin
-        let wordsInCommon: Integer := min(wordsInUse, set.wordsInUse)
+        wordsInCommon : constant Integer := min(wordsInUse, set.wordsInUse);
 
         if wordsInUse < set.wordsInUse then
             ensureCapacity(set.wordsInUse)
@@ -1015,7 +1017,7 @@ begin
     procedure andNot (set : BitSet) is
     begin
         -- Perform logical (a & not b) on words in common
-        var i: Integer := min(wordsInUse, set.wordsInUse) - 1
+        i : Integer := min(wordsInUse, set.wordsInUse) - 1;
         while i >= 0 loop
             words[i] := @ and not set.words[i]
             i := @ - 1;
@@ -1045,8 +1047,8 @@ begin
     -- 
     -- private
     hashCode : Integer {
-        var h: Int64 := 1234
-        var i: Integer := wordsInUse
+        h : Int64 := 1234;
+        i : Integer := wordsInUse;
         i := @ - 1;
         while i >= 0 loop
              h ^= words[i] * Int64(i + 1)

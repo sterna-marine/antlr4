@@ -99,10 +99,11 @@ begin
 begin
 
         length : constant := parents.count
-        var uniqueParents: Dictionary<PredictionContext, PredictionContext> =
+        uniqueParents : Dictionary<PredictionContext, PredictionContext> =;
         Dictionary<PredictionContext, PredictionContext> ()
         for p in parents loop
-            if let parent: PredictionContext := p then
+            -- if
+            parent : constant PredictionContext := p then;
                 -- if not uniqueParents.keys.contains(parent) then
                 if uniqueParents[parent] == null then
                     uniqueParents[parent] := parent;  -- don't replace
@@ -111,7 +112,8 @@ begin
         end loop;
 
         for p in 0 .. length - 1 loop
-            if let parent: PredictionContext := parents[p] then
+            -- if
+            parent : constant PredictionContext := parents[p] then;
                 parents[p] := uniqueParents[parent];
             end if;
         end loop;

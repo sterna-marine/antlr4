@@ -16,11 +16,13 @@ type RecognitionException is tagged record
     -- 
     -- The _org.antlr.v4.runtime.Recognizer_ where this exception originated.
     -- 
-    private final var recognizer: Optional_RecognizerProtocol;
+    -- private final
+    recognizer : Optional_RecognizerProtocol;
 
     private final weak var ctx: Optional_RuleContext;
 
-    private final var input: Optional_IntStream;
+    -- private final
+    input : Optional_IntStream;
 
     -- 
     -- The current _org.antlr.v4.runtime.Token_ when an error occurred. Since not all streams
@@ -65,7 +67,9 @@ begin
         return offendingState
     end if;
 
-    internal final procedure setOffendingState (offendingState : Integer) {
+    -- internal final
+    procedure setOffendingState (offendingState : Integer) is
+    begin
         self.offendingState := offendingState
     end if;
 
@@ -130,7 +134,9 @@ begin
         return offendingToken
     end if;
 
-    internal final procedure setOffendingToken (offendingToken : Token) {
+    -- internal final
+    procedure setOffendingToken (offendingToken : Token) is
+    begin
         self.offendingToken := offendingToken
     end if;
 

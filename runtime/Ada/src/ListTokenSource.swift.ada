@@ -19,7 +19,8 @@ type ListTokenSource is new TokenSource with null record;
     -- 
     -- The wrapped collection of _org.antlr.v4.runtime.Token_ objects to return.
     -- 
-    internal let tokens: [Token]
+    -- internal
+    tokens : constant [Token];
 
     -- 
     -- The name of the input source. If this value is `null`, a call to

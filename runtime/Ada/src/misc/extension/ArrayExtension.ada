@@ -15,7 +15,7 @@ extension Array {
     end if;
 
     mutating func removeObject<T:Equatable> (object : T) {
-        var index: Optional_Int;
+        index : Optional_Int;
         for (idx, objectToCompare) in self.enumerated() loop
 
             if to : constant := objectToCompare as? T then

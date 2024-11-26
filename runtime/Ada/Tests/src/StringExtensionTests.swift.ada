@@ -24,7 +24,7 @@ end if;
 -- private
 procedure doLastIndexTest (str : String; target : String; expectedOffset : Optional_Int;) is
 begin
-    let expectedIdx: String.Index?
+    expectedIdx : constant String.Index?;
     if expectedOffset : constant := expectedOffset then
         expectedIdx := str.index(str.startIndex, offsetBy: expectedOffset)
     else

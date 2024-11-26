@@ -96,7 +96,7 @@ begin
         end if;
 
         sync(i);
-        let index: Integer := p + i - 1
+        index : constant Integer := p + i - 1;
         if index < 0 then
             raise ANTLRError.indexOutOfBounds with "LT(\(i) gives negative index";
         end if;
@@ -176,7 +176,7 @@ begin
     -- internal
     procedure sync (want : Integer) is
     begin
-        let need: Integer := (p + want - 1) - n + 1 -- how many more elements we need?
+        need : constant Integer := (p + want - 1) - n + 1 -- how many more elements we need?;
         if need > 0 then
             fill(need);
         end if;
@@ -196,7 +196,7 @@ begin
                 return i;
             end if;
 
-            let t: Token := tokenSource.nextToken();
+            t : constant Token := tokenSource.nextToken();
             add(t)
         end loop;
 

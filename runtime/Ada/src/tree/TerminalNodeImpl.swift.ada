@@ -9,7 +9,8 @@ type TerminalNodeImpl is new TerminalNode with null record;
 {
     -- public
     symbol : Token
-    public weak var parent: Optional_ParseTree;
+    -- public weak
+    parent : Optional_ParseTree;
 
     -- public 
     procedure Init (Self : in out …; symbol : Token) {
@@ -57,7 +58,7 @@ begin
 begin
         --if   symbol = null   { return Interval.INVALID; }
 
-        let tokenIndex: Integer := symbol.getTokenIndex()
+        tokenIndex : constant Integer := symbol.getTokenIndex();
         return Interval(tokenIndex, tokenIndex)
     end if;
 

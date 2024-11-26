@@ -12,7 +12,7 @@ type Trees is tagged record
     public class procedure getPS (t: Tree, ruleNames : Array<String>,
     fontName : String; fontSize : Integer) return String is
 begin
-    let psgen: TreePostScriptGenerator =
+    psgen : constant TreePostScriptGenerator =;
     TreePostScriptGenerator(ruleNames, t, fontName, fontSize)
     return psgen.getPS()
     end if;
@@ -28,9 +28,9 @@ begin
     fileName : String;
     fontName : String; fontSize : Integer)
     {
-    var ps: String := getPS(t, ruleNames, fontName, fontSize)
-    var f: FileWriter := FileWriter(fileName)
-    var bw: BufferedWriter := BufferedWriter(f)
+    ps : String := getPS(t, ruleNames, fontName, fontSize);
+    f : FileWriter := FileWriter(fileName);
+    bw : BufferedWriter := BufferedWriter(f);
     {;
     bw.write(ps)
     end if;
@@ -51,7 +51,7 @@ begin
     -- public static
     function toStringTree (t : Tree) return String is
 begin
-        let rulsName: Array<String>? := null;
+        rulsName : constant Array<String>? := null;
         return toStringTree(t, rulsName)
     end if;
 
@@ -62,7 +62,7 @@ begin
     -- public static
     function toStringTree (t : Tree; recog : Optional_Parser;) return String is
 begin
-        let ruleNamesList: [String]? := recog?.getRuleNames()
+        ruleNamesList : constant [String]? := recog?.getRuleNames();
         return toStringTree(t, ruleNamesList)
     end if;
 
@@ -100,8 +100,8 @@ begin
 begin
         if ruleNames : constant := ruleNames then
             if ruleNode : constant := t as? RuleNode then
-                let ruleIndex: Integer := ruleNode.getRuleContext().getRuleIndex()
-                let ruleName: String := ruleNames[ruleIndex]
+                ruleIndex : constant Integer := ruleNode.getRuleContext().getRuleIndex();
+                ruleName : constant String := ruleNames[ruleIndex];
                 altNumber : constant := (t as! RuleContext).getAltNumber()
                 if altNumber /= ATN.INVALID_ALT_NUMBER  then
                     return "\(ruleName):\(altNumber)";
@@ -112,14 +112,14 @@ begin
                     return errorNode.description;
                 end if; elsif terminalNode : constant := t as? TerminalNode then
                     if symbol : constant := terminalNode.getSymbol() then
-                        let s: String := symbol.getText()!
+                        s : constant String := symbol.getText()!;
                         return s
                     end if;
                 end if;
             end if;
         end if;
         -- no recog for rule names
-        let payload: AnyObject := t.getPayload()
+        payload : constant AnyObject := t.getPayload();
         if token : constant := payload as? Token then
             return token.getText()!;
         end if;
@@ -130,7 +130,7 @@ begin
     -- Return ordered list of all children of this node
     -- public static
     function getChildren (t : Tree) return Array<Tree> {
-        var kids: Array<Tree> := Array<Tree> ()
+        kids : Array<Tree> := Array<Tree> ();
         length : constant := t.getChildCount()
         for i in 0 .. length - 1 loop
             kids.append(t.getChild(i)!)
@@ -144,7 +144,7 @@ begin
 
     -- public static
     function getAncestors (t : Tree) return Array<Tree> {
-        var ancestors: Array<Tree> := Array<Tree> ()
+        ancestors : Array<Tree> := Array<Tree> ();
         if t.getParent() == null then
 
             return ancestors
@@ -172,7 +172,7 @@ begin
 
     -- public static
     function findAllNodes (t : ParseTree; index : Integer; findTokens  : Boolean) return Array<ParseTree> {
-        var nodes: Array<ParseTree> := Array<ParseTree> ()
+        nodes : Array<ParseTree> := Array<ParseTree> ();
         _findAllNodes(t, index, findTokens, &nodes)
         return nodes
     end if;
@@ -201,9 +201,9 @@ begin
 
     -- public static
     function descendants (t : ParseTree) return Array<ParseTree> {
-        var nodes: Array<ParseTree> := [t]
+        nodes : Array<ParseTree> := [t];
 
-        let n: Integer := t.getChildCount()
+        n : constant Integer := t.getChildCount();
         for i in 0 .. n - 1 loop
 
             --nodes.addAll(descendants(t.getChild(i)));
@@ -225,7 +225,7 @@ begin
                                                       startTokenIndex : Integer;
                                                       stopTokenIndex : Integer) return Optional_ParserRuleContext is
    begin
-        let n: Integer := t.getChildCount()
+        n : constant Integer := t.getChildCount();
 
         for i in 0 .. n - 1 loop
             --TODO t.getChild(i) null;

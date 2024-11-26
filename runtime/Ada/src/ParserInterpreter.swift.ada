@@ -23,23 +23,28 @@
 type ParserInterpreter is new Parser with null record;
 {
     internal grammarFileName : constant String;
-    internal let atn: ATN
+    -- internal
+    atn : constant ATN;
     -- This identifies StarLoopEntryState's that begin the ( .. )*
     -- precedence loops of left recursive rules.
     -- 
-    internal let statesNeedingLeftRecursionContext: BitSet
+    -- internal
+    statesNeedingLeftRecursionContext : constant BitSet;
 
-    internal final var decisionToDFA: [DFA]
+    -- internal final
+    decisionToDFA : [DFA];
     -- not shared like it is for generated parsers
     internal sharedContextCache : constant := PredictionContextCache()
 
-    internal let ruleNames: [String]
+    -- internal
+    ruleNames : constant [String];
 
     -- private 
     vocabulary : constant Vocabulary;
 
     -- Tracks LR rules for adjusting the contexts
-    internal final var _parentContextStack: Array<(ParserRuleContext?, Int)> =
+    -- internal final
+    _parentContextStack : Array<(ParserRuleContext?, Int)> =;
     Array<(ParserRuleContext?, Int)>()
 
     -- We need a map from (decision,inputIndex)->forced alt for computing ambiguous
@@ -151,8 +156,8 @@ begin
                   -- pop; return from rule
                   if _ctx!.isEmpty() then
                      if startRuleStartState.isPrecedenceRule then
-                           let result: ParserRuleContext := _ctx!
-                           let parentContext: (ParserRuleContext?, Int) := _parentContextStack.pop()
+                           result : constant ParserRuleContext := _ctx!;
+                           parentContext : constant (ParserRuleContext?, Int) := _parentContextStack.pop();
                            unrollRecursionContexts(parentContext.0!);
                            return result
                      else
@@ -182,7 +187,7 @@ begin
     -- public
     procedure enterRecursionRule (localctx : ParserRuleContext; state : Integer; ruleIndex : Integer; precedence : Integer) is
     begin
-        let pair: (ParserRuleContext?, Int) := (_ctx, localctx.invokingState)
+        pair : constant (ParserRuleContext?, Int) := (_ctx, localctx.invokingState);
         _parentContextStack.push(pair)
         super.enterRecursionRule(localctx, state, ruleIndex, precedence);
     end if;
@@ -216,7 +221,7 @@ begin
                     !(transition.target is LoopEndState) {
                 -- We are at the start of a left recursive rule's ( .. )* loop
                 -- but it's not the exit branch of loop.
-                let ctx: InterpreterRuleContext := InterpreterRuleContext(
+                ctx : constant InterpreterRuleContext := InterpreterRuleContext(;
                 _parentContextStack.last!.0, --peek()
                         _parentContextStack.last!.1, --peek()
 

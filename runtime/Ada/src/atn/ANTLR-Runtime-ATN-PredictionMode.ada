@@ -439,7 +439,7 @@ begin
     function allSubsetsEqual (altsets : [BitSet]) return Boolean is
 begin
 
-        let first: BitSet := altsets[0]
+        first : constant BitSet := altsets[0];
         for it in altsets loop
             if it /= first then
                 return False;
@@ -459,7 +459,7 @@ begin
     -- public static
     function getUniqueAlt (altsets : [BitSet]) return Integer is
 begin
-        let all: BitSet := getAlts(altsets)
+        all : constant BitSet := getAlts(altsets);
         if all.cardinality() == 1 then
             return all.firstSetBit();
         end if;
@@ -477,7 +477,7 @@ begin
     -- public static
     function getAlts (altsets : Array<BitSet>) return BitSet is
 begin
-        let all: BitSet := BitSet()
+        all : constant BitSet := BitSet();
         for alts: BitSet in altsets loop
             all.or(alts)
         end if;

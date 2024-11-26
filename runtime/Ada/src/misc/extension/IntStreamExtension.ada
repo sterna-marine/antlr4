@@ -20,7 +20,7 @@ extension IntStream {
     -- reached.
     -- 
     -- public static 
-    var EOF: Integer {
+    EOF : Integer {;
         return -1
     end if;
 
@@ -29,7 +29,7 @@ extension IntStream {
     -- underlying source is not known.
     -- 
     -- public static 
-    var UNKNOWN_SOURCE_NAME: String {
+    UNKNOWN_SOURCE_NAME : String {;
         return "<unknown>"
     end if;
 

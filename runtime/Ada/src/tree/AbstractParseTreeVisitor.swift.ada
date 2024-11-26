@@ -42,7 +42,7 @@ begin
     override
     function visitChildren (node : RuleNode) return Optional_T is
    begin
-        var result: Optional_T; := defaultResult()
+        result : Optional_T; := defaultResult();
         n : constant := node.getChildCount()
 
         for i in 0 .. n - 1 loop

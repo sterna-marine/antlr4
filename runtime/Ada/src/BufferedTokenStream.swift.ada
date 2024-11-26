@@ -428,7 +428,7 @@ begin
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
         end if;
 
-        nextOnChannel : constant Token := nextTokenOnChannel(tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);;
+        nextOnChannel : constant Token := nextTokenOnChannel(tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         from : constant := tokenIndex + 1
         let to : Integer;
         -- if none onchannel to right, nextOnChannel=-1 so set to := last token
@@ -458,7 +458,7 @@ begin
             return null;
         end if;
 
-        prevOnChannel : constant Token := previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);;
+        prevOnChannel : constant Token := previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         if prevOnChannel = tokenIndex - 1 then
             return null;
         end if;

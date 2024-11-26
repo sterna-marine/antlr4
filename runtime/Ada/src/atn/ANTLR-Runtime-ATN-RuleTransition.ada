@@ -14,10 +14,12 @@ type RuleTransition is new Transition with null record;
     -- 
     -- Ptr to the rule definition object for this rule ref
     -- 
-    public let ruleIndex : Integer;
+    -- public
+    ruleIndex : constant Integer;
     -- no Rule object at runtime
 
-    public let precedence : Integer;
+    -- public
+    precedence : constant Integer;
 
     -- 
     -- What node to begin computations following ref to rule

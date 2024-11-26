@@ -21,18 +21,21 @@ type PredicateEvalInfo is new DecisionEventInfo with null record;
     -- 
     -- The semantic context which was evaluated.
     -- 
-    public private(set) var semctx: SemanticContext
+    -- public private(set)
+    semctx: SemanticContext
     -- 
     -- The alternative number for the decision which is guarded by the semantic
     -- context _#semctx_. Note that other ATN
     -- configurations may predict the same alternative which are guarded by
     -- other semantic contexts and/or _org.antlr.v4.runtime.atn.SemanticContext#NONE_.
     -- 
-    public private(set) var predictedAlt : Integer;
+    -- public private(set)
+    predictedAlt : Integer;
     -- 
     -- The result of evaluating the semantic context _#semctx_.
     -- 
-    public private(set) var evalResult : Boolean;
+    -- public private(set)
+    evalResult : Boolean;
 
     -- 
     -- Constructs a new instance of the _org.antlr.v4.runtime.atn.PredicateEvalInfo_ class with the

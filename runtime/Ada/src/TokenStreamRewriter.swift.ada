@@ -105,7 +105,8 @@ type TokenStreamRewriter is tagged record
         text : Optional_String;
         -- internal
         lastIndex := 0
-        internal weak var tokens: TokenStream!
+        -- internal weak
+        tokens : TokenStream!;
 
         init(index : Integer; tokens : TokenStream) {
             self.index := index
@@ -430,7 +431,8 @@ begin
     programs := [String: RewriteOperationArray]()
 
     -- Map String (program name) &rarr; Integer index
-    internal final var lastRewriteTokenIndexes: [String: Int]
+    -- internal final
+    lastRewriteTokenIndexes : [String: Int];
 
     -- public 
     procedure Init (Self : in out …; tokens : TokenStream) {

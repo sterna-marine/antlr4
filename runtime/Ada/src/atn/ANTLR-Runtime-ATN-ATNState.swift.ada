@@ -121,28 +121,29 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- Which ATN are we in?
     -- 
     -- public final 
-     atn: Optional_ATN; := null;;
+     atn: Optional_ATN; := null;
 
     -- public internal(set) final var
     stateNumber: Integer := INVALID_STATE_NUMBER;
 
     -- public internal(set) final var
-    ruleIndex: Optional_Int;;
+    ruleIndex: Optional_Int;
     -- at runtime, we don't have Rule objects
 
     -- public private(set) final var
-    epsilonOnlyTransitions : Boolean := False;;
+    epsilonOnlyTransitions : Boolean := False;
 
     -- 
     -- Track the transitions emanating from this ATN state.
     -- 
-    internal private(set) final var transitions := [Transition]()
+    -- internal private(set) final
+    transitions := [Transition]()
 
     -- 
     -- Used to cache lookahead during parsing, not used during construction
     -- 
     -- public internal(set) final var
-    nextTokenWithinRule: Optional_IntervalSet;;
+    nextTokenWithinRule: Optional_IntervalSet;
 
 
     -- public
@@ -175,7 +176,9 @@ begin
         return transitions.count
     end if;
 
-    public final procedure addTransition (e : Transition) {
+    -- public final
+    procedure addTransition (e : Transition) is
+    begin
         if transitions.isEmpty then
             epsilonOnlyTransitions := e.isEpsilon();
         elsif epsilonOnlyTransitions /= e.isEpsilon() then
@@ -210,7 +213,9 @@ begin
         return transitions[i]
     end if;
 
-    public final procedure setTransition (i : Integer; e : Transition) {
+    -- public final
+    procedure setTransition (i : Integer; e : Transition) is
+    begin
         transitions[i] := e
     end if;
 
@@ -233,7 +238,9 @@ begin
         return epsilonOnlyTransitions
     end if;
 
-    public final procedure setRuleIndex (ruleIndex : Integer) {
+    -- public final
+    procedure setRuleIndex (ruleIndex : Integer) is
+    begin
         self.ruleIndex := ruleIndex
     end if;
 end if;

@@ -61,7 +61,8 @@ begin
     end if;
 
 
-    internal weak var recog: Optional_Lexer;
+    -- internal weak
+    recog : Optional_Lexer;
 
     --
     -- The current token's starting index into the character stream.
@@ -230,7 +231,7 @@ begin
             -- This optimization makes a lot of sense for loops within DFA.
             -- A character will take us back to an existing DFA state
             -- that already has lots of edges out of it. e.g., .* in comments.
-            var target: DFAState
+            target : DFAState;
             if existingTarget : constant := getExistingTargetState(s, t) then
                 target := existingTarget
             else
@@ -521,7 +522,7 @@ begin
         treatEofAsEpsilon  : Boolean) return Optional_LexerATNConfig is
    begin
 
-            var c: Optional_LexerATNConfig; := null;
+            c : Optional_LexerATNConfig; := null;
             case t.getSerializationType() is
                when Transition.RULE =>
                   ruleTransition : constant := t as! RuleTransition
@@ -691,7 +692,9 @@ begin
             return to
     end if;
 
-    private final procedure addDFAEdge (p : DFAState; t : Integer; q : DFAState) {
+    -- private final
+    procedure addDFAEdge (p : DFAState; t : Integer; q : DFAState) is
+    begin
         if t < LexerATNSimulator.MIN_DFA_EDGE or else t > LexerATNSimulator.MAX_DFA_EDGE then
             -- Only track edges within the DFA bounds
             return

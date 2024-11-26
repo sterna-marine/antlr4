@@ -39,7 +39,8 @@ type CommonTokenFactory is new TokenFactory with null record;
     -- The default value is `False` to avoid the performance and memory
     -- overhead of copying text for every token unless explicitly requested.
     -- 
-    internal let copyText : Boolean;
+    -- internal
+    copyText : constant Boolean;
 
     -- 
     -- Constructs a _org.antlr.v4.runtime.CommonTokenFactory_ with the specified value for

@@ -16,7 +16,8 @@
 -- public
 type LexerTypeAction is new LexerAction and CustomStringConvertible with null record;
 {
-    fileprivate let type : Integer;
+    -- fileprivate
+    type : constant Integer;
 
     -- 
     -- Constructs a new `type` action with the specified token type value.

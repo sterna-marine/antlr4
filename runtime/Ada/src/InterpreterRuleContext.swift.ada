@@ -69,7 +69,7 @@ begin
         guard ctx : constant := ctx else {
              return null;
         end if;
-        let dup: InterpreterRuleContext := InterpreterRuleContext()
+        dup : constant InterpreterRuleContext := InterpreterRuleContext();
         dup.copyFrom(ctx)
         dup.ruleIndex := ctx.getRuleIndex()
         dup.parent := fromParserRuleContext(ctx.getParent() as? ParserRuleContext)

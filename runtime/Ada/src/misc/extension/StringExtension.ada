@@ -12,7 +12,7 @@ extension String {
         if target.isEmpty then
             return null;
         end if;
-        var result: String.Index? := null;
+        result : String.Index? := null;
         var substring := self[ .. ]
         loop
             guard targetRange : constant := substring.range(of: target) else {

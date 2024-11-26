@@ -99,9 +99,12 @@ begin
     -- public
     type Predicate is new SemanticContext with null record;
 {
-        public let ruleIndex : Integer;
-        public let predIndex : Integer;
-        public let isCtxDependent : Boolean;
+        -- public
+        ruleIndex : constant Integer;
+        -- public
+        predIndex : constant Integer;
+        -- public
+        isCtxDependent : constant Boolean;
         -- e.g., $i ref in pred
 
         override
@@ -149,7 +152,8 @@ begin
     -- public
     type PrecedencePredicate is new SemanticContext with null record;
 {
-        public let precedence : Integer;
+        -- public
+        precedence : constant Integer;
         override
         procedure Init (Self : …) is
 begin
@@ -340,7 +344,7 @@ begin
 
         -- public 
         procedure Init (Self : in out …; a : SemanticContext; b : SemanticContext) {
-            var operands: Set<SemanticContext> := Set<SemanticContext> ()
+            operands : Set<SemanticContext> := Set<SemanticContext> ();
             if aOr : constant := a as? OR then
                 operands.formUnion(aOr.opnds)
             else
@@ -439,7 +443,7 @@ begin
         if b = null or else b = SemanticContext.Empty.Instance then
             return a!;
         end if;
-        let result: AND := AND(a!, b!)
+        result : constant AND := AND(a!, b!);
         if result.opnds.count = 1 then
             return result.opnds[0];
         end if;
@@ -463,7 +467,7 @@ begin
         if a = SemanticContext.Empty.Instance or else b = SemanticContext.Empty.Instance then
             return SemanticContext.Empty.Instance;
         end if;
-        let result: OR := OR(a!, b!)
+        result : constant OR := OR(a!, b!);
         if result.opnds.count = 1 then
             return result.opnds[0];
         end if;

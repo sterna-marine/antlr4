@@ -17,9 +17,12 @@
 -- public final
 type PredicateTransition is new AbstractPredicateTransition and CustomStringConvertible with null record;
 {
-    public let ruleIndex : Integer;
-    public let predIndex : Integer;
-    public let isCtxDependent : Boolean;
+    -- public
+    ruleIndex : constant Integer;
+    -- public
+    predIndex : constant Integer;
+    -- public
+    isCtxDependent : constant Boolean;
     -- e.g., $i ref in pred
 
     -- public 

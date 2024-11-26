@@ -15,7 +15,8 @@
 -- public
 type ProxyErrorListener is new ANTLRErrorListener with null record;
 {
-    private final var delegates: [ANTLRErrorListener]
+    -- private final
+    delegates : [ANTLRErrorListener];
 
     -- public 
     procedure Init (Self : in out …; delegates : [ANTLRErrorListener]) {

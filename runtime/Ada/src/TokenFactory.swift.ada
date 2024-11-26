@@ -41,8 +41,10 @@ type TokenSourceAndStream is tagged record
     -- public static 
     EMPTY : constant := TokenSourceAndStream()
 
-    public weak var tokenSource: Optional_TokenSource;
-    public weak var stream: Optional_CharStream;
+    -- public weak
+    tokenSource : Optional_TokenSource;
+    -- public weak
+    stream : Optional_CharStream;
 
     -- public 
     procedure Init (Self : in out …; tokenSource : Optional_TokenSource; := null, stream : Optional_CharStream; := null) {

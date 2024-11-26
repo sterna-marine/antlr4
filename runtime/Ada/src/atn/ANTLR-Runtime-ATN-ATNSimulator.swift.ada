@@ -43,7 +43,8 @@ type ATNSimulator is tagged record
     -- more time I think and doesn't save on the overall footprint
     -- so it's not worth the complexity.
     -- 
-    internal let sharedContextCache: PredictionContextCache
+    -- internal
+    sharedContextCache : constant PredictionContextCache;
 
     -- public 
     procedure Init (Self : in out …; atn : ATN;

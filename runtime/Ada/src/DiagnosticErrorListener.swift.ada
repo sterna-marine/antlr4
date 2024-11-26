@@ -33,7 +33,8 @@ type DiagnosticErrorListener is new BaseErrorListener with null record;
     -- 
     -- When `True`, only exactly known ambiguities are reported.
     -- 
-    internal final var exactOnly : Boolean;
+    -- internal final
+    exactOnly : Boolean;
 
     -- 
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_ which only
@@ -109,15 +110,15 @@ begin
     -- internal
     function getDecisionDescription (recognizer : Parser; dfa : DFA) return String is
 begin
-        let decision: Integer := dfa.decision
-        let ruleIndex: Integer := dfa.atnStartState.ruleIndex!
+        decision : constant Integer := dfa.decision;
+        ruleIndex : constant Integer := dfa.atnStartState.ruleIndex!;
 
-        let ruleNames: [String] := recognizer.getRuleNames()
+        ruleNames : constant [String] := recognizer.getRuleNames();
         guard ruleNames.indices.contains(ruleIndex) else {
             return String(decision)
         end if;
 
-        let ruleName: String := ruleNames[ruleIndex]
+        ruleName : constant String := ruleNames[ruleIndex];
         --if (ruleName = null or else ruleName.isEmpty()) {
         if ruleName.isEmpty then
             return String(decision);

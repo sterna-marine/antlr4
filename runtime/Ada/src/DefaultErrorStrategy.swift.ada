@@ -472,7 +472,7 @@ begin
     function recoverInline (recognizer : Parser) return Token is
 begin
         -- SINGLE TOKEN DELETION
-        matchedSymbol : constant Token := singleTokenDeletion(recognizer);;
+        matchedSymbol : constant Token := singleTokenDeletion(recognizer);
         if matchedSymbol : constant := matchedSymbol then
             -- we have deleted the extra token.
             -- now, move past ttype token as if all were ok
@@ -509,7 +509,7 @@ begin
     -- open
     function singleTokenInsertion (recognizer : Parser) return Boolean is
 begin
-        currentSymbolType : constant Token := getTokenStream(recognizer).LA(1);;
+        currentSymbolType : constant Token := getTokenStream(recognizer).LA(1);
         -- if current token is consistent with what could come after current
         -- ATN state, then we know we're missing a token; error recovery
         -- is free to conjure up and insert the missing token
@@ -547,8 +547,8 @@ begin
     -- open
     function singleTokenDeletion (recognizer : Parser) return Optional_Token is
    begin
-        nextTokenType : constant Token := getTokenStream(recognizer).LA(2);;
-        expecting : constant Token := getExpectedTokens(recognizer);;
+        nextTokenType : constant Token := getTokenStream(recognizer).LA(2);
+        expecting : constant Token := getExpectedTokens(recognizer);
         if expecting.contains(nextTokenType) then
             reportUnwantedToken(recognizer)
             -- 
@@ -596,7 +596,7 @@ begin
     function getMissingSymbol (recognizer : Parser) return Token is
 begin
         currentSymbol : constant := recognizer.getCurrentToken();
-        expecting : constant Token := getExpectedTokens(recognizer);;
+        expecting : constant Token := getExpectedTokens(recognizer);
         expectedTokenType : constant := expecting.getMinElement() -- get any element
         var tokenText : String;
         if expectedTokenType = CommonToken.EOF then
@@ -605,7 +605,7 @@ begin
             tokenText := "<missing " + recognizer.getVocabulary().getDisplayName(expectedTokenType) + ">";
         end if;
         var current := currentSymbol
-        lookback : constant Token := getTokenStream(recognizer).LT(-1);;
+        lookback : constant Token := getTokenStream(recognizer).LT(-1);
         if current.getType() == CommonToken.EOF and then lookback /= null then
             current := lookback!;
         end if;
@@ -773,7 +773,7 @@ begin
     function getErrorRecoverySet (recognizer : Parser) return IntervalSet is
 begin
         atn : constant := recognizer.getInterpreter().atn
-        var ctx: Optional_RuleContext; := recognizer._ctx
+        ctx : Optional_RuleContext; := recognizer._ctx;
         recoverSet : constant := IntervalSet()
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 loop
             -- compute what follows who invoked us
