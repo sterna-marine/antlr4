@@ -5,7 +5,8 @@
 -- How to emit recognition errors.
 -- 
 
-public protocol ANTLRErrorListener: AnyObject {
+-- public
+type ANTLRErrorListener is interface;
     -- 
     -- Upon syntax error, notify any interested parties. This is not how to
     -- recover from errors or compute error messages. _org.antlr.v4.runtime.ANTLRErrorStrategy_

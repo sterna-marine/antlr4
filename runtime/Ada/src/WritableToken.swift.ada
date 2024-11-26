@@ -4,7 +4,8 @@
 --
 
 
-public protocol WritableToken: Token {
+-- public
+type WritableToken is interface and Token;
     procedure setText (text : String)
 
     procedure setType (ttype : Integer)

@@ -9,7 +9,8 @@
 -- _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher#compile(String, int)_.
 -- 
 
-public class ParseTreePattern {
+-- public
+type ParseTreePattern is tagged record
     -- 
     -- This is the backing field for _#getPatternRuleIndex()_.
     -- 
@@ -63,7 +64,8 @@ public class ParseTreePattern {
     -- used to determine whether or not the match was successful.
     -- 
 
-    public function match (tree : ParseTree) return ParseTreeMatch is
+    -- public
+    function match (tree : ParseTree) return ParseTreeMatch is
 begin
         return matcher.match(tree, self);
     end ;
@@ -75,7 +77,8 @@ begin
     -- - Returns: `True` if `tree` is a match for the current tree
     -- pattern; otherwise, `False`.
     -- 
-    public function matches (tree : ParseTree) return Boolean is
+    -- public
+    function matches (tree : ParseTree) return Boolean is
 begin
         return matcher.match(tree, self).succeeded();
     end ;
@@ -111,7 +114,8 @@ begin
     -- pattern.
     -- 
 
-    public function getMatcher (This : …) return ParseTreePatternMatcher is
+    -- public
+    function getMatcher (This : …) return ParseTreePatternMatcher is
 begin
         return matcher
     end ;
@@ -122,7 +126,8 @@ begin
     -- - Returns: The tree pattern in concrete syntax form.
     -- 
 
-    public function getPattern (This : …) return String is
+    -- public
+    function getPattern (This : …) return String is
 begin
         return pattern
     end ;
@@ -134,7 +139,8 @@ begin
     -- - Returns: The parser rule which serves as the outermost rule for the tree
     -- pattern.
     -- 
-    public function getPatternRuleIndex (This : …) return Integer is
+    -- public
+    function getPatternRuleIndex (This : …) return Integer is
 begin
         return patternRuleIndex
     end ;
@@ -147,7 +153,8 @@ begin
     -- - Returns: The tree pattern as a _org.antlr.v4.runtime.tree.ParseTree_.
     -- 
 
-    public function getPatternTree (This : …) return ParseTree is
+    -- public
+    function getPatternTree (This : …) return ParseTree is
 begin
         return patternTree
     end ;

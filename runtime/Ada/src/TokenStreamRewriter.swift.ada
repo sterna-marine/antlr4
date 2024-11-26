@@ -83,13 +83,15 @@
 
 with Foundation;
 
-public class TokenStreamRewriter {
+-- public
+type TokenStreamRewriter is tagged record
     public DEFAULT_PROGRAM_NAME : constant := "default"
     public static PROGRAM_INIT_SIZE : constant := 100
     public static MIN_TOKEN_INDEX : constant := 0
 
     -- Define the rewrite operation hierarchy
-    public type RewriteOperation is new CustomStringConvertible with null record;
+    -- public
+    type RewriteOperation is new CustomStringConvertible with null record;
 {
         -- What index into rewrites List are we?
         -- internal
@@ -117,7 +119,8 @@ public class TokenStreamRewriter {
         -- Execute the rewrite operation by possibly adding to the buffer.
         -- Return the index of the next token to operate on.
         -- 
-        public function execute (buf : inout String) return Integer is
+        -- public
+        function execute (buf : inout String) return Integer is
 begin
             return index
         end ;
@@ -130,9 +133,11 @@ begin
         end ;
     end ;
 
-    public type InsertBeforeOp is new RewriteOperation with null record;
+    -- public
+    type InsertBeforeOp is new RewriteOperation with null record;
 {
-        override public function execute (buf : inout String) return Integer is
+        -- override public
+        function execute (buf : inout String) return Integer is
 begin
             if text : constant := text then
                 buf.append(text);
@@ -145,7 +150,8 @@ begin
         end ;
     end ;
 
-    public type InsertAfterOp is new InsertBeforeOp with null record;
+    -- public
+    type InsertAfterOp is new InsertBeforeOp with null record;
 {
         -- public 
         override
@@ -158,7 +164,8 @@ begin
     -- instructions.
     --
 
-    public type ReplaceOp is new RewriteOperation with null record;
+    -- public
+    type ReplaceOp is new RewriteOperation with null record;
 {
 
         -- public 
@@ -168,7 +175,8 @@ begin
         end ;
 
         override
-        public function execute (buf : inout String) return Integer is
+        -- public
+        function execute (buf : inout String) return Integer is
 begin
             if text : constant := text then
                 buf := @ + text;
@@ -192,17 +200,22 @@ begin
     public class RewriteOperationArray{
         private final var rewrites := [RewriteOperation?]()
 
-        public procedure Init (Self : …) is
+        -- public
+        procedure Init (Self : …) is
 begin
             rewrites.reserveCapacity(TokenStreamRewriter.PROGRAM_INIT_SIZE)
         end ;
 
-        final procedure append (op : RewriteOperation) {
+        -- final
+        procedure append (op : RewriteOperation) is
+        begin
             op.instructionIndex := rewrites.count
             rewrites.append(op)
         end ;
 
-        final procedure rollback (instructionIndex : Integer) {
+        -- final
+        procedure rollback (instructionIndex : Integer) is
+        begin
             rewrites := Array(rewrites[TokenStreamRewriter.MIN_TOKEN_INDEX ..< instructionIndex])
         end ;
 
@@ -265,7 +278,8 @@ begin
         -- 
         -- Return a map from token index to operation.
         -- 
-        final function reduceToSingleOperationPerIndex (This : …) return [Int: RewriteOperation] {
+        -- final
+        function reduceToSingleOperationPerIndex (This : …) return [Int: RewriteOperation] {
 
             rewritesCount : constant := rewrites.count
             -- WALK REPLACES
@@ -367,7 +381,7 @@ begin
             for i in 0 .. rewritesCount - 1 loop
                 if op : constant := rewrites[i] then
                     if m[op.index] /= null then
-                        raise ANTLRError.illegalArgument with "should only be one op per index";;
+                        raise ANTLRError.illegalArgument with "should only be one op per index";
                     end if;
                     m[op.index] := op
                 end ;
@@ -376,7 +390,8 @@ begin
             return m
         end ;
 
-        final function catOpText (a : String?, b : String?) return String is
+        -- final
+        function catOpText (a : String?, b : String?) return String is
 begin
             x : constant := a ?? ""
             y : constant := b ?? ""
@@ -385,7 +400,8 @@ begin
 
         -- Get all operations before an index of a particular kind
 
-        final function getKindOfOps<T: RewriteOperation> (rewrites : inout [RewriteOperation?], kind : T.Type, before : Integer ) return [Int] is
+        -- final
+        function getKindOfOps<T: RewriteOperation> (rewrites : inout [RewriteOperation?], kind : T.Type, before : Integer ) return [Int] is
 begin
 
             length : constant := min(before, rewrites.count)
@@ -421,12 +437,15 @@ begin
         lastRewriteTokenIndexes := Dictionary<String, Int> ()
     end ;
 
-    public final function getTokenStream (This : …) return TokenStream is
+    -- public final
+    function getTokenStream (This : …) return TokenStream is
 begin
         return tokens
     end ;
 
-    public procedure rollback (instructionIndex : Integer) {
+    -- public
+    procedure rollback (instructionIndex : Integer) is
+    begin
         rollback(DEFAULT_PROGRAM_NAME, instructionIndex)
     end ;
 
@@ -434,130 +453,180 @@ begin
     -- the indicated instruction (via instructionIndex) is no
     -- longer in the stream. UNTESTED!
     -- 
-    public procedure rollback (programName : String; instructionIndex : Integer) {
+    -- public
+    procedure rollback (programName : String; instructionIndex : Integer) is
+    begin
         if program : constant := programs[programName] then
             program.rollback(instructionIndex);
         end if;
     end ;
 
-    public procedure deleteProgram (This : …) is
+    -- public
+    procedure deleteProgram (This : …) is
 begin
         deleteProgram(DEFAULT_PROGRAM_NAME)
     end ;
 
     -- Reset the program so that no instructions exist
-    public procedure deleteProgram (programName : String) {
+    -- public
+    procedure deleteProgram (programName : String) is
+    begin
         rollback(programName, TokenStreamRewriter.MIN_TOKEN_INDEX)
     end ;
 
-    public procedure insertAfter (t : Token; text : String) {
+    -- public
+    procedure insertAfter (t : Token; text : String) is
+    begin
         insertAfter(DEFAULT_PROGRAM_NAME, t, text)
     end ;
 
-    public procedure insertAfter (index : Integer; text : String) {
+    -- public
+    procedure insertAfter (index : Integer; text : String) is
+    begin
         insertAfter(DEFAULT_PROGRAM_NAME, index, text)
     end ;
 
-    public procedure insertAfter (programName : String; t : Token; text : String) {
+    -- public
+    procedure insertAfter (programName : String; t : Token; text : String) is
+    begin
         insertAfter(programName, t.getTokenIndex(), text)
     end ;
 
-    public procedure insertAfter (programName : String; index : Integer; text : String) {
+    -- public
+    procedure insertAfter (programName : String; index : Integer; text : String) is
+    begin
         -- to insert after, just insert before next index (even if past end)
         op : constant := InsertAfterOp(index, text, tokens)
         rewrites : constant := getProgram(programName)
         rewrites.append(op)
     end ;
 
-    public procedure insertBefore (t : Token; text : String) {
+    -- public
+    procedure insertBefore (t : Token; text : String) is
+    begin
         insertBefore(DEFAULT_PROGRAM_NAME, t, text)
     end ;
 
-    public procedure insertBefore (index : Integer; text : String) {
+    -- public
+    procedure insertBefore (index : Integer; text : String) is
+    begin
         insertBefore(DEFAULT_PROGRAM_NAME, index, text)
     end ;
 
-    public procedure insertBefore (programName : String; t : Token; text : String) {
+    -- public
+    procedure insertBefore (programName : String; t : Token; text : String) is
+    begin
         insertBefore(programName, t.getTokenIndex(), text)
     end ;
 
-    public procedure insertBefore (programName : String; index : Integer; text : String) {
+    -- public
+    procedure insertBefore (programName : String; index : Integer; text : String) is
+    begin
         op : constant := InsertBeforeOp(index, text, tokens)
         rewrites : constant := getProgram(programName)
         rewrites.append(op)
     end ;
 
-    public procedure replace (index : Integer; text : String) {
+    -- public
+    procedure replace (index : Integer; text : String) is
+    begin
         replace(DEFAULT_PROGRAM_NAME, index, index, text);
     end ;
 
-    public procedure replace (from : Integer; to : Integer; text : String) {
+    -- public
+    procedure replace (from : Integer; to : Integer; text : String) is
+    begin
         replace(DEFAULT_PROGRAM_NAME, from, to, text);
     end ;
 
-    public procedure replace (indexT : Token; text : String) {
+    -- public
+    procedure replace (indexT : Token; text : String) is
+    begin
         replace(DEFAULT_PROGRAM_NAME, indexT, indexT, text);
     end ;
 
-    public procedure replace (from : Token; to : Token; text : String) {
+    -- public
+    procedure replace (from : Token; to : Token; text : String) is
+    begin
         replace(DEFAULT_PROGRAM_NAME, from, to, text)
     end ;
 
-    public procedure replace (programName : String; from : Integer; to : Integer; text : String?) {
+    -- public
+    procedure replace (programName : String; from : Integer; to : Integer; text : String?) is
+    begin
         if from > to or else from < 0 or else to < 0 or else to >= tokens.size() then
-            raise ANTLRError.illegalArgument with "replace: range invalid: \(from)..\(to)(size=\(tokens.size()))";;
+            raise ANTLRError.illegalArgument with "replace: range invalid: \(from)..\(to)(size=\(tokens.size()))";
         end if;
         op : constant := ReplaceOp(from, to, text, tokens)
         rewritesArray : constant := getProgram(programName)
         rewritesArray.append(op)
     end ;
 
-    public procedure replace (programName : String; from : Token; to : Token; text : String?) {
+    -- public
+    procedure replace (programName : String; from : Token; to : Token; text : String?) is
+    begin
         replace(programName,;
             from.getTokenIndex(),
             to.getTokenIndex(),
             text)
     end ;
 
-    public procedure delete (index : Integer) {
+    -- public
+    procedure delete (index : Integer) is
+    begin
         delete(DEFAULT_PROGRAM_NAME, index, index);
     end ;
 
-    public procedure delete (from : Integer; to : Integer) {
+    -- public
+    procedure delete (from : Integer; to : Integer) is
+    begin
         delete(DEFAULT_PROGRAM_NAME, from, to);
     end ;
 
-    public procedure delete (indexT : Token) {
+    -- public
+    procedure delete (indexT : Token) is
+    begin
         delete(DEFAULT_PROGRAM_NAME, indexT, indexT);
     end ;
 
-    public procedure delete (from : Token; to : Token) {
+    -- public
+    procedure delete (from : Token; to : Token) is
+    begin
         delete(DEFAULT_PROGRAM_NAME, from, to);
     end ;
 
-    public procedure delete (programName : String; from : Integer; to : Integer) {
+    -- public
+    procedure delete (programName : String; from : Integer; to : Integer) is
+    begin
         replace(programName, from, to, null);
     end ;
 
-    public procedure delete (programName : String; from : Token; to : Token) {
+    -- public
+    procedure delete (programName : String; from : Token; to : Token) is
+    begin
         replace(programName, from, to, null);
     end ;
 
-    public function getLastRewriteTokenIndex (This : …) return Integer is
+    -- public
+    function getLastRewriteTokenIndex (This : …) return Integer is
 begin
         return getLastRewriteTokenIndex(DEFAULT_PROGRAM_NAME)
     end ;
 
-    internal function getLastRewriteTokenIndex (programName : String) return Integer is
+    -- internal
+    function getLastRewriteTokenIndex (programName : String) return Integer is
 begin
         return lastRewriteTokenIndexes[programName] ?? -1
     end ;
 
-    internal procedure setLastRewriteTokenIndex (programName : String; i : Integer) {
+    -- internal
+    procedure setLastRewriteTokenIndex (programName : String; i : Integer) is
+    begin
         lastRewriteTokenIndexes[programName] := i
     end ;
 
-    internal function getProgram (name : String) return RewriteOperationArray is
+    -- internal
+    function getProgram (name : String) return RewriteOperationArray is
 begin
         if program : constant := programs[name] then
             return program
@@ -566,7 +635,8 @@ begin
         end if;
     end ;
 
-    private function initializeProgram (name : String) return RewriteOperationArray is
+    -- private
+    function initializeProgram (name : String) return RewriteOperationArray is
 begin
         program : constant := RewriteOperationArray()
         programs[name] := program
@@ -576,7 +646,8 @@ begin
     -- Return the text from the original tokens altered per the
     -- instructions given to this rewriter.
     -- 
-    public function getText (This : …) return String is
+    -- public
+    function getText (This : …) return String is
 begin
         return getText(DEFAULT_PROGRAM_NAME, Interval.of(0, tokens.size() - 1));
     end ;
@@ -584,7 +655,8 @@ begin
     -- Return the text from the original tokens altered per the
     -- instructions given to this rewriter in programName.
     -- 
-    public function getText (programName : String) return String is
+    -- public
+    function getText (programName : String) return String is
 begin
         return getText(programName, Interval.of(0, tokens.size() - 1));
     end ;
@@ -598,12 +670,14 @@ begin
     -- insertBefore on the first token, you would get that insertion.
     -- The same is True if you do an insertAfter the stop token.
     -- 
-    public function getText (interval : Interval) return String is
+    -- public
+    function getText (interval : Interval) return String is
 begin
         return getText(DEFAULT_PROGRAM_NAME, interval);
     end ;
 
-    public function getText (programName : String; interval : Interval) return String is
+    -- public
+    function getText (programName : String; interval : Interval) return String is
 begin
         var start := interval.a
         var stop := interval.b

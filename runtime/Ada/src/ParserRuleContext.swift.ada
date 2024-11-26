@@ -26,7 +26,8 @@
 -- group values such as this aggregate.  The getters/setters are there to
 -- satisfy the superclass interface.
 --
-open type ParserRuleContext is new RuleContext with null record;
+-- open
+type ParserRuleContext is new RuleContext with null record;
 {
     public static EMPTY : constant := ParserRuleContext()
 
@@ -70,7 +71,9 @@ open type ParserRuleContext is new RuleContext with null record;
     -- public
     exception : RecognitionException?
 
-    public override procedure Init (Self : …) is
+    -- public
+    override
+    procedure Init (Self : …) is
 begin
         super.init()
     end ;
@@ -91,7 +94,9 @@ begin
     -- to the generic XContext so this function must copy those nodes to
     -- the YContext as well else they are lost!
     --
-    open procedure copyFrom (ctx : ParserRuleContext) {
+    -- open
+    procedure copyFrom (ctx : ParserRuleContext) is
+    begin
         self.parent := ctx.parent
         self.invokingState := ctx.invokingState
         self.start := ctx.start
@@ -111,10 +116,14 @@ begin
 
     -- Double dispatch methods for listeners
 
-    open procedure enterRule (listener : ParseTreeListener) {
+    -- open
+    procedure enterRule (listener : ParseTreeListener) is
+    begin
     end ;
 
-    open procedure exitRule (listener : ParseTreeListener) {
+    -- open
+    procedure exitRule (listener : ParseTreeListener) is
+    begin
     end ;
 
     -- Add a parse tree node to this as a child.  Works for
@@ -128,25 +137,33 @@ begin
     --
     -- - Since: 4.7
     --
-    open procedure addAnyChild (t : ParseTree) {
+    -- open
+    procedure addAnyChild (t : ParseTree) is
+    begin
         if children = null then
             children := [ParseTree]();
         end if;
         children!.append(t)
     end ;
 
-    open procedure addChild (ruleInvocation : RuleContext) {
+    -- open
+    procedure addChild (ruleInvocation : RuleContext) is
+    begin
         addAnyChild(ruleInvocation)
     end ;
 
     -- Add a token leaf node child and force its parent to be this node.
-    open procedure addChild (t : TerminalNode) {
+    -- open
+    procedure addChild (t : TerminalNode) is
+    begin
         t.setParent(self)
         addAnyChild(t)
     end ;
 
     -- Add an error node child and force its parent to be this node.
-    open procedure addErrorNode (errorNode : ErrorNode) {
+    -- open
+    procedure addErrorNode (errorNode : ErrorNode) is
+    begin
         errorNode.setParent(self)
         addAnyChild(errorNode)
     end ;
@@ -156,21 +173,24 @@ begin
     -- we entered a rule. If we have # label, we will need to remove
     -- generic ruleContext object.
     --
-    open procedure removeLastChild (This : …) is
+    -- open
+    procedure removeLastChild (This : …) is
 begin
         children?.removeLast()
     end ;
 
 
     override
-    open function getChild (i : Integer) return Tree? {
+    -- open
+    function getChild (i : Integer) return Tree? {
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
         end ;
         return children[i]
     end ;
 
-    open function getChild<T: ParseTree> (ctxType : T.Type, i : Integer) return T? is
+    -- open
+    function getChild<T: ParseTree> (ctxType : T.Type, i : Integer) return T? is
 begin
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
@@ -188,7 +208,8 @@ begin
         return null;
     end ;
 
-    open function getToken (ttype : Integer; i : Integer) return TerminalNode? {
+    -- open
+    function getToken (ttype : Integer; i : Integer) return TerminalNode? {
         guard children : constant := children, i >= 0 and then i < children.count else {
             return null;
         end ;
@@ -208,7 +229,8 @@ begin
         return null;
     end ;
 
-    open function getTokens (ttype : Integer) return [TerminalNode] {
+    -- open
+    function getTokens (ttype : Integer) return [TerminalNode] {
         guard children : constant := children else {
             return [TerminalNode]()
         end ;
@@ -222,12 +244,14 @@ begin
         end ;
     end ;
 
-    open function getRuleContext<T: ParserRuleContext> (ctxType : T.Type, i : Integer) return T? is
+    -- open
+    function getRuleContext<T: ParserRuleContext> (ctxType : T.Type, i : Integer) return T? is
 begin
         return getChild(ctxType, i: i)
     end ;
 
-    open function getRuleContexts<T: ParserRuleContext> (ctxType : T.Type) return [T] is
+    -- open
+    function getRuleContexts<T: ParserRuleContext> (ctxType : T.Type) return [T] is
 begin
         guard children : constant := children else {
             return [T]()
@@ -236,7 +260,8 @@ begin
     end ;
 
     override
-    open function getChildCount (This : …) return Integer is
+    -- open
+    function getChildCount (This : …) return Integer is
 begin
         return children?.count ?? 0
     end ;
@@ -248,7 +273,8 @@ begin
     end ;
 
     override
-    open function getSourceInterval (This : …) return Interval is
+    -- open
+    function getSourceInterval (This : …) return Interval is
 begin
         guard start : constant := start, stop : constant := stop else {
              return Interval.INVALID
@@ -261,7 +287,8 @@ begin
     -- Note that the range from start to stop is inclusive, so for rules that do not consume anything
     -- (for example, zero length or error productions) this token may exceed stop.
     --
-    open function getStart () return Token? {
+    -- open
+    function getStart () return Token? {
         return start
     end ;
     --
@@ -269,12 +296,14 @@ begin
     -- Note that the range from start to stop is inclusive, so for rules that do not consume anything
     -- (for example, zero length or error productions) this token may precede start.
     --
-    open function getStop () return Token? {
+    -- open
+    function getStop () return Token? {
         return stop
     end ;
 
     -- Used for rule context info debugging during parse-time, not so much for ATN debugging
-    open function toInfoString (recognizer : Parser) return String is
+    -- open
+    function toInfoString (recognizer : Parser) return String is
 begin
         rules : constant := Array(recognizer.getRuleInvocationStack(self).reversed())
         startStr : constant := start?.description ?? "<unknown>"

@@ -12,7 +12,8 @@
 -- - Author: Sam Harwell
 -- 
 
-public type ProxyErrorListener is new ANTLRErrorListener with null record;
+-- public
+type ProxyErrorListener is new ANTLRErrorListener with null record;
 {
     private final var delegates: [ANTLRErrorListener]
 
@@ -21,7 +22,8 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
         self.delegates := delegates
     end ;
 
-    public procedure syntaxError<T> (recognizer : Recognizer<T>,
+    -- public
+    procedure syntaxError<T> (recognizer : Recognizer<T>,
                                offendingSymbol : AnyObject?,
                                line : Integer;
                                charPositionInLine : Integer;
@@ -34,7 +36,8 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
     end ;
 
 
-    public procedure reportAmbiguity (recognizer : Parser;
+    -- public
+    procedure reportAmbiguity (recognizer : Parser;
                                 dfa : DFA;
                                 startIndex : Integer;
                                 stopIndex : Integer;
@@ -47,7 +50,8 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
     end ;
 
 
-    public procedure reportAttemptingFullContext (recognizer : Parser;
+    -- public
+    procedure reportAttemptingFullContext (recognizer : Parser;
                                             dfa : DFA;
                                             startIndex : Integer;
                                             stopIndex : Integer;
@@ -59,7 +63,8 @@ public type ProxyErrorListener is new ANTLRErrorListener with null record;
     end ;
 
 
-    public procedure reportContextSensitivity (recognizer : Parser;
+    -- public
+    procedure reportContextSensitivity (recognizer : Parser;
                                          dfa : DFA;
                                          startIndex : Integer;
                                          stopIndex : Integer;

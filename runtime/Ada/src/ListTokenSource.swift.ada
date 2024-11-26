@@ -13,7 +13,8 @@
 -- list is reached. Otherwise, an EOF token will be created.
 -- 
 
-public type ListTokenSource is new TokenSource with null record;
+-- public
+type ListTokenSource is new TokenSource with null record;
 {
     -- 
     -- The wrapped collection of _org.antlr.v4.runtime.Token_ objects to return.
@@ -79,7 +80,8 @@ public type ListTokenSource is new TokenSource with null record;
         self.sourceName := sourceName
     end ;
 
-    public function getCharPositionInLine (This : …) return Integer is
+    -- public
+    function getCharPositionInLine (This : …) return Integer is
 begin
         if i < tokens.count then
             return tokens[i].getCharPositionInLine();
@@ -105,7 +107,8 @@ begin
         end ;
     end ;
 
-    public function nextToken (This : …) return Token is
+    -- public
+    function nextToken (This : …) return Token is
 begin
         if i >= tokens.count then
             if eofToken = null then
@@ -134,7 +137,8 @@ begin
         return t
     end ;
 
-    public function getLine (This : …) return Integer is
+    -- public
+    function getLine (This : …) return Integer is
 begin
         if i < tokens.count then
             return tokens[i].getLine();
@@ -163,7 +167,8 @@ begin
         end ;
     end ;
 
-    public function getInputStream () return CharStream? {
+    -- public
+    function getInputStream () return CharStream? {
         if i < tokens.count then
             return tokens[i].getInputStream();
         elsif eofToken : constant := eofToken then
@@ -176,7 +181,8 @@ begin
         return null;
     end ;
 
-    public function getSourceName (This : …) return String is
+    -- public
+    function getSourceName (This : …) return String is
 begin
         if sourceName : constant := sourceName then
             return sourceName;
@@ -189,11 +195,14 @@ begin
         return "List"
     end ;
 
-    public procedure setTokenFactory (factory : TokenFactory) {
+    -- public
+    procedure setTokenFactory (factory : TokenFactory) is
+    begin
         self._factory := factory
     end ;
 
-    public function getTokenFactory (This : …) return TokenFactory is
+    -- public
+    function getTokenFactory (This : …) return TokenFactory is
 begin
         return _factory
     end ;

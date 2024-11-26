@@ -6,11 +6,14 @@
 public class MultiMap<K:Hashable, V> {
     -- private
     mapping := [K: Array<V>]()
-    public procedure map (key : K; value : V) {
+    -- public
+    procedure map (key : K; value : V) is
+    begin
         mapping[key, default: Array()].append(value)
     end ;
 
-    public function getPairs () return Array<(K, V)> {
+    -- public
+    function getPairs () return Array<(K, V)> {
         var pairs: Array<(K, V)> := Array<(K, V)>()
         for key: K in mapping.keys loop
             for value: V in mapping[key]! loop
@@ -20,11 +23,13 @@ public class MultiMap<K:Hashable, V> {
         return pairs
     end ;
 
-    public function get (key : K) return Array<(V)>? {
+    -- public
+    function get (key : K) return Array<(V)>? {
         return mapping[key]
     end ;
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         return mapping.count
     end ;

@@ -11,7 +11,8 @@
 -- - Author: Sam Harwell
 -- 
 
-public final class MurmurHash {
+-- public final
+type MurmurHash is tagged record
 
     -- private static
     DEFAULT_SEED : constant UInt32 := 0;
@@ -28,7 +29,8 @@ public final class MurmurHash {
     -- 
     -- - Returns: the intermediate hash value
     -- 
-    public static function initialize (This : …) return UInt32 is
+    -- public static
+    function initialize (This : …) return UInt32 is
 begin
         return initialize(DEFAULT_SEED)
     end ;
@@ -39,12 +41,14 @@ begin
     -- - Parameter seed: the seed
     -- - Returns: the intermediate hash value
     -- 
-    public static function initialize (seed : UInt32) return UInt32 is
+    -- public static
+    function initialize (seed : UInt32) return UInt32 is
 begin
         return seed
     end ;
 
-    private static function calcK (value : UInt32) return UInt32 is
+    -- private static
+    function calcK (value : UInt32) return UInt32 is
 begin
         var k := value
         k := k &* c1
@@ -60,13 +64,15 @@ begin
     -- - Parameter value: the value to add to the current hash
     -- - Returns: the updated intermediate hash value
     -- 
-    public static function update2 (hashIn : UInt32; value : Integer) return UInt32 is
+    -- public static
+    function update2 (hashIn : UInt32; value : Integer) return UInt32 is
 begin
         return updateInternal(hashIn, UInt32(truncatingIfNeeded: value))
     end ;
 
 
-    private static function updateInternal (hashIn : UInt32; value : UInt32) return UInt32 is
+    -- private static
+    function updateInternal (hashIn : UInt32; value : UInt32) return UInt32 is
 begin
         k : constant := calcK(value)
         var hash := hashIn
@@ -84,7 +90,8 @@ begin
     -- - Parameter value: the value to add to the current hash
     -- - Returns: the updated intermediate hash value
     -- 
-    public static function update<T:Hashable> (hash : UInt32; value : T?) return UInt32 is
+    -- public static
+    function update<T:Hashable> (hash : UInt32; value : T?) return UInt32 is
 begin
         return update2(hash, value?.hashValue ?? 0)
     end ;
@@ -97,12 +104,14 @@ begin
     -- - Parameter numberOfWords: the number of UInt32 values added to the hash
     -- - Returns: the final hash result
     -- 
-    public static function finish (hashin : UInt32; numberOfWords : Integer) return Integer is
+    -- public static
+    function finish (hashin : UInt32; numberOfWords : Integer) return Integer is
 begin
         return Integer (finish(hashin, byteCount: (numberOfWords &* 4)))
     end ;
 
-    private static function finish (hashin : UInt32; byteCount byteCountInt : Integer) return UInt32 is
+    -- private static
+    function finish (hashin : UInt32; byteCount byteCountInt : Integer) return UInt32 is
 begin
         byteCount : constant := UInt32(truncatingIfNeeded: byteCountInt)
         var hash := hashin
@@ -125,7 +134,8 @@ begin
     -- - Parameter seed: the seed for the MurmurHash algorithm
     -- - Returns: the hash code of the data
     -- 
-    public static function hashCode<T:Hashable> (data : [T], seed : Integer) return Integer is
+    -- public static
+    function hashCode<T:Hashable> (data : [T], seed : Integer) return Integer is
 begin
         var hash := initialize(UInt32(truncatingIfNeeded: seed))
         for value in data loop
@@ -147,13 +157,15 @@ begin
     -- test patterns (see MurmurHashTests.swift) and the example code on
     -- Wikipedia.
     --
-    public static function hashString (s : String; seed : UInt32) return UInt32 is
+    -- public static
+    function hashString (s : String; seed : UInt32) return UInt32 is
 begin
         bytes : constant := Array(s.utf8)
         return hashBytesLittleEndian(bytes, seed)
     end ;
 
-    private static function hashBytesLittleEndian (bytes : [UInt8], seed : UInt32) return UInt32 is
+    -- private static
+    function hashBytesLittleEndian (bytes : [UInt8], seed : UInt32) return UInt32 is
 begin
         byteCount : constant := bytes.count
 
@@ -180,7 +192,8 @@ begin
         return finish(hash, byteCount: byteCount)
     end ;
 
-    private procedure Init (Self : …) is
+    -- private
+    procedure Init (Self : …) is
 begin
     end ;
 end ;

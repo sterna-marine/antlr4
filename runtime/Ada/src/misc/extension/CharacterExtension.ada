@@ -56,7 +56,8 @@ extension Character {
         return c.unicodeValue
     end ;
 
-    public static function isJavaIdentifierStart (char : Integer) return Boolean is
+    -- public static
+    function isJavaIdentifierStart (char : Integer) return Boolean is
 begin
         ch : constant := Character(integerLiteral: char)
         return ch == "_" or else ch == "$" or else ("a" <= ch and then ch <= "z")
@@ -64,13 +65,15 @@ begin
 
     end ;
 
-    public static function isJavaIdentifierPart (char : Integer) return Boolean is
+    -- public static
+    function isJavaIdentifierPart (char : Integer) return Boolean is
 begin
         ch : constant := Character(integerLiteral: char)
         return isJavaIdentifierStart(char) or else ("0" <= ch and then ch <= "9")
     end ;
 
-    public static function toCodePoint (high : Integer; low : Integer) return Integer is
+    -- public static
+    function toCodePoint (high : Integer; low : Integer) return Integer is
 begin
         MIN_SUPPLEMENTARY_CODE_POINT : constant := 65536 -- 0x010000
         MIN_HIGH_SURROGATE : constant := 0xd800 --"\u{dbffend ;"  --"\u{DBFFend ;"  --"\u{DBFFend ;"

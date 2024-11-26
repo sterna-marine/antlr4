@@ -16,22 +16,26 @@ procedure errPrint (msg : String) {
     fputs(msg + "\n", stderr)
 end ;
 
-public function +(lhs: String, rhs : Integer) return String is
+-- public
+function +(lhs: String, rhs : Integer) return String is
 begin
     return lhs + String(rhs)
 end ;
 
-public function +(lhs : Integer; rhs: String) return String is
+-- public
+function +(lhs : Integer; rhs: String) return String is
 begin
     return String(lhs) + rhs
 end ;
 
-public function +(lhs: String, rhs: Token) return String is
+-- public
+function +(lhs: String, rhs: Token) return String is
 begin
     return lhs + rhs.description
 end ;
 
-public function +(lhs: Token, rhs: String) return String is
+-- public
+function +(lhs: Token, rhs: String) return String is
 begin
     return lhs.description + rhs
 end ;

@@ -44,6 +44,8 @@ begin
     end ;
 end ;
 
-private procedure doMurmurHashTest (input : String; seed : UInt32; expected : UInt32) {
+-- private
+procedure doMurmurHashTest (input : String; seed : UInt32; expected : UInt32) is
+begin
     XCTAssertEqual(MurmurHash.hashString(input, seed), expected)
 end ;

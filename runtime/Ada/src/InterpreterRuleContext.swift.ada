@@ -18,7 +18,8 @@
 -- provide equivalent functionality.
 -- 
 
-public type InterpreterRuleContext is new ParserRuleContext with null record;
+-- public
+type InterpreterRuleContext is new ParserRuleContext with null record;
 {
     -- 
     -- This is the backing field for _#getRuleIndex_.
@@ -26,7 +27,9 @@ public type InterpreterRuleContext is new ParserRuleContext with null record;
     -- private
     ruleIndex : Integer := -1
 
-    public override procedure Init (Self : …) is
+    -- public
+    override
+    procedure Init (Self : …) is
 begin
         super.init()
     end ;
@@ -49,7 +52,8 @@ begin
     end ;
 
     override
-    public function getRuleIndex (This : …) return Integer is
+    -- public
+    function getRuleIndex (This : …) return Integer is
 begin
         return ruleIndex
     end ;
@@ -59,7 +63,8 @@ begin
     -- stack to a _org.antlr.v4.runtime.InterpreterRuleContext_ tree.
     -- Return _null_ if `ctx` is null.
     -- 
-    public static function fromParserRuleContext (ctx : ParserRuleContext?) return InterpreterRuleContext? {
+    -- public static
+    function fromParserRuleContext (ctx : ParserRuleContext?) return InterpreterRuleContext? {
         guard ctx : constant := ctx else {
              return null;
         end ;

@@ -11,7 +11,8 @@
 -- 
 -- If you need encoding, pass in stream/reader with correct encoding.
 --
-public type ANTLRInputStream is new CharStream with null record;
+-- public
+type ANTLRInputStream is new CharStream with null record;
 {
     --
     -- The data being scanned
@@ -36,7 +37,8 @@ public type ANTLRInputStream is new CharStream with null record;
     -- public
     name : String?
 
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
         n := 0
         data := []
@@ -71,12 +73,14 @@ begin
         self.n := numberOfActualUnicodeScalarsInArray
     end ;
 
-    public procedure reset (This : …) is
+    -- public
+    procedure reset (This : …) is
 begin
         p := 0
     end ;
 
-    public procedure consume (This : …) is
+    -- public
+    procedure consume (This : …) is
 begin
         if p >= n then
             assert(LA(1) == ANTLRInputStream.EOF, "Expected: LA(1)==IntStream.EOF")
@@ -92,7 +96,8 @@ begin
         end ;
     end ;
 
-    public function LA (i : Integer) return Integer is
+    -- public
+    function LA (i : Integer) return Integer is
 begin
         var i := i
         if i = 0 then
@@ -114,7 +119,8 @@ begin
         return Integer (data[p + i - 1].value)
     end ;
 
-    public function LT (i : Integer) return Integer is
+    -- public
+    function LT (i : Integer) return Integer is
 begin
         return LA(i)
     end ;
@@ -124,12 +130,14 @@ begin
     -- last symbol has been read.  The index is the index of char to
     -- be returned from LA(1).
     -- 
-    public function index (This : …) return Integer is
+    -- public
+    function index (This : …) return Integer is
 begin
         return p
     end ;
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         return n
     end ;
@@ -138,12 +146,15 @@ begin
     -- mark/release do nothing; we have entire buffer
     -- 
 
-    public function mark (This : …) return Integer is
+    -- public
+    function mark (This : …) return Integer is
 begin
         return -1
     end ;
 
-    public procedure release (marker : Integer) {
+    -- public
+    procedure release (marker : Integer) is
+    begin
     end ;
 
     -- 
@@ -151,7 +162,9 @@ begin
     -- update line and charPositionInLine. If we seek backwards, just set p
     -- 
 
-    public procedure seek (index : Integer) {
+    -- public
+    procedure seek (index : Integer) is
+    begin
         var index := index
         if index <= p then
             p := index -- just jump; don't update stream state (line,  .. )
@@ -164,7 +177,8 @@ begin
         end loop;
     end ;
 
-    public function getText (interval : Interval) return String is
+    -- public
+    function getText (interval : Interval) return String is
 begin
         start : constant := interval.a
         if start >= n then
@@ -177,12 +191,14 @@ begin
         return String(unicodeScalarView)
     end ;
 
-    public function getSourceName (This : …) return String is
+    -- public
+    function getSourceName (This : …) return String is
 begin
         return name ?? ANTLRInputStream.UNKNOWN_SOURCE_NAME
     end ;
 
-    public function toString (This : …) return String is
+    -- public
+    function toString (This : …) return String is
 begin
         var unicodeScalarView := String.UnicodeScalarView()
         unicodeScalarView.append(contentsOf: data)

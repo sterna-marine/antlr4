@@ -17,7 +17,8 @@
 -- regular tokens of the text surrounding the tags.
 -- 
 
-public type Chunk is new Equatable with null record;
+-- public
+type Chunk is new Equatable with null record;
 {
     -- public static
     function "=" (lhs: Chunk, rhs: Chunk) return Boolean is
@@ -25,7 +26,8 @@ begin
         return lhs.isEqual(rhs)
     end ;
 
-    public function isEqual (other : Chunk) return Boolean is
+    -- public
+    function isEqual (other : Chunk) return Boolean is
 begin
         return self === other
     end ;

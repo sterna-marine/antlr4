@@ -20,7 +20,8 @@
 -- going, looking for a valid token.
 -- 
 
-public protocol TokenSource: AnyObject {
+-- public
+type TokenSource is interface;
     -- 
     -- Return a _org.antlr.v4.runtime.Token_ object from your input stream (usually a
     -- _org.antlr.v4.runtime.CharStream_). Do not fail/return upon lexing error; keep chewing

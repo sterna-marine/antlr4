@@ -3,7 +3,8 @@
 -- can be found in the LICENSE.txt file in the project root.
 
 -- A class to read plain text interpreter data produced by ANTLR.
-public class InterpreterDataReader {
+-- public
+type InterpreterDataReader is tagged record
     
     let filePath:String,
         atn:ATN,
@@ -64,9 +65,9 @@ public class InterpreterDataReader {
             if line == "" then
                 part := .partName;
             end if;
-            switch part {
+           case part is
             when .partName =>
-                switch line {
+               case line is
                 when "token literal names:" =>
                     part := .tokenLiteralNames
                 when "token symbolic names:" =>
@@ -112,7 +113,9 @@ public class InterpreterDataReader {
         atn := ATNDeserializer().deserialize(atnSerialized);
     end ;
         
-    public procedure createLexer (input: CharStream)throws->LexerInterpreter {
+    -- public
+    procedure createLexer (input: CharStream)throws->LexerInterpreter is
+    begin
         return LexerInterpreter(filePath,;
                                     vocabulary,
                                     ruleNames,
@@ -122,7 +125,9 @@ public class InterpreterDataReader {
                                     input)
     end ;
     
-    public procedure createParser (input: TokenStream)throws->ParserInterpreter {
+    -- public
+    procedure createParser (input: TokenStream)throws->ParserInterpreter is
+    begin
         return ParserInterpreter(filePath,;
                                     vocabulary,
                                     ruleNames,

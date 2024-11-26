@@ -41,7 +41,8 @@ with Foundation;
 -- - note: JDK1.0
 -- 
 
-public type BitSet is new Hashable and CustomStringConvertible with null record;
+-- public
+type BitSet is new Hashable and CustomStringConvertible with null record;
 {
     -- 
     -- BitSets are packed into arrays of "words."  Currently a word is
@@ -103,7 +104,8 @@ public type BitSet is new Hashable and CustomStringConvertible with null record;
     -- 
     -- Given a bit index, return word index containing it.
     -- 
-    private static function wordIndex (bitIndex : Integer) return Integer is
+    -- private static
+    function wordIndex (bitIndex : Integer) return Integer is
 begin
         return bitIndex >> ADDRESS_BITS_PER_WORD
     end ;
@@ -124,7 +126,8 @@ begin
     -- WARNING:This method assumes that the number of words actually in use is
     -- less than or equal to the current value of wordsInUse!
     -- 
-    private procedure recalculateWordsInUse (This : …) is
+    -- private
+    procedure recalculateWordsInUse (This : …) is
 begin
         -- Traverse the bitset until a used word is found
         var i: Integer := wordsInUse - 1
@@ -139,7 +142,8 @@ begin
     -- 
     -- Creates a new bit set. All bits are initially `False`.
     -- 
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
         sizeIsSticky := False;
         words := [Int64](repeating: Int64(0), count: BitSet.wordIndex(BitSet.BITS_PER_WORD - 1) + 1)
@@ -170,7 +174,9 @@ begin
         -- initWords(nbits);
     end ;
 
-    private procedure initWords (nbits : Integer) {
+    -- private
+    procedure initWords (nbits : Integer) is
+    begin
         -- words :=  [Int64](count: BitSet.wordIndex(BitSet.BITS_PER_WORD-1) + 1, repeatedValue: Int64(0));
         --  words := [BitSet.wordIndex(nbits-1) + 1];
     end ;
@@ -199,11 +205,13 @@ begin
     -- - returns: a long array containing a little-endian representation
     -- of all the bits in this bit set
     -- 
-    public function toLongArray () return [Int64] {
+    -- public
+    function toLongArray () return [Int64] {
         return copyOf(words, wordsInUse)
     end ;
 
-    private function copyOf (words : [Int64], newLength : Integer) return [Int64] {
+    -- private
+    function copyOf (words : [Int64], newLength : Integer) return [Int64] {
         var newWords := [Int64](repeating: Int64(0), count: newLength)
         length : constant := min(words.count, newLength)
         newWords[0 ..< length] := words[0 ..< length]
@@ -213,7 +221,9 @@ begin
     -- Ensures that the BitSet can hold enough words.
     -- - parameter wordsRequired: the minimum acceptable number of words.
     -- 
-    private procedure ensureCapacity (wordsRequired : Integer) {
+    -- private
+    procedure ensureCapacity (wordsRequired : Integer) is
+    begin
         if words.count < wordsRequired then
             -- Allocate larger of doubled size or required size
             let request: Integer := max(2 * words.count, wordsRequired)
@@ -229,7 +239,9 @@ begin
     -- possibly using recalculateWordsInUse().
     -- - parameter wordIndex: the index to be accommodated.
     -- 
-    private procedure expandTo (wordIndex : Integer) {
+    -- private
+    procedure expandTo (wordIndex : Integer) is
+    begin
         let wordsRequired: Integer := wordIndex + 1
         if wordsInUse < wordsRequired then
             ensureCapacity(wordsRequired)
@@ -263,7 +275,9 @@ begin
     -- - parameter  bitIndex: the index of the bit to flip
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
-    public procedure flip (bitIndex : Integer) {
+    -- public
+    procedure flip (bitIndex : Integer) is
+    begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
@@ -289,7 +303,9 @@ begin
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
-    public procedure flip (fromIndex : Integer; toIndex : Integer) {
+    -- public
+    procedure flip (fromIndex : Integer; toIndex : Integer) is
+    begin
         BitSet.checkRange(fromIndex, toIndex);
 
         if fromIndex = toIndex then
@@ -331,7 +347,9 @@ begin
     -- - parameter  bitIndex: a bit index
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
-    public procedure set (bitIndex : Integer) {
+    -- public
+    procedure set (bitIndex : Integer) is
+    begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
@@ -352,11 +370,13 @@ begin
     -- - parameter  value: a boolean value to set
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
-    public procedure set (bitIndex : Integer; value  : Boolean) {
+    -- public
+    procedure set (bitIndex : Integer; value  : Boolean) is
+    begin
         if value then
             set(bitIndex);
         else
-            clear(bitIndex);;
+            clear(bitIndex);
         end if;
     end ;
 
@@ -370,7 +390,9 @@ begin
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
-    public procedure set (fromIndex : Integer; toIndex : Integer) {
+    -- public
+    procedure set (fromIndex : Integer; toIndex : Integer) is
+    begin
         BitSet.checkRange(fromIndex, toIndex);
 
         if fromIndex = toIndex then
@@ -417,11 +439,13 @@ begin
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
-    public procedure set (fromIndex : Integer; toIndex : Integer; value  : Boolean) {
+    -- public
+    procedure set (fromIndex : Integer; toIndex : Integer; value  : Boolean) is
+    begin
         if value then
             set(fromIndex, toIndex);
         else
-            clear(fromIndex, toIndex);;
+            clear(fromIndex, toIndex);
         end if;
     end ;
 
@@ -432,9 +456,11 @@ begin
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- -   JDK1.0
     -- 
-    public procedure clear (bitIndex : Integer) {
+    -- public
+    procedure clear (bitIndex : Integer) is
+    begin
         if bitIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";;
+            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
         end if;
         let index: Integer := BitSet.wordIndex(bitIndex)
         if index >= wordsInUse then
@@ -457,7 +483,9 @@ begin
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
-    public procedure clear (fromIndex : Integer;  toIndex : Integer) {
+    -- public
+    procedure clear (fromIndex : Integer;  toIndex : Integer) is
+    begin
         var toIndex := toIndex
         BitSet.checkRange(fromIndex, toIndex);
 
@@ -504,7 +532,8 @@ begin
     -- 
     -- Sets all of the bits in this BitSet to `False`.
     -- 
-    public procedure clear (This : …) is
+    -- public
+    procedure clear (This : …) is
 begin
         while wordsInUse > 0 loop
             wordsInUse := @ - 1;
@@ -522,7 +551,8 @@ begin
     -- - returns: the value of the bit with the specified index
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
-    public function get (bitIndex : Integer) return Boolean is
+    -- public
+    function get (bitIndex : Integer) return Boolean is
 begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
@@ -547,7 +577,8 @@ begin
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
-    public function get (fromIndex : Integer; toIndex : Integer) return BitSet is
+    -- public
+    function get (fromIndex : Integer; toIndex : Integer) return BitSet is
 begin
         var toIndex := toIndex
         BitSet.checkRange(fromIndex, toIndex)
@@ -611,7 +642,8 @@ begin
     --
     -- Equivalent to nextSetBit(0), but guaranteed not to raise an exception.
     --
-    public function firstSetBit (This : …) return Integer is
+    -- public
+    function firstSetBit (This : …) return Integer is
 begin
         return try! nextSetBit(0)
     end ;
@@ -634,7 +666,8 @@ begin
     -- is no such bit
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
-    public function nextSetBit (fromIndex : Integer) return Integer is
+    -- public
+    function nextSetBit (fromIndex : Integer) return Integer is
 begin
         if fromIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
@@ -670,7 +703,8 @@ begin
     -- - returns: the index of the next clear bit
     -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is negative
     -- 
-    public function nextClearBit (fromIndex : Integer) return Integer is
+    -- public
+    function nextClearBit (fromIndex : Integer) return Integer is
 begin
         -- Neither spec nor implementation handle bitsets of maximal length.
         -- See 4816253.
@@ -721,7 +755,8 @@ begin
     -- than `-1`
     -- - note: 1.7
     -- 
-    public function previousSetBit (fromIndex : Integer) return Integer is
+    -- public
+    function previousSetBit (fromIndex : Integer) return Integer is
 begin
         if fromIndex < 0 then
             if fromIndex == -1 then
@@ -764,7 +799,8 @@ begin
     -- than `-1`
     -- - note: 1.7
     -- 
-    public function previousClearBit (fromIndex : Integer) return Integer is
+    -- public
+    function previousClearBit (fromIndex : Integer) return Integer is
 begin
         if fromIndex < 0 then
             if fromIndex == -1 then
@@ -802,7 +838,8 @@ begin
     -- 
     -- - returns: the logical size of this `BitSet`
     -- 
-    public function length (This : …) return Integer is
+    -- public
+    function length (This : …) return Integer is
 begin
         if wordsInUse = 0 then
             return 0;
@@ -818,7 +855,8 @@ begin
     -- 
     -- - returns: boolean indicating whether this `BitSet` is empty
     -- 
-    public function isEmpty (This : …) return Boolean is
+    -- public
+    function isEmpty (This : …) return Boolean is
 begin
         return wordsInUse = 0
     end ;
@@ -831,7 +869,8 @@ begin
     -- - returns: boolean indicating whether this `BitSet` intersects
     -- the specified `BitSet`
     -- 
-    public function intersects (set : BitSet) return Boolean is
+    -- public
+    function intersects (set : BitSet) return Boolean is
 begin
         var i: Integer := min(wordsInUse, set.wordsInUse) - 1
         while i >= 0 loop
@@ -848,7 +887,8 @@ begin
     -- 
     -- - returns: the number of bits set to `True` in this `BitSet`
     -- 
-    public function cardinality (This : …) return Integer is
+    -- public
+    function cardinality (This : …) return Integer is
 begin
         var sum: Integer := 0
         for i in 0 .. wordsInUse - 1 loop
@@ -866,7 +906,9 @@ begin
     -- 
     -- - parameter set: a bit set
     -- 
-    public procedure and (set : BitSet) {
+    -- public
+    procedure and (set : BitSet) is
+    begin
         if self = set then
             return;
         end if;
@@ -894,7 +936,9 @@ begin
     -- 
     -- - parameter set: a bit set
     -- 
-    public procedure or (set : BitSet) {
+    -- public
+    procedure or (set : BitSet) is
+    begin
         if self = set then
             return;
         end if;
@@ -934,7 +978,9 @@ begin
     -- 
     -- - parameter  set: a bit set
     -- 
-    public procedure xor (set : BitSet) {
+    -- public
+    procedure xor (set : BitSet) is
+    begin
         let wordsInCommon: Integer := min(wordsInUse, set.wordsInUse)
 
         if wordsInUse < set.wordsInUse then
@@ -965,7 +1011,9 @@ begin
     -- - parameter  set: the `BitSet` with which to mask this
     -- `BitSet`
     -- 
-    public procedure andNot (set : BitSet) {
+    -- public
+    procedure andNot (set : BitSet) is
+    begin
         -- Perform logical (a & not b) on words in common
         var i: Integer := min(wordsInUse, set.wordsInUse) - 1
         while i >= 0 loop
@@ -1008,7 +1056,9 @@ begin
         return Integer (Int32((h >> 32) ^ h))
     end ;
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         hasher.combine(hashCode)
     end ;
 
@@ -1019,7 +1069,8 @@ begin
     -- 
     -- - returns: the number of bits currently in this bit set
     -- 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         return words.count * BitSet.BITS_PER_WORD
     end ;
@@ -1033,7 +1084,8 @@ begin
     -- Calling this method may, but is not required to, affect the value
     -- returned by a subsequent call to the _#size()_ method.
     -- 
-    private procedure trimToSize (This : …) is
+    -- private
+    procedure trimToSize (This : …) is
 begin
         if wordsInUse /= words.count then
             words := copyOf(words, wordsInUse)

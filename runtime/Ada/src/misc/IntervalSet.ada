@@ -18,7 +18,8 @@
 -- (inclusive).
 -- 
 
-public type IntervalSet is new IntSet and Hashable and CustomStringConvertible with null record;
+-- public
+type IntervalSet is new IntSet and Hashable and CustomStringConvertible with null record;
 {
     -- public static 
     COMPLETE_CHAR_SET : constant IntervalSet =;
@@ -71,17 +72,19 @@ public type IntervalSet is new IntSet and Hashable and CustomStringConvertible w
     --
     -- Create a set with all ints within range [a .. b] (inclusive)
     -- 
-    public static function of (a : Integer; b : Integer) return IntervalSet is
+    -- public static
+    function of (a : Integer; b : Integer) return IntervalSet is
 begin
         s : constant := IntervalSet()
         try! s.add(a, b)
         return s
     end ;
 
-    public procedure clear (This : …) is
+    -- public
+    procedure clear (This : …) is
 begin
         if readonly then
-            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";;
+            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
         intervals.removeAll()
     end ;
@@ -91,9 +94,11 @@ begin
     -- as a range el .. el.
     -- 
 
-    public procedure add (el : Integer) {
+    -- public
+    procedure add (el : Integer) is
+    begin
         if readonly then
-            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";;
+            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
         try! add(el, el)
     end ;
@@ -106,14 +111,18 @@ begin
     -- if this is then1 .. 5, 10 .. 20end ;, adding 6 .. 7 yields
     -- {1 .. 5, 6 .. 7, 10 .. 20end ;.  Adding 4 .. 8 yields {1 .. 8, 10 .. 20end ;.
     -- 
-    public procedure add (a : Integer; b : Integer) {
+    -- public
+    procedure add (a : Integer; b : Integer) is
+    begin
         add(Interval.of(a, b));
     end ;
 
     -- copy on write so we can cache a .. a intervals and sets of that
-    internal procedure add (addition : Interval) {
+    -- internal
+    procedure add (addition : Interval) is
+    begin
         if readonly then
-            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";;
+            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
         if addition.b < addition.a then
             return;
@@ -170,7 +179,8 @@ begin
     -- 
     -- combine all sets in the array returned the or'd value
     -- 
-    public function or (sets : [IntervalSet]) return IntSet is
+    -- public
+    function or (sets : [IntervalSet]) return IntSet is
 begin
         r : constant := IntervalSet()
         for s in sets loop
@@ -180,7 +190,8 @@ begin
     end ;
 
     @discardableResult
-    public function addAll (set : IntSet?) return IntSet is
+    -- public
+    function addAll (set : IntSet?) return IntSet is
 begin
 
         guard set : constant := set else {
@@ -201,7 +212,8 @@ begin
         return self
     end ;
 
-    public function complement (minElement : Integer; maxElement : Integer) return IntSet? {
+    -- public
+    function complement (minElement : Integer; maxElement : Integer) return IntSet? {
         return complement(IntervalSet.of(minElement, maxElement))
     end ;
 
@@ -209,7 +221,8 @@ begin
     -- 
     -- 
 
-    public function complement (vocabulary : IntSet?) return IntSet? {
+    -- public
+    function complement (vocabulary : IntSet?) return IntSet? {
         guard vocabulary : constant := vocabulary, not vocabulary.isnull() else {
             return null  -- nothing in common with null set
         end ;
@@ -225,7 +238,8 @@ begin
     end ;
 
 
-    public function subtract (a : IntSet?) return IntSet is
+    -- public
+    function subtract (a : IntSet?) return IntSet is
 begin
         guard a : constant := a, not a.isnull() else {
             return IntervalSet(self)
@@ -245,7 +259,8 @@ begin
     -- `null`, it is treated as though it was an empty set.
     -- 
 
-    public function subtract (left : IntervalSet?, right : IntervalSet?) return IntervalSet is
+    -- public
+    function subtract (left : IntervalSet?, right : IntervalSet?) return IntervalSet is
 begin
 
         guard left : constant := left, not left.isnull() else {
@@ -322,7 +337,8 @@ begin
     end ;
 
 
-    public function or (a : IntSet) return IntSet is
+    -- public
+    function or (a : IntSet) return IntSet is
 begin
         o : constant := IntervalSet()
         try! o.addAll(self)
@@ -334,7 +350,8 @@ begin
     -- 
     -- 
 
-    public function and (other : IntSet?) return IntSet? {
+    -- public
+    function and (other : IntSet?) return IntSet? {
         if other = null then
             return null;  -- nothing in common with null set
         end if;
@@ -412,7 +429,8 @@ begin
     -- 
     -- 
 
-    public function contains (el : Integer) return Boolean is
+    -- public
+    function contains (el : Integer) return Boolean is
 begin
         for interval in intervals loop
             a : constant := interval.a
@@ -430,7 +448,8 @@ begin
     -- 
     -- 
 
-    public function isnull (This : …) return Boolean is
+    -- public
+    function isnull (This : …) return Boolean is
 begin
         return intervals.isEmpty
     end ;
@@ -439,7 +458,8 @@ begin
     -- 
     -- 
 
-    public function getSingleElement (This : …) return Integer is
+    -- public
+    function getSingleElement (This : …) return Integer is
 begin
         if intervals.count = 1 then
             interval : constant := intervals[0]
@@ -456,7 +476,8 @@ begin
     -- - returns: the maximum value contained in the set. If the set is empty, this
     -- method returns _org.antlr.v4.runtime.Token#INVALID_TYPE_.
     -- 
-    public function getMaxElement (This : …) return Integer is
+    -- public
+    function getMaxElement (This : …) return Integer is
 begin
         if isnull() then
             return CommonToken.INVALID_TYPE;
@@ -471,7 +492,8 @@ begin
     -- - returns: the minimum value contained in the set. If the set is empty, this
     -- method returns _org.antlr.v4.runtime.Token#INVALID_TYPE_.
     -- 
-    public function getMinElement (This : …) return Integer is
+    -- public
+    function getMinElement (This : …) return Integer is
 begin
         if isnull() then
             return CommonToken.INVALID_TYPE;
@@ -483,11 +505,14 @@ begin
     -- 
     -- Return a list of Interval objects.
     -- 
-    public function getIntervals () return [Interval] {
+    -- public
+    function getIntervals () return [Interval] {
         return intervals
     end ;
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         for interval in intervals loop
             hasher.combine(interval.a)
             hasher.combine(interval.b)
@@ -517,7 +542,8 @@ begin
         return toString(False)
     end ;
 
-    public function toString (elemAreChar  : Boolean) return String is
+    -- public
+    function toString (elemAreChar  : Boolean) return String is
 begin
         if intervals.isEmpty then
             return "{end ;";
@@ -562,7 +588,8 @@ begin
         return buf
     end ;
 
-    public function toString (vocabulary : Vocabulary) return String is
+    -- public
+    function toString (vocabulary : Vocabulary) return String is
 begin
         if intervals.isEmpty then
             return "{end ;";
@@ -604,7 +631,8 @@ begin
         return buf
     end ;
 
-    internal function elementName (vocabulary : Vocabulary; a : Integer) return String is
+    -- internal
+    function elementName (vocabulary : Vocabulary; a : Integer) return String is
 begin
         if a = CommonToken.EOF then
             return "<EOF>";
@@ -616,7 +644,8 @@ begin
     end ;
 
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         var n := 0
         for interval in intervals loop
@@ -626,7 +655,8 @@ begin
     end ;
 
 
-    public function toList () return [Int] {
+    -- public
+    function toList () return [Int] {
         var values := [Int]()
         for interval in intervals loop
             a : constant := interval.a
@@ -636,7 +666,8 @@ begin
         return values
     end ;
 
-    public function toSet () return Set<Int> {
+    -- public
+    function toSet () return Set<Int> {
         var s := Set<Int> ()
         for interval in intervals loop
             a : constant := interval.a
@@ -653,7 +684,8 @@ begin
     -- don't bother to implement if you're not doing that for a new
     -- ANTLR code gen target.
     -- 
-    public function get (i : Integer) return Integer is
+    -- public
+    function get (i : Integer) return Integer is
 begin
         var index := 0
         for interval in intervals loop
@@ -669,9 +701,11 @@ begin
         return -1
     end ;
 
-    public procedure remove (el : Integer) {
+    -- public
+    procedure remove (el : Integer) is
+    begin
         if readonly then
-            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";;
+            raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
         var idx := intervals.startIndex
         while idx < intervals.endIndex loop
@@ -712,12 +746,14 @@ begin
         end loop;
     end ;
 
-    public function isReadonly (This : …) return Boolean is
+    -- public
+    function isReadonly (This : …) return Boolean is
 begin
         return readonly
     end ;
 
-    public procedure makeReadonly (This : …) is
+    -- public
+    procedure makeReadonly (This : …) is
 begin
         readonly := True;
     end ;

@@ -21,7 +21,9 @@ begin
 
 end ;
 
-private procedure doLastIndexTest (str : String; target : String; expectedOffset : Int?) {
+-- private
+procedure doLastIndexTest (str : String; target : String; expectedOffset : Int?) is
+begin
     let expectedIdx: String.Index?
     if expectedOffset : constant := expectedOffset then
         expectedIdx := str.index(str.startIndex, offsetBy: expectedOffset)

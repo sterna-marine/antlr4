@@ -10,7 +10,8 @@
 -- -  Sam Harwell
 -- 
 
-public type ConsoleErrorListener is new BaseErrorListener with null record;
+-- public
+type ConsoleErrorListener is new BaseErrorListener with null record;
 {
     -- 
     -- Provides a default instance of _org.antlr.v4.runtime.ConsoleErrorListener_.
@@ -27,7 +28,9 @@ public type ConsoleErrorListener is new BaseErrorListener with null record;
     -- line __line__:__charPositionInLine__ __msg__
     -- 
     -- 
-    override public procedure syntaxError<T> (recognizer : Recognizer<T>,
+    -- public
+    override
+    procedure syntaxError<T> (recognizer : Recognizer<T>,
                                         offendingSymbol : AnyObject?,
                                         line : Integer;
                                         charPositionInLine : Integer;

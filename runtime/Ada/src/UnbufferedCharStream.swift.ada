@@ -18,7 +18,8 @@ with Foundation;
 -- As of 4.7, the class uses UTF-8 by default, and the buffer holds Unicode
 -- code points in the buffer as ints.
 --
-open type UnbufferedCharStream is new CharStream with null record;
+-- open
+type UnbufferedCharStream is new CharStream with null record;
 {
     private let bufferSize : Integer;
 
@@ -96,10 +97,11 @@ open type UnbufferedCharStream is new CharStream with null record;
         self.unicodeIterator := UnicodeScalarStreamIterator(si)
     end ;
 
-    public procedure consume (This : …) is
+    -- public
+    procedure consume (This : …) is
 begin
         if LA(1) == CommonToken.EOF then;
-            raise ANTLRError.illegalState with "cannot consume EOF";;
+            raise ANTLRError.illegalState with "cannot consume EOF";
         end if;
 
         -- buf always has at least data[p = 0] in this method due to ctor
@@ -122,7 +124,9 @@ begin
     -- the char index 'need' elements ahead. If we need 1 element,
     -- {@code (p+1-1)==pend ; must be less than {@code data.lengthend ;.
     --
-    internal procedure sync (want : Integer) {
+    -- internal
+    procedure sync (want : Integer) is
+    begin
         need : constant := (p + want - 1) - n + 1 -- how many more elements we need?
         if need > 0 then
             fill(need);
@@ -154,7 +158,8 @@ begin
     -- Override to provide different source of characters than
     -- {@link #input inputend ;.
     --
-    internal function nextChar () return Int? {
+    -- internal
+    function nextChar () return Int? {
         if next : constant := unicodeIterator.next() then
             return Integer (next.value);
         elsif unicodeIterator.hasErrorOccurred then
@@ -164,7 +169,9 @@ begin
         end if;
     end ;
 
-    internal procedure add (c : Integer) {
+    -- internal
+    procedure add (c : Integer) is
+    begin
         if n >= data.count then
             data := @ + [Int](repeating: 0, count: data.count);
         end if;
@@ -172,7 +179,8 @@ begin
         n := @ + 1;
     end ;
 
-    public function LA (i : Integer) return Integer is
+    -- public
+    function LA (i : Integer) return Integer is
 begin
         if i == -1 then
             return lastChar;  -- special case
@@ -180,7 +188,7 @@ begin
         sync(i)
         index : constant := p + i - 1
         if index < 0 then
-            raise ANTLRError.indexOutOfBounds with "";;
+            raise ANTLRError.indexOutOfBounds with "";
         end if;
         if index >= n then
             return CommonToken.EOF;
@@ -195,7 +203,8 @@ begin
     -- protection against misuse where {@code seek()end ; is called on a mark or
     -- {@code release()end ; is called in the wrong order.</p>
     --
-    public function mark (This : …) return Integer is
+    -- public
+    function mark (This : …) return Integer is
 begin
         if numMarkers = 0 then
             lastCharBufferStart := lastChar;
@@ -209,7 +218,9 @@ begin
     -- Decrement number of markers, resetting buffer if we hit 0.
     -- @param marker
     --
-    public procedure release (marker : Integer) {
+    -- public
+    procedure release (marker : Integer) is
+    begin
         expectedMark : constant := -numMarkers
         if marker /= expectedMark then
             preconditionFailure("release() called with an invalid marker.");
@@ -235,7 +246,8 @@ begin
         end ;
     end ;
 
-    public function index (This : …) return Integer is
+    -- public
+    function index (This : …) return Integer is
 begin
         return currentCharIndex
     end ;
@@ -243,7 +255,9 @@ begin
     -- Seek to absolute character index, which might not be in the current
     --  sliding window.  Move {@code pend ; to {@code index-bufferStartIndexend ;.
     --
-    public procedure seek (index_ : Integer) {
+    -- public
+    procedure seek (index_ : Integer) is
+    begin
         var index := index_
 
         if index = currentCharIndex then
@@ -258,7 +272,7 @@ begin
         -- index = to bufferStartIndex should set p to 0
         i : constant := index - getBufferStartIndex()
         if i < 0 then
-            raise ANTLRError.illegalArgument with "cannot seek to negative index \(index)";;
+            raise ANTLRError.illegalArgument with "cannot seek to negative index \(index)";
         elsif i >= n then
             si : constant := getBufferStartIndex()
             ei : constant := si + n
@@ -275,20 +289,23 @@ begin
         end if;
     end ;
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         preconditionFailure("Unbuffered stream cannot know its size")
     end ;
 
-    public function getSourceName (This : …) return String is
+    -- public
+    function getSourceName (This : …) return String is
 begin
         return name
     end ;
 
-    public function getText (interval : Interval) return String is
+    -- public
+    function getText (interval : Interval) return String is
 begin
         if interval.a < 0 or else interval.b < interval.a - 1 then
-            raise ANTLRError.illegalArgument with "invalid interval";;
+            raise ANTLRError.illegalArgument with "invalid interval";
         end if;
 
         bufferStartIndex : constant := getBufferStartIndex()
@@ -317,7 +334,8 @@ begin
         return String(codepoints)
     end ;
 
-    internal function getBufferStartIndex (This : …) return Integer is
+    -- internal
+    function getBufferStartIndex (This : …) return Integer is
 begin
         return currentCharIndex - p
     end ;
@@ -342,7 +360,8 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
         self.buffGen := buffer[0 .. 0 - 1].makeIterator()
     end ;
 
-    mutating function next () return Ada.Interface.C.unsigned_short? {
+    -- mutating
+    function next () return Ada.Interface.C.unsigned_short? {
         if result : constant := buffGen.next() then
             return result;
         end if;
@@ -351,7 +370,7 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
             return null;
         end if;
 
-        switch stream.streamStatus {
+       case stream.streamStatus is
             when .notOpen, .writing, .closed =>
                 preconditionFailure()
             when .atEnd =>
@@ -390,13 +409,14 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
         self.streamIterator := streamIterator
     end ;
 
-    mutating function next () return Unicode.Scalar? {
+    -- mutating
+    function next () return Unicode.Scalar? {
         if streamIterator.hasErrorOccurred then
             hasErrorOccurred := True;
             return null;
         end ;
 
-        switch codec.decode(&streamIterator) {
+       case codec.decode(&streamIterator) is
         when .scalarValue(let scalar) =>
             return scalar
         when .emptyInput =>

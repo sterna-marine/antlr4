@@ -5,7 +5,8 @@
 -- 
 
 
-public type DFA is new CustomStringConvertible with null record;
+-- public
+type DFA is new CustomStringConvertible with null record;
 {
     -- 
     -- A set of all DFA states.
@@ -70,7 +71,8 @@ public type DFA is new CustomStringConvertible with null record;
     -- `False`.
     -- - seealso: org.antlr.v4.runtime.Parser#getPrecedence()
     -- 
-    public final function isPrecedenceDfa (This : …) return Boolean is
+    -- public final
+    function isPrecedenceDfa (This : …) return Boolean is
 begin
         return precedenceDfa
     end ;
@@ -85,7 +87,8 @@ begin
     -- - throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
     -- - seealso: #isPrecedenceDfa()
     -- 
-    public final function getPrecedenceStartState (precedence : Integer) return DFAState? {
+    -- public final
+    function getPrecedenceStartState (precedence : Integer) return DFAState? {
         if not isPrecedenceDfa() then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
 
@@ -110,7 +113,7 @@ begin
     -- 
     public final procedure setPrecedenceStartState (precedence : Integer; startState : DFAState) {
         if not isPrecedenceDfa() then
-            raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";;
+            raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
         end if;
 
         guard s0 : constant := s0, edges : constant := s0.edges, precedence >= 0 else {
@@ -133,7 +136,8 @@ begin
     --
     -- Return a list of all states in this DFA, ordered by state number.
     -- 
-    public function getStates () return [DFAState] {
+    -- public
+    function getStates () return [DFAState] {
         var result := [DFAState](states.keys)
 
         result := result.sorted {
@@ -149,7 +153,8 @@ begin
         return toString(Vocabulary.EMPTY_VOCABULARY)
     end ;
 
-    public function toString (vocabulary : Vocabulary) return String is
+    -- public
+    function toString (vocabulary : Vocabulary) return String is
 begin
         if s0 = null then
             return "";
@@ -159,7 +164,8 @@ begin
         return serializer.description
     end ;
 
-    public function toLexerString (This : …) return String is
+    -- public
+    function toLexerString (This : …) return String is
 begin
         if s0 = null then
             return "";

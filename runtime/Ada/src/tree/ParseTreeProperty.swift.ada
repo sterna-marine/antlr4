@@ -7,10 +7,16 @@ with Foundation;
 public class ParseTreeProperty<V> {
   var annotations := Dictionary<ObjectIdentifier, V> ()
   
-  public procedure Init (Self : …) is
+  -- public
+  procedure Init (Self : …) is
 beginend ;
   
-  open function get (node : ParseTree) return V? { return annotations[ObjectIdentifier(node)] end ;
-  open procedure put (node : ParseTree; value : V) { annotations[ObjectIdentifier(node)] := value end ;
-  open procedure removeFrom (node : ParseTree) { annotations.removeValue(forKey: ObjectIdentifier(node)) end ;
+  -- open
+  function get (node : ParseTree) return V? { return annotations[ObjectIdentifier(node)] end ;
+  -- open
+  procedure put (node : ParseTree; value : V) is
+  begin annotations[ObjectIdentifier(node)] := value end ;
+  -- open
+  procedure removeFrom (node : ParseTree) is
+  begin annotations.removeValue(forKey: ObjectIdentifier(node)) end ;
 end ;

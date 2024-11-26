@@ -5,7 +5,8 @@
 -- 
 
 
-public type LexerInterpreter is new Lexer with null record;
+-- public
+type LexerInterpreter is new Lexer with null record;
 {
     internal grammarFileName : constant String;
     internal let atn: ATN
@@ -48,34 +49,40 @@ public type LexerInterpreter is new Lexer with null record;
     end ;
 
     override
-    public function getATN (This : …) return ATN is
+    -- public
+    function getATN (This : …) return ATN is
 begin
         return atn
     end ;
 
     override
-    public function getGrammarFileName (This : …) return String is
+    -- public
+    function getGrammarFileName (This : …) return String is
 begin
         return grammarFileName
     end ;
 
     override
-    public function getRuleNames () return [String] {
+    -- public
+    function getRuleNames () return [String] {
         return ruleNames
     end ;
 
     override
-    public function getChannelNames () return [String] {
+    -- public
+    function getChannelNames () return [String] {
         return channelNames
     end ;
 
     override
-    public function getModeNames () return [String] {
+    -- public
+    function getModeNames () return [String] {
         return modeNames
     end ;
 
     override
-    public function getVocabulary (This : …) return Vocabulary is
+    -- public
+    function getVocabulary (This : …) return Vocabulary is
 begin
         return vocabulary ?? super.getVocabulary()
     end ;

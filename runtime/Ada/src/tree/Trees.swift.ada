@@ -6,7 +6,8 @@
 
 -- A set of utility routines useful for all kinds of ANTLR trees.
 
-public class Trees {
+-- public
+type Trees is tagged record
     --
     public class procedure getPS (t: Tree, ruleNames : Array<String>,
     fontName : String; fontSize : Integer) return String is
@@ -16,7 +17,8 @@ begin
     return psgen.getPS()
     end ;
 
-    public class function getPS (t: Tree, ruleNames : Array<String>) return String is
+    -- public class
+    function getPS (t: Tree, ruleNames : Array<String>) return String is
 begin
     return getPS(t, ruleNames, "Helvetica", 11)
     end ;
@@ -46,7 +48,8 @@ begin
     -- node payloads to get the text for the nodes.  Detect
     -- parse trees and extract data appropriately.
     -- 
-    public static function toStringTree (t : Tree) return String is
+    -- public static
+    function toStringTree (t : Tree) return String is
 begin
         let rulsName: Array<String>? := null;
         return toStringTree(t, rulsName)
@@ -56,7 +59,8 @@ begin
     -- node payloads to get the text for the nodes.  Detect
     -- parse trees and extract data appropriately.
     -- 
-    public static function toStringTree (t : Tree; recog : Parser?) return String is
+    -- public static
+    function toStringTree (t : Tree; recog : Parser?) return String is
 begin
         let ruleNamesList: [String]? := recog?.getRuleNames()
         return toStringTree(t, ruleNamesList)
@@ -66,7 +70,8 @@ begin
     -- node payloads to get the text for the nodes.  Detect
     -- parse trees and extract data appropriately.
     -- 
-    public static function toStringTree (t : Tree; ruleNames : Array<String>?) return String is
+    -- public static
+    function toStringTree (t : Tree; ruleNames : Array<String>?) return String is
 begin
         s : constant := Utils.escapeWhitespace(getNodeText(t, ruleNames), False)
         if t.getChildCount() == 0 then
@@ -84,12 +89,14 @@ begin
         return buf
     end ;
 
-    public static function getNodeText (t : Tree; recog : Parser?) return String is
+    -- public static
+    function getNodeText (t : Tree; recog : Parser?) return String is
 begin
         return getNodeText(t, recog?.getRuleNames())
     end ;
 
-    public static function getNodeText (t : Tree; ruleNames : Array<String>?) return String is
+    -- public static
+    function getNodeText (t : Tree; ruleNames : Array<String>?) return String is
 begin
         if ruleNames : constant := ruleNames then
             if ruleNode : constant := t as? RuleNode then
@@ -121,7 +128,8 @@ begin
     end ;
 
     -- Return ordered list of all children of this node
-    public static function getChildren (t : Tree) return Array<Tree> {
+    -- public static
+    function getChildren (t : Tree) return Array<Tree> {
         var kids: Array<Tree> := Array<Tree> ()
         length : constant := t.getChildCount()
         for i in 0 .. length - 1 loop
@@ -134,7 +142,8 @@ begin
     -- list is the root and the last is the parent of this node.
     -- 
 
-    public static function getAncestors (t : Tree) return Array<Tree> {
+    -- public static
+    function getAncestors (t : Tree) return Array<Tree> {
         var ancestors: Array<Tree> := Array<Tree> ()
         if t.getParent() == null then
 
@@ -151,15 +160,18 @@ begin
         return ancestors
     end ;
 
-    public static function findAllTokenNodes (t : ParseTree; ttype : Integer) return Array<ParseTree> {
+    -- public static
+    function findAllTokenNodes (t : ParseTree; ttype : Integer) return Array<ParseTree> {
         return findAllNodes(t, ttype, True)
     end ;
 
-    public static function findAllRuleNodes (t : ParseTree; ruleIndex : Integer) return Array<ParseTree> {
+    -- public static
+    function findAllRuleNodes (t : ParseTree; ruleIndex : Integer) return Array<ParseTree> {
         return findAllNodes(t, ruleIndex, False)
     end ;
 
-    public static function findAllNodes (t : ParseTree; index : Integer; findTokens  : Boolean) return Array<ParseTree> {
+    -- public static
+    function findAllNodes (t : ParseTree; index : Integer; findTokens  : Boolean) return Array<ParseTree> {
         var nodes: Array<ParseTree> := Array<ParseTree> ()
         _findAllNodes(t, index, findTokens, &nodes)
         return nodes
@@ -186,7 +198,8 @@ begin
         end loop;
     end ;
 
-    public static function descendants (t : ParseTree) return Array<ParseTree> {
+    -- public static
+    function descendants (t : ParseTree) return Array<ParseTree> {
         var nodes: Array<ParseTree> := [t]
 
         let n: Integer := t.getChildCount()
@@ -230,7 +243,8 @@ begin
         return null;
     end ;
 
-    private procedure Init (Self : …) is
+    -- private
+    procedure Init (Self : …) is
 begin
     end ;
 end ;

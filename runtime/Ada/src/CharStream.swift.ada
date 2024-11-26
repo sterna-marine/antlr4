@@ -9,7 +9,8 @@
 -- A source of characters for an ANTLR lexer.
 -- 
 
-public protocol CharStream: IntStream {
+-- public
+type CharStream is interface and IntStream;
     -- 
     -- This method returns the text for a range of characters within this input
     -- stream. This method is guaranteed to not raise an exception if the

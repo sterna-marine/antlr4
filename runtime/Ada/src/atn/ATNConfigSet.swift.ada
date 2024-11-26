@@ -10,7 +10,8 @@
 -- info about the set, with support for combining similar configurations using a
 -- graph-structured stack.
 --
-public final type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
+-- public final
+type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
 {
     --
     -- The reason that we need this is because we don't want the hash map to use
@@ -81,7 +82,8 @@ public final type ATNConfigSet is new Hashable and CustomStringConvertible with 
 
     --override
     @discardableResult
-    public function add (config : ATNConfig) return Boolean is
+    -- public
+    function add (config : ATNConfig) return Boolean is
 begin
         var mergeCache : DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>? := null;
         return add(config, &mergeCache);
@@ -98,12 +100,13 @@ begin
     -- _#hasSemanticContext_ when necessary.
     --
     @discardableResult
-    public procedure add (
+    -- public
+    procedure add (
         config : ATNConfig;
         mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?) return Boolean is
 begin
             if readonly then
-                raise ANTLRError.illegalState with "This set is readonly";;
+                raise ANTLRError.illegalState with "This set is readonly";
             end if;
 
             if config.semanticContext /= SemanticContext.Empty.Instance then
@@ -139,7 +142,8 @@ begin
             return True;
     end ;
 
-    public function getOrAdd (config : ATNConfig) return ATNConfig is
+    -- public
+    function getOrAdd (config : ATNConfig) return ATNConfig is
 begin
 
         return configLookup.getOrAdd(config)
@@ -149,11 +153,13 @@ begin
     --
     -- Return a List holding list of configs
     --
-    public function elements () return [ATNConfig] {
+    -- public
+    function elements () return [ATNConfig] {
         return configs
     end ;
 
-    public function getStates () return Set<ATNState> {
+    -- public
+    function getStates () return Set<ATNState> {
         var states := Set<ATNState> (minimumCapacity: configs.count)
         for config in configs loop
             states.insert(config.state)
@@ -169,7 +175,8 @@ begin
     --
     -- - since: 4.3
     --
-    public function getAlts (This : …) return BitSet is
+    -- public
+    function getAlts (This : …) return BitSet is
 begin
         alts : constant := BitSet()
         for config in configs loop
@@ -178,7 +185,8 @@ begin
         return alts
     end ;
 
-    public function getPredicates () return [SemanticContext] {
+    -- public
+    function getPredicates () return [SemanticContext] {
         var preds := [SemanticContext]()
         for config in configs loop
             if config.semanticContext /= SemanticContext.Empty.Instance then
@@ -188,14 +196,17 @@ begin
         return preds
     end ;
 
-    public function get (i : Integer) return ATNConfig is
+    -- public
+    function get (i : Integer) return ATNConfig is
 begin
         return configs[i]
     end ;
 
-    public procedure optimizeConfigs (interpreter : ATNSimulator) {
+    -- public
+    procedure optimizeConfigs (interpreter : ATNSimulator) is
+    begin
         if readonly then
-            raise ANTLRError.illegalState with "This set is readonly";;
+            raise ANTLRError.illegalState with "This set is readonly";
         end if;
         if configLookup.isEmpty then
             return;
@@ -207,7 +218,8 @@ begin
     end ;
 
     @discardableResult
-    public function addAll (coll : ATNConfigSet) return Boolean is
+    -- public
+    function addAll (coll : ATNConfigSet) return Boolean is
 begin
         for c in coll.configs loop
             add(c);
@@ -215,7 +227,9 @@ begin
         return False;
     end ;
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         if isReadonly() then
             if cachedHashCode == -1 then
                 cachedHashCode := configsHashValue;
@@ -241,40 +255,47 @@ begin
         return configs.count
     end ;
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         return configs.count
     end ;
 
 
-    public function isEmpty (This : …) return Boolean is
+    -- public
+    function isEmpty (This : …) return Boolean is
 begin
         return configs.isEmpty
     end ;
 
 
-    public function contains (o : ATNConfig) return Boolean is
+    -- public
+    function contains (o : ATNConfig) return Boolean is
 begin
         return configLookup.contains(o)
     end ;
 
 
-    public procedure clear (This : …) is
+    -- public
+    procedure clear (This : …) is
 begin
         if readonly then
-            raise ANTLRError.illegalState with "This set is readonly";;
+            raise ANTLRError.illegalState with "This set is readonly";
         end if;
         configs.removeAll()
         cachedHashCode := -1
         configLookup.removeAll()
     end ;
 
-    public function isReadonly (This : …) return Boolean is
+    -- public
+    function isReadonly (This : …) return Boolean is
 begin
         return readonly
     end ;
 
-    public procedure setReadonly (readonly  : Boolean) {
+    -- public
+    procedure setReadonly (readonly  : Boolean) is
+    begin
         self.readonly := readonly
         configLookup.removeAll()
 
@@ -305,14 +326,16 @@ begin
     -- public <T> function toArray (a : [T]) return [T] {
     -- return configLookup.toArray(a);
     --
-    private function configHash (stateNumber : Integer;context : PredictionContext?) return Int{
+    -- private
+    function configHash (stateNumber : Integer;context : PredictionContext?) return Int{
         var hashCode := MurmurHash.initialize(7)
         hashCode := MurmurHash.update(hashCode, stateNumber)
         hashCode := MurmurHash.update(hashCode, context)
         return MurmurHash.finish(hashCode, 2)
     end ;
 
-    public function getConflictingAltSubsets () return [BitSet] {
+    -- public
+    function getConflictingAltSubsets () return [BitSet] {
         var configToAlts := [Int: BitSet]()
 
         for cfg in configs loop
@@ -331,7 +354,8 @@ begin
         return Array(configToAlts.values)
     end ;
 
-    public function getStateToAltMap () return [Int: BitSet] {
+    -- public
+    function getStateToAltMap () return [Int: BitSet] {
         var m := [Int: BitSet]()
 
         for cfg in configs loop
@@ -349,7 +373,8 @@ begin
     end ;
 
     --for DFAState
-    public function getAltSet () return Set<Int>?  {
+    -- public
+    function getAltSet () return Set<Int>?  {
         if configs.isEmpty then
             return null;
         end if;
@@ -361,7 +386,8 @@ begin
     end ;
 
     --for DiagnosticErrorListener
-    public function getAltBitSet () return BitSet  {
+    -- public
+    function getAltBitSet () return BitSet  {
         result : constant := BitSet()
         for config in configs loop
             try! result.set(config.alt)
@@ -384,7 +410,8 @@ begin
 
     --ParserATNSimulator
 
-    public function getUniqueAlt (This : …) return Integer is
+    -- public
+    function getUniqueAlt (This : …) return Integer is
 begin
         var alt := ATN.INVALID_ALT_NUMBER
         for config in configs loop
@@ -397,7 +424,8 @@ begin
         return alt
     end ;
 
-    public function removeAllConfigsNotInRuleStopState (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
+    -- public
+    function removeAllConfigsNotInRuleStopState (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
 begin
         if PredictionMode.allConfigsInRuleStopStates(self) then
             return self;
@@ -422,7 +450,8 @@ begin
         return result
     end ;
 
-    public function applyPrecedenceFilter (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
+    -- public
+    function applyPrecedenceFilter (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
 begin
 
         configSet : constant := ATNConfigSet(fullCtx)
@@ -472,7 +501,8 @@ begin
         return configSet
     end ;
 
-    internal function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return [SemanticContext?]? {
+    -- internal
+    function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return [SemanticContext?]? {
         var altToPred := [SemanticContext?](repeating: null, count: nalts + 1)
         for config in configs loop
             if try! ambigAlts.get(config.alt) then
@@ -498,7 +528,8 @@ begin
         return (nPredAlts = 0 ? null : altToPred)
     end ;
 
-    public function getAltThatFinishedDecisionEntryRule (This : …) return Integer is
+    -- public
+    function getAltThatFinishedDecisionEntryRule (This : …) return Integer is
 begin
         alts : constant := IntervalSet()
         for config in configs loop
@@ -524,7 +555,8 @@ begin
     -- Assumption: the input stream has been restored to the starting point
     -- prediction, which is where predicates need to evaluate.
     --
-    public procedure splitAccordingToSemanticValidity (
+    -- public
+    procedure splitAccordingToSemanticValidity (
         outerContext : ParserRuleContext;
         evalSemanticContext : (SemanticContext, ParserRuleContext, Int, Bool) return Bool) rereturn (ATNConfigSet, ATNConfigSet) {
         succeeded : constant := ATNConfigSet(fullCtx)
@@ -544,7 +576,8 @@ begin
         return (succeeded, failed)
     end ;
 
-    public function dupConfigsWithoutSemanticPredicates (This : …) return ATNConfigSet is
+    -- public
+    function dupConfigsWithoutSemanticPredicates (This : …) return ATNConfigSet is
 begin
         dup : constant := ATNConfigSet()
         for config in configs loop

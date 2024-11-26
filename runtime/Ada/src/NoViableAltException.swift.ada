@@ -10,7 +10,8 @@
 -- in the various paths when the error. Reported by reportNoViableAlternative()
 -- 
 
-public type NoViableAltException is new RecognitionException with null record;
+-- public
+type NoViableAltException is new RecognitionException with null record;
 {
     -- Which configurations did we at input.index() that couldn't match input.LT(1)?;
 
@@ -55,13 +56,15 @@ public type NoViableAltException is new RecognitionException with null record;
     end ;
 
 
-    public function getStartToken (This : …) return Token is
+    -- public
+    function getStartToken (This : …) return Token is
 begin
         return startToken
     end ;
 
 
-    public function getDeadEndConfigs () return ATNConfigSet? {
+    -- public
+    function getDeadEndConfigs () return ATNConfigSet? {
         return deadEndConfigs
     end ;
 

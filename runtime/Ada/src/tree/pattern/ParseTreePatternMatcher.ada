@@ -63,7 +63,8 @@
 -- `\<` and `\>`.
 -- 
 
-public class ParseTreePatternMatcher {
+-- public
+type ParseTreePatternMatcher is tagged record
 
     -- 
     -- This is the backing field for _#getLexer()_.
@@ -105,12 +106,14 @@ public class ParseTreePatternMatcher {
     -- - Throws: ANTLRError.ilegalArgument if `start` is `null` or empty.
     -- - Throws: ANTLRError.ilegalArgument if `stop` is `null` or empty.
     -- 
-    public procedure setDelimiters (start : String; stop : String; escapeLeft : String) {
+    -- public
+    procedure setDelimiters (start : String; stop : String; escapeLeft : String) is
+    begin
         if start.isEmpty then
-            raise ANTLRError.illegalArgument with "start cannot be null or empty";;
+            raise ANTLRError.illegalArgument with "start cannot be null or empty";
         end if;
         if stop.isEmpty then
-            raise ANTLRError.illegalArgument with "stop cannot be null or empty";;
+            raise ANTLRError.illegalArgument with "stop cannot be null or empty";
         end if;
 
         self.start := start
@@ -121,7 +124,8 @@ public class ParseTreePatternMatcher {
     -- 
     -- Does `pattern` matched as rule `patternRuleIndex` match `tree`?
     -- 
-    public function matches (tree : ParseTree; pattern : String; patternRuleIndex : Integer) return Boolean is
+    -- public
+    function matches (tree : ParseTree; pattern : String; patternRuleIndex : Integer) return Boolean is
 begin
         let p: ParseTreePattern := compile(pattern, patternRuleIndex);
         return matches(tree, p);
@@ -131,7 +135,8 @@ begin
     -- Does `pattern` matched as rule patternRuleIndex match tree? Pass in a
     -- compiled pattern instead of a string representation of a tree pattern.
     -- 
-    public function matches (tree : ParseTree; pattern : ParseTreePattern) return Boolean is
+    -- public
+    function matches (tree : ParseTree; pattern : ParseTreePattern) return Boolean is
 begin
         let labels: MultiMap<String, ParseTree> := MultiMap<String, ParseTree> ()
         let mismatchedNode: ParseTree? := matchImpl(tree, pattern.getPatternTree(), labels);
@@ -143,7 +148,8 @@ begin
     -- `tree` and return a _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ object that contains the
     -- matched elements, or the node at which the match failed.
     -- 
-    public function match (tree : ParseTree; pattern : String; patternRuleIndex : Integer) return ParseTreeMatch is
+    -- public
+    function match (tree : ParseTree; pattern : String; patternRuleIndex : Integer) return ParseTreeMatch is
 begin
         let p: ParseTreePattern := compile(pattern, patternRuleIndex);
         return match(tree, p);
@@ -155,7 +161,8 @@ begin
     -- node at which the match failed. Pass in a compiled pattern instead of a
     -- string representation of a tree pattern.
     -- 
-    public function match (tree : ParseTree; pattern : ParseTreePattern) return ParseTreeMatch is
+    -- public
+    function match (tree : ParseTree; pattern : ParseTreePattern) return ParseTreeMatch is
 begin
         let labels: MultiMap<String, ParseTree> := MultiMap<String, ParseTree> ()
         let mismatchedNode: ParseTree? := matchImpl(tree, pattern.getPatternTree(), labels);
@@ -166,7 +173,8 @@ begin
     -- For repeated use of a tree pattern, compile it to a
     -- _org.antlr.v4.runtime.tree.pattern.ParseTreePattern_ using this method.
     -- 
-    public function compile (pattern : String; patternRuleIndex : Integer) return ParseTreePattern is
+    -- public
+    function compile (pattern : String; patternRuleIndex : Integer) return ParseTreePattern is
 begin
         tokenList : constant := tokenize(pattern);
         tokenSrc : constant := ListTokenSource(tokenList)
@@ -183,7 +191,7 @@ begin
 
         -- Make sure tree pattern compilation checks for a complete parse
         if tokens.LA(1) /= CommonToken.EOF then;
-            raise ANTLRError.illegalState with "Tree pattern compilation doesn't check for a complete parse";;
+            raise ANTLRError.illegalState with "Tree pattern compilation doesn't check for a complete parse";
         end if;
 
         return ParseTreePattern(self, pattern, patternRuleIndex, tree)
@@ -193,7 +201,8 @@ begin
     -- Used to convert the tree pattern string into a series of tokens. The
     -- input stream is reset.
     -- 
-    public function getLexer (This : …) return Lexer is
+    -- public
+    function getLexer (This : …) return Lexer is
 begin
         return lexer
     end ;
@@ -202,7 +211,8 @@ begin
     -- Used to collect to the grammar file name, token names, rule names for
     -- used to parse the pattern into a parse tree.
     -- 
-    public function getParser (This : …) return Parser is
+    -- public
+    function getParser (This : …) return Parser is
 begin
         return parser
     end ;
@@ -218,7 +228,8 @@ begin
     -- was successful. The specific node returned depends on the matching
     -- algorithm used by the implementation, and may be overridden.
     -- 
-    internal procedure matchImpl (tree : ParseTree;
+    -- internal
+    procedure matchImpl (tree : ParseTree;
                             patternTree : ParseTree;
                             labels : MultiMap<String, ParseTree>) return ParseTree? {
 
@@ -300,7 +311,8 @@ begin
     end if;
 
     -- Is `t` `(expr <expr>)` subtree?
-    internal function getRuleTagToken (t : ParseTree) return RuleTagToken? {
+    -- internal
+    function getRuleTagToken (t : ParseTree) return RuleTagToken? {
         if ruleNode : constant := t as? RuleNode,
             ruleNode.getChildCount() == 1,
             terminalNode : constant := ruleNode[0] as? TerminalNode,
@@ -311,7 +323,8 @@ begin
         return null;
     end ;
 
-    public function tokenize (pattern : String) return Array<Token> {
+    -- public
+    function tokenize (pattern : String) return Array<Token> {
         -- split pattern into chunks: sea (raw input) and islands (<ID>, <expr>)
         chunks : constant := split(pattern);
 
@@ -324,7 +337,7 @@ begin
                 if firstStr.lowercased() /= firstStr then
                     ttype : constant := parser.getTokenType(tagChunk.getTag())
                     if ttype = CommonToken.INVALID_TYPE then
-                        raise ANTLRError.illegalArgument with "Unknown token " + tagChunk.getTag() + " in pattern: " + pattern;;
+                        raise ANTLRError.illegalArgument with "Unknown token " + tagChunk.getTag() + " in pattern: " + pattern;
                     end if;
                     t : constant := TokenTagToken(tagChunk.getTag(), ttype, tagChunk.getLabel())
                     tokens.append(t)
@@ -332,12 +345,12 @@ begin
                     if firstStr.uppercased() /= firstStr then
                         let ruleIndex: Integer := parser.getRuleIndex(tagChunk.getTag())
                         if ruleIndex == -1 then
-                            raise ANTLRError.illegalArgument with "Unknown rule " + tagChunk.getTag() + " in pattern: " + pattern;;
+                            raise ANTLRError.illegalArgument with "Unknown rule " + tagChunk.getTag() + " in pattern: " + pattern;
                         end if;
                         let ruleImaginaryTokenType: Integer := parser.getATNWithBypassAlts().ruleToTokenType[ruleIndex]
                         tokens.append(RuleTagToken(tagChunk.getTag(), ruleImaginaryTokenType, tagChunk.getLabel()))
                     else
-                        raise ANTLRError.illegalArgument with "invalid tag: " + tagChunk.getTag() + " in pattern: " + pattern;;
+                        raise ANTLRError.illegalArgument with "invalid tag: " + tagChunk.getTag() + " in pattern: " + pattern;
                     end if;
                 end ;
             else
@@ -359,7 +372,8 @@ begin
     -- 
     -- Split `<ID> := <e:expr> ;` into 4 chunks for tokenizing by _#tokenize_.
     -- 
-    public function split (pattern : String) return [Chunk] {
+    -- public
+    function split (pattern : String) return [Chunk] {
         var p := pattern.startIndex
         n : constant := pattern.endIndex
         var chunks := [Chunk]()
@@ -389,17 +403,17 @@ begin
         end loop;
 
         if starts.count > stops.count then
-            raise ANTLRError.illegalArgument with "unterminated tag in pattern: " + pattern;;
+            raise ANTLRError.illegalArgument with "unterminated tag in pattern: " + pattern;
         end if;
 
         if starts.count < stops.count then
-            raise ANTLRError.illegalArgument with "missing start tag in pattern: " + pattern;;
+            raise ANTLRError.illegalArgument with "missing start tag in pattern: " + pattern;
         end if;
 
         ntags : constant := starts.count
         for i in 0 .. ntags - 1 loop
             if starts[i].lowerBound >= stops[i].lowerBound then
-                raise ANTLRError.illegalArgument with "tag delimiters out of order in pattern: " + pattern;;
+                raise ANTLRError.illegalArgument with "tag delimiters out of order in pattern: " + pattern;
             end if;
         end loop;
 

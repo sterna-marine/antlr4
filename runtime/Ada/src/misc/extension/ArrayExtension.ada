@@ -9,7 +9,8 @@ with Foundation;
 --https:--github.com/pNre/ExSwift/blob/master/ExSwift/Array.swift
 extension Array {
    @discardableResult
-    mutating function concat (addArray : [Element]) return [Element] {
+    -- mutating
+    function concat (addArray : [Element]) return [Element] {
         return self + addArray
     end ;
 
@@ -36,7 +37,8 @@ extension Array {
     -- 
     -- :returns: The removed element
     -- 
-    mutating function pop (This : …) return Element is
+    -- mutating
+    function pop (This : …) return Element is
 begin
         return removeLast()
     end ;
@@ -45,7 +47,9 @@ begin
     -- 
     -- :param: newElement Element to append
     -- 
-    mutating procedure push (newElement : Element) {
+    -- mutating
+    procedure push (newElement : Element) is
+    begin
         return append(newElement)
     end ;
 

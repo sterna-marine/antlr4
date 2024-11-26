@@ -1,4 +1,6 @@
-procedure Antlr4 is
+with ANTLR.Runtime;
+
+procedure Main is
 begin
    null;
-end Antlr4;
+end Main;

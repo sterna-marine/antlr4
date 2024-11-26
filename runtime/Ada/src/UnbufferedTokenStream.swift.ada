@@ -4,7 +4,8 @@
 --
 
 
-public type UnbufferedTokenStream is new TokenStream with null record;
+-- public
+type UnbufferedTokenStream is new TokenStream with null record;
 {
     -- internal
     tokenSource : TokenSource
@@ -75,18 +76,20 @@ public type UnbufferedTokenStream is new TokenStream with null record;
     end ;
 
 
-    public function get (i : Integer) return Token is
+    -- public
+    function get (i : Integer) return Token is
 begin
         -- get absolute index
         bufferStartIndex : constant := getBufferStartIndex()
         if i < bufferStartIndex or else i >= bufferStartIndex + n then
-            raise ANTLRError.indexOutOfBounds with "get(\(i)) outside buffer: \(bufferStartIndex)..\(bufferStartIndex + n)";;
+            raise ANTLRError.indexOutOfBounds with "get(\(i)) outside buffer: \(bufferStartIndex)..\(bufferStartIndex + n)";
         end if;
         return tokens[i - bufferStartIndex]
     end ;
 
 
-    public function LT (i : Integer) return Token? {
+    -- public
+    function LT (i : Integer) return Token? {
         if i == -1 then
             return lastToken;
         end if;
@@ -94,7 +97,7 @@ begin
         sync(i);
         let index: Integer := p + i - 1
         if index < 0 then
-            raise ANTLRError.indexOutOfBounds with "LT(\(i) gives negative index";;
+            raise ANTLRError.indexOutOfBounds with "LT(\(i) gives negative index";
         end if;
 
         if index >= n then
@@ -107,41 +110,47 @@ begin
     end ;
 
 
-    public function LA (i : Integer) return Integer is
+    -- public
+    function LA (i : Integer) return Integer is
 begin
         return LT(i)!.getType();
     end ;
 
 
-    public function getTokenSource (This : …) return TokenSource is
+    -- public
+    function getTokenSource (This : …) return TokenSource is
 begin
         return tokenSource
     end ;
 
 
-    public function getText (This : …) return String is
+    -- public
+    function getText (This : …) return String is
 begin
         return ""
     end ;
 
 
-    public function getText (ctx : RuleContext) return String is
+    -- public
+    function getText (ctx : RuleContext) return String is
 begin
         return getText(ctx.getSourceInterval());
     end ;
 
 
-    public function getText (start : Token?, stop : Token?) return String is
+    -- public
+    function getText (start : Token?, stop : Token?) return String is
 begin
         return getText(Interval.of(start!.getTokenIndex(), stop!.getTokenIndex()));
     end ;
 
 
-    public procedure consume (This : …) is
+    -- public
+    procedure consume (This : …) is
 begin
         --Token.EOF
         if LA(1) == CommonToken.EOF then
-            raise ANTLRError.illegalState with "cannot consume EOF";;
+            raise ANTLRError.illegalState with "cannot consume EOF";
         end if;
 
         -- buf always has at least tokens[p = 0] in this method due to ctor
@@ -163,10 +172,12 @@ begin
     -- `p` index is `tokens.length-1`.  `p+need-1` is the tokens index 'need' elements
     -- ahead.  If we need 1 element, `(p+1-1)==p` must be less than `tokens.length`.
     -- 
-    internal procedure sync (want : Integer) {
+    -- internal
+    procedure sync (want : Integer) is
+    begin
         let need: Integer := (p + want - 1) - n + 1 -- how many more elements we need?
         if need > 0 then
-            fill(need);;
+            fill(need);
         end if;
     end ;
 
@@ -176,7 +187,8 @@ begin
     -- then EOF was reached before `n` tokens could be added.
     -- 
     @discardableResult
-    internal function fill (n : Integer) return Integer is
+    -- internal
+    function fill (n : Integer) return Integer is
 begin
         for i in 0 .. n - 1 loop
             if self.n > 0 and then tokens[self.n - 1].getType() == CommonToken.EOF then
@@ -190,7 +202,9 @@ begin
         return n
     end ;
 
-    internal procedure add (t : Token) {
+    -- internal
+    procedure add (t : Token) is
+    begin
         if n >= tokens.count then
             --TODO: array count buffer size
             --tokens := Arrays.copyOf(tokens, tokens.length * 2);
@@ -212,7 +226,8 @@ begin
     -- `release()` is called in the wrong order.
     -- 
 
-    public function mark (This : …) return Integer is
+    -- public
+    function mark (This : …) return Integer is
 begin
         if numMarkers = 0 then
             lastTokenBufferStart := lastToken;
@@ -224,10 +239,12 @@ begin
     end ;
 
 
-    public procedure release (marker : Integer) {
+    -- public
+    procedure release (marker : Integer) is
+    begin
         expectedMark : constant := -numMarkers
         if marker /= expectedMark then
-            raise ANTLRError.illegalState with "release() called with an invalid marker.";;
+            raise ANTLRError.illegalState with "release() called with an invalid marker.";
         end if;
 
         numMarkers := @ - 1;
@@ -246,13 +263,16 @@ begin
     end ;
 
 
-    public function index (This : …) return Integer is
+    -- public
+    function index (This : …) return Integer is
 begin
         return currentTokenIndex
     end ;
 
 
-    public procedure seek (index : Integer) {
+    -- public
+    procedure seek (index : Integer) is
+    begin
         var index := index
         -- seek to absolute index
         if index = currentTokenIndex then
@@ -271,7 +291,7 @@ begin
 
         end ;
         elsif i >= n then
-            raise ANTLRError.unsupportedOperation with "seek to index outside buffer: \(index) not in \(bufferStartIndex)..<\(bufferStartIndex + n)";;
+            raise ANTLRError.unsupportedOperation with "seek to index outside buffer: \(index) not in \(bufferStartIndex)..<\(bufferStartIndex + n)";
         end if;
 
         p := i
@@ -284,19 +304,22 @@ begin
     end ;
 
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         fatalError("Unbuffered stream cannot know its size")
     end ;
 
 
-    public function getSourceName (This : …) return String is
+    -- public
+    function getSourceName (This : …) return String is
 begin
         return tokenSource.getSourceName()
     end ;
 
 
-    public function getText (interval : Interval) return String is
+    -- public
+    function getText (interval : Interval) return String is
 begin
         bufferStartIndex : constant := getBufferStartIndex()
         bufferStopIndex : constant := bufferStartIndex + tokens.count - 1
@@ -304,7 +327,7 @@ begin
         start : constant := interval.a
         stop : constant := interval.b
         if start < bufferStartIndex or else stop > bufferStopIndex then
-            raise ANTLRError.unsupportedOperation with "interval \(interval) not in token buffer window: \(bufferStartIndex) .. \(bufferStopIndex)";;
+            raise ANTLRError.unsupportedOperation with "interval \(interval) not in token buffer window: \(bufferStartIndex) .. \(bufferStopIndex)";
         end if;
 
         a : constant := start - bufferStartIndex
@@ -317,7 +340,8 @@ begin
         return buf
     end ;
 
-    internal final function getBufferStartIndex (This : …) return Integer is
+    -- internal final
+    function getBufferStartIndex (This : …) return Integer is
 begin
         return currentTokenIndex - p
     end ;

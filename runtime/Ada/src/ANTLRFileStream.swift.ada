@@ -8,7 +8,8 @@
 
 with Foundation;
 
-public type ANTLRFileStream is new ANTLRInputStream with null record;
+-- public
+type ANTLRFileStream is new ANTLRInputStream with null record;
 {
     private fileName : constant String;
 
@@ -21,7 +22,8 @@ public type ANTLRFileStream is new ANTLRInputStream with null record;
     end ;
 
     override
-    public function getSourceName (This : …) return String is
+    -- public
+    function getSourceName (This : …) return String is
 begin
         return fileName
     end ;

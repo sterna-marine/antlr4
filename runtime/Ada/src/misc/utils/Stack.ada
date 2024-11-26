@@ -18,7 +18,8 @@ public struct Stack<T> {
         items.append(item)
     end ;
     @discardableResult
-    public mutating function pop (This : …) return T is
+    -- public mutating
+    function pop (This : …) return T is
 begin
         return items.removeLast()
     end ;
@@ -28,7 +29,8 @@ begin
         return items.removeAll()
     end ;
 
-    public function peek () return T? {
+    -- public
+    function peek () return T? {
         return items.last
     end ;
     -- public

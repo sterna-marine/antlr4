@@ -11,7 +11,8 @@
 -- chunks where the tag corresponds to a parser rule.
 -- 
 
-public type RuleTagToken is new Token and CustomStringConvertible with null record;
+-- public
+type RuleTagToken is new Token and CustomStringConvertible with null record;
 {
     -- 
     -- This is the backing field for _#getRuleName_.
@@ -70,7 +71,8 @@ public type RuleTagToken is new Token and CustomStringConvertible with null reco
     -- 
     -- - Returns: The name of the parser rule associated with this rule tag.
     -- 
-    public final function getRuleName (This : …) return String is
+    -- public final
+    function getRuleName (This : …) return String is
 begin
         return ruleName
     end ;
@@ -81,14 +83,16 @@ begin
     -- - Returns: The name of the label associated with the rule tag, or
     -- `null` if this is an unlabeled rule tag.
     -- 
-    public final function getLabel () return String? {
+    -- public final
+    function getLabel () return String? {
         return label
     end ;
 
     -- 
     -- Rule tag tokens are always placed on the _#DEFAULT_CHANNEL_.
     -- 
-    public function getChannel (This : …) return Integer is
+    -- public
+    function getChannel (This : …) return Integer is
 begin
         return RuleTagToken.DEFAULT_CHANNEL
     end ;
@@ -97,7 +101,8 @@ begin
     -- This method returns the rule tag formatted with `<` and `>`
     -- delimiters.
     -- 
-    public function getText () return String? {
+    -- public
+    function getText () return String? {
         if label : constant := label then
             return "<\(label):\(ruleName)>";
         end if;
@@ -108,7 +113,8 @@ begin
     -- Rule tag tokens have types assigned according to the rule bypass
     -- transitions created during ATN deserialization.
     -- 
-    public function getType (This : …) return Integer is
+    -- public
+    function getType (This : …) return Integer is
 begin
         return bypassTokenType
     end ;
@@ -116,7 +122,8 @@ begin
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns 0.
     -- 
-    public function getLine (This : …) return Integer is
+    -- public
+    function getLine (This : …) return Integer is
 begin
         return 0
     end ;
@@ -124,7 +131,8 @@ begin
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
     -- 
-    public function getCharPositionInLine (This : …) return Integer is
+    -- public
+    function getCharPositionInLine (This : …) return Integer is
 begin
         return -1
     end ;
@@ -134,7 +142,8 @@ begin
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
     -- 
-    public function getTokenIndex (This : …) return Integer is
+    -- public
+    function getTokenIndex (This : …) return Integer is
 begin
         return -1
     end ;
@@ -142,7 +151,8 @@ begin
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
     -- 
-    public function getStartIndex (This : …) return Integer is
+    -- public
+    function getStartIndex (This : …) return Integer is
 begin
         return -1
     end ;
@@ -150,7 +160,8 @@ begin
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns -1.
     -- 
-    public function getStopIndex (This : …) return Integer is
+    -- public
+    function getStopIndex (This : …) return Integer is
 begin
         return -1
     end ;
@@ -158,18 +169,21 @@ begin
     -- 
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns `null`.
     -- 
-    public function getTokenSource () return TokenSource? {
+    -- public
+    function getTokenSource () return TokenSource? {
         return null;
     end ;
 
     --
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ always returns `null`.
     -- 
-    public function getInputStream () return CharStream? {
+    -- public
+    function getInputStream () return CharStream? {
         return null;
     end ;
 
-    public function getTokenSourceAndStream (This : …) return TokenSourceAndStream is
+    -- public
+    function getTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
         return TokenSourceAndStream.EMPTY
     end ;

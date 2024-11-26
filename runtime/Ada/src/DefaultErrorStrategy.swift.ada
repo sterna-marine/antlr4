@@ -11,7 +11,8 @@
 
 with Foundation;
 
-open type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
+-- open
+type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
 {
     -- 
     -- Indicates whether the error strategy is currently "recovering from an
@@ -54,7 +55,8 @@ open type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     nextTokensState := ATNState.INVALID_STATE_NUMBER
 
 
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
     end ;
 
@@ -62,7 +64,9 @@ begin
     -- The default implementation simply calls _#endErrorCondition_ to
     -- ensure that the handler is not in error recovery mode.
     -- 
-    open procedure reset (recognizer : Parser) {
+    -- open
+    procedure reset (recognizer : Parser) is
+    begin
         endErrorCondition(recognizer)
     end ;
 
@@ -72,11 +76,14 @@ begin
     -- 
     -- - parameter recognizer: the parser instance
     -- 
-    open procedure beginErrorCondition (recognizer : Parser) {
+    -- open
+    procedure beginErrorCondition (recognizer : Parser) is
+    begin
         errorRecoveryMode := True;
     end ;
 
-    open function inErrorRecoveryMode (recognizer : Parser) return Boolean is
+    -- open
+    function inErrorRecoveryMode (recognizer : Parser) return Boolean is
 begin
         return errorRecoveryMode
     end ;
@@ -87,7 +94,9 @@ begin
     -- 
     -- - parameter recognizer:
     -- 
-    open procedure endErrorCondition (recognizer : Parser) {
+    -- open
+    procedure endErrorCondition (recognizer : Parser) is
+    begin
         errorRecoveryMode := False;
         lastErrorStates := null;
         lastErrorIndex := -1
@@ -96,7 +105,9 @@ begin
     -- 
     -- The default implementation simply calls _#endErrorCondition_.
     -- 
-    open procedure reportMatch (recognizer : Parser) {
+    -- open
+    procedure reportMatch (recognizer : Parser) is
+    begin
         endErrorCondition(recognizer)
     end ;
 
@@ -116,7 +127,9 @@ begin
     -- * All other types: calls _org.antlr.v4.runtime.Parser#notifyErrorListeners_ to report
     -- the exception
     -- 
-    open procedure reportError (recognizer : Parser; e : RecognitionException) {
+    -- open
+    procedure reportError (recognizer : Parser; e : RecognitionException) is
+    begin
         -- if we've already reported an error and have not matched a token
         -- yet successfully, don't report any errors.
         if inErrorRecoveryMode(recognizer) then
@@ -141,7 +154,9 @@ begin
     -- until we find one in the resynchronization set--loosely the set of tokens
     -- that can follow the current rule.
     -- 
-    open procedure recover (recognizer : Parser; e : RecognitionException) {
+    -- open
+    procedure recover (recognizer : Parser; e : RecognitionException) is
+    begin
 --		print("recover in "+recognizer.getRuleInvocationStack()+
 --						   " index="+getTokenStream(recognizer).index()+
 --						   ", lastErrorIndex="+
@@ -215,7 +230,9 @@ begin
     -- functionality by simply overriding this method as a blank { end ;.
     -- 
 
-    open procedure sync (recognizer : Parser) {
+    -- open
+    procedure sync (recognizer : Parser) is
+    begin
         s : constant := recognizer.getInterpreter().atn.states[recognizer.getState()]!
 --		errPrint("sync @ "+s.stateNumber+"="+s.getClass().getSimpleName());
         -- If already recovering, don't to sync;
@@ -245,7 +262,7 @@ begin
             return
         end ;
 
-        switch s.getStateType() {
+       case s.getStateType()  is
         when ATNState.BLOCK_START => fallthrough;
         when ATNState.STAR_BLOCK_START => fallthrough;
         when ATNState.PLUS_BLOCK_START => fallthrough;
@@ -279,7 +296,9 @@ begin
     -- - parameter recognizer: the parser instance
     -- - parameter e: the recognition exception
     -- 
-    open procedure reportNoViableAlternative (recognizer : Parser; e : NoViableAltException) {
+    -- open
+    procedure reportNoViableAlternative (recognizer : Parser; e : NoViableAltException) is
+    begin
         tokens : constant := getTokenStream(recognizer)
         var input : String;
         if e.getStartToken().getType() == CommonToken.EOF then
@@ -305,7 +324,9 @@ begin
     -- - parameter recognizer: the parser instance
     -- - parameter e: the recognition exception
     -- 
-    open procedure reportInputMismatch (recognizer : Parser; e : InputMismatchException) {
+    -- open
+    procedure reportInputMismatch (recognizer : Parser; e : InputMismatchException) is
+    begin
         tok : constant := getTokenErrorDisplay(e.getOffendingToken())
         expected : constant := e.getExpectedTokens()?.toString(recognizer.getVocabulary()) ?? "<missing>"
         msg : constant := "mismatched input \(tok) expecting \(expected)"
@@ -321,7 +342,9 @@ begin
     -- - parameter recognizer: the parser instance
     -- - parameter e: the recognition exception
     -- 
-    open procedure reportFailedPredicate (recognizer : Parser; e : FailedPredicateException) {
+    -- open
+    procedure reportFailedPredicate (recognizer : Parser; e : FailedPredicateException) is
+    begin
         ruleName : constant := recognizer.getRuleNames()[recognizer._ctx!.getRuleIndex()]
         msg : constant := "rule \(ruleName) \(e.message!)"
         recognizer.notifyErrorListeners(e.getOffendingToken(), msg, e)
@@ -345,7 +368,9 @@ begin
     -- 
     -- - parameter recognizer: the parser instance
     -- 
-    open procedure reportUnwantedToken (recognizer : Parser) {
+    -- open
+    procedure reportUnwantedToken (recognizer : Parser) is
+    begin
         if inErrorRecoveryMode(recognizer) then
             return;
         end if;
@@ -376,7 +401,9 @@ begin
     -- 
     -- - parameter recognizer: the parser instance
     -- 
-    open procedure reportMissingToken (recognizer : Parser) {
+    -- open
+    procedure reportMissingToken (recognizer : Parser) is
+    begin
         if inErrorRecoveryMode(recognizer) then
             return;
         end if;
@@ -441,7 +468,8 @@ begin
     -- in rule `atom`. It can assume that you forgot the `')'`.
     -- 
 
-    open function recoverInline (recognizer : Parser) return Token is
+    -- open
+    function recoverInline (recognizer : Parser) return Token is
 begin
         -- SINGLE TOKEN DELETION
         matchedSymbol : constant := singleTokenDeletion(recognizer);
@@ -454,7 +482,7 @@ begin
 
         -- SINGLE TOKEN INSERTION
         if singleTokenInsertion(recognizer) then;
-            return getMissingSymbol(recognizer);;
+            return getMissingSymbol(recognizer);
         end if;
         -- even that didn't work; must raise the exception
         exn : constant := InputMismatchException(recognizer, state: nextTokensState, ctx: nextTokensContext)
@@ -478,7 +506,8 @@ begin
     -- - returns: `True` if single-token insertion is a viable recovery
     -- strategy for the current mismatched input, otherwise `False`
     -- 
-    open function singleTokenInsertion (recognizer : Parser) return Boolean is
+    -- open
+    function singleTokenInsertion (recognizer : Parser) return Boolean is
 begin
         currentSymbolType : constant := getTokenStream(recognizer).LA(1);
         -- if current token is consistent with what could come after current
@@ -515,7 +544,8 @@ begin
     -- deletion successfully recovers from the mismatched input, otherwise
     -- `null`
     -- 
-    open function singleTokenDeletion (recognizer : Parser) return Token? {
+    -- open
+    function singleTokenDeletion (recognizer : Parser) return Token? {
         nextTokenType : constant := getTokenStream(recognizer).LA(2);
         expecting : constant := getExpectedTokens(recognizer);
         if expecting.contains(nextTokenType) then
@@ -555,12 +585,14 @@ begin
     -- If you change what tokens must be created by the lexer,
     -- override this method to create the appropriate tokens.
     -- 
-    open function getTokenStream (recognizer : Parser) return TokenStream is
+    -- open
+    function getTokenStream (recognizer : Parser) return TokenStream is
 begin
         return recognizer.getInputStream() as! TokenStream
     end ;
 
-    open function getMissingSymbol (recognizer : Parser) return Token is
+    -- open
+    function getMissingSymbol (recognizer : Parser) return Token is
 begin
         currentSymbol : constant := recognizer.getCurrentToken();
         expecting : constant := getExpectedTokens(recognizer);
@@ -588,7 +620,8 @@ begin
     end ;
 
 
-    open function getExpectedTokens (recognizer : Parser) return IntervalSet is
+    -- open
+    function getExpectedTokens (recognizer : Parser) return IntervalSet is
 begin
         return recognizer.getExpectedTokens();
     end ;
@@ -602,7 +635,8 @@ begin
     -- your token objects because you don't have to go modify your lexer
     -- so that it creates a new Java type.
     -- 
-    open function getTokenErrorDisplay (t : Token?) return String is
+    -- open
+    function getTokenErrorDisplay (t : Token?) return String is
 begin
         guard t : constant := t else {
             return "<no token>"
@@ -618,17 +652,20 @@ begin
         return escapeWSAndQuote(s!)
     end ;
 
-    open function getSymbolText (symbol : Token) return String? {
+    -- open
+    function getSymbolText (symbol : Token) return String? {
         return symbol.getText()
     end ;
 
-    open function getSymbolType (symbol : Token) return Integer is
+    -- open
+    function getSymbolType (symbol : Token) return Integer is
 begin
         return symbol.getType()
     end ;
 
 
-    open function escapeWSAndQuote (s : String) return String is
+    -- open
+    function escapeWSAndQuote (s : String) return String is
 begin
         var s := s
         s := s.replacingOccurrences(of: "\n", with: "\\n")
@@ -730,7 +767,8 @@ begin
     -- Like Grosch I implement context-sensitive FOLLOW sets that are combined
     -- at run-time upon error to avoid overhead during parsing.
     -- 
-    open function getErrorRecoverySet (recognizer : Parser) return IntervalSet is
+    -- open
+    function getErrorRecoverySet (recognizer : Parser) return IntervalSet is
 begin
         atn : constant := recognizer.getInterpreter().atn
         var ctx: RuleContext? := recognizer._ctx
@@ -751,7 +789,9 @@ begin
     -- 
     -- Consume tokens until one matches the given token set.
     -- 
-    open procedure consumeUntil (recognizer : Parser; set : IntervalSet) {
+    -- open
+    procedure consumeUntil (recognizer : Parser; set : IntervalSet) is
+    begin
 --		errPrint("consumeUntil("+set.toString(recognizer.getTokenNames())+")");
         var ttype := getTokenStream(recognizer).LA(1);
         while ttype /= CommonToken.EOF and then not set.contains(ttype) loop

@@ -16,7 +16,8 @@ public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
     data := [Key1: [Key2: Value]]()
 
     @discardableResult
-    public mutating function put (k1 : Key1; k2 : Key2; v : Value) return Value? {
+    -- public mutating
+    function put (k1 : Key1; k2 : Key2; v : Value) return Value? {
 
         let prev: Value?
         -- if
@@ -34,11 +35,13 @@ public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
         return prev
     end ;
 
-    public function get (k1 : Key1; k2 : Key2) return Value? {
+    -- public
+    function get (k1 : Key1; k2 : Key2) return Value? {
         return data[k1]?[k2]
     end ;
 
-    public function get (k1 : Key1) return [Key2: Value]? {
+    -- public
+    function get (k1 : Key1) return [Key2: Value]? {
         return data[k1]
     end ;
 end ;

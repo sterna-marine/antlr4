@@ -11,7 +11,8 @@
 -- - seealso: org.antlr.v4.runtime.misc.IntervalSet
 -- 
 
-public protocol IntSet {
+-- public
+type IntSet is interface;
     -- 
     -- Adds the specified value to the current set.
     -- 

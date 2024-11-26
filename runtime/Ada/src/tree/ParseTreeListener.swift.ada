@@ -17,7 +17,8 @@
 -- https:--github.com/antlr/antlr4/issues/841
 -- 
 
-public protocol ParseTreeListener: AnyObject {
+-- public
+type ParseTreeListener is interface;
     procedure visitTerminal (node : TerminalNode)
 
     procedure visitErrorNode (node : ErrorNode)

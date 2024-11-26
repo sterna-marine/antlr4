@@ -16,7 +16,8 @@
 -- This class does not perform any validation on the tag or label names aside
 -- from ensuring that the tag is a non-null, non-empty string.
 -- 
-public type TagChunk is new Chunk and CustomStringConvertible with null record;
+-- public
+type TagChunk is new Chunk and CustomStringConvertible with null record;
 {
     -- 
     -- This is the backing field for _#getTag_.
@@ -62,7 +63,7 @@ public type TagChunk is new Chunk and CustomStringConvertible with null record;
         self.tag := tag
         super.init()
         if tag.isEmpty then
-            raise ANTLRError.illegalArgument with "tag cannot be null or empty";;
+            raise ANTLRError.illegalArgument with "tag cannot be null or empty";
         end if;
     end ;
 
@@ -71,7 +72,8 @@ public type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- 
     -- - Returns: The tag for the chunk.
     -- 
-    public final function getTag (This : …) return String is
+    -- public final
+    function getTag (This : …) return String is
 begin
         return tag
     end ;
@@ -82,7 +84,8 @@ begin
     -- - Returns: The label assigned to this chunk, or `null` if no label is
     -- assigned to the chunk.
     -- 
-    public final function getLabel () return String? {
+    -- public final
+    function getLabel () return String? {
         return label
     end ;
 
@@ -102,7 +105,8 @@ begin
     end ;
 
 
-    override public function isEqual (other : Chunk) return Boolean is
+    -- override public
+    function isEqual (other : Chunk) return Boolean is
 begin
         guard other : constant := other as? TagChunk else {
             return False;

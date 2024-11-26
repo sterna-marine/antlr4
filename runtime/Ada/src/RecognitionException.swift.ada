@@ -11,7 +11,8 @@
 -- and what kind of problem occurred.
 -- 
 
-public class RecognitionException {
+-- public
+type RecognitionException is tagged record
     -- 
     -- The _org.antlr.v4.runtime.Recognizer_ where this exception originated.
     -- 
@@ -58,7 +59,8 @@ public class RecognitionException {
     -- 
     -- If the state number is not known, this method returns -1.
     -- 
-    public function getOffendingState (This : …) return Integer is
+    -- public
+    function getOffendingState (This : …) return Integer is
 begin
         return offendingState
     end ;
@@ -77,7 +79,8 @@ begin
     -- - Returns: The set of token types that could potentially follow the current
     -- state in the ATN, or `null` if the information is not available.
     -- 
-    public function getExpectedTokens () return IntervalSet? {
+    -- public
+    function getExpectedTokens () return IntervalSet? {
         if recognizer : constant := recognizer then
             return try? recognizer.getATN().getExpectedTokens(offendingState, ctx!);
         end if;
@@ -92,7 +95,8 @@ begin
     -- - Returns: The _org.antlr.v4.runtime.RuleContext_ at the time this exception was thrown.
     -- If the context is not available, this method returns `null`.
     -- 
-    public function getCtx () return RuleContext? {
+    -- public
+    function getCtx () return RuleContext? {
         return ctx
     end ;
 
@@ -106,16 +110,19 @@ begin
     -- where this exception was thrown, or `null` if the stream is not
     -- available.
     -- 
-    public function getInputStream () return IntStream? {
+    -- public
+    function getInputStream () return IntStream? {
         return input
     end ;
 
-    public procedure clearInputStream (This : …) is
+    -- public
+    procedure clearInputStream (This : …) is
 begin
         input := null;
     end ;
 
-    public function getOffendingToken (This : …) return Token is
+    -- public
+    function getOffendingToken (This : …) return Token is
 begin
         return offendingToken
     end ;
@@ -132,11 +139,13 @@ begin
     -- - Returns: The recognizer where this exception occurred, or `null` if
     -- the recognizer is not available.
     -- 
-    public function getRecognizer () return RecognizerProtocol? {
+    -- public
+    function getRecognizer () return RecognizerProtocol? {
         return recognizer
     end ;
 
-    public procedure clearRecognizer (This : …) is
+    -- public
+    procedure clearRecognizer (This : …) is
 begin
         self.recognizer := null;
     end ;

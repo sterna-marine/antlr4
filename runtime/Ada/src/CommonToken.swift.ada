@@ -6,7 +6,8 @@
 
 
 
-public type CommonToken is new WritableToken with null record;
+-- public
+type CommonToken is new WritableToken with null record;
 {
     -- 
     -- This is the backing field for _#getType_ and _#setType_.
@@ -140,18 +141,22 @@ public type CommonToken is new WritableToken with null record;
     end ;
 
 
-    public function getType (This : …) return Integer is
+    -- public
+    function getType (This : …) return Integer is
 begin
         return type
     end ;
 
 
-    public procedure setLine (line : Integer) {
+    -- public
+    procedure setLine (line : Integer) is
+    begin
         self.line := line
     end ;
 
 
-    public function getText () return String? {
+    -- public
+    function getText () return String? {
         if text : constant := text then
             return text;
         end if;
@@ -184,84 +189,107 @@ begin
     -- of the token.
     -- 
 
-    public procedure setText (text : String) {
+    -- public
+    procedure setText (text : String) is
+    begin
         self.text := text
     end ;
 
-    public function getLine (This : …) return Integer is
+    -- public
+    function getLine (This : …) return Integer is
 begin
         return line
     end ;
 
 
-    public function getCharPositionInLine (This : …) return Integer is
+    -- public
+    function getCharPositionInLine (This : …) return Integer is
 begin
         return charPositionInLine
     end ;
 
 
-    public procedure setCharPositionInLine (charPositionInLine : Integer) {
+    -- public
+    procedure setCharPositionInLine (charPositionInLine : Integer) is
+    begin
         self.charPositionInLine := charPositionInLine
     end ;
 
 
-    public function getChannel (This : …) return Integer is
+    -- public
+    function getChannel (This : …) return Integer is
 begin
         return channel
     end ;
 
 
-    public procedure setChannel (channel : Integer) {
+    -- public
+    procedure setChannel (channel : Integer) is
+    begin
         self.channel := channel
     end ;
 
 
-    public procedure setType (type : Integer) {
+    -- public
+    procedure setType (type : Integer) is
+    begin
         self.type := type
     end ;
 
 
-    public function getStartIndex (This : …) return Integer is
+    -- public
+    function getStartIndex (This : …) return Integer is
 begin
         return start
     end ;
 
-    public procedure setStartIndex (start : Integer) {
+    -- public
+    procedure setStartIndex (start : Integer) is
+    begin
         self.start := start
     end ;
 
 
-    public function getStopIndex (This : …) return Integer is
+    -- public
+    function getStopIndex (This : …) return Integer is
 begin
         return stop
     end ;
 
-    public procedure setStopIndex (stop : Integer) {
+    -- public
+    procedure setStopIndex (stop : Integer) is
+    begin
         self.stop := stop
     end ;
 
 
-    public function getTokenIndex (This : …) return Integer is
+    -- public
+    function getTokenIndex (This : …) return Integer is
 begin
         return index
     end ;
 
 
-    public procedure setTokenIndex (index : Integer) {
+    -- public
+    procedure setTokenIndex (index : Integer) is
+    begin
         self.index := index
     end ;
 
 
-    public function getTokenSource () return TokenSource? {
+    -- public
+    function getTokenSource () return TokenSource? {
         return source.tokenSource
     end ;
 
 
-    public function getInputStream () return CharStream? {
+    -- public
+    function getInputStream () return CharStream? {
         return source.stream
     end ;
 
-    public function getTokenSourceAndStream (This : …) return TokenSourceAndStream is
+    -- public
+    function getTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
         return source
     end ;
@@ -272,7 +300,8 @@ begin
         return toString(null)
     end ;
 
-    public function toString (r : Recognizer<ATNSimulator>?) return String is
+    -- public
+    function toString (r : Recognizer<ATNSimulator>?) return String is
 begin
         channelStr : constant := (channel > 0 ? ",channel=\(channel)" : "")
 

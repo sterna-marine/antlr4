@@ -11,7 +11,8 @@
 -- - Author: Sam Harwell
 -- 
 
-public type Vocabulary is new Hashable with null record;
+-- public
+type Vocabulary is new Hashable with null record;
 {
     -- private static
     EMPTY_NAMES : constant [String?] := [String?](repeating: "", count: 1);
@@ -92,7 +93,8 @@ public type Vocabulary is new Hashable with null record;
     -- - Returns: A _org.antlr.v4.runtime.Vocabulary_ instance which uses `tokenNames` for
     -- the display names of tokens.
     -- 
-    public static function fromTokenNames (tokenNames : [String?]?) return Vocabulary is
+    -- public static
+    function fromTokenNames (tokenNames : [String?]?) return Vocabulary is
 begin
         guard tokenNames : constant := tokenNames, tokenNames.count > 0 else {
             return EMPTY_VOCABULARY
@@ -125,7 +127,8 @@ begin
     end ;
 
 
-    public function getLiteralName (tokenType : Integer) return String? {
+    -- public
+    function getLiteralName (tokenType : Integer) return String? {
         if tokenType >= 0 and then tokenType < literalNames.count then
             return literalNames[tokenType];
         end if;
@@ -134,7 +137,8 @@ begin
     end ;
 
 
-    public function getSymbolicName (tokenType : Integer) return String? {
+    -- public
+    function getSymbolicName (tokenType : Integer) return String? {
         if tokenType >= 0 and then tokenType < symbolicNames.count then
             return symbolicNames[tokenType];
         end if;
@@ -146,7 +150,8 @@ begin
     end ;
 
 
-    public function getDisplayName (tokenType : Integer) return String is
+    -- public
+    function getDisplayName (tokenType : Integer) return String is
 begin
         if tokenType >= 0 and then tokenType < displayNames.count then
             if displayName : constant := displayNames[tokenType] then
@@ -165,7 +170,9 @@ begin
         return String(tokenType)
     end ;
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         hasher.combine(ObjectIdentifier(self))
     end ;
 end ;

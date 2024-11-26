@@ -6,7 +6,8 @@
 with Foundation;
 
 
-public protocol RecognizerProtocol {
+-- public
+type RecognizerProtocol is interface;
     function getATN () return ATN
     function getGrammarFileName () return String
     function getParseInfo () return ParseInfo?
@@ -28,7 +29,8 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
     -- private
     _stateNumber := ATNState.INVALID_STATE_NUMBER
 
-    open function getRuleNames () return [String] {
+    -- open
+    function getRuleNames () return [String] {
         fatalError(#function + " must be overridden")
     end ;
 
@@ -38,7 +40,8 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
     -- - Returns: A _org.antlr.v4.runtime.Vocabulary_ instance providing information about the
     -- vocabulary used by the grammar.
     -- 
-    open function getVocabulary (This : …) return Vocabulary is
+    -- open
+    function getVocabulary (This : …) return Vocabulary is
 begin
         fatalError(#function + " must be overridden")
     end ;
@@ -48,7 +51,8 @@ begin
     -- 
     -- Used for XPath and tree pattern compilation.
     -- 
-    public function getTokenTypeMap () return [String: Int] {
+    -- public
+    function getTokenTypeMap () return [String: Int] {
         return tokenTypeMap
     end ;
 
@@ -78,7 +82,8 @@ begin
     -- 
     -- Used for XPath and tree pattern compilation.
     -- 
-    public function getRuleIndexMap () return [String : Int] {
+    -- public
+    function getRuleIndexMap () return [String : Int] {
         return ruleIndexMap
     end ;
 
@@ -88,7 +93,8 @@ begin
     end ;()
 
 
-    public function getTokenType (tokenName : String) return Integer is
+    -- public
+    function getTokenType (tokenName : String) return Integer is
 begin
         return getTokenTypeMap()[tokenName] ?? CommonToken.INVALID_TYPE
     end ;
@@ -100,14 +106,16 @@ begin
     -- For interpreters, we don't know their serialized ATN despite having
     -- created the interpreter from it.
     -- 
-    open function getSerializedATN () return [Int] {
+    -- open
+    function getSerializedATN () return [Int] {
         fatalError("there is no serialized ATN")
     end ;
 
     -- For debugging and other purposes, might want the grammar name.
     -- Have ANTLR generate an implementation for this method.
     -- 
-    open function getGrammarFileName (This : …) return String is
+    -- open
+    function getGrammarFileName (This : …) return String is
 begin
         fatalError(#function + " must be overridden")
     end ;
@@ -117,7 +125,8 @@ begin
     -- 
     -- - Returns: The _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.
     -- 
-    open function getATN (This : …) return ATN is
+    -- open
+    function getATN (This : …) return ATN is
 begin
         fatalError(#function + " must be overridden")
     end ;
@@ -127,7 +136,8 @@ begin
     -- 
     -- - Returns: The ATN interpreter used by the recognizer for prediction.
     -- 
-    open function getInterpreter (This : …) return ATNInterpreter is
+    -- open
+    function getInterpreter (This : …) return ATNInterpreter is
 begin
         return _interp
     end ;
@@ -137,7 +147,8 @@ begin
     -- 
     -- - Since: 4.3
     -- 
-    open function getParseInfo () return ParseInfo? {
+    -- open
+    function getParseInfo () return ParseInfo? {
         return null;
     end ;
 
@@ -147,14 +158,17 @@ begin
     -- - Parameter interpreter: The ATN interpreter used by the recognizer for
     -- prediction.
     -- 
-    open procedure setInterpreter (interpreter : ATNInterpreter) {
+    -- open
+    procedure setInterpreter (interpreter : ATNInterpreter) is
+    begin
         _interp := interpreter
     end ;
 
     -- 
     -- What is the error header, normally line/character position information?
     -- 
-    open function getErrorHeader (e : RecognitionException) return String is
+    -- open
+    function getErrorHeader (e : RecognitionException) return String is
 begin
         offending : constant := e.getOffendingToken()
         line : constant := offending.getLine()
@@ -162,46 +176,58 @@ begin
         return "line \(line):\(charPositionInLine)"
     end ;
 
-    open procedure addErrorListener (listener : ANTLRErrorListener) {
+    -- open
+    procedure addErrorListener (listener : ANTLRErrorListener) is
+    begin
         _listeners.append(listener)
     end ;
 
-    open procedure removeErrorListener (listener : ANTLRErrorListener) {
+    -- open
+    procedure removeErrorListener (listener : ANTLRErrorListener) is
+    begin
         _listeners := _listeners.filter() {
             $0 !== listener
         end ;
     end ;
 
-    open procedure removeErrorListeners (This : …) is
+    -- open
+    procedure removeErrorListeners (This : …) is
 begin
         _listeners.removeAll()
     end ;
 
-    open function getErrorListeners () return [ANTLRErrorListener] {
+    -- open
+    function getErrorListeners () return [ANTLRErrorListener] {
         return _listeners
     end ;
 
-    open function getErrorListenerDispatch (This : …) return ANTLRErrorListener is
+    -- open
+    function getErrorListenerDispatch (This : …) return ANTLRErrorListener is
 begin
         return ProxyErrorListener(getErrorListeners())
     end ;
 
     -- subclass needs to override these if there are sempreds or actions
     -- that the ATN interp needs to execute
-    open function sempred (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) return Boolean is
+    -- open
+    function sempred (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) return Boolean is
 begin
         return True;
     end ;
 
-    open function precpred (localctx : RuleContext?, precedence : Integer) return Boolean is
+    -- open
+    function precpred (localctx : RuleContext?, precedence : Integer) return Boolean is
 begin
         return True;
     end ;
 
-    open procedure action (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) {
+    -- open
+    procedure action (_localctx : RuleContext?, ruleIndex : Integer; actionIndex : Integer) is
+    begin
     end ;
 
-    public final function getState (This : …) return Integer is
+    -- public final
+    function getState (This : …) return Integer is
 begin
         return _stateNumber
     end ;
@@ -219,20 +245,26 @@ begin
 --		if ( traceATNStates ) _ctx.trace(atnState);
     end ;
 
-    open function getInputStream () return IntStream? {
+    -- open
+    function getInputStream () return IntStream? {
         fatalError(#function + " must be overridden")
     end ;
 
-    open procedure setInputStream (input : IntStream) {
+    -- open
+    procedure setInputStream (input : IntStream) is
+    begin
         fatalError(#function + " must be overridden")
     end ;
 
-    open function getTokenFactory (This : …) return TokenFactory is
+    -- open
+    function getTokenFactory (This : …) return TokenFactory is
 begin
         fatalError(#function + " must be overridden")
     end ;
 
-    open procedure setTokenFactory (input : TokenFactory) {
+    -- open
+    procedure setTokenFactory (input : TokenFactory) is
+    begin
         fatalError(#function + " must be overridden")
     end ;
 end ;

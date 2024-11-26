@@ -8,7 +8,8 @@
 -- Represents the result of matching a _org.antlr.v4.runtime.tree.ParseTree_ against a tree pattern.
 -- 
 
-public type ParseTreeMatch is new CustomStringConvertible with null record;
+-- public
+type ParseTreeMatch is new CustomStringConvertible with null record;
 {
     -- 
     -- This is the backing field for _#getTree()_.
@@ -75,7 +76,8 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
     -- label, or `null` if no parse tree matched a tag with the label.
     -- 
 
-    public function get (label : String) return ParseTree? {
+    -- public
+    function get (label : String) return ParseTree? {
         if parseTrees : constant := labels.get(label) , parseTrees.count > 0 then
             return parseTrees[parseTrees.count - 1]   -- return last if multiple
         else
@@ -105,7 +107,8 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
     -- the specified `label`. If no nodes matched the label, an empty list
     -- is returned.
     -- 
-    public function getAll (label : String) return Array<ParseTree> {
+    -- public
+    function getAll (label : String) return Array<ParseTree> {
         return labels.get(label) ?? []
     end ;
 
@@ -119,7 +122,8 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
     -- - Returns: A mapping from labels to parse tree nodes. If the parse tree
     -- pattern did not contain any rule or token tags, this map will be empty.
     -- 
-    public function getLabels () return MultiMap<String, ParseTree> {
+    -- public
+    function getLabels () return MultiMap<String, ParseTree> {
         return labels
     end ;
 
@@ -129,7 +133,8 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
     -- - Returns: the node at which we first detected a mismatch, or `null`
     -- if the match was successful.
     -- 
-    public function getMismatchedNode () return ParseTree? {
+    -- public
+    function getMismatchedNode () return ParseTree? {
         return mismatchedNode
     end ;
 
@@ -139,7 +144,8 @@ public type ParseTreeMatch is new CustomStringConvertible with null record;
     -- - Returns: `True` if the match operation succeeded; otherwise,
     -- `False`.
     -- 
-    public function succeeded (This : …) return Boolean is
+    -- public
+    function succeeded (This : …) return Boolean is
 begin
         return mismatchedNode = null;
     end ;
@@ -149,7 +155,8 @@ begin
     -- 
     -- - Returns: The tree pattern we are matching against.
     -- 
-    public function getPattern (This : …) return ParseTreePattern is
+    -- public
+    function getPattern (This : …) return ParseTreePattern is
 begin
         return pattern
     end ;
@@ -159,7 +166,8 @@ begin
     -- 
     -- - Returns: The _org.antlr.v4.runtime.tree.ParseTree_ we are trying to match to a pattern.
     -- 
-    public function getTree (This : …) return ParseTree is
+    -- public
+    function getTree (This : …) return ParseTree is
 begin
         return tree
     end ;

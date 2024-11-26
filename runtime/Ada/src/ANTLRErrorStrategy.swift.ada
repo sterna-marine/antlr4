@@ -23,7 +23,8 @@
 -- 
 -- TODO: what to do about lexers
 -- 
-public protocol ANTLRErrorStrategy {
+-- public
+type ANTLRErrorStrategy is interface;
     -- 
     -- Reset the error handler state for the specified `recognizer`.
     -- - parameter recognizer: the parser instance

@@ -18,14 +18,14 @@ begin
         inputStream1 : constant := ANTLRInputStream("A")
         tokenStream : constant := CommonTokenStream(VisitorBasicLexer(inputStream1))
 
-        tokenStream.fill();;
+        tokenStream.fill();
         XCTAssertEqual(2, tokenStream.size())
         XCTAssertEqual(VisitorBasicLexer.A, tokenStream.get(0).getType());
         XCTAssertEqual(Lexer.EOF, tokenStream.get(1).getType());
 
         inputStream2 : constant := ANTLRInputStream("AA");
         tokenStream.setTokenSource(VisitorBasicLexer(inputStream2));
-        tokenStream.fill();;
+        tokenStream.fill();
         XCTAssertEqual(3, tokenStream.size())
         XCTAssertEqual(VisitorBasicLexer.A, tokenStream.get(0).getType());
         XCTAssertEqual(VisitorBasicLexer.A, tokenStream.get(1).getType());

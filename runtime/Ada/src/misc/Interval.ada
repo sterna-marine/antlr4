@@ -31,7 +31,8 @@ public struct Interval: Hashable {
     -- Interval object with a .. a in it.  On Java.g4, 218623 IntervalSets
     -- have a .. a (set with 1 element).
     -- 
-    public static function of (a : Integer; b : Integer) return Interval is
+    -- public static
+    function of (a : Integer; b : Integer) return Interval is
 begin
         return Interval(a, b)
     end ;
@@ -40,7 +41,8 @@ begin
     -- return number of elements between a and b inclusively. x .. x is length 1.
     -- if b &lt; a, then length is 0.  9 .. 10 has length 2.
     -- 
-    public function length (This : …) return Integer is
+    -- public
+    function length (This : …) return Integer is
 begin
         if b < a then
             return 0;
@@ -49,7 +51,9 @@ begin
     end ;
 
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         hasher.combine(a)
         hasher.combine(b)
     end ;
@@ -57,7 +61,8 @@ begin
     --
     -- Does this start completely before other? Disjoint
     -- 
-    public function startsBeforeDisjoint (other : Interval) return Boolean is
+    -- public
+    function startsBeforeDisjoint (other : Interval) return Boolean is
 begin
         return self.a < other.a and then self.b < other.a
     end ;
@@ -65,7 +70,8 @@ begin
     -- 
     -- Does this start at or before other? Nondisjoint
     -- 
-    public function startsBeforeNonDisjoint (other : Interval) return Boolean is
+    -- public
+    function startsBeforeNonDisjoint (other : Interval) return Boolean is
 begin
         return self.a <= other.a and then self.b >= other.a
     end ;
@@ -73,7 +79,8 @@ begin
     -- 
     -- Does this.a start after other.b? May or may not be disjoint
     -- 
-    public function startsAfter (other : Interval) return Boolean is
+    -- public
+    function startsAfter (other : Interval) return Boolean is
 begin
         return self.a > other.a
     end ;
@@ -81,7 +88,8 @@ begin
     -- 
     -- Does this start completely after other? Disjoint
     -- 
-    public function startsAfterDisjoint (other : Interval) return Boolean is
+    -- public
+    function startsAfterDisjoint (other : Interval) return Boolean is
 begin
         return self.a > other.b
     end ;
@@ -89,7 +97,8 @@ begin
     -- 
     -- Does this start after other? NonDisjoint
     -- 
-    public function startsAfterNonDisjoint (other : Interval) return Boolean is
+    -- public
+    function startsAfterNonDisjoint (other : Interval) return Boolean is
 begin
         return self.a > other.a and then self.a <= other.b -- this.b>=other.b implied
     end ;
@@ -97,7 +106,8 @@ begin
     -- 
     -- Are both ranges disjoint? I.e., no overlap?
     -- 
-    public function disjoint (other : Interval) return Boolean is
+    -- public
+    function disjoint (other : Interval) return Boolean is
 begin
         return startsBeforeDisjoint(other) or else startsAfterDisjoint(other)
     end ;
@@ -105,12 +115,14 @@ begin
     -- 
     -- Are two intervals adjacent such as 0 .. 41 and 42 .. 42?
     -- 
-    public function adjacent (other : Interval) return Boolean is
+    -- public
+    function adjacent (other : Interval) return Boolean is
 begin
         return self.a = other.b + 1 or else self.b = other.a - 1
     end ;
 
-    public function properlyContains (other : Interval) return Boolean is
+    -- public
+    function properlyContains (other : Interval) return Boolean is
 begin
         return other.a >= self.a and then other.b <= self.b
     end ;
@@ -118,7 +130,8 @@ begin
     -- 
     -- Return the interval computed from combining this and other
     -- 
-    public function union (other : Interval) return Interval is
+    -- public
+    function union (other : Interval) return Interval is
 begin
         return Interval.of(min(a, other.a), max(b, other.b))
     end ;
@@ -126,7 +139,8 @@ begin
     -- 
     -- Return the interval in common between this and o
     -- 
-    public function intersection (other : Interval) return Interval is
+    -- public
+    function intersection (other : Interval) return Interval is
 begin
         return Interval.of(max(a, other.a), min(b, other.b))
     end ;
@@ -137,7 +151,8 @@ begin
     -- within this, which would result in two disjoint intervals
     -- instead of the single one returned by this method.
     -- 
-    public function differenceNotProperlyContained (other : Interval) return Interval? {
+    -- public
+    function differenceNotProperlyContained (other : Interval) return Interval? {
         var diff: Interval? := null;
         -- other.a to left of this.a (or same)
         if other.startsBeforeNonDisjoint(self) then

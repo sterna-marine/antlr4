@@ -55,7 +55,8 @@
 -- - SeeAlso: org.antlr.v4.runtime.ParserRuleContext
 --
 
-open type RuleContext is new RuleNode with null record;
+-- open
+type RuleContext is new RuleNode with null record;
 {
     -- What context invoked this rule?
     public weak var parent: RuleContext?
@@ -68,7 +69,8 @@ open type RuleContext is new RuleNode with null record;
     -- public
     invokingState := ATNState.INVALID_STATE_NUMBER
 
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
     end ;
 
@@ -79,7 +81,8 @@ begin
         self.invokingState := invokingState;
     end if;
 
-    open function depth (This : …) return Integer is
+    -- open
+    function depth (This : …) return Integer is
 begin
         var n := 0
         var p: RuleContext? := self
@@ -93,32 +96,39 @@ begin
     -- A context is empty if there is no invoking state; meaning nobody called
     -- current context.
     --
-    open function isEmpty (This : …) return Boolean is
+    -- open
+    function isEmpty (This : …) return Boolean is
 begin
         return invokingState = ATNState.INVALID_STATE_NUMBER
     end ;
 
     -- satisfy the ParseTree / SyntaxTree interface
 
-    open function getSourceInterval (This : …) return Interval is
+    -- open
+    function getSourceInterval (This : …) return Interval is
 begin
         return Interval.INVALID
     end ;
 
-    open function getRuleContext (This : …) return RuleContext is
+    -- open
+    function getRuleContext (This : …) return RuleContext is
 begin
         return self
     end ;
 
-    open function getParent () return Tree? {
+    -- open
+    function getParent () return Tree? {
         return parent
     end ;
 
-    open procedure setParent (parent : RuleContext) {
+    -- open
+    procedure setParent (parent : RuleContext) is
+    begin
         self.parent := parent
     end ;
 
-    open function getPayload (This : …) return AnyObject is
+    -- open
+    function getPayload (This : …) return AnyObject is
 begin
         return self
     end ;
@@ -131,7 +141,8 @@ begin
     -- method.
     --
 
-    open function getText (This : …) return String is
+    -- open
+    function getText (This : …) return String is
 begin
         length : constant := getChildCount()
         if length = 0 then
@@ -146,21 +157,27 @@ begin
         return builder
     end ;
 
-    open function getRuleIndex (This : …) return Integer is
+    -- open
+    function getRuleIndex (This : …) return Integer is
 begin
         return -1
     end ;
 
-    open function getAltNumber (This : …) return Integer is
+    -- open
+    function getAltNumber (This : …) return Integer is
 begin return ATN.INVALID_ALT_NUMBER end ;
-    open procedure setAltNumber (altNumber : Integer) { end ;
+    -- open
+    procedure setAltNumber (altNumber : Integer) is
+    begin end ;
 
-    open function getChild (i : Integer) return Tree? {
+    -- open
+    function getChild (i : Integer) return Tree? {
         return null;
     end ;
 
 
-    open function getChildCount (This : …) return Integer is
+    -- open
+    function getChildCount (This : …) return Integer is
 begin
         return 0
     end ;
@@ -172,7 +189,8 @@ begin
     end ;
 
 
-    open function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
+    -- open
+    function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
         return visitor.visitChildren(self)
     end ;
 
@@ -180,7 +198,8 @@ begin
     -- (root child1 .. childN). Print just a node if this is a leaf.
     -- We have to know the recognizer so we can get rule names.
     --
-    open function toStringTree (recog : Parser) return String is
+    -- open
+    function toStringTree (recog : Parser) return String is
 begin
         return Trees.toStringTree(self, recog)
     end ;
@@ -188,12 +207,14 @@ begin
     -- Print out a whole tree, not just a node, in LISP format
     -- (root child1 .. childN). Print just a node if this is a leaf.
     --
-    public function toStringTree (ruleNames : [String]?) return String is
+    -- public
+    function toStringTree (ruleNames : [String]?) return String is
 begin
         return Trees.toStringTree(self, ruleNames)
     end ;
 
-    open function toStringTree (This : …) return String is
+    -- open
+    function toStringTree (This : …) return String is
 begin
         return toStringTree(null)
     end ;
@@ -208,24 +229,28 @@ begin
          return description
     end ;
 
-    public final function toString<T> (recog : Recognizer<T>) return String is
+    -- public final
+    function toString<T> (recog : Recognizer<T>) return String is
 begin
         return toString(recog, ParserRuleContext.EMPTY)
     end ;
 
-    public final function toString (ruleNames : [String]) return String is
+    -- public final
+    function toString (ruleNames : [String]) return String is
 begin
         return toString(ruleNames, null)
     end ;
 
     -- recog null unless ParserRuleContext, in which case we use subclass toString( .. )
-    open function toString<T> (recog : Recognizer<T>?, stop : RuleContext) return String is
+    -- open
+    function toString<T> (recog : Recognizer<T>?, stop : RuleContext) return String is
 begin
         ruleNames : constant := recog?.getRuleNames()
         return toString(ruleNames, stop)
     end ;
 
-    open function toString (ruleNames : [String]?, stop : RuleContext?) return String is
+    -- open
+    function toString (ruleNames : [String]?, stop : RuleContext?) return String is
 begin
         var buf := ""
         var p: RuleContext? := self
@@ -253,7 +278,8 @@ begin
         return buf
     end ;
 
-    open function castdown<T> (subType : T.Type) return T is
+    -- open
+    function castdown<T> (subType : T.Type) return T is
 begin
         return self as! T
     end ;

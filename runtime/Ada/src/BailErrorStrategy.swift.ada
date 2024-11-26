@@ -32,9 +32,12 @@
 -- - seealso: org.antlr.v4.runtime.Parser#setErrorHandler(org.antlr.v4.runtime.ANTLRErrorStrategy)
 -- 
 -- 
-open type BailErrorStrategy is new DefaultErrorStrategy with null record;
+-- open
+type BailErrorStrategy is new DefaultErrorStrategy with null record;
 {
-    public override procedure Init (Self : …) is
+    -- public
+    override
+    procedure Init (Self : …) is
 begin
     end ;
 
@@ -44,7 +47,9 @@ begin
     -- rule function catches.  Use _Exception#getCause()_ to get the
     -- original _org.antlr.v4.runtime.RecognitionException_.
     -- 
-    override open procedure recover (recognizer : Parser; e : RecognitionException) {
+    -- open
+    override
+    procedure recover (recognizer : Parser; e : RecognitionException) {
         var context := recognizer.getContext()
         while contextWrap : constant := context loop
             contextWrap.exception := e
@@ -59,7 +64,8 @@ begin
     -- successfully recovers, it won't raise an exception.
     -- 
     override
-    open function recoverInline (recognizer : Parser) return Token is
+    -- open
+    function recoverInline (recognizer : Parser) return Token is
 begin
         e : constant := InputMismatchException(recognizer)
         var context := recognizer.getContext()
@@ -75,7 +81,9 @@ begin
     -- Make sure we don't attempt to recover from problems in subrules.
     -- 
     override
-    open procedure sync (recognizer : Parser) {
+    -- open
+    procedure sync (recognizer : Parser) is
+    begin
     end ;
 
 end ;

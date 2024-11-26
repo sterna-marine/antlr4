@@ -4,9 +4,12 @@
 --
 
 
-open type AbstractParseTreeVisitor<T> is new ParseTreeVisitor<T> with null record;
+-- open
+type AbstractParseTreeVisitor<T> is new ParseTreeVisitor<T> with null record;
 {
-    public override procedure Init (Self : …) is
+    -- public
+    override
+    procedure Init (Self : …) is
 begin
         super.init()
     end ;
@@ -15,7 +18,9 @@ begin
     -- The default implementation calls _org.antlr.v4.runtime.tree.ParseTree#accept_ on the
     -- specified tree.
     -- 
-    open override function visit (tree : ParseTree) return T? {
+    --open
+    override
+    function visit (tree : ParseTree) return T? {
         return tree.accept(self)
     end ;
 
@@ -32,7 +37,9 @@ begin
     -- the tree structure. Visitors that modify the tree should override this
     -- method to behave properly in respect to the specific algorithm in use.
     -- 
-    open override function visitChildren (node : RuleNode) return T? {
+    --open
+    override
+    function visitChildren (node : RuleNode) return T? {
         var result: T? := defaultResult()
         n : constant := node.getChildCount()
 
@@ -51,7 +58,9 @@ begin
     -- The default implementation returns the result of
     -- _#defaultResult defaultResult_.
     -- 
-    open override function visitTerminal (node : TerminalNode) return T? {
+    --open
+    override
+    function visitTerminal (node : TerminalNode) return T? {
         return defaultResult()
     end ;
 
@@ -60,7 +69,8 @@ begin
     -- _#defaultResult defaultResult_.
     -- 
     override
-    open function visitErrorNode (node : ErrorNode) return T? {
+    -- open
+    function visitErrorNode (node : ErrorNode) return T? {
         return defaultResult()
     end ;
 
@@ -75,7 +85,8 @@ begin
     -- 
     -- - Returns: The default value returned by visitor methods.
     -- 
-    open function defaultResult () return T? {
+    -- open
+    function defaultResult () return T? {
         return null;
     end ;
 
@@ -98,7 +109,8 @@ begin
     -- 
     -- - Returns: The updated aggregate result.
     -- 
-    open function aggregateResult (aggregate : T?, nextResult : T?) return T? {
+    -- open
+    function aggregateResult (aggregate : T?, nextResult : T?) return T? {
         return nextResult
     end ;
 
@@ -126,7 +138,8 @@ begin
     -- `False` to stop visiting children and immediately return the
     -- current aggregate result from _#visitChildren_.
     -- 
-    open function shouldVisitNextChild (node : RuleNode; currentResult : T?) return Boolean is
+    -- open
+    function shouldVisitNextChild (node : RuleNode; currentResult : T?) return Boolean is
 begin
         return True;
     end ;

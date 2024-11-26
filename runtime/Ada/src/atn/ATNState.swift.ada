@@ -65,7 +65,8 @@
 -- 
 -- 
 -- 
-public type ATNState is new Hashable and CustomStringConvertible with null record;
+-- public
+type ATNState is new Hashable and CustomStringConvertible with null record;
 {
     -- constants for serialization
     -- public static 
@@ -89,7 +90,7 @@ public type ATNState is new Hashable and CustomStringConvertible with null recor
     -- public static 
     STAR_LOOP_BACK : constant Integer := 9;
     -- public static 
-    STAR_LOOP_EN : constant Integer := 10;;
+    STAR_LOOP_EN : constant Integer := 10;
     -- public static 
     PLUS_LOOP_BACK : constant Integer := 11;
     -- public static 
@@ -139,11 +140,14 @@ public type ATNState is new Hashable and CustomStringConvertible with null recor
     public internal(set) final var nextTokenWithinRule: IntervalSet?
 
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         hasher.combine(stateNumber)
     end ;
 
-    public function isNonGreedyExitState (This : …) return Boolean is
+    -- public
+    function isNonGreedyExitState (This : …) return Boolean is
 begin
         return False;
     end ;
@@ -155,11 +159,13 @@ begin
         --return "MyClass \(string)"
         return String(stateNumber)
     end ;
-    public final function getTransitions () return [Transition] {
+    -- public final
+    function getTransitions () return [Transition] {
         return transitions
     end ;
 
-    public final function getNumberOfTransitions (This : …) return Integer is
+    -- public final
+    function getNumberOfTransitions (This : …) return Integer is
 begin
         return transitions.count
     end ;
@@ -193,7 +199,8 @@ begin
         end if;
     end ;
 
-    public final function transition (i : Integer) return Transition is
+    -- public final
+    function transition (i : Integer) return Transition is
 begin
         return transitions[i]
     end ;
@@ -202,18 +209,21 @@ begin
         transitions[i] := e
     end ;
 
-    public final function removeTransition (index : Integer) return Transition is
+    -- public final
+    function removeTransition (index : Integer) return Transition is
 begin
 
         return transitions.remove(at: index)
     end ;
 
-    public function getStateType (This : …) return Integer is
+    -- public
+    function getStateType (This : …) return Integer is
 begin
         fatalError(#function + " must be overridden")
     end ;
 
-    public final function onlyHasEpsilonTransitions (This : …) return Boolean is
+    -- public final
+    function onlyHasEpsilonTransitions (This : …) return Boolean is
 begin
         return epsilonOnlyTransitions
     end ;

@@ -30,15 +30,18 @@ begin
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
-            override function visitTerminal (node : TerminalNode) return String? {
+            override
+            function visitTerminal (node : TerminalNode) return String? {
                 return "\(node.getSymbol()!)\n"
             end ;
 
-            override function defaultResult () return String? {
+            override
+            function defaultResult () return String? {
                 return ""
             end ;
 
-            override function aggregateResult (aggregate : String?, nextResult : String?) return String? {
+            override
+            function aggregateResult (aggregate : String?, nextResult : String?) return String? {
                 return aggregate! + nextResult!
             end ;
         end ;
@@ -62,14 +65,16 @@ begin
 
         type ErrorListener is new BaseErrorListener with null record;
 {
-            override procedure Init (Self : …) is
+            override
+            procedure Init (Self : …) is
 begin
                 super.init()
             end ;
 
             var errors := [String]()
 
-            override procedure syntaxError<T> (recognizer : Recognizer<T>,
+            override
+            procedure syntaxError<T> (recognizer : Recognizer<T>,
                                          offendingSymbol : AnyObject?,
                                          line : Integer; charPositionInLine : Integer;
                                          msg : String; e : AnyObject?) {
@@ -89,15 +94,18 @@ begin
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
-            override function visitErrorNode (node : ErrorNode) return String? {
+            override
+            function visitErrorNode (node : ErrorNode) return String? {
                 return "Error encountered: \(node.getSymbol()!)"
             end ;
 
-            override function defaultResult () return String? {
+            override
+            function defaultResult () return String? {
                 return ""
             end ;
 
-            override function aggregateResult (aggregate : String?, nextResult : String?) return String? {
+            override
+            function aggregateResult (aggregate : String?, nextResult : String?) return String? {
                 return aggregate! + nextResult!
             end ;
         end ;
@@ -124,11 +132,13 @@ begin
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
-            override function visitTerminal (node : TerminalNode) return String? {
+            override
+            function visitTerminal (node : TerminalNode) return String? {
                 return "\(node.getSymbol()!)\n"
             end ;
 
-            override function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
+            override
+            function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
 begin
                 return currentResult = null or else currentResult!.isEmpty
             end ;
@@ -156,16 +166,19 @@ begin
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
-            override function visitTerminal (node : TerminalNode) return String? {
+            override
+            function visitTerminal (node : TerminalNode) return String? {
                 XCTFail()
                 return null;
             end ;
 
-            override function defaultResult () return String? {
+            override
+            function defaultResult () return String? {
                 return "default result"
             end ;
 
-            override function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
+            override
+            function shouldVisitNextChild (node : RuleNode; currentResult : String?) return Boolean is
 begin
                 return False;
             end ;
@@ -191,15 +204,18 @@ begin
 
         type Visitor is new VisitorCalcBaseVisitor<Int> with null record;
 {
-            override function visitS (ctx : VisitorCalcParser.SContext) return Int? {
+            override
+            function visitS (ctx : VisitorCalcParser.SContext) return Int? {
                 return visit(ctx.expr()!)
             end ;
 
-            override function visitNumber (ctx : VisitorCalcParser.NumberContext) return Int? {
+            override
+            function visitNumber (ctx : VisitorCalcParser.NumberContext) return Int? {
                 return Integer ((ctx.INT()?.getText())!)
             end ;
 
-            override function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Int? {
+            override
+            function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Int? {
                 left : constant := visit(ctx.expr(0)!)!
                 right : constant := visit(ctx.expr(1)!)!
                 if ctx.MUL() /= null then
@@ -209,7 +225,8 @@ begin
                 end if;
             end ;
 
-            override function visitAdd (ctx : VisitorCalcParser.AddContext) return Int? {
+            override
+            function visitAdd (ctx : VisitorCalcParser.AddContext) return Int? {
                 left : constant := visit(ctx.expr(0)!)!
                 right : constant := visit(ctx.expr(1)!)!
                 if ctx.ADD() /= null then

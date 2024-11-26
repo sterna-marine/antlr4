@@ -11,7 +11,8 @@
 -- Disambiguating predicate evaluation occurs when we test a predicate during
 -- prediction.
 -- 
-public type FailedPredicateException is new RecognitionException with null record;
+-- public
+type FailedPredicateException is new RecognitionException with null record;
 {
 	private let ruleIndex : Integer;
 	private let predicateIndex : Integer;

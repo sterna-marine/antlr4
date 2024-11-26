@@ -19,7 +19,8 @@
 -- _org.antlr.v4.runtime.CommonTokenStream_.
 --
 
-public type BufferedTokenStream is new TokenStream with null record;
+-- public
+type BufferedTokenStream is new TokenStream with null record;
 {
     -- 
     -- The _org.antlr.v4.runtime.TokenSource_ from which tokens for this stream are fetched.
@@ -71,46 +72,56 @@ public type BufferedTokenStream is new TokenStream with null record;
     end ;
 
 
-    public function getTokenSource (This : …) return TokenSource is
+    -- public
+    function getTokenSource (This : …) return TokenSource is
 begin
         return tokenSource
     end ;
 
 
-    public function index (This : …) return Integer is
+    -- public
+    function index (This : …) return Integer is
 begin
         return p
     end ;
 
 
-    public function mark (This : …) return Integer is
+    -- public
+    function mark (This : …) return Integer is
 begin
         return 0
     end ;
 
-    public procedure release (marker : Integer) {
+    -- public
+    procedure release (marker : Integer) is
+    begin
         -- no resources to release
     end ;
 
-    public procedure reset (This : …) is
+    -- public
+    procedure reset (This : …) is
 begin
         seek(0);
     end ;
 
 
-    public procedure seek (index : Integer) {
+    -- public
+    procedure seek (index : Integer) is
+    begin
         lazyInit();
         p := adjustSeekIndex(index);
     end ;
 
 
-    public function size (This : …) return Integer is
+    -- public
+    function size (This : …) return Integer is
 begin
         return tokens.count
     end ;
 
 
-    public procedure consume (This : …) is
+    -- public
+    procedure consume (This : …) is
 begin
         var skipEofCheck : Boolean;
         if p >= 0 then
@@ -128,11 +139,11 @@ begin
         end ;
 
         if not skipEofCheck and then LA(1) == BufferedTokenStream.EOF then;
-            raise ANTLRError.illegalState with "cannot consume EOF";;
+            raise ANTLRError.illegalState with "cannot consume EOF";
         end if;
 
         if sync(p + 1) then;
-            p := adjustSeekIndex(p + 1);;
+            p := adjustSeekIndex(p + 1);
         end if;
     end ;
 
@@ -144,7 +155,8 @@ begin
     -- - seealso: #get(int i)
     -- 
     @discardableResult
-    internal function sync (i : Integer) return Boolean is
+    -- internal
+    function sync (i : Integer) return Boolean is
 begin
         assert(i >= 0, "Expected: i>=0")
         n : constant := i - tokens.count + 1 -- how many more elements we need?
@@ -162,7 +174,8 @@ begin
     -- 
     -- - returns: The actual number of elements added to the buffer.
     -- 
-    internal function fetch (n : Integer) return Integer is
+    -- internal
+    function fetch (n : Integer) return Integer is
 begin
         if fetchedEOF then
             return 0;
@@ -184,7 +197,8 @@ begin
         return n
     end ;
 
-    public function get (i : Integer) return Token is
+    -- public
+    function get (i : Integer) return Token is
 begin
         guard tokens.indices.contains(i) else {
             raise ANTLRError.indexOutOfBounds with "token index \(i) out of range 0 ..< \(tokens.count)";
@@ -195,7 +209,8 @@ begin
     -- 
     -- Get all tokens from start .. stop inclusively
     -- 
-    public function get (start : Integer;stop : Integer) return Array<Token>? {
+    -- public
+    function get (start : Integer;stop : Integer) return Array<Token>? {
         var stop := stop
         if start < 0 or else stop < 0 then
             return null;
@@ -213,12 +228,14 @@ begin
         return subset
     end ;
 
-    public function LA (i : Integer) return Integer is
+    -- public
+    function LA (i : Integer) return Integer is
 begin
         return LT(i)!.getType();
     end ;
 
-    internal function LB (k : Integer) return Token? {
+    -- internal
+    function LB (k : Integer) return Token? {
         if (p - k) < 0 then
             return null;
         end if;
@@ -226,13 +243,14 @@ begin
     end ;
 
 
-    public function LT (k : Integer) return Token? {
+    -- public
+    function LT (k : Integer) return Token? {
         lazyInit();
         if k = 0 then
             return null;
         end if;
         if k < 0 then
-            return LB(-k);;
+            return LB(-k);
         end if;
 
         i : constant := p + k - 1
@@ -258,7 +276,8 @@ begin
     -- - parameter i: The target token index.
     -- - returns: The adjusted target token index.
     -- 
-    internal function adjustSeekIndex (i : Integer) return Integer is
+    -- internal
+    function adjustSeekIndex (i : Integer) return Integer is
 begin
         return i
     end ;
@@ -266,11 +285,12 @@ begin
     internal final procedure lazyInit (Self : …) is
 begin
         if p == -1 then
-            setup();;
+            setup();
         end if;
     end ;
 
-    internal procedure setup (This : …) is
+    -- internal
+    procedure setup (This : …) is
 begin
         sync(0);
         p := adjustSeekIndex(0);
@@ -279,18 +299,22 @@ begin
     -- 
     -- Reset this token stream by setting its token source.
     -- 
-    public procedure setTokenSource (tokenSource : TokenSource) {
+    -- public
+    procedure setTokenSource (tokenSource : TokenSource) is
+    begin
         self.tokenSource := tokenSource
         tokens.removeAll()
         p := -1
         fetchedEOF := False;
     end ;
 
-    public function getTokens () return [Token] {
+    -- public
+    function getTokens () return [Token] {
         return tokens
     end ;
 
-    public function getTokens (start : Integer; stop : Integer) return [Token]? {
+    -- public
+    function getTokens (start : Integer; stop : Integer) return [Token]? {
         return getTokens(start, stop, null);
     end ;
 
@@ -299,7 +323,8 @@ begin
     -- the token type BitSet.  Return null if no tokens were found.  This
     -- method looks at both on and off channel tokens.
     -- 
-    public function getTokens (start : Integer; stop : Integer; types : Set<Int>?) return [Token]? {
+    -- public
+    function getTokens (start : Integer; stop : Integer; types : Set<Int>?) return [Token]? {
         lazyInit();
         guard tokens.indices.contains(start),
               tokens.indices.contains(stop) else {
@@ -323,7 +348,8 @@ begin
         return filteredTokens
     end ;
 
-    public function getTokens (start : Integer; stop : Integer; ttype : Integer) return [Token]? {
+    -- public
+    function getTokens (start : Integer; stop : Integer; ttype : Integer) return [Token]? {
         return getTokens(start, stop, [ttype]);
     end ;
 
@@ -333,7 +359,8 @@ begin
     -- the EOF token if there are no tokens on channel between `i` and
     -- EOF.
     -- 
-    internal function nextTokenOnChannel (i : Integer; channel : Integer) return Integer is
+    -- internal
+    function nextTokenOnChannel (i : Integer; channel : Integer) return Integer is
 begin
         var i := i
         sync(i);
@@ -365,7 +392,8 @@ begin
     -- index is returned. This is due to the fact that the EOF token is treated
     -- as though it were on every channel.
     -- 
-    internal function previousTokenOnChannel (i : Integer; channel : Integer) return Integer is
+    -- internal
+    function previousTokenOnChannel (i : Integer; channel : Integer) return Integer is
 begin
         var i := i
         sync(i);
@@ -391,7 +419,8 @@ begin
     -- the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
     -- EOF. If channel is -1, find any non default channel token.
     -- 
-    public function getHiddenTokensToRight (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
+    -- public
+    function getHiddenTokensToRight (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
         lazyInit();
         guard tokens.indices.contains(tokenIndex) else {
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
@@ -415,7 +444,8 @@ begin
     -- the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
     -- If channel is -1, find any non default channel token.
     -- 
-    public function getHiddenTokensToLeft (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
+    -- public
+    function getHiddenTokensToLeft (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
         lazyInit();
         guard tokens.indices.contains(tokenIndex) else {
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
@@ -436,7 +466,8 @@ begin
         return filterForChannel(from, to, channel)
     end ;
 
-    internal function filterForChannel (from : Integer; to : Integer; channel : Integer) return [Token]? {
+    -- internal
+    function filterForChannel (from : Integer; to : Integer; channel : Integer) return [Token]? {
         var hidden := [Token]()
         for t in tokens[from .. to] loop
             if channel == -1 then
@@ -456,7 +487,8 @@ begin
     end ;
 
 
-    public function getSourceName (This : …) return String is
+    -- public
+    function getSourceName (This : …) return String is
 begin
         return tokenSource.getSourceName()
     end ;
@@ -464,12 +496,14 @@ begin
     -- 
     -- Get the text of all tokens in this buffer.
     -- 
-    public function getText (This : …) return String is
+    -- public
+    function getText (This : …) return String is
 begin
         return getText(Interval.of(0, size() - 1));
     end ;
 
-    public function getText (interval : Interval) return String is
+    -- public
+    function getText (interval : Interval) return String is
 begin
         start : constant := interval.a
         if start < 0 then
@@ -486,16 +520,18 @@ begin
     end ;
 
 
-    public function getText (ctx : RuleContext) return String is
+    -- public
+    function getText (ctx : RuleContext) return String is
 begin
         return getText(ctx.getSourceInterval());
     end ;
 
 
-    public function getText (start : Token?, stop : Token?) return String is
+    -- public
+    function getText (start : Token?, stop : Token?) return String is
 begin
         if start : constant := start, stop : constant := stop then
-            return getText(Interval.of(start.getTokenIndex(), stop.getTokenIndex()));;
+            return getText(Interval.of(start.getTokenIndex(), stop.getTokenIndex()));
         end if;
 
         return ""
@@ -504,7 +540,8 @@ begin
     -- 
     -- Get all tokens from lexer until EOF
     -- 
-    public procedure fill (This : …) is
+    -- public
+    procedure fill (This : …) is
 begin
         lazyInit();
         blockSize : constant := 1000

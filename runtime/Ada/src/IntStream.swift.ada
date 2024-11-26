@@ -20,7 +20,8 @@
 -- * _#consume_
 -- * _#size_
 -- 
-public protocol IntStream: AnyObject {
+-- public
+type IntStream is interface;
 
     -- 
     -- Consumes the current symbol in the stream. This method has the following

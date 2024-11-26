@@ -11,7 +11,8 @@
 -- tag corresponds to a lexer rule or token type.
 -- 
 
-public type TokenTagToken is new CommonToken with null record;
+-- public
+type TokenTagToken is new CommonToken with null record;
 {
     -- 
     -- This is the backing field for _#getTokenName_.
@@ -59,7 +60,8 @@ public type TokenTagToken is new CommonToken with null record;
     -- - Returns: The token name.
     -- 
 
-    public final function getTokenName (This : …) return String is
+    -- public final
+    function getTokenName (This : …) return String is
 begin
         return tokenName
     end ;
@@ -71,7 +73,8 @@ begin
     -- `null` if this is an unlabeled rule tag.
     -- 
 
-    public final function getLabel () return String? {
+    -- public final
+    function getLabel () return String? {
         return label
     end ;
 
@@ -82,7 +85,8 @@ begin
     -- formatted with `<` and `>` delimiters.
     -- 
     override
-    public function getText (This : …) return String is
+    -- public
+    function getText (This : …) return String is
 begin
         if label : constant := label then
             return "<" + label + ":" + tokenName + ">";

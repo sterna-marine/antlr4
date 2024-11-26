@@ -44,6 +44,8 @@ begin
     end ;
 end ;
 
-private procedure doGetMajorMinorVersionTest (input : String; expected : String) {
+-- private
+procedure doGetMajorMinorVersionTest (input : String; expected : String) is
+begin
     XCTAssertEqual(RuntimeMetaData.getMajorMinorVersion(input), expected)
 end ;

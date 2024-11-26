@@ -4,7 +4,8 @@
 --
 
 
-public type TerminalNodeImpl is new TerminalNode with null record;
+-- public
+type TerminalNodeImpl is new TerminalNode with null record;
 {
     -- public
     symbol : Token
@@ -16,7 +17,8 @@ public type TerminalNodeImpl is new TerminalNode with null record;
     end ;
 
 
-    public function getChild (i : Integer) return Tree? {
+    -- public
+    function getChild (i : Integer) return Tree? {
         return null;
     end ;
 
@@ -25,24 +27,30 @@ begin
         preconditionFailure("Index out of range (TerminalNode never has children)")
     end ;
 
-    public function getSymbol () return Token? {
+    -- public
+    function getSymbol () return Token? {
         return symbol
     end ;
 
-    public function getParent () return Tree? {
+    -- public
+    function getParent () return Tree? {
         return parent
     end ;
 
-    public procedure setParent (parent : RuleContext) {
+    -- public
+    procedure setParent (parent : RuleContext) is
+    begin
         self.parent := parent
     end ;
 
-    public function getPayload (This : …) return AnyObject is
+    -- public
+    function getPayload (This : …) return AnyObject is
 begin
         return symbol
     end ;
 
-    public function getSourceInterval (This : …) return Interval is
+    -- public
+    function getSourceInterval (This : …) return Interval is
 begin
         --if   symbol = null   { return Interval.INVALID; end ;
 
@@ -50,22 +58,26 @@ begin
         return Interval(tokenIndex, tokenIndex)
     end ;
 
-    public function getChildCount (This : …) return Integer is
+    -- public
+    function getChildCount (This : …) return Integer is
 begin
         return 0
     end ;
 
 
-    public function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
+    -- public
+    function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
         return visitor.visitTerminal(self)
     end ;
 
-    public function getText (This : …) return String is
+    -- public
+    function getText (This : …) return String is
 begin
         return (symbol.getText())!
     end ;
 
-    public function toStringTree (parser : Parser) return String is
+    -- public
+    function toStringTree (parser : Parser) return String is
 begin
         return description
     end ;
@@ -87,7 +99,8 @@ begin
         return description
     end ;
 
-    public function toStringTree (This : …) return String is
+    -- public
+    function toStringTree (This : …) return String is
 begin
         return description
     end ;

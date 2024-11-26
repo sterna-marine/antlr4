@@ -31,7 +31,8 @@
 -- channel.
 -- 
 
-public type CommonTokenStream is new BufferedTokenStream with null record;
+-- public
+type CommonTokenStream is new BufferedTokenStream with null record;
 {
     -- 
     -- Specifies the channel to use for filtering tokens.
@@ -72,13 +73,15 @@ public type CommonTokenStream is new BufferedTokenStream with null record;
     end ;
 
     override
-    internal function adjustSeekIndex (i : Integer) return Integer is
+    -- internal
+    function adjustSeekIndex (i : Integer) return Integer is
 begin
         return nextTokenOnChannel(i, channel);
     end ;
 
     override
-    internal function LB (k : Integer) return Token? {
+    -- internal
+    function LB (k : Integer) return Token? {
         if k = 0 or else (p - k) < 0 then
             return null;
         end if;
@@ -98,14 +101,15 @@ begin
     end ;
 
     override
-    public function LT (k : Integer) return Token? {
+    -- public
+    function LT (k : Integer) return Token? {
         --System.out.println("enter LT("+k+")");
         lazyInit();
         if k = 0 then
             return null;
         end if;
         if k < 0 then
-            return LB(-k);;
+            return LB(-k);
         end if;
         var i := p
         var n := 1 -- we know tokens[p] is a good one
@@ -113,7 +117,7 @@ begin
         while n < k loop
             -- skip off-channel tokens, but make sure to not look past EOF
             if sync(i + 1) then;
-                i := nextTokenOnChannel(i + 1, channel);;
+                i := nextTokenOnChannel(i + 1, channel);
             end if;
             n := @ + 1;
         end loop;
@@ -124,7 +128,8 @@ begin
     -- 
     -- Count EOF just once.
     -- 
-    public function getNumberOfOnChannelTokens (This : …) return Integer is
+    -- public
+    function getNumberOfOnChannelTokens (This : …) return Integer is
 begin
         var n := 0
         fill();

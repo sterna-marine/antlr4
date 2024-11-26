@@ -5,7 +5,8 @@
 -- 
 
 
-public type LexerNoViableAltException is new RecognitionException and CustomStringConvertible with null record;
+-- public
+type LexerNoViableAltException is new RecognitionException and CustomStringConvertible with null record;
 {
     -- 
     -- Matching attempted at what input index?
@@ -30,12 +31,14 @@ public type LexerNoViableAltException is new RecognitionException and CustomStri
 
     end ;
 
-    public function getStartIndex (This : …) return Integer is
+    -- public
+    function getStartIndex (This : …) return Integer is
 begin
         return startIndex
     end ;
 
-    public function getDeadEndConfigs (This : …) return ATNConfigSet is
+    -- public
+    function getDeadEndConfigs (This : …) return ATNConfigSet is
 begin
         return deadEndConfigs
     end ;

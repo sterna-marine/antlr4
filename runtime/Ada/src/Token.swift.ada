@@ -10,7 +10,8 @@
 -- we obtained this token.
 -- 
 
-public protocol Token: AnyObject, CustomStringConvertible {
+-- public
+type Token is interface and CustomStringConvertible;
     --INVALID_TYPE : constant : Integer := 0;
 
     -- During lookahead operations, this "token" signifies we hit rule end ATN state

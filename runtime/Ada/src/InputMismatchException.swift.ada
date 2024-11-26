@@ -10,7 +10,8 @@
 -- when the current input does not match the expected token.
 -- 
 
-public type InputMismatchException is new RecognitionException with null record;
+-- public
+type InputMismatchException is new RecognitionException with null record;
 {
     -- public 
     procedure Init (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: ParserRuleContext? := null) {

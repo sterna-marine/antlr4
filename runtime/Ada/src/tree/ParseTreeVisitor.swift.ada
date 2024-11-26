@@ -16,7 +16,8 @@
 
 
 open class ParseTreeVisitor<T> {
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
 
     end ;
@@ -27,7 +28,8 @@ begin
     -- - Parameter tree: The _org.antlr.v4.runtime.tree.ParseTree_ to visit.
     -- - Returns: The result of visiting the parse tree.
     -- 
-    open function visit (tree : ParseTree) return T? {
+    -- open
+    function visit (tree : ParseTree) return T? {
         fatalError(#function + " must be overridden")
     end ;
 
@@ -38,7 +40,8 @@ begin
     -- - Parameter node: The _org.antlr.v4.runtime.tree.RuleNode_ whose children should be visited.
     -- - Returns: The result of visiting the children of the node.
     -- 
-    open function visitChildren (node : RuleNode) return T? {
+    -- open
+    function visitChildren (node : RuleNode) return T? {
         fatalError(#function + " must be overridden")
     end ;
 
@@ -48,7 +51,8 @@ begin
     -- - Parameter node: The _org.antlr.v4.runtime.tree.TerminalNode_ to visit.
     -- - Returns: The result of visiting the node.
     -- 
-    open function visitTerminal (node : TerminalNode) return T? {
+    -- open
+    function visitTerminal (node : TerminalNode) return T? {
         fatalError(#function + " must be overridden")
     end ;
 
@@ -58,7 +62,8 @@ begin
     -- - Parameter node: The _org.antlr.v4.runtime.tree.ErrorNode_ to visit.
     -- - Returns: The result of visiting the node.
     -- 
-    open function visitErrorNode (node : ErrorNode) return T? {
+    -- open
+    function visitErrorNode (node : ErrorNode) return T? {
         fatalError(#function + " must be overridden")
     end ;
 end ;

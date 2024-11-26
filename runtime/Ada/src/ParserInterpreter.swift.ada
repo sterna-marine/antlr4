@@ -19,7 +19,8 @@
 -- See TestParserInterpreter for examples.
 -- 
 
-public type ParserInterpreter is new Parser with null record;
+-- public
+type ParserInterpreter is new Parser with null record;
 {
     internal grammarFileName : constant String;
     internal let atn: ATN
@@ -104,30 +105,35 @@ public type ParserInterpreter is new Parser with null record;
     end ;
 
     override
-    public function getATN (This : …) return ATN is
+    -- public
+    function getATN (This : …) return ATN is
 begin
         return atn
     end ;
 
     override
-    public function getVocabulary (This : …) return Vocabulary is
+    -- public
+    function getVocabulary (This : …) return Vocabulary is
 begin
         return vocabulary
     end ;
 
     override
-    public function getRuleNames () return [String] {
+    -- public
+    function getRuleNames () return [String] {
         return ruleNames
     end ;
 
     override
-    public function getGrammarFileName (This : …) return String is
+    -- public
+    function getGrammarFileName (This : …) return String is
 begin
         return grammarFileName
     end ;
 
     -- Begin parsing at startRuleIndex
-    public function parse (startRuleIndex : Integer) return ParserRuleContext is
+    -- public
+    function parse (startRuleIndex : Integer) return ParserRuleContext is
 begin
         startRuleStartState : constant := atn.ruleToStartState[startRuleIndex]
 
@@ -135,12 +141,12 @@ begin
         if startRuleStartState.isPrecedenceRule then
             enterRecursionRule(rootContext, startRuleStartState.stateNumber, startRuleIndex, 0);
         else
-            enterRule(rootContext, startRuleStartState.stateNumber, startRuleIndex);;
+            enterRule(rootContext, startRuleStartState.stateNumber, startRuleIndex);
         end if;
 
         loop
             p : constant := getATNState()!
-            switch p.getStateType() {
+           case p.getStateType()  is
             when ATNState.RULE_STOP =>
                 -- pop; return from rule
                 if _ctx!.isEmpty() then
@@ -174,17 +180,22 @@ begin
     end ;
 
     override
-    public procedure enterRecursionRule (localctx : ParserRuleContext; state : Integer; ruleIndex : Integer; precedence : Integer) {
+    -- public
+    procedure enterRecursionRule (localctx : ParserRuleContext; state : Integer; ruleIndex : Integer; precedence : Integer) is
+    begin
         let pair: (ParserRuleContext?, Int) := (_ctx, localctx.invokingState)
         _parentContextStack.push(pair)
         super.enterRecursionRule(localctx, state, ruleIndex, precedence);
     end ;
 
-    internal function getATNState () return ATNState? {
+    -- internal
+    function getATNState () return ATNState? {
         return atn.states[getState()]
     end ;
 
-    internal procedure visitState (p : ATNState) {
+    -- internal
+    procedure visitState (p : ATNState) is
+    begin
         var altNum : Integer;
         if p.getNumberOfTransitions() > 1 then
             getErrorHandler().sync(self);
@@ -192,14 +203,14 @@ begin
             if decision = overrideDecision and then _input.index() == overrideDecisionInputIndex then
                 altNum := overrideDecisionAlt
             else
-                altNum := getInterpreter().adaptivePredict(_input, decision, _ctx);;
+                altNum := getInterpreter().adaptivePredict(_input, decision, _ctx);
             end if;
         else
             altNum := 1;
         end if;
 
         transition : constant := p.transition(altNum - 1)
-        switch transition.getSerializationType() {
+       case transition.getSerializationType() is
         when Transition.EPSILON =>
             if statesNeedingLeftRecursionContext.get(p.stateNumber) and;
                     !(transition.target is LoopEndState) {
@@ -220,7 +231,7 @@ begin
         when Transition.SET => fallthrough;
         when Transition.NOT_SET =>
             if not transition.matches(_input.LA(1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then;
-                _errHandler.recoverInline(self);;
+                _errHandler.recoverInline(self);
             end if;
             matchWildcard();
 
@@ -234,13 +245,13 @@ begin
             if ruleStartState.isPrecedenceRule then
                 enterRecursionRule(ctx, ruleStartState.stateNumber, ruleIndex, (transition as! RuleTransition).precedence);
             else
-                enterRule(ctx, transition.target.stateNumber, ruleIndex);;
+                enterRule(ctx, transition.target.stateNumber, ruleIndex);
             end if;
 
         when Transition.PREDICATE =>
             predicateTransition : constant := transition as! PredicateTransition
             if not sempred(_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then;
-                raise ANTLRException.recognition with FailedPredicateException(self);;
+                raise ANTLRException.recognition with FailedPredicateException(self);
             end if;
 
         when Transition.ACTION =>
@@ -249,7 +260,7 @@ begin
 
         when Transition.PRECEDENCE =>
             if not precpred(_ctx!, (transition as! PrecedencePredicateTransition).precedence) then
-                raise ANTLRException.recognition with FailedPredicateException(self, "precpred(_ctx,\((transition as! PrecedencePredicateTransition).precedence))");;
+                raise ANTLRException.recognition with FailedPredicateException(self, "precpred(_ctx,\((transition as! PrecedencePredicateTransition).precedence))");
             end if;
 
         when others =>
@@ -260,14 +271,16 @@ begin
         setState(transition.target.stateNumber)
     end ;
 
-    internal procedure visitRuleStopState (p : ATNState) {
+    -- internal
+    procedure visitRuleStopState (p : ATNState) is
+    begin
         ruleStartState : constant := atn.ruleToStartState[p.ruleIndex!]
         if ruleStartState.isPrecedenceRule then
             let (parentContext, parentState) := _parentContextStack.pop()
             unrollRecursionContexts(parentContext!);
             setState(parentState)
         else
-            exitRule();;
+            exitRule();
         end if;
 
         ruleTransition : constant := atn.states[getState()]!.transition(0) as! RuleTransition
@@ -314,7 +327,9 @@ begin
     -- 
     -- - Since: 4.5.1
     -- 
-    public procedure addDecisionOverride (decision : Integer; tokenIndex : Integer; forcedAlt : Integer) {
+    -- public
+    procedure addDecisionOverride (decision : Integer; tokenIndex : Integer; forcedAlt : Integer) is
+    begin
         overrideDecision := decision
         overrideDecisionInputIndex := tokenIndex
         overrideDecisionAlt := forcedAlt

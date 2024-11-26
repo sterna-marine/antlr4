@@ -7,9 +7,11 @@
 
 with Foundation;
 
-public class Utils {
+-- public
+type Utils is tagged record
 
-    public static function escapeWhitespace (s : String; escapeSpaces  : Boolean) return String is
+    -- public static
+    function escapeWhitespace (s : String; escapeSpaces  : Boolean) return String is
 begin
         var buf := ""
         for c in s loop
@@ -29,7 +31,8 @@ begin
     end ;
 
 
-    public static function toMap (keys : [String]) return [String: Int] {
+    -- public static
+    function toMap (keys : [String]) return [String: Int] {
         var m := [String: Int]()
         for (index, v) in keys.enumerated() loop
             m[v] := index

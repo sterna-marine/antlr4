@@ -10,7 +10,8 @@
 -- and deletion as well as during "consume until error recovery set"
 -- upon no viable alternative exceptions.
 -- 
-public type ErrorNode is new TerminalNodeImpl with null record;
+-- public
+type ErrorNode is new TerminalNodeImpl with null record;
 {
     -- public 
     override
@@ -20,7 +21,8 @@ public type ErrorNode is new TerminalNodeImpl with null record;
 
 
     override
-    public function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
+    -- public
+    function accept<T> (visitor : ParseTreeVisitor<T>) return T? {
         return visitor.visitErrorNode(self)
     end ;
 

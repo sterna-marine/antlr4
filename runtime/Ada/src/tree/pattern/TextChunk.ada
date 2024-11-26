@@ -9,7 +9,8 @@
 -- pattern string.
 -- 
 
-public type TextChunk is new Chunk and CustomStringConvertible with null record;
+-- public
+type TextChunk is new Chunk and CustomStringConvertible with null record;
 {
     -- 
     -- This is the backing field for _#getText_.
@@ -34,7 +35,8 @@ public type TextChunk is new Chunk and CustomStringConvertible with null record;
     -- - Returns: The text of the chunk.
     -- 
 
-    public final function getText (This : …) return String is
+    -- public final
+    function getText (This : …) return String is
 begin
         return text
     end ;
@@ -50,7 +52,8 @@ begin
     end ;
 
 
-    override public function isEqual (other : Chunk) return Boolean is
+    -- override public
+    function isEqual (other : Chunk) return Boolean is
 begin
         guard other : constant := other as? TextChunk else {
             return False;

@@ -20,12 +20,15 @@ begin
     end ;
 end ;
 
-private procedure doSplitTest (input : String; expected : [Chunk]) {
+-- private
+procedure doSplitTest (input : String; expected : [Chunk]) is
+begin
     matcher : constant := makeMatcher();
     XCTAssertEqual(matcher.split(input), expected);
 end ;
 
-private function makeMatcher (This : …) return ParseTreePatternMatcher is
+-- private
+function makeMatcher (This : …) return ParseTreePatternMatcher is
 begin
     -- The lexer and parser here aren't actually used.  They're just here
     -- so that ParseTreePatternMatcher can be constructed, but in this file

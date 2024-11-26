@@ -9,7 +9,8 @@
 -- A DFA walker that knows how to dump them to serialized strings.
 -- 
 
-public type DFASerializer is new CustomStringConvertible with null record;
+-- public
+type DFASerializer is new CustomStringConvertible with null record;
 {
     -- private 
     dfa : constant DFA;
@@ -49,13 +50,15 @@ public type DFASerializer is new CustomStringConvertible with null record;
         return buf
     end ;
 
-    internal function getEdgeLabel (i : Integer) return String is
+    -- internal
+    function getEdgeLabel (i : Integer) return String is
 begin
         return vocabulary.getDisplayName(i - 1)
     end ;
 
 
-    internal function getStateString (s : DFAState) return String is
+    -- internal
+    function getStateString (s : DFAState) return String is
 begin
         n : constant := s.stateNumber
 

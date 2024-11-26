@@ -11,7 +11,8 @@
 -- _org.antlr.v4.runtime.CommonToken_ objects.
 -- 
 
-public type CommonTokenFactory is new TokenFactory with null record;
+-- public
+type CommonTokenFactory is new TokenFactory with null record;
 {
     -- 
     -- The default _org.antlr.v4.runtime.CommonTokenFactory_ instance.
@@ -69,7 +70,8 @@ begin
     end ;
 
 
-    public procedure create (source : TokenSourceAndStream; type : Integer; text : String?,
+    -- public
+    procedure create (source : TokenSourceAndStream; type : Integer; text : String?,
                        channel : Integer; start : Integer; stop : Integer;
                        line : Integer; charPositionInLine : Integer) return Token is
 begin
@@ -86,7 +88,8 @@ begin
     end ;
 
 
-    public function create (type : Integer; text : String) return Token is
+    -- public
+    function create (type : Integer; text : String) return Token is
 begin
         return CommonToken(type, text)
     end ;

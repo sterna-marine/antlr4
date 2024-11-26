@@ -13,13 +13,16 @@
 -- -  Sam Harwell
 -- 
 
-open type BaseErrorListener is new ANTLRErrorListener with null record;
+-- open
+type BaseErrorListener is new ANTLRErrorListener with null record;
 {
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
     end ;
 
-    open procedure syntaxError<T> (recognizer : Recognizer<T>,
+    -- open
+    procedure syntaxError<T> (recognizer : Recognizer<T>,
                              offendingSymbol : AnyObject?,
                              line : Integer;
                              charPositionInLine : Integer;
@@ -29,7 +32,8 @@ begin
     end ;
 
 
-    open procedure reportAmbiguity (recognizer : Parser;
+    -- open
+    procedure reportAmbiguity (recognizer : Parser;
                                 dfa : DFA;
                                 startIndex : Integer;
                                 stopIndex : Integer;
@@ -39,7 +43,8 @@ begin
     end ;
 
 
-    open procedure reportAttemptingFullContext (recognizer : Parser;
+    -- open
+    procedure reportAttemptingFullContext (recognizer : Parser;
                                             dfa : DFA;
                                             startIndex : Integer;
                                             stopIndex : Integer;
@@ -48,7 +53,8 @@ begin
     end ;
 
 
-    open procedure reportContextSensitivity (recognizer : Parser;
+    -- open
+    procedure reportContextSensitivity (recognizer : Parser;
                                          dfa : DFA;
                                          startIndex : Integer;
                                          stopIndex : Integer;

@@ -34,7 +34,8 @@
 -- - Since: 4.3
 -- 
 
-public class RuntimeMetaData {
+-- public
+type RuntimeMetaData is tagged record
     -- 
     -- A compile-time constant containing the current version of the ANTLR 4
     -- runtime library.
@@ -76,7 +77,8 @@ public class RuntimeMetaData {
     -- - Returns: The currently executing version of the ANTLR 4 library
     -- 
 
-    public static function getRuntimeVersion (This : …) return String is
+    -- public static
+    function getRuntimeVersion (This : …) return String is
 begin
         return RuntimeMetaData.VERSION
     end ;
@@ -164,7 +166,8 @@ begin
     -- - Returns: A string of the form __major__.__minor__ containing
     -- only the major and minor components of the version string.
     -- 
-    public static function getMajorMinorVersion (version : String) return String is
+    -- public static
+    function getMajorMinorVersion (version : String) return String is
 begin
         var result := version
 

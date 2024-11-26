@@ -4,10 +4,12 @@
 --
 
 
-public class ParseTreeWalker {
+-- public
+type ParseTreeWalker is tagged record
     public static DEFAULT : constant := ParseTreeWalker()
 
-    public procedure Init (Self : …) is
+    -- public
+    procedure Init (Self : …) is
 begin
     end ;
 
@@ -19,7 +21,9 @@ begin
 	 * - Parameter listener: The listener used by the walker to process grammar rules
 	 * - Parameter t: The parse tree to be walked on
 	--
-    public procedure walk (listener : ParseTreeListener; t : ParseTree) {
+    -- public
+    procedure walk (listener : ParseTreeListener; t : ParseTree) is
+    begin
         if errNode : constant := t as? ErrorNode then
             listener.visitErrorNode(errNode);
         elsif termNode : constant := t as? TerminalNode then
@@ -42,7 +46,9 @@ begin
 	 * - Parameter listener: The listener responding to the trigger events
 	 * - Parameter r: The grammar rule containing the rule context
 	--
-    internal procedure enterRule (listener : ParseTreeListener; r : RuleNode) {
+    -- internal
+    procedure enterRule (listener : ParseTreeListener; r : RuleNode) is
+    begin
         ctx : constant := r.getRuleContext() as! ParserRuleContext
         listener.enterEveryRule(ctx);
         ctx.enterRule(listener)
@@ -54,7 +60,9 @@ begin
 	 * - Parameter listener: The listener responding to the trigger events
 	 * - Parameter r: The grammar rule containing the rule context
 	--
-    internal procedure exitRule (listener : ParseTreeListener; r : RuleNode) {
+    -- internal
+    procedure exitRule (listener : ParseTreeListener; r : RuleNode) is
+    begin
         ctx : constant := r.getRuleContext() as! ParserRuleContext
         ctx.exitRule(listener)
         listener.exitEveryRule(ctx);

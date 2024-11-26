@@ -14,7 +14,8 @@
 
 with Foundation;
 
-open type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null record;
+-- open
+type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null record;
 {
     public static EOF : constant := -1
     public static DEFAULT_MODE : constant := 0
@@ -99,7 +100,9 @@ open type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with null r
     -- public
     _text : String?
 
-    public override procedure Init (Self : …) is
+    -- public
+    override
+    procedure Init (Self : …) is
 begin
         self._tokenFactorySourcePair := TokenSourceAndStream()
         super.init()
@@ -114,7 +117,8 @@ begin
         self._tokenFactorySourcePair.stream := input
     end ;
 
-    open procedure reset (This : …) is
+    -- open
+    procedure reset (This : …) is
 begin
         -- wack Lexer state variables
         if _input : constant := _input then
@@ -140,7 +144,8 @@ begin
     -- stream.
     -- 
 
-    open function nextToken (This : …) return Token is
+    -- open
+    function nextToken (This : …) return Token is
 begin
         guard _input : constant := _input else {
             raise ANTLRError.illegalState with "nextToken requires a non-null input stream.";
@@ -207,21 +212,27 @@ begin
     -- if token = null at end of any token rule, it creates one for you
     -- and emits it.
     -- 
-    open procedure skip (This : …) is
+    -- open
+    procedure skip (This : …) is
 begin
         _type := Lexer.SKIP
     end ;
 
-    open procedure more (This : …) is
+    -- open
+    procedure more (This : …) is
 begin
         _type := Lexer.MORE
     end ;
 
-    open procedure mode (m : Integer) {
+    -- open
+    procedure mode (m : Integer) is
+    begin
         _mode := m
     end ;
 
-    open procedure pushMode (m : Integer) {
+    -- open
+    procedure pushMode (m : Integer) is
+    begin
         if LexerATNSimulator.debug then
             print("pushMode \(m)");
         end if;
@@ -229,10 +240,11 @@ begin
         mode(m)
     end ;
     @discardableResult
-    open function popMode (This : …) return Integer is
+    -- open
+    function popMode (This : …) return Integer is
 begin
         if _modeStack.isEmpty then
-            raise ANTLRError.unsupportedOperation with " EmptyStackException";;
+            raise ANTLRError.unsupportedOperation with " EmptyStackException";
         end if;
 
         if LexerATNSimulator.debug then
@@ -243,12 +255,16 @@ begin
     end ;
 
 
-    open override procedure setTokenFactory (factory : TokenFactory) {
+    -- open
+    override
+    procedure setTokenFactory (factory : TokenFactory) {
         self._factory := factory
     end ;
 
 
-    open override function getTokenFactory (This : …) return TokenFactory is
+    --open
+    override
+    function getTokenFactory (This : …) return TokenFactory is
 begin
         return _factory
     end ;
@@ -257,7 +273,9 @@ begin
     -- Set the char stream and reset the lexer
     -- 
 
-    open override procedure setInputStream (input : IntStream) {
+    -- open
+    override
+    procedure setInputStream (input : IntStream) {
         self._input := null;
         self._tokenFactorySourcePair := makeTokenSourceAndStream()
         reset();
@@ -266,13 +284,15 @@ begin
     end ;
 
 
-    open function getSourceName (This : …) return String is
+    -- open
+    function getSourceName (This : …) return String is
 begin
         return _input!.getSourceName()
     end ;
 
 
-    open function getInputStream () return CharStream? {
+    -- open
+    function getInputStream () return CharStream? {
         return _input
     end ;
 
@@ -282,7 +302,9 @@ begin
     -- and getToken (to push tokens into a list and pull from that list
     -- rather than a single variable as this implementation does).
     -- 
-    open procedure emit (token : Token) {
+    -- open
+    procedure emit (token : Token) is
+    begin
         --System.err.println("emit "+token);
         self._token := token
     end ;
@@ -295,7 +317,8 @@ begin
     -- custom Token objects or provide a new factory.
     -- 
     @discardableResult
-    open function emit (This : …) return Token is
+    -- open
+    function emit (This : …) return Token is
 begin
         t : constant := _factory.create(_tokenFactorySourcePair, _type, _text, _channel, _tokenStartCharIndex, getCharIndex() - 1, _tokenStartLine, _tokenStartCharPositionInLine)
         emit(t)
@@ -303,7 +326,8 @@ begin
     end ;
 
     @discardableResult
-    open function emitEOF (This : …) return Token is
+    -- open
+    function emitEOF (This : …) return Token is
 begin
         cpos : constant := getCharPositionInLine()
         line : constant := getLine()
@@ -322,29 +346,36 @@ begin
     end ;
 
 
-    open function getLine (This : …) return Integer is
+    -- open
+    function getLine (This : …) return Integer is
 begin
         return getInterpreter().getLine()
     end ;
 
 
-    open function getCharPositionInLine (This : …) return Integer is
+    -- open
+    function getCharPositionInLine (This : …) return Integer is
 begin
         return getInterpreter().getCharPositionInLine()
     end ;
 
-    open procedure setLine (line : Integer) {
+    -- open
+    procedure setLine (line : Integer) is
+    begin
         getInterpreter().setLine(line)
     end ;
 
-    open procedure setCharPositionInLine (charPositionInLine : Integer) {
+    -- open
+    procedure setCharPositionInLine (charPositionInLine : Integer) is
+    begin
         getInterpreter().setCharPositionInLine(charPositionInLine)
     end ;
 
     -- 
     -- What is the index of the current character of lookahead?
     -- 
-    open function getCharIndex (This : …) return Integer is
+    -- open
+    function getCharIndex (This : …) return Integer is
 begin
         return _input!.index()
     end ;
@@ -353,7 +384,8 @@ begin
     -- Return the text matched so far for the current token or any
     -- text override.
     -- 
-    open function getText (This : …) return String is
+    -- open
+    function getText (This : …) return String is
 begin
         if _text /= null then
             return _text!;
@@ -365,45 +397,58 @@ begin
     -- Set the complete text of this token; it wipes any previous
     -- changes to the text.
     -- 
-    open procedure setText (text : String) {
+    -- open
+    procedure setText (text : String) is
+    begin
         self._text := text
     end ;
 
     -- 
     -- Override if emitting multiple tokens.
     -- 
-    open function getToken (This : …) return Token is
+    -- open
+    function getToken (This : …) return Token is
 begin
         return _token!
     end ;
 
-    open procedure setToken (_token : Token) {
+    -- open
+    procedure setToken (_token : Token) is
+    begin
         self._token := _token
     end ;
 
-    open procedure setType (ttype : Integer) {
+    -- open
+    procedure setType (ttype : Integer) is
+    begin
         _type := ttype
     end ;
 
-    open function getType (This : …) return Integer is
+    -- open
+    function getType (This : …) return Integer is
 begin
         return _type
     end ;
 
-    open procedure setChannel (channel : Integer) {
+    -- open
+    procedure setChannel (channel : Integer) is
+    begin
         _channel := channel
     end ;
 
-    open function getChannel (This : …) return Integer is
+    -- open
+    function getChannel (This : …) return Integer is
 begin
         return _channel
     end ;
 
-    open function getChannelNames () return [String]? {
+    -- open
+    function getChannelNames () return [String]? {
         return null;
     end ;
 
-    open function getModeNames () return [String]? {
+    -- open
+    function getModeNames () return [String]? {
         return null;
     end ;
 
@@ -411,7 +456,8 @@ begin
     -- Return a list of all Token objects in input char stream.
     -- Forces load of all tokens. Does not include EOF token.
     -- 
-    open function getAllTokens (This : …) return [Token] {
+    -- open
+    function getAllTokens (This : …) return [Token] {
         var tokens := [Token]()
         var t := nextToken();
         while t.getType() /= CommonToken.EOF loop
@@ -421,14 +467,18 @@ begin
         return tokens
     end ;
 
-    open procedure recover (e : LexerNoViableAltException) {
+    -- open
+    procedure recover (e : LexerNoViableAltException) is
+    begin
         if _input!.LA(1) /= BufferedTokenStream.EOF then;
             -- skip a char and again;
             getInterpreter().consume(_input!);
         end ;
     end ;
 
-    open procedure notifyListeners<T> (e : LexerNoViableAltException; recognizer: Recognizer<T>) {
+    -- open
+    procedure notifyListeners<T> (e : LexerNoViableAltException; recognizer: Recognizer<T>) is
+    begin
 
         text : constant String;
         do {
@@ -443,7 +493,8 @@ begin
         listener.syntaxError(recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e)
     end ;
 
-    open function getErrorDisplay (s : String) return String is
+    -- open
+    function getErrorDisplay (s : String) return String is
 begin
         var buf := ""
         for c in s loop
@@ -452,12 +503,13 @@ begin
         return buf
     end ;
 
-    open function getErrorDisplay (c : Character) return String is
+    -- open
+    function getErrorDisplay (c : Character) return String is
 begin
         if c.integerValue = CommonToken.EOF then
             return "<EOF>";
         end if;
-        switch c {
+       case c  is
         when "\n" =>
             return "\\n"
         when "\t" =>
@@ -469,7 +521,8 @@ begin
         end ;
     end ;
 
-    open function getCharErrorDisplay (c : Character) return String is
+    -- open
+    function getCharErrorDisplay (c : Character) return String is
 begin
         let s: String := getErrorDisplay(c)
         return "'\(s)'"
@@ -481,12 +534,15 @@ begin
     -- it all works out.  You can instead use the rule invocation stack
     -- to do sophisticated error recovery if you are in a fragment rule.
     -- 
-    open procedure recover (re : AnyObject) {
+    -- open
+    procedure recover (re : AnyObject) is
+    begin
         -- TODO: Do we lose character or line position information?
         _input!.consume();
     end ;
 
-    internal function makeTokenSourceAndStream (This : …) return TokenSourceAndStream is
+    -- internal
+    function makeTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
         return TokenSourceAndStream(self, _input)
     end ;

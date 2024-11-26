@@ -8,7 +8,8 @@
 -- the error handling strategy (to create missing tokens).  Notifying the parser
 -- of a new factory means that it notifies it's token source and error strategy.
 -- 
-public protocol TokenFactory {
+-- public
+type TokenFactory is interface;
 
     --typealias Symbol
     -- This is the method used to create tokens in the lexer and in the
@@ -30,7 +31,8 @@ end ;
  TokenSourceAndStream shared across many tokens.  The references here are weak
  to avoid retain cycles.
 --
-public class TokenSourceAndStream {
+-- public
+type TokenSourceAndStream is tagged record
     --
     -- An empty TokenSourceAndStream which is used as the default value of
     -- _#source_ for tokens that do not have a source.

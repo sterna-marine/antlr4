@@ -31,7 +31,8 @@
 -- meaning that state was reached via a different set of rule invocations.
 --
 
-public final type DFAState is new Hashable and CustomStringConvertible with null record;
+-- public final
+type DFAState is new Hashable and CustomStringConvertible with null record;
 {
     public internal(set) var stateNumber := ATNState.INVALID_STATE_NUMBER
 
@@ -87,7 +88,8 @@ public final type DFAState is new Hashable and CustomStringConvertible with null
     -- Map a predicate to a predicted alternative.
     --
 
-    public final type PredPrediction is new CustomStringConvertible with null record;
+    -- public final
+    type PredPrediction is new CustomStringConvertible with null record;
 {
         -- public 
         pred : constant SemanticContext;
@@ -116,12 +118,15 @@ public final type DFAState is new Hashable and CustomStringConvertible with null
     -- Get the set of all alts mentioned by all ATN configurations in this
     -- DFA state.
     --
-    public function getAltSet () return Set<Int>? {
+    -- public
+    function getAltSet () return Set<Int>? {
         return configs.getAltSet()
     end ;
 
 
-    public procedure hash (into hasher: inout Hasher) {
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
         hasher.combine(configs)
     end ;
 

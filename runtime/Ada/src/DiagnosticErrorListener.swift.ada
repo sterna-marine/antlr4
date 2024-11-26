@@ -27,7 +27,8 @@
 
 with Foundation;
 
-public type DiagnosticErrorListener is new BaseErrorListener with null record;
+-- public
+type DiagnosticErrorListener is new BaseErrorListener with null record;
 {
     -- 
     -- When `True`, only exactly known ambiguities are reported.
@@ -56,7 +57,8 @@ begin
     end ;
 
     override
-    public procedure reportAmbiguity (recognizer : Parser;
+    -- public
+    procedure reportAmbiguity (recognizer : Parser;
         dfa : DFA;
         startIndex : Integer;
         stopIndex : Integer;
@@ -75,7 +77,8 @@ begin
     end ;
 
     override
-    public procedure reportAttemptingFullContext (recognizer : Parser;
+    -- public
+    procedure reportAttemptingFullContext (recognizer : Parser;
         dfa : DFA;
         startIndex : Integer;
         stopIndex : Integer;
@@ -88,7 +91,8 @@ begin
     end ;
 
     override
-    public procedure reportContextSensitivity (recognizer : Parser;
+    -- public
+    procedure reportContextSensitivity (recognizer : Parser;
         dfa : DFA;
         startIndex : Integer;
         stopIndex : Integer;
@@ -100,7 +104,8 @@ begin
             recognizer.notifyErrorListeners(message)
     end ;
 
-    internal function getDecisionDescription (recognizer : Parser; dfa : DFA) return String is
+    -- internal
+    function getDecisionDescription (recognizer : Parser; dfa : DFA) return String is
 begin
         let decision: Integer := dfa.decision
         let ruleIndex: Integer := dfa.atnStartState.ruleIndex!
@@ -129,14 +134,16 @@ begin
     -- - returns: Returns `reportedAlts` if it is not `null`, otherwise
     -- returns the set of alternatives represented in `configs`.
     -- 
-    internal function getConflictingAlts (reportedAlts : BitSet?, configs : ATNConfigSet) return BitSet is
+    -- internal
+    function getConflictingAlts (reportedAlts : BitSet?, configs : ATNConfigSet) return BitSet is
 begin
         return reportedAlts ?? configs.getAltBitSet()
     end ;
 end ;
 
 
-fileprivate function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex : Integer) return String is
+-- fileprivate
+function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex : Integer) return String is
 begin
     do {
         return recognizer.getTokenStream()?.getText(Interval.of(startIndex, stopIndex)) ?? "<unknown>";
