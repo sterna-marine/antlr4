@@ -157,7 +157,7 @@ begin
     -- open
     function nextToken (This : …) return Token is
 begin
-        guard _input : constant := _input else {
+        if not Is_Valid (_input) then
             raise ANTLRError.illegalState with "nextToken requires a non-null input stream.";
         end if;
 
@@ -191,8 +191,8 @@ begin
                         ttype := getInterpreter().match(_input, _mode);
                     end if;
                     catch  ANTLRException.recognition(let e) {
-                        notifyListeners(e as! LexerNoViableAltException, recognizer: self)
-                        recover(e as! LexerNoViableAltException);
+                        notifyListeners(LexerNoViableAltException (e), recognizer: self)
+                        recover(LexerNoViableAltException (e));
                         ttype := Lexer.SKIP
                     end if;
                     if _input.LA(1) == BufferedTokenStream.EOF then;
@@ -289,7 +289,7 @@ begin
         self._input := null;
         self._tokenFactorySourcePair := makeTokenSourceAndStream()
         reset();
-        self._input := input as? CharStream
+        self._input := Is_Valid (input); -- as CharStream
         self._tokenFactorySourcePair := makeTokenSourceAndStream()
     end if;
 

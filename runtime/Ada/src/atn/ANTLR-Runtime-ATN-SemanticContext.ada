@@ -238,12 +238,14 @@ begin
         -- public 
         procedure Init (Self : in out …; a : SemanticContext; b : SemanticContext) {
             var operands := Set<SemanticContext> ()
-            if aAnd : constant := a as? AND then
+            aAnd : constant Optional_AND := Set (a);
+            if Is_Valid (aAnd) then
                 operands.formUnion(aAnd.opnds)
             else
                 operands.insert(a);
             end if;
-            if bAnd : constant := b as? AND then
+            bAnd : constant Optional_AND := Set (b);
+            if Is_Valid (bAnd) then
                 operands.formUnion(bAnd.opnds)
             else
                 operands.insert(b);
@@ -345,12 +347,14 @@ begin
         -- public 
         procedure Init (Self : in out …; a : SemanticContext; b : SemanticContext) {
             operands : Set<SemanticContext> := Set<SemanticContext> ();
-            if aOr : constant := a as? OR then
+            aOr : constant Optional_OR := Set (a);
+            if Is_Valid (aOr) then
                 operands.formUnion(aOr.opnds)
             else
                 operands.insert(a);
             end if;
-            if bOr : constant := b as? OR then
+            bOr : constant Optional_OR := Set (b);
+            if Is_Valid (bOr) then
                 operands.formUnion(bOr.opnds)
             else
                 operands.insert(b);
@@ -478,7 +482,7 @@ begin
     -- private static
     function filterPrecedencePredicates (collection : inout Set<SemanticContext>) return [PrecedencePredicate] {
         result : constant := collection.compactMap {
-            $0 as? PrecedencePredicate
+            PrecedencePredicate ($0); -- as? PrecedencePredicate
         end if;
         collection := Set<SemanticContext> (collection.filter {
             !($0 is PrecedencePredicate)
@@ -495,19 +499,19 @@ begin
     end if;
 
     if (lhs is SemanticContext.Predicate) and then (rhs is SemanticContext.Predicate) then
-        return (lhs as! SemanticContext.Predicate) == (rhs as! SemanticContext.Predicate);
+        return (SemanticContext (lhs).Predicate) == (SemanticContext (rhs).Predicate);
     end if;
 
     if (lhs is SemanticContext.PrecedencePredicate) and then (rhs is SemanticContext.PrecedencePredicate) then
-        return (lhs as! SemanticContext.PrecedencePredicate) == (rhs as! SemanticContext.PrecedencePredicate);
+        return (SemanticContext (lhs).PrecedencePredicate) == (SemanticContext (rhs).PrecedencePredicate);
     end if;
 
     if (lhs is SemanticContext.AND) and then (rhs is SemanticContext.AND) then
-        return (lhs as! SemanticContext.AND) == (rhs as! SemanticContext.AND);
+        return (SemanticContext (lhs).AND) == (SemanticContext (rhs).AND);
     end if;
 
     if (lhs is SemanticContext.OR) and then (rhs is SemanticContext.OR) then
-        return (lhs as! SemanticContext.OR) == (rhs as! SemanticContext.OR);
+        return (SemanticContext (lhs).OR) == (SemanticContext (rhs).OR);
     end if;
 
 

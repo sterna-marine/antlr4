@@ -21,8 +21,9 @@ type FailedPredicateException is new RecognitionException with null record;
 	public init(recognizer : Parser; predicate : Optional_String; := null, message : Optional_String; := null) {
 		s : constant := recognizer.getInterpreter().atn.states[recognizer.getState()]!
 
-		trans : constant := s.transition(0) as! AbstractPredicateTransition
-		if predex : constant := trans as? PredicateTransition then
+		trans : constant AbstractPredicateTransition := AbstractPredicateTransition (s.transition(0));
+		predex : constant PredicateTransition := PredicateTransition (trans);
+		if Is_Valid (predex) then
 			self.ruleIndex := predex.ruleIndex
 			self.predicateIndex := predex.predIndex
 		else

@@ -93,7 +93,8 @@ begin
             -- token, along with the text of the token.
             lastToken : constant := tokens.last!
 
-            if tokenText : constant Token := lastToken.getText() then;
+            tokenText : constant Optional_Token := Set (lastToken.getText());
+             if Is_Valid (tokenText) then
                 if lastNewLine : constant := tokenText.lastIndex(of: "\n") then
                     return tokenText.distance(from: lastNewLine, to: tokenText.endIndex) - 1;
                 end if;
@@ -151,7 +152,8 @@ begin
             lastToken : constant := tokens.last!
             var line := lastToken.getLine()
 
-            if tokenText : constant Token := lastToken.getText() then;
+            tokenText : constant Optional_Token := Set (lastToken.getText());
+             if Is_Valid (tokenText) then
                 for c in tokenText loop
                     if c == "\n" then
                         line := @ + 1;

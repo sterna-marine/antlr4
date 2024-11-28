@@ -99,18 +99,22 @@ begin
     function getNodeText (t : Tree; ruleNames : Array<String>?) return String is
 begin
         if ruleNames : constant := ruleNames then
-            if ruleNode : constant := t as? RuleNode then
+            ruleNode : constant Optional_RuleNode := Set (t);
+            if Is_Valid (ruleNode) then
                 ruleIndex : constant Integer := ruleNode.getRuleContext().getRuleIndex();
                 ruleName : constant String := ruleNames[ruleIndex];
-                altNumber : constant := (t as! RuleContext).getAltNumber()
+                altNumber : constant RuleContext := RuleContext ((t);).getAltNumber()
                 if altNumber /= ATN.INVALID_ALT_NUMBER  then
                     return "\(ruleName):\(altNumber)";
                 end if;
                 return ruleName
             else
-                if errorNode : constant := t as? ErrorNode then
+                errorNode : constant Optional_ErrorNode := Set (t);
+                if Is_Valid (errorNode) then
                     return errorNode.description;
-                end if; elsif terminalNode : constant := t as? TerminalNode then
+                end if; else -- elseif
+    terminalNode : constant TerminalNode := TerminalNode (t);
+    if Is_Valid (terminalNode) then
                     if symbol : constant := terminalNode.getSymbol() then
                         s : constant String := symbol.getText()!;
                         return s
@@ -120,7 +124,8 @@ begin
         end if;
         -- no recog for rule names
         payload : constant AnyObject := t.getPayload();
-        if token : constant := payload as? Token then
+        token : constant Optional_Token := Set (payload);
+        if Is_Valid (token) then
             return token.getText()!;
         end if;
         return "\(t.getPayload())"
@@ -181,12 +186,14 @@ begin
     procedure _findAllNodes (t : ParseTree;
                                     index : Integer; findTokens : Boolean; nodes : inout Array<ParseTree>) {
         -- check this node (the root) first
-        if tnode : constant := t as? TerminalNode , findTokens then
+        tnode : constant Optional_TerminalNode , findTokens := Set (t);
+        if Is_Valid (tnode) then
             if tnode.getSymbol()!.getType() == index then
                 nodes.append(t);
             end if;
         else
-            if ctx : constant := t as? ParserRuleContext , not findTokens then
+            ctx : constant Optional_ParserRuleContext , not findTokens := Set (t);
+            if Is_Valid (ctx) then
                 if ctx.getRuleIndex() == index then
                     nodes.append(t);
                 end if;
@@ -208,7 +215,7 @@ begin
 
             --nodes.addAll(descendants(t.getChild(i)));
             if child : constant := t.getChild(i) then
-                nodes.concat(descendants(child as! ParseTree));
+                nodes.concat(descendants(ParseTree (child)));
             end if;
 
         end loop;
@@ -237,7 +244,8 @@ begin
                 return r;
             end if;
         end loop;
-        if r : constant := t as? ParserRuleContext then
+        r : constant Optional_ParserRuleContext := Set (t);
+        if Is_Valid (r) then
             if startTokenIndex >= r.getStart()!.getTokenIndex() and then -- is range fully contained in t?
                     stopTokenIndex <= r.getStop()!.getTokenIndex() {
                 return r

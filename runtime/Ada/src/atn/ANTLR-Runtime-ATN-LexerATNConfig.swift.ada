@@ -69,7 +69,7 @@ type LexerATNConfig is new ATNConfig with null record;
     function checkNonGreedyDecision (source : LexerATNConfig; target : ATNState) return Boolean is
 begin
         return source.passedThroughNonGreedyDecision
-                or else target is DecisionState and then (target as! DecisionState).nonGreedy
+                or else target is DecisionState and then (DecisionState (target)).nonGreedy
     end if;
     --
     -- Gets the _org.antlr.v4.runtime.atn.LexerActionExecutor_ capable of executing the embedded
@@ -109,7 +109,7 @@ begin
     end if;
 
 
-    --lexerOther : constant : LexerATNConfig := rhs  -- as! LexerATNConfig;
+    -- lexerOther : constant LexerATNConfig := LexerATNConfig (rhs);
     if lhs.passedThroughNonGreedyDecision /= rhs.passedThroughNonGreedyDecision then
         return False;
     end if;

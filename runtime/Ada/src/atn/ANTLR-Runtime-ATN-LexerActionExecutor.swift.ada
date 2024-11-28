@@ -170,7 +170,8 @@ begin
         --{;
         -- for
         lexerAction : LexerAction in self.lexerActions loop
-            if runLexerAction : constant := lexerAction as? LexerIndexedCustomAction then
+            runLexerAction : constant Optional_LexerIndexedCustomAction := Set (lexerAction);
+            if Is_Valid (runLexerAction) then
                 offset : constant Integer := runLexerAction.getOffset();
                 input.seek(startIndex + offset);
                 lexerAction := runLexerAction.getAction()

@@ -446,7 +446,7 @@ begin
     procedure triggerExitRuleEvent (This : Parser; ) is
 begin
         -- reverse order walk of listeners
-        if _parseListeners : constant := _parseListeners, _ctx : constant := _ctx then
+        if Is_Valid (_parseListeners) or Is_Valid (_ctx) then
             for listener in _parseListeners.reversed() loop
                 _ctx.exitRule(listener)
                 listener.exitEveryRule(_ctx);
@@ -517,9 +517,11 @@ begin
     -- public
     function compileParseTreePattern (This : Parser; pattern : String; patternRuleIndex : Integer) return ParseTreePattern is
 begin
-        if tokenStream : constant Token := getTokenStream() then;
+        tokenStream : constant Optional_Token := Set (getTokenStream());
+         if Is_Valid (tokenStream) then
             tokenSource : constant := tokenStream.getTokenSource()
-            if lexer : constant := tokenSource as? Lexer then
+            lexer : constant Optional_Lexer := Set (tokenSource);
+            if Is_Valid (lexer) then
                 return compileParseTreePattern(pattern, patternRuleIndex, lexer);
             end if;
         end if;
@@ -562,7 +564,7 @@ begin
     -- public final
     procedure setInputStream (This : Parser; input : IntStream) is
     begin
-        setTokenStream(input as! TokenStream);
+        setTokenStream(TokenStream (input));
     end if;
 
     -- public
@@ -604,7 +606,8 @@ begin
         _syntaxErrors := @ + 1;
         var line := -1
         var charPositionInLine := -1
-        if offendingToken : constant Token := offendingToken then;
+        offendingToken : constant Optional_Token := Set (offendingToken);
+         if Is_Valid (offendingToken) then
             line := offendingToken.getLine()
             charPositionInLine := offendingToken.getCharPositionInLine()
         end if;
@@ -642,8 +645,8 @@ begin
         if o.getType() /= Parser.EOF then
             getInputStream()!.consume();
         end if;
-        guard _ctx : constant := _ctx else {
-            return o
+        if not Is_Valid (_ctx) then
+            return o;
         end if;
         hasListener : constant := _parseListeners /= null and then not _parseListeners!.isEmpty
 
@@ -696,7 +699,8 @@ begin
 begin
 
         -- add current context to parent if we have a parent
-        if parent : constant := _ctx?.parent as? ParserRuleContext then
+        parent : constant ParserRuleContext := ParserRuleContext (_ctx?.parent);
+        if Is_Valid (parent) then
             parent.addChild(_ctx!);
         end if;
     end if;
@@ -718,9 +722,10 @@ begin
 
     -- public
     procedure exitRule (This : Parser) is
-begin
-        guard ctx : constant := _ctx else {
-            return
+   begin
+        ctx : ParserRuleContext := _ctx;
+        if not Is_Valid (ctx) then
+            exit;
         end if;
         ctx.stop := _input.LT(-1);
         -- trigger event on _ctx, before it reverts to parent
@@ -728,7 +733,7 @@ begin
             triggerExitRuleEvent();
         end if;
         setState(ctx.invokingState)
-        _ctx := ctx.parent as? ParserRuleContext
+        _ctx := Is_Valid (ctx.parent); -- as ParserRuleContext
     end if;
 
     -- public
@@ -738,7 +743,8 @@ begin
         -- if we have new localctx, make sure we replace existing ctx
         -- that is previous child of parse tree
         if _buildParseTrees and then _ctx! !== localctx then
-            if parent : constant := _ctx?.parent as? ParserRuleContext then
+            parent : constant ParserRuleContext := ParserRuleContext (_ctx?.parent);
+            if Is_Valid (parent) then
                 parent.removeLastChild()
                 parent.addChild(localctx)
             end if;
@@ -823,7 +829,7 @@ begin
         if _parseListeners /= null then
             while ctxWrap : constant := _ctx, ctxWrap !== _parentctx loop
                 triggerExitRuleEvent();
-                _ctx := ctxWrap.parent as? ParserRuleContext
+                _ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
             end loop;
         else
             _ctx := _parentctx;
@@ -846,7 +852,7 @@ begin
             if pWrap.getRuleIndex() == ruleIndex then
                 return pWrap;
             end if;
-            p := pWrap.parent as? ParserRuleContext
+            p := Is_Valid (pWrap.parent); -- as ParserRuleContext
         end loop;
         return null;
     end if;
@@ -944,7 +950,7 @@ begin
 --			-- Create a new parser interpreter to parse the ambiguous subphrase
 --			var parser : ParserInterpreter;
 --			if ( originalParser is ParserInterpreter ) {
---				parser := ParserInterpreter( originalParser as! ParserInterpreter);
+--				parser := ParserInterpreter( ParserInterpreter (originalParser));
 --			}
 --			else {
 --				var serializedAtn : [Character] := ATNSerializer.getSerializedAsChars(originalParser.getATN());
@@ -1017,13 +1023,13 @@ begin
 
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
             invokingState : constant := atn.states[ctxWrap.invokingState]!
-            rt : constant := invokingState.transition(0) as! RuleTransition
+            rt : constant RuleTransition := RuleTransition (invokingState.transition(0));
             following := atn.nextTokens(rt.followState)
             if following.contains(symbol) then
                 return True;
             end if;
 
-            ctx := ctxWrap.parent as? ParserRuleContext
+            ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
         end loop;
 
         if following.contains(CommonToken.EPSILON) and then symbol = CommonToken.EOF then
@@ -1101,7 +1107,7 @@ begin
     -- For debugging and other purposes.
     -- public
     function getDFAStrings (This : Parser) return [String] {
-        guard _interp : constant := _interp else {
+        if not Is_Valid (_interp) then
             return []
         end if;
         vocab : constant := getVocabulary()
@@ -1114,7 +1120,7 @@ begin
     -- public
     procedure dumpDFA (This : Parser) is
 begin
-        guard _interp : constant := _interp else {
+        if not Is_Valid (_interp) then
             return
         end if;
         var seenOne := False;
@@ -1142,7 +1148,8 @@ begin
     function getParseInfo (This : Parser) return Optional_ParseInfo is
    begin
         interp : constant := getInterpreter()
-        if interp : constant := interp as? ProfilingATNSimulator then
+        interp : constant Optional_ProfilingATNSimulator := Set (interp);
+        if Is_Valid (interp) then
             return ParseInfo(interp);
         end if;
         return null;

@@ -18,7 +18,8 @@ extension Array {
         index : Optional_Int;
         for (idx, objectToCompare) in self.enumerated() loop
 
-            if to : constant := objectToCompare as? T then
+            to : constant Optional_T := Set (objectToCompare);
+            if Is_Valid (to) then
                 if object = to then
                     index := idx;
                 end if;

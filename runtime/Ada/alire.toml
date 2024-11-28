@@ -33,6 +33,7 @@ Development.Debug_Info = "Yes"
 Development.Compile_Checks =  "Warnings"  
 # Development.Contracts = "Yes" 
 Development.style_checks = [
+      "-gnat2022",
       "-gnatyB",   # Check Boolean operators
       "-gnaty-d",  # Disable check no DOS line terminators present
       "-gnatye",   # Check end/exit labels
@@ -41,7 +42,10 @@ Development.style_checks = [
       "-gnatyM132",# Check maximum line length
       "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
       "-gnatyS",   # Check no statements after THEN/ELSE
-      "-gnatyx"    # Check extra parentheses
+      "-gnatyx",    # Check extra parentheses
+      "-gnatyC",
+      "-gnaty-l",
+      "-gnaty-t"
 ]
 
 Validation.Optimization = "Performance" 

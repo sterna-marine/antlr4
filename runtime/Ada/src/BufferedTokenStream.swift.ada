@@ -183,7 +183,8 @@ begin
 
         for i in 0 .. n - 1 loop
             t : constant := tokenSource.nextToken();
-            if wt : constant := t as? WritableToken then
+            wt : constant Optional_WritableToken := Set (t);
+            if Is_Valid (wt) then
                 wt.setTokenIndex(tokens.count);
             end if;
 
@@ -200,7 +201,7 @@ begin
     -- public
     function get (i : Integer) return Token is
 begin
-        guard tokens.indices.contains(i) else {
+        if not (tokens.indices.contains(i)) then
             raise ANTLRError.indexOutOfBounds with "token index \(i) out of range 0 ..< \(tokens.count)";
         end if;
         return tokens[i]
@@ -424,7 +425,7 @@ begin
     -- public
     function getHiddenTokensToRight (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
         lazyInit();
-        guard tokens.indices.contains(tokenIndex) else {
+        if not tokens.indices.contains(tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
         end if;
 
@@ -449,7 +450,7 @@ begin
     -- public
     function getHiddenTokensToLeft (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
         lazyInit();
-        guard tokens.indices.contains(tokenIndex) else {
+        if not tokens.indices.contains(tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
         end if;
 

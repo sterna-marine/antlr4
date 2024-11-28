@@ -227,7 +227,9 @@ package body ANTLR.Runtime.ATNConfig is
         return True;
     end if;
 
-    if l : constant := lhs as? LexerATNConfig, r : constant := rhs as? LexerATNConfig then
+    l : constant Optional_LexerATNConfig := Set (lhs);
+    r : constant Optional_LexerATNConfig := Set (rhs);
+    if Is_Valid (l) and Is_Valid (r) then
         return l = r
     end if;
 

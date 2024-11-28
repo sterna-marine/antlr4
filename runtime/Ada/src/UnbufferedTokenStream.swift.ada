@@ -211,7 +211,8 @@ begin
             --tokens := Arrays.copyOf(tokens, tokens.length * 2);
         end if;
 
-        if wt : constant := t as? WritableToken then
+        wt : constant Optional_WritableToken := Set (t);
+        if Is_Valid (wt) then
             wt.setTokenIndex(getBufferStartIndex() + n);
         end if;
 

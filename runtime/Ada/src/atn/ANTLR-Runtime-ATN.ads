@@ -142,7 +142,7 @@ begin
 
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
             invokingState : constant := states[ctxWrap.invokingState]!
-            rt : constant := invokingState.transition(0) as! RuleTransition
+            rt : constant RuleTransition := RuleTransition (invokingState.transition(0));
             following := nextTokens(rt.followState)
             try! expected.addAll(following)
             try! expected.remove(CommonToken.EPSILON)

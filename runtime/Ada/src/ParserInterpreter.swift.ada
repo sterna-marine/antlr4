@@ -95,7 +95,8 @@ type ParserInterpreter is new Parser with null record;
         -- identify the ATN states where pushNewRecursionContext() must be called
         self.statesNeedingLeftRecursionContext := try! BitSet(atn.states.count)
         for  state in atn.states loop
-            if state : constant := state as? StarLoopEntryState then
+            state : constant Optional_StarLoopEntryState := Set (state);
+            if Is_Valid (state) then
                 if state.precedenceRuleDecision then
                     try! self.statesNeedingLeftRecursionContext.set(state.stateNumber);
                 end if;
@@ -204,7 +205,7 @@ begin
         var altNum : Integer;
         if p.getNumberOfTransitions() > 1 then
             getErrorHandler().sync(self);
-            decision : constant := (p as! DecisionState).decision
+            decision : constant DecisionState := DecisionState ((p);).decision
             if decision = overrideDecision and then _input.index() == overrideDecisionInputIndex then
                 altNum := overrideDecisionAlt
             else
@@ -230,7 +231,7 @@ begin
             end if;
 
         when Transition.ATOM =>
-            match((transition as! AtomTransition).label);
+            match((AtomTransition (transition)).label);
 
         when Transition.RANGE => fallthrough;
         when Transition.SET => fallthrough;
@@ -244,28 +245,28 @@ begin
             matchWildcard();
 
         when Transition.RULE =>
-            ruleStartState : constant := transition.target as! RuleStartState
+            ruleStartState : constant RuleStartState := RuleStartState (transition.target);
             ruleIndex : constant := ruleStartState.ruleIndex!
             ctx : constant := InterpreterRuleContext(_ctx, p.stateNumber, ruleIndex)
             if ruleStartState.isPrecedenceRule then
-                enterRecursionRule(ctx, ruleStartState.stateNumber, ruleIndex, (transition as! RuleTransition).precedence);
+                enterRecursionRule(ctx, ruleStartState.stateNumber, ruleIndex, (RuleTransition (transition)).precedence);
             else
                 enterRule(ctx, transition.target.stateNumber, ruleIndex);
             end if;
 
         when Transition.PREDICATE =>
-            predicateTransition : constant := transition as! PredicateTransition
+            predicateTransition : constant PredicateTransition := PredicateTransition (transition);
             if not sempred(_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then;
                 raise ANTLRException.recognition with FailedPredicateException(self);
             end if;
 
         when Transition.ACTION =>
-            actionTransition : constant := transition as! ActionTransition
+            actionTransition : constant ActionTransition := ActionTransition (transition);
             action(_ctx, actionTransition.ruleIndex, actionTransition.actionIndex);
 
         when Transition.PRECEDENCE =>
-            if not precpred(_ctx!, (transition as! PrecedencePredicateTransition).precedence) then
-                raise ANTLRException.recognition with FailedPredicateException(self, "precpred(_ctx,\((transition as! PrecedencePredicateTransition).precedence))");
+            if not precpred(_ctx!, (PrecedencePredicateTransition (transition)).precedence) then
+                raise ANTLRException.recognition with FailedPredicateException(self, "precpred(_ctx,\((PrecedencePredicateTransition (transition)).precedence))");
             end if;
 
         when others =>
@@ -288,7 +289,7 @@ begin
             exitRule();
         end if;
 
-        ruleTransition : constant := atn.states[getState()]!.transition(0) as! RuleTransition
+        ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState()]!.transition(0));
         setState(ruleTransition.followState.stateNumber)
     end if;
 

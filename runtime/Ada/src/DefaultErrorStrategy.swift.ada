@@ -137,11 +137,16 @@ begin
             return -- don't report spurious errors
         end if;
         beginErrorCondition(recognizer)
-        if nvae : constant := e as? NoViableAltException then
+        nvae : constant Optional_NoViableAltException := Set (e);
+        if Is_Valid (nvae) then
             reportNoViableAlternative(recognizer, nvae);
-        elsif ime : constant := e as? InputMismatchException then
+        else -- elseif
+           ime : constant InputMismatchException := InputMismatchException (e);
+           if Is_Valid (ime) then
             reportInputMismatch(recognizer, ime);
-        elsif fpe : constant := e as? FailedPredicateException then
+        else -- elseif
+           fpe : constant FailedPredicateException := FailedPredicateException (e);
+           if Is_Valid (fpe) then
             reportFailedPredicate(recognizer, fpe)
         else
             errPrint("unknown recognition error type: " + String(describing: type(of: e)))
@@ -278,7 +283,7 @@ begin
                -- errPrint("at loop back: "+s.getClass().getSimpleName());
                reportUnwantedToken(recognizer)
                expecting : constant := recognizer.getExpectedTokens();
-               whatFollowsLoopIterationOrRule : constant := expecting.or(getErrorRecoverySet(recognizer)) as! IntervalSet
+               whatFollowsLoopIterationOrRule : constant IntervalSet := IntervalSet (expecting.or(getErrorRecoverySet(recognizer)));
                consumeUntil(recognizer, whatFollowsLoopIterationOrRule);
 
             when others =>
@@ -639,7 +644,7 @@ begin
     -- open
     function getTokenErrorDisplay (t : Optional_Token;) return String is
 begin
-        guard t : constant := t else {
+        if not Is_Valid (t) then
             return "<no token>"
         end if;
         var s := getSymbolText(t)
@@ -778,7 +783,7 @@ begin
         while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 loop
             -- compute what follows who invoked us
             invokingState : constant := atn.states[ctxWrap.invokingState]!
-            rt : constant := invokingState.transition(0) as! RuleTransition
+            rt : constant RuleTransition := RuleTransition (invokingState.transition(0));
             follow : constant := atn.nextTokens(rt.followState)
             try! recoverSet.addAll(follow)
             ctx := ctxWrap.parent

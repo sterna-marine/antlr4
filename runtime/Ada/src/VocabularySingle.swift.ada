@@ -96,8 +96,8 @@ type Vocabulary is new Hashable with null record;
     -- public static
     function fromTokenNames (tokenNames : [String?]?) return Vocabulary is
 begin
-        guard tokenNames : constant := tokenNames, tokenNames.count > 0 else {
-            return EMPTY_VOCABULARY
+        if not Is_Valid (tokenNames) or not (tokenNames.count > 0) then
+            return EMPTY_VOCABULARY;
         end if;
 
         var literalNames := tokenNames

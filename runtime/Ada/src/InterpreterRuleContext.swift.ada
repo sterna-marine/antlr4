@@ -66,7 +66,7 @@ begin
     -- public static
     function fromParserRuleContext (ctx : Optional_ParserRuleContext;) return Optional_InterpreterRuleContext is
    begin
-        guard ctx : constant := ctx else {
+        if not Is_Valid (ctx) then
              return null;
         end if;
         dup : constant InterpreterRuleContext := InterpreterRuleContext();

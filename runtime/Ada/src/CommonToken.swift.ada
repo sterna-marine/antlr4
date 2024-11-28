@@ -159,7 +159,8 @@ begin
     -- public
     function getText () return Optional_String is
    begin
-        if text : constant Text := text then
+        text : constant Optional_Text := Set (text);
+         if Is_Valid (text) then
             return text;
         end if;
 

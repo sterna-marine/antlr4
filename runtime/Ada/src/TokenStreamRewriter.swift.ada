@@ -142,7 +142,8 @@ begin
         -- override public
         function execute (buf : inout String) return Integer is
 begin
-            if text : constant Text := text then
+            text : constant Optional_Text := Set (text);
+             if Is_Valid (text) then
                 buf.append(text);
             end if;
             token : constant := tokens.get(index);
@@ -181,7 +182,8 @@ begin
         -- public
         function execute (buf : inout String) return Integer is
 begin
-            if text : constant Text := text then
+            text : constant Optional_Text := Set (text);
+             if Is_Valid (text) then
                 buf := @ + text;
             end if;
             return lastIndex + 1
@@ -193,7 +195,8 @@ begin
         function description return String is
             token : constant := try! tokens.get(index)
             lastToken : constant := try! tokens.get(lastIndex)
-            if text : constant Text := text then
+            text : constant Optional_Text := Set (text);
+             if Is_Valid (text) then
                 return "<ReplaceOp@\(token)..\(lastToken):""\(text)"">";
             end if;
             return "<DeleteOp@\(token)..\(lastToken)>"
@@ -287,8 +290,9 @@ begin
             rewritesCount : constant := rewrites.count
             -- WALK REPLACES
             for i in 0 .. rewritesCount - 1 loop
-                guard rop : constant := rewrites[i] as? ReplaceOp else {
-                    continue
+                rop : constant ReplaceOp := ReplaceOp (rewrites[i]);
+                if not Is_Valid (rop) then
+                    goto CONTINUE;
                 end if;
 
                 -- Wipe prior inserts within range
@@ -331,12 +335,14 @@ begin
                         end if;
                     end if;
                 end if;
+               <<CONTINUE>>
             end loop;
 
             -- WALK INSERTS
             for i in 0 .. rewritesCount - 1 loop
-                guard iop : constant := rewrites[i] else {
-                    continue
+                iop : constant := rewrites[i];
+                if not Is_Valid (iop) then
+                    goto CONTINUE;
                 end if;
                 if !(iop is InsertBeforeOp) then
                     continue;
@@ -378,6 +384,7 @@ begin
                         end if;
                     end if;
                 end loop;
+               <<CONTINUE>>
             end loop;
 
             var m := [Int: RewriteOperation]()
@@ -693,7 +700,8 @@ begin
         if start < 0 then
             start := 0;
         end if;
-        guard rewrites : constant := programs[programName], not rewrites.isEmpty else {
+       rewrites : constant := programs[programName];
+       if not Is_Valid (rewrites) or not rewrites.isEmpty then
              return tokens.getText(interval); -- no instructions to execute
         end if;
 

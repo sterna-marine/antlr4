@@ -55,7 +55,8 @@ begin
     -- override public
     function isEqual (other : Chunk) return Boolean is
 begin
-        guard other : constant := other as? TextChunk else {
+        other : constant TextChunk := TextChunk (other);
+        if not Is_Valid (other) then
             return False;
         end if;
         return text = other.text

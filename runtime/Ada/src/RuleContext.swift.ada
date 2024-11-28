@@ -289,7 +289,7 @@ begin
     -- open
     function castdown<T> (subType : T.Type) return T is
 begin
-        return self as! T
+        return T (self)
     end if;
 
 end if;

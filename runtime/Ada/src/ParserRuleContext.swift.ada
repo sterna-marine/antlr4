@@ -108,7 +108,8 @@ begin
             self.children := [ParseTree]()
             -- reset parent pointer for any error nodes
             for child in ctxChildren loop
-                if errNode : constant := child as? ErrorNode then
+                errNode : constant Optional_ErrorNode := Set (child);
+                if Is_Valid (errNode) then
                     addChild(errNode);
                 end if;
             end loop;
@@ -185,7 +186,7 @@ begin
     -- open
     function getChild (i : Integer) return Optional_Tree is
    begin
-        guard children : constant := children, i >= 0 and then i < children.count else {
+        if not Is_Valid (children) or not i >= 0 or not i < children.count then
             return null;
         end if;
         return children[i]
@@ -194,12 +195,13 @@ begin
     -- open
     function getChild<T: ParseTree> (ctxType : T.Type, i : Integer) return T? is
 begin
-        guard children : constant := children, i >= 0 and then i < children.count else {
+        if not Is_Valid (children) or not i >= 0 or not i < children.count then
             return null;
         end if;
         var j := -1 -- what element have we found with ctxType?
         for o in children loop
-            if o : constant := o as? T then
+            o : constant Optional_T := Set (o);
+            if Is_Valid (o) then
                 j := @ + 1;
                 if j = i then
                     return o;
@@ -213,12 +215,13 @@ begin
     -- open
     function getToken (ttype : Integer; i : Integer) return Optional_TerminalNode is
    begin
-        guard children : constant := children, i >= 0 and then i < children.count else {
+        if not Is_Valid (children) or not i >= 0 or not i < children.count then
             return null;
         end if;
         var j := -1 -- what token with ttype have we found?
         for o in children loop
-            if tnode : constant := o as? TerminalNode then
+            tnode : constant Optional_TerminalNode := Set (o);
+            if Is_Valid (tnode) then
                 symbol : constant := tnode.getSymbol()!
                 if symbol.getType() == ttype then
                     j := @ + 1;
@@ -234,12 +237,14 @@ begin
 
     -- open
     function getTokens (ttype : Integer) return [TerminalNode] {
-        guard children : constant := children else {
-            return [TerminalNode]()
+        if not Is_Valid (children) then
+            return [TerminalNode]();
         end if;
 
         return children.compactMap {
-            if tnode : constant := $0 as? TerminalNode, symbol : constant := tnode.getSymbol(), symbol.getType() == ttype then
+            tnode : constant TerminalNode := TerminalNode($0);
+            symbol : constant := tnode.getSymbol()
+            if Is_Valid (tnode) and Is_Valid (symbol) and symbol.getType() = ttype then 
                 return tnode
             else
                 return null;
@@ -256,10 +261,12 @@ begin
     -- open
     function getRuleContexts<T: ParserRuleContext> (ctxType : T.Type) return [T] is
 begin
-        guard children : constant := children else {
-            return [T]()
+        if not Is_Valid (children) then
+            return [T]();
         end if;
-        return children.compactMap { $0 as? T end if;
+        return children.compactMap { 
+            T ($0) -- as? T 
+            };
     end if;
 
     override
@@ -279,8 +286,8 @@ begin
     -- open
     function getSourceInterval (This : …) return Interval is
 begin
-        guard start : constant := start, stop : constant := stop else {
-             return Interval.INVALID
+        if not Is_Valid (start) or not Is_Valid (stop) then
+             return Interval.INVALID;
         end if;
         return Interval.of(start.getTokenIndex(), stop.getTokenIndex())
     end if;

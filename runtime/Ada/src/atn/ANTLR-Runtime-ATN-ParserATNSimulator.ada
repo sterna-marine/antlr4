@@ -1461,7 +1461,7 @@ begin
                         -- come in handy and we avoid evaluating context dependent
                         -- preds if this is > 0.
                         if _dfa : constant := _dfa , _dfa.isPrecedenceDfa() then
-                            outermostPrecedenceReturn : constant Integer := (t as! EpsilonTransition).outermostPrecedenceReturn();
+                            outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn();
                             if outermostPrecedenceReturn = _dfa.atnStartState.ruleIndex then
                                 c.setPrecedenceFilterSuppressed(True);
                             end if;
@@ -1614,7 +1614,7 @@ begin
         -- the context has an empty stack case. If so, it would mean
         -- global FOLLOW so we can't perform optimization
         if p.getStateType() /= ATNState.STAR_LOOP_ENor else;
-            !( (p as! StarLoopEntryState)).precedenceRuleDecision or else -- Are we the special loop entry/exit state?
+            !( (StarLoopEntryState (p))).precedenceRuleDecision or else -- Are we the special loop entry/exit state?
             configContext.isEmpty() or else -- If SLL wildcard
             configContext.hasEmptyPath(){
             return False;
@@ -1629,9 +1629,9 @@ begin
             {return False}
         end if;
 
-        decisionStartState : constant := (p.transition(0).target as! BlockStartState)
+        decisionStartState : constant BlockStartState := BlockStartState ((p.transition(0).target);)
         blockEndStateNum : constant := decisionStartState.endState!.stateNumber
-        blockEndState : constant := (atn.states[blockEndStateNum] as! BlockEndState)
+        blockEndState : constant BlockEndState := BlockEndState ((atn.states[blockEndStateNum]);)
 
         -- Verify that the top of each stack context leads to loop entry/exit
         -- state through epsilon edges and w/o leaving rule.
@@ -1695,19 +1695,19 @@ begin
    begin
             case t.getSerializationType() is
                when Transition.RULE =>
-                  return ruleTransition(config, t as! RuleTransition)
+                  return ruleTransition(config, RuleTransition (t))
 
                when Transition.PRECEDENCE =>
-                  return precedenceTransition(config, t as! PrecedencePredicateTransition, collectPredicates, inContext, fullCtx);
+                  return precedenceTransition(config, PrecedencePredicateTransition (t), collectPredicates, inContext, fullCtx);
 
                when Transition.PREDICATE =>
-                  return predTransition(config, t as! PredicateTransition,;
+                  return predTransition(config, PredicateTransition (t),;
                      collectPredicates,
                      inContext,
                      fullCtx)
 
                when Transition.ACTION =>
-                  return actionTransition(config, t as! ActionTransition)
+                  return actionTransition(config, ActionTransition (t))
 
                when Transition.EPSILON =>
                   return ATNConfig(config, t.target)
@@ -1943,9 +1943,12 @@ begin
             var trans := "no edges"
             if c.state.getNumberOfTransitions() > 0 then
                 t : constant := c.state.transition(0)
-                if at : constant := t as? AtomTransition then
+                at : constant Optional_AtomTransition := Set (t);
+                if Is_Valid (at) then
                     trans := "Atom " + getTokenName(at.label);
-                elsif st : constant := t as? SetTransition then
+                else -- elseif
+                   st : constant SetTransition := SetTransition (t);
+                   if Is_Valid (st) then
                     not : constant := st is NotSetTransition
                     trans := (not ? "~" : "") + "Set " + st.set.description
                 end if;

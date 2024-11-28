@@ -25,11 +25,16 @@ begin
     -- public
     procedure walk (listener : ParseTreeListener; t : ParseTree) is
     begin
-        if errNode : constant := t as? ErrorNode then
+        errNode : constant Optional_ErrorNode := Set (t);
+        if Is_Valid (errNode) then
             listener.visitErrorNode(errNode);
-        elsif termNode : constant := t as? TerminalNode then
+        else -- elseif
+           termNode : constant TerminalNode := TerminalNode (t);
+           if Is_Valid (termNode) then
             listener.visitTerminal(termNode);
-        elsif r : constant := t as? RuleNode then
+        else -- elseif
+           r : constant RuleNode := RuleNode (t);
+           if Is_Valid (r) then
             enterRule(listener, r);
             n : constant := r.getChildCount()
             for i in 0 .. n - 1 loop
@@ -50,7 +55,7 @@ begin
     -- internal
     procedure enterRule (listener : ParseTreeListener; r : RuleNode) is
     begin
-        ctx : constant := r.getRuleContext() as! ParserRuleContext
+        ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext());
         listener.enterEveryRule(ctx);
         ctx.enterRule(listener)
     end if;
@@ -64,7 +69,7 @@ begin
     -- internal
     procedure exitRule (listener : ParseTreeListener; r : RuleNode) is
     begin
-        ctx : constant := r.getRuleContext() as! ParserRuleContext
+        ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext());
         ctx.exitRule(listener)
         listener.exitEveryRule(ctx);
     end if;

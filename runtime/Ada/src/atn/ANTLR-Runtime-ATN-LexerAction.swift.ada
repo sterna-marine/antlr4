@@ -81,23 +81,23 @@ begin
     end if;
 
     if (lhs is LexerChannelAction) and then (rhs is LexerChannelAction) then
-        return (lhs as! LexerChannelAction) == (rhs as! LexerChannelAction);
+        return (LexerChannelAction (lhs)) == (LexerChannelAction (rhs));
     end if; elsif (lhs is LexerCustomAction) and then (rhs is LexerCustomAction) then
-        return (lhs as! LexerCustomAction) == (rhs as! LexerCustomAction);
+        return (LexerCustomAction (lhs)) == (LexerCustomAction (rhs));
     end if; elsif (lhs is LexerIndexedCustomAction) and then (rhs is LexerIndexedCustomAction) then
-        return (lhs as! LexerIndexedCustomAction) == (rhs as! LexerIndexedCustomAction);
+        return (LexerIndexedCustomAction (lhs)) == (LexerIndexedCustomAction (rhs));
     end if; elsif (lhs is LexerModeAction) and then (rhs is LexerModeAction) then
-        return (lhs as! LexerModeAction) == (rhs as! LexerModeAction);
+        return (LexerModeAction (lhs)) == (LexerModeAction (rhs));
     end if; elsif (lhs is LexerMoreAction) and then (rhs is LexerMoreAction) then
-        return (lhs as! LexerMoreAction) == (rhs as! LexerMoreAction);
+        return (LexerMoreAction (lhs)) == (LexerMoreAction (rhs));
     end if; elsif (lhs is LexerPopModeAction) and then (rhs is LexerPopModeAction) then
-        return (lhs as! LexerPopModeAction) == (rhs as! LexerPopModeAction);
+        return (LexerPopModeAction (lhs)) == (LexerPopModeAction (rhs));
     end if; elsif (lhs is LexerPushModeAction) and then (rhs is LexerPushModeAction) then
-        return (lhs as! LexerPushModeAction) == (rhs as! LexerPushModeAction);
+        return (LexerPushModeAction (lhs)) == (LexerPushModeAction (rhs));
     end if; elsif (lhs is LexerSkipAction) and then (rhs is LexerSkipAction) then
-        return (lhs as! LexerSkipAction) == (rhs as! LexerSkipAction);
+        return (LexerSkipAction (lhs)) == (LexerSkipAction (rhs));
     end if; elsif (lhs is LexerTypeAction) and then (rhs is LexerTypeAction) then
-        return (lhs as! LexerTypeAction) == (rhs as! LexerTypeAction);
+        return (LexerTypeAction (lhs)) == (LexerTypeAction (rhs));
     end if;
 
 

@@ -199,7 +199,8 @@ begin
         n : constant := s.getNumberOfTransitions()
         for i in 0 .. n - 1 loop
             t : constant := s.transition(i)
-            if rt : constant := t as? RuleTransition then
+            rt : constant Optional_RuleTransition := Set (t);
+            if Is_Valid (rt) then
                 if try! calledRuleStack.get(rt.target.ruleIndex!) then
                     continue;
                 end if;

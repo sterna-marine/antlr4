@@ -114,7 +114,7 @@ begin
         ruleIndex : constant Integer := dfa.atnStartState.ruleIndex!;
 
         ruleNames : constant [String] := recognizer.getRuleNames();
-        guard ruleNames.indices.contains(ruleIndex) else {
+        if not ruleNames.indices.contains(ruleIndex) then
             return String(decision)
         end if;
 

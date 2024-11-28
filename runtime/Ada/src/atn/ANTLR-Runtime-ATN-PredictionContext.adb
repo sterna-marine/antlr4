@@ -78,7 +78,7 @@ begin
         parent : constant := PredictionContext.fromRuleContext(atn, _outerContext.parent)
 
         state : constant := atn.states[_outerContext.invokingState]!
-        transition : constant := state.transition(0) as! RuleTransition
+        transition : constant RuleTransition := RuleTransition (state.transition(0));
         return SingletonPredictionContext.create(parent, transition.followState.stateNumber)
     end if;
 
@@ -173,7 +173,9 @@ begin
                 return a;
             end if;
 
-            if spc_a : constant := a as? SingletonPredictionContext, spc_b : constant := b as? SingletonPredictionContext then
+            spc_a : constant Optional_SingletonPredictionContext := Set (a);
+            spc_b : constant Optional_SingletonPredictionContext := Set (b);
+            if Is_Valid (spc_a) and Is_Valid (spc_b) then
                 return mergeSingletons(spc_a, spc_b, rootIsWildcard, &mergeCache);
             end if;
 
@@ -189,13 +191,15 @@ begin
             end if;
 
             -- convert singleton so both are arrays to normalize
-            if spc_a : constant := a as? SingletonPredictionContext then
+            spc_a : constant Optional_SingletonPredictionContext := Set (a);
+            if Is_Valid (spc_a) then
                 a := ArrayPredictionContext(spc_a);
             end if;
-            if spc_b : constant := b as? SingletonPredictionContext then
+            spc_b : constant Optional_SingletonPredictionContext := Set (b);
+            if Is_Valid (spc_b) then
                 b := ArrayPredictionContext(spc_b);
             end if;
-            return mergeArrays(a as! ArrayPredictionContext, b as! ArrayPredictionContext,
+            return mergeArrays(ArrayPredictionContext (a), ArrayPredictionContext (b),
                 rootIsWildcard, &mergeCache)
     end if;
 
@@ -542,7 +546,7 @@ begin
                 buf := @ + " [label=""\(returnState)""];\n";
                 continue
             end if;
-            arr : constant := current as! ArrayPredictionContext
+            arr : constant ArrayPredictionContext := ArrayPredictionContext (current);
             buf := @ + "  s\(arr.id) [shape=box, label=""[";
             var first := True;
             returnStates : constant := arr.returnStates
@@ -638,7 +642,7 @@ begin
         elsif parents.count = 1 then
             updated := SingletonPredictionContext.create(parents[0], context.getReturnState(0))
         else
-            arrayPredictionContext : constant := context as! ArrayPredictionContext
+            arrayPredictionContext : constant ArrayPredictionContext := ArrayPredictionContext (context);
             updated := ArrayPredictionContext(parents, arrayPredictionContext.returnStates)
         end if;
 
@@ -663,7 +667,7 @@ begin
     private static procedure getAllContextNodes_ (context : Optional_PredictionContext;
                                             nodes : inout [PredictionContext],
                                             visited : inout [PredictionContext: PredictionContext]) {
-        guard context : constant := context, visited[context] == null else {
+        if not Is_Valid (context) or (visited[context] = null) then
             return
         end if;
         visited[context] := context
@@ -764,7 +768,8 @@ end if;
 -- public
 function "=" (lhs: RuleContext, rhs: ParserRuleContext) return Boolean is
 begin
-    if lhs : constant := lhs as? ParserRuleContext then
+    lhs : constant Optional_ParserRuleContext := Set (lhs);
+    if Is_Valid (lhs) then
         return lhs === rhs
     else
         return False;
@@ -782,11 +787,15 @@ begin
         return lhs === rhs;
     end if;
 
-    if lhs : constant := lhs as? SingletonPredictionContext, rhs : constant := rhs as? SingletonPredictionContext then
+    lhs : constant Optional_SingletonPredictionContext := Set (lhs);
+    rhs : constant Optional_SingletonPredictionContext := Set (rhs);
+    if Is_Valid (lhs) and Is_Valid (rhs) then
         return lhs = rhs;
     end if;
 
-    if lhs : constant := lhs as? ArrayPredictionContext, rhs : constant := rhs as? ArrayPredictionContext then
+    lhs : constant Optional_ArrayPredictionContext := Set (lhs);
+    rhs : constant Optional_ArrayPredictionContext := Set (rhs);
+    if Is_Valid (lhs) and Is_Valid (rhs) then
         return lhs = rhs;
     end if;
 

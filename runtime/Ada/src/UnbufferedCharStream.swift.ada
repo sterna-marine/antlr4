@@ -147,8 +147,9 @@ begin
                 return i;
             end if;
 
-            guard c : constant := nextChar() else {
-                return i
+            c : constant := nextChar();
+            if not Is_Valid (c) then
+                return i;
             end if;
             add(c)
         end loop;

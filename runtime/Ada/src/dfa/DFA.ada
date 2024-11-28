@@ -49,7 +49,8 @@ type DFA is new CustomStringConvertible with null record;
         self.atnStartState := atnStartState
         self.decision := decision
 
-        if starLoopState : constant := atnStartState as? StarLoopEntryState, starLoopState.precedenceRuleDecision then
+        starLoopState : constant Optional_StarLoopEntryState, starLoopState.precedenceRuleDecision := Set (atnStartState);
+        if Is_Valid (starLoopState) then
             precedenceState : constant := DFAState(ATNConfigSet())
             precedenceState.edges := [DFAState]()
             precedenceState.isAcceptState := False;
@@ -92,13 +93,13 @@ begin
     -- 
     -- public final
     function getPrecedenceStartState (precedence : Integer) return Optional_DFAState is
-   begin
+    begin
         if not isPrecedenceDfa() then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
 
         end if;
 
-        guard s0 : constant := s0, edges : constant := s0.edges, precedence >= 0, precedence < edges.count else {
+        if not Is_Valid (s0) or not Is_Valid (s0.edges) or not precedence >= 0 or not precedence < edges.count then
             return null;
         end if;
 
@@ -122,8 +123,8 @@ begin
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
         end if;
 
-        guard s0 : constant := s0, edges : constant := s0.edges, precedence >= 0 else {
-            return
+        if not Is_Valid (s0) or not Is_Valid (s0.edges) or not precedence >= 0 then
+            return null;
         end if;
 
         -- synchronization on s0 here is ok. when the DFA is turned into a

@@ -194,10 +194,11 @@ begin
     function addAll (set : Optional_IntSet;) return IntSet is
 begin
 
-        guard set : constant := set else {
-             return self
+        if not Is_Valid (set) then
+             return self;
         end if;
-        if other : constant := set as? IntervalSet then
+        other : constant Optional_IntervalSet := Set (set);
+        if Is_Valid (other) then
             -- walk set and add each interval
             for interval in other.intervals loop
                 add(interval);
@@ -223,13 +224,14 @@ begin
     -- 
 
     -- public
-    function complement (vocabulary : Optional_IntSet;) return Optional_IntSet is
+    function complement (vocabulary : Optional_IntSet) return Optional_IntSet is
    begin
-        guard vocabulary : constant := vocabulary, not vocabulary.isnull() else {
-            return null  -- nothing in common with null set
+        if not Is_Valid (vocabulary) or vocabulary.isnull() then
+            return null;  -- nothing in common with null set
         end if;
         vocabularyIS : IntervalSet;
-        if vocabulary : constant := vocabulary as? IntervalSet then
+        vocabulary : constant Optional_IntervalSet := Set (vocabulary);
+        if Is_Valid (vocabulary) then
             vocabularyIS := vocabulary
         else
             vocabularyIS := IntervalSet()
@@ -243,10 +245,11 @@ begin
     -- public
     function subtract (a : Optional_IntSet;) return IntSet is
 begin
-        guard a : constant := a, not a.isnull() else {
+        if not Is_Valid (a) or a.isnull() then
             return IntervalSet(self)
         end if;
-        if a : constant := a as? IntervalSet then
+        a : constant Optional_IntervalSet := Set (a);
+        if Is_Valid (a) then
             return subtract(self, a);
         end if;
 
@@ -265,13 +268,13 @@ begin
     function subtract (left : Optional_IntervalSet; right : Optional_IntervalSet;) return IntervalSet is
 begin
 
-        guard left : constant := left, not left.isnull() else {
-            return IntervalSet()
+        if not Is_Valid (left) or left.isnull() then
+            return IntervalSet();
         end if;
 
         result : constant := IntervalSet(left)
 
-        guard right : constant := right, not right.isnull() else {
+        f not Is_Valid (right) or right.isnull() then
             -- right set has no elements; just return the copy of the current set
             return result
         end if;
@@ -360,7 +363,7 @@ begin
         end if;
 
         myIntervals : constant := self.intervals
-        theirIntervals : constant := (other as! IntervalSet).intervals
+        theirIntervals : constant IntervalSet := IntervalSet ((other);).intervals
         intersection : Optional_IntervalSet; := null;
         mySize : constant := myIntervals.count
         theirSize : constant := theirIntervals.count
@@ -535,7 +538,7 @@ begin
     -- if ( obj = null or else !(obj is IntervalSet) ) then
     -- return False;
     -- }
-    -- var other : IntervalSet := obj as! IntervalSet;
+    -- var other : IntervalSet := IntervalSet (obj);
     -- return self.intervals.equals(other.intervals);
     -- 
 

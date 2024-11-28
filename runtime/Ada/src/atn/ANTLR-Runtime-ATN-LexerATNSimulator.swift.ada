@@ -355,8 +355,9 @@ begin
         -- than a config that already reached an accept state for the same rule
         var skipAlt := ATN.INVALID_ALT_NUMBER
         for c in closureConfig.configs loop
-            guard c : constant := c as? LexerATNConfig else {
-                continue
+            c : constant LexerATNConfig := LexerATNConfig (c);
+            if not Is_Valid (c) then
+                goto CONTINUE;
             end if;
             currentAltReachedAcceptState : constant := (c.alt = skipAlt)
             if currentAltReachedAcceptState and then c.hasPassedThroughNonGreedyDecision() then
@@ -392,6 +393,7 @@ begin
                     end if;
                 end if;
             end loop;
+            <<CONTINUE>>
         end loop;
     end if;
 
@@ -525,7 +527,7 @@ begin
             c : Optional_LexerATNConfig; := null;
             case t.getSerializationType() is
                when Transition.RULE =>
-                  ruleTransition : constant := t as! RuleTransition
+                  ruleTransition : constant RuleTransition := RuleTransition (t);
                   newContext : constant := SingletonPredictionContext.create(config.context, ruleTransition.followState.stateNumber)
                   c := LexerATNConfig(config, t.target, newContext)
 
@@ -553,7 +555,7 @@ begin
                   -- states reached by traversing predicates. Since this is when we
                   -- test them, we cannot cash the DFA state target of ID.
                   --
-                  pt : constant := t as! PredicateTransition
+                  pt : constant PredicateTransition := PredicateTransition (t);
                   if LexerATNSimulator.debug then
                      print("EVAL rule \(pt.ruleIndex):\(pt.predIndex)");
                   end if;
@@ -576,7 +578,7 @@ begin
                      -- getEpsilonTarget to return two configurations, so
                      -- additional modifications are needed before we can support
                      -- the split operation.
-                     lexerActionExecutor : constant := LexerActionExecutor.append(config.getLexerActionExecutor(), atn.lexerActions[(t as! ActionTransition).actionIndex])
+                     lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append(config.getLexerActionExecutor(), atn.lexerActions[(t);).actionIndex])
                      c := LexerATNConfig(config, t.target, lexerActionExecutor)
                   else
                      -- ignore actions in referenced rules
@@ -733,7 +735,7 @@ begin
 
         if rss : constant := configs.firstConfigWithRuleStopState then
             proposed.isAcceptState := True;
-            proposed.lexerActionExecutor := (rss as! LexerATNConfig).getLexerActionExecutor()
+            proposed.lexerActionExecutor := (LexerATNConfig (rss)).getLexerActionExecutor()
             proposed.prediction := atn.ruleToTokenType[rss.state.ruleIndex!]
         end if;
 

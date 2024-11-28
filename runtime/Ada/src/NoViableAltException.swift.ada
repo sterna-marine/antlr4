@@ -50,7 +50,8 @@ type NoViableAltException is new RecognitionException with null record;
         self.startToken := startToken
 
         super.init(recognizer, input, ctx)
-        if offendingToken : constant Token := offendingToken then;
+        offendingToken : constant Optional_Token := Set (offendingToken);
+         if Is_Valid (offendingToken) then
             setOffendingToken(offendingToken);
         end if;
     end if;

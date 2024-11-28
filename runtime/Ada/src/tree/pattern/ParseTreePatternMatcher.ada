@@ -236,17 +236,18 @@ begin
 
         -- x and <ID>, x and y, or x and x; or could be mismatched types
         if tree is TerminalNode and then patternTree is TerminalNode then
-            t1 : constant := tree as! TerminalNode
-            t2 : constant := patternTree as! TerminalNode
+            t1 : constant TerminalNode := TerminalNode (tree);
+            t2 : constant TerminalNode := TerminalNode (patternTree);
             mismatchedNode : Optional_ParseTree; := null;
             -- both are tokens and they have same type
             if t1.getSymbol()!.getType() == t2.getSymbol()!.getType() then
                 if t2.getSymbol() is TokenTagToken then
                     -- x and <ID>
-                    tokenTagToken : constant TokenTagToken := t2.getSymbol() as! TokenTagToken;
+                    tokenTagToken : constant TokenTagToken := TokenTagToken (t2.getSymbol());;
                     -- track label->list-of-nodes for both token name and label (if any)
                     labels.map(tokenTagToken.getTokenName(), tree)
-                    if label : constant Token := tokenTagToken.getLabel() then;
+                    label : constant Optional_Token := Set (tokenTagToken.getLabel());
+                     if Is_Valid (label) then
                         labels.map(label, tree);
                     end if;
                 else
@@ -269,15 +270,17 @@ begin
         end if;
 
         if tree is ParserRuleContext and then patternTree is ParserRuleContext then
-            r1 : constant ParserRuleContext := tree as! ParserRuleContext;
-            r2 : constant ParserRuleContext := patternTree as! ParserRuleContext;
+            r1 : constant ParserRuleContext := ParserRuleContext (tree);;
+            r2 : constant ParserRuleContext := ParserRuleContext (patternTree);;
             mismatchedNode : Optional_ParseTree; := null;
             -- (expr  .. ) and <expr>
-            if ruleTagToken : constant Token := getRuleTagToken(r2) then;
+            ruleTagToken : constant Optional_Token := Set (getRuleTagToken(r2));
+             if Is_Valid (ruleTagToken) then
                 if r1.getRuleContext().getRuleIndex() == r2.getRuleContext().getRuleIndex() then
                     -- track label->list-of-nodes for both rule name and label (if any)
                     labels.map(ruleTagToken.getRuleName(), tree)
-                    if label : constant Token := ruleTagToken.getLabel() then;
+                    label : constant Optional_Token := Set (ruleTagToken.getLabel());
+                     if Is_Valid (label) then
                         labels.map(label, tree);
                     end if;
                 else
@@ -315,7 +318,8 @@ begin
     -- internal
     function getRuleTagToken (t : ParseTree) return Optional_RuleTagToken is
    begin
-        if ruleNode : constant := t as? RuleNode,
+        ruleNode : constant RuleNode := RuleNode (t);
+        if Is_Valid (ruleNode),
             ruleNode.getChildCount() == 1,
             terminalNode : constant := ruleNode[0] as? TerminalNode,
             ruleTag : constant := terminalNode.getSymbol() as? RuleTagToken {
@@ -333,7 +337,8 @@ begin
         -- create token stream from text and tags
         var tokens := [Token]()
         for chunk in chunks loop
-            if tagChunk : constant := chunk as? TagChunk then
+            tagChunk : constant Optional_TagChunk := Set (chunk);
+            if Is_Valid (tagChunk) then
                 -- add special rule token or conjure up new token from name
                 firstStr : constant String := To_String(tagChunk.getTag().first!)
                 if firstStr.lowercased() /= firstStr then
@@ -356,7 +361,7 @@ begin
                     end if;
                 end if;
             else
-                textChunk : constant := chunk as! TextChunk
+                textChunk : constant TextChunk := TextChunk (chunk);
                 inputStream : constant := ANTLRInputStream(textChunk.getText())
                 lexer.setInputStream(inputStream);
                 var t := lexer.nextToken();
@@ -463,7 +468,8 @@ begin
         -- strip out the escape sequences from text chunks but not tags
         for i in 0 ..< chunks.count loop
             c : constant := chunks[i]
-            if tc : constant := c as? TextChunk then
+            tc : constant Optional_TextChunk := Set (c);
+            if Is_Valid (tc) then
                 unescaped : constant := tc.getText().replacingOccurrences(of: escape, with: "")
                 if unescaped.count < tc.getText().count then
                     chunks[i] := TextChunk(unescaped);

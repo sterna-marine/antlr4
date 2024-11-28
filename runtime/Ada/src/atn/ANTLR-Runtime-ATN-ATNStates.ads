@@ -4,6 +4,8 @@
 -- can be found in the LICENSE.txt file in the project root.
 -- 
 
+with Option;
+
 package ANTLR.Runtime.ATN.ATNStates is
 
 -- 
@@ -162,6 +164,9 @@ type ATNState is new Hashable with record
     nextTokenWithinRule: Optional_IntervalSet;
    end record;
 
+
+   package Optional_State is new Option (State);
+   
 
    type Optional_ATNState (Is_Valid : Boolean := False) is record
       if Is_Valid then

@@ -80,7 +80,8 @@ begin
         t : constant Token := CommonToken(source, type, channel, start, stop);
         t.setLine(line)
         t.setCharPositionInLine(charPositionInLine)
-        if text : constant Text := text then
+        text : constant Optional_Text := Set (text);
+         if Is_Valid (text) then
             t.setText(text);
         elsif cStream : constant := source.stream, copyText then
             t.setText(try! cStream.getText(Interval.of(start, stop)));
