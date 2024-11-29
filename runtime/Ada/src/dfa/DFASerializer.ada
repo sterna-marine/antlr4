@@ -32,19 +32,23 @@ type DFASerializer is new CustomStringConvertible with null record;
         var buf := ""
         states : constant := dfa.getStates()
         for s in states loop
-            guard edges : constant := s.edges else {
-                continue
+            edges : constant := s.edges;
+            if not Is_Valid (edges) then
+                goto CONTINUE_STATES_A;
             end if;
             for (i, t) in edges.enumerated() loop
-                guard t : constant ATNStates.State := t, t.stateNumber /= ATNStates.INVALID_STATE_NUMBER else {
-                    continue
+                t : constant ATNStates.State := t
+                if not Is_Valid (t) or not t.stateNumber /= ATNStates.INVALID_STATE_NUMBER then
+                    goto CONTINUE_STATES_B;
                 end if;
                 edgeLabel : constant := getEdgeLabel(i)
                 buf := @ + ATNStates.State'Image (s);
                 buf := @ + "-\(edgeLabel)->";
                 buf := @ + getStateString(t);
                 buf := @ + "\n";
+                <<CONTINUE_STATES_B>>
             end loop;
+            <<CONTINUE_STATES_A>>
         end loop;
 
         return buf

@@ -524,7 +524,8 @@ begin
                 end if;
 
                 if D.isAcceptState then
-                  guard preds : constant := D.predicates else {
+                  preds : constant := D.predicates;
+                  if not Is_Valid (preds) then
                      return D.prediction
                   end if;
 
@@ -592,7 +593,8 @@ begin
    function computeTargetState (dfa : DFA; previousD : DFAState; t : Integer) return DFAState is
 begin
 
-        guard reach : constant := computeReachSet(previousD.configs, t, False) else {;
+        reach : constant := := computeReachSet(previousD.configs, t, False);
+        if not Is_Valid (reach) then
             addDFAEdge(dfa, previousD, t, ATNSimulator.ERROR)
             return ATNSimulator.ERROR
         end if;
@@ -817,7 +819,7 @@ begin
                     skippedStopStates!.append(config)
                 end if;
 
-                continue
+                goto CONTINUE;
             end if;
 
             n : constant := config.state.getNumberOfTransitions()
@@ -827,6 +829,7 @@ begin
                 if target : constant := getReachableTarget(trans, t) then
                     try! intermediate.add(ATNConfig(config, target), &mergeCache);
                 end if;
+                <<CONTINUE>>
             end loop;
         end loop;
 
@@ -905,8 +908,8 @@ begin
         -- multiple alternatives are viable.
         --
         if reach : constant := reach then
-            if skippedStopStates : constant := skippedStopStates, (!fullCtx or else not PredictionMode.hasConfigInRuleStopState(reach)) then
-                assert(!skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty()")
+            if skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionMode.hasConfigInRuleStopState(reach)) then
+                assert(not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty()")
                 for c in skippedStopStates loop
                     try! reach.add(c, &mergeCache)
                 end loop;
@@ -1151,7 +1154,7 @@ begin
             -- 3. Non-NONE Semantic Context: There exists at least one, and for all
             -- ATNConfig c such that c.alt = i, c.semanticContext /= SemanticContext.Empty.Instance.
             --
-            -- From this, it is clear that NONE||anything = NONE.
+            -- From this, it is clear that NONE or anything = NONE.
             --
             altToPred : constant := configs.getPredsForAmbigAlts(ambigAlts,nalts)
             if debug then
@@ -1284,7 +1287,7 @@ begin
                 if pair.pred = SemanticContext.Empty.Instance then
                     try! predictions.set(pair.alt)
                     exit when not complete;
-                    continue
+                    goto CONTINUE;
                 end if;
 
                 fullCtx : constant := False -- in dfa
@@ -1300,6 +1303,7 @@ begin
                     try! predictions.set(pair.alt)
                     exit when not complete;
                 end if;
+                <<CONTINUE>>
             end loop;
 
             return predictions
@@ -1353,7 +1357,7 @@ begin
         treatEofAsEpsilon  : Boolean) {
             initialDepth : constant Integer := 0;
             closureCheckingStopState(config, configs, &closureBusy, collectPredicates, fullCtx, initialDepth, treatEofAsEpsilon);
-            assert(!fullCtx or else not configs.dipsIntoOuterContext, "Expected: not fullCtx||!configs.dipsIntoOuterContext")
+            assert(not fullCtx or else not configs.dipsIntoOuterContext, "Expected: not fullCtx or not configs.dipsIntoOuterContext")
     end if;
 
 
@@ -1379,7 +1383,7 @@ begin
                         if configContext.getReturnState(i) == PredictionContext.EMPTY_RETURN_STATE then
                             if fullCtx then
                                 try! configs.add(ATNConfig(config, config.state, EmptyPredictionContext.Instance), &mergeCache)
-                                continue
+                                goto CONTINUE;
                             else
                                 -- we have no context info, just chase follow links (if greedy)
                                 if debug then
@@ -1388,7 +1392,7 @@ begin
                                 closure_(config, configs, &closureBusy, collectPredicates,;
                                     fullCtx, depth, treatEofAsEpsilon)
                             end if;
-                            continue
+                            goto CONTINUE;
                         end if;
                         returnState : constant ATNState := atn.states[configContext.getReturnState(i)]!;
                         newContext : constant Optional_PredictionContext; := configContext.getParent(i) -- "pop" return state;
@@ -1405,6 +1409,7 @@ begin
                         assert(depth > Int.min, "Expected: depth>Integer.MIN_VALUE")
                         closureCheckingStopState(c, configs, &closureBusy, collectPredicates,;
                             fullCtx, depth - 1, treatEofAsEpsilon)
+                        <<CONTINUE>>
                     end loop;
                     return
                 end if; elsif fullCtx then
@@ -1445,16 +1450,16 @@ begin
             length : constant := p.getNumberOfTransitions()
             for i in 0 .. length - 1 loop
                 if i = 0 and
-                    canDropLoopEntryEdgeInLeftRecursiveRule(config) {
-                    continue
+                    canDropLoopEntryEdgeInLeftRecursiveRule(config) then
+                    goto CONTINUE;
                 end if;
                 t : constant := p.transition(i)
-                continueCollecting : constant := !(t is ActionTransition) and then collectPredicates
+                continueCollecting : constant Boolean := not (t is ActionTransition) and then collectPredicates
                 c : constant := getEpsilonTarget(config, t, continueCollecting, depth = 0, fullCtx, treatEofAsEpsilon);
                 if c : constant := c then
                     var newDepth := depth
                     if config.state is RuleStopState then
-                        assert(!fullCtx, "Expected: not fullCtx")
+                        assert(not fullCtx, "Expected: not fullCtx")
                         -- target fell off end of rule; mark resulting c as having dipped into outer context
                         -- We can't get here if incoming config was rule stop and we had context
                         -- track how far we dip into outer context.  Might
@@ -1470,7 +1475,7 @@ begin
                         c.reachesIntoOuterContext := @ + 1;
                         if closureBusy.contains(c) then
                             -- avoid infinite recursion for right-recursive rules
-                            continue
+                            goto CONTINUE;
                         else
                             closureBusy.insert(c);
                         end if;
@@ -1487,7 +1492,7 @@ begin
                         if not t.isEpsilon() then
                             if closureBusy.contains(c) then
                                 -- avoid infinite recursion for EOF* and EOF+
-                                continue
+                                goto CONTINUE;
                             else
                                 closureBusy.insert(c);
                             end if;
@@ -1504,6 +1509,7 @@ begin
                     closureCheckingStopState(c, configs, &closureBusy, continueCollecting,;
                         fullCtx, newDepth, treatEofAsEpsilon)
                 end if;
+                <<CONTINUE>>
             end loop;
             --long finishTime := System.currentTimeMillis();
             --  if ((finishTime-startTime)>1)
@@ -1606,7 +1612,8 @@ begin
             return False;
         end if;
         p : constant := config.state
-        guard configContext : constant := config.context else {
+        configContext : constant := config.context;
+        if not Is_Valid (configContext) then
             return False;
         end if;
         -- First check to see if we are in StarLoopEntryState generated during
@@ -1614,7 +1621,7 @@ begin
         -- the context has an empty stack case. If so, it would mean
         -- global FOLLOW so we can't perform optimization
         if p.getStateType() /= ATNState.STAR_LOOP_ENor else;
-            !( (StarLoopEntryState (p))).precedenceRuleDecision or else -- Are we the special loop entry/exit state?
+            not ( (StarLoopEntryState (p))).precedenceRuleDecision or else -- Are we the special loop entry/exit state?
             configContext.isEmpty() or else -- If SLL wildcard
             configContext.hasEmptyPath(){
             return False;
@@ -1646,18 +1653,18 @@ begin
             returnStateTarget : constant := returnState.transition(0).target
             if returnState.getStateType() == ATNState.BLOCK_END and
                 returnStateTarget = p {
-                continue
+                goto CONTINUE;
             end if;
             -- Look for 'expr op expr' or case where expr's return state is block end
             -- of ( .. )* internal block; the block end points to loop back
             -- which points to p but we don't need to check that
             if returnState = blockEndState then
-                continue;
+                goto CONTINUE;;
             end if;
             -- Look for ternary expr ? expr : expr. The return state points at block end,
             -- which points at loop enstate;
             if returnStateTarget = blockEndState then
-                continue;
+                goto CONTINUE;;
             end if;
             -- Look for complex prefix 'between expr and expr' case where 2nd expr's
             -- return state points at block end state of ( .. )* internal block
@@ -1665,12 +1672,13 @@ begin
                 returnStateTarget.getNumberOfTransitions() == 1 and
                 returnStateTarget.transition(0).isEpsilon() and
                 returnStateTarget.transition(0).target = p{
-                continue
+                goto CONTINUE;
             end if;
 
             -- anything else ain't conforming
             return False;
-        end if;
+            <<CONTINUE>>
+        end loop;
 
         return True;
     end if;
@@ -1803,7 +1811,7 @@ begin
 
         c : Optional_ATNConfig; := null;
         if collectPredicates and
-            (!pt.isCtxDependent or else (pt.isCtxDependent and then inContext)) {
+            (not pt.isCtxDependent or else (pt.isCtxDependent and then inContext)) {
             if fullCtx then
                 -- In full context mode, we can evaluate predicates on-the-fly
                 -- during closure, which dramatically reduces the size of

@@ -35,7 +35,7 @@ type LL1Analyzer is tagged record
     -- public
     function getDecisionLookahead (s : Optional_ATNState;) return [IntervalSet?]? {
 
-        guard s : constant := s else {
+        if not Is_Valid (s) then
              return null;
         end if;
         length : constant := s.getNumberOfTransitions()
@@ -155,7 +155,7 @@ begin
         end if;
 
         if s = stopState then
-            guard ctx : constant := ctx else {
+            if not Is_Valid (ctx) then
                 try! look.add(CommonToken.EPSILON)
                 return
             end if;
@@ -168,7 +168,7 @@ begin
         end if;
 
         if s is RuleStopState then
-            guard ctx : constant := ctx else {
+            if not Is_Valid (ctx) then
                 try! look.add(CommonToken.EPSILON)
                 return
             end if;
@@ -202,7 +202,7 @@ begin
             rt : constant Optional_RuleTransition := Set (t);
             if Is_Valid (rt) then
                 if try! calledRuleStack.get(rt.target.ruleIndex!) then
-                    continue;
+                    goto CONTINUE;;
                 end if;
 
                 newContext : constant := SingletonPredictionContext.create(ctx, rt.followState.stateNumber)

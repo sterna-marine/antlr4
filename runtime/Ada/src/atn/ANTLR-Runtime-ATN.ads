@@ -125,7 +125,7 @@ begin
     -- public
     function getExpectedTokens (stateNumber : ATNStates.State; context : RuleContext) return IntervalSet is
 begin
-        guard states.indices.contains(stateNumber) else {
+        if not states.indices.contains(stateNumber) then
             raise ANTLRError.illegalArgument with "Invalid state number.";
         end if;
 

@@ -9,7 +9,7 @@
 --
 -- A tree structure used to record the semantic context in which
 -- an ATN configuration is valid.  It's either a single predicate,
--- a conjunction `p1 and p2`, or a sum of products `p1||p2`.
+-- a conjunction `p1 and p2`, or a sum of products `p1 or p2`.
 --
 -- I have scoped the _org.antlr.v4.runtime.atn.SemanticContext.AND_, _org.antlr.v4.runtime.atn.SemanticContext.OR_, and _org.antlr.v4.runtime.atn.SemanticContext.Predicate_ subclasses of
 -- _org.antlr.v4.runtime.atn.SemanticContext_ within the scope of this outer class.
@@ -255,9 +255,10 @@ begin
             if not precedencePredicates.isEmpty then
                 -- interested in the transition with the lowest precedence
 
-                reduced : constant := precedencePredicates.sorted {
-                    $0.precedence < $1.precedence
-                end if;
+               -- closure
+               function "<" (lhs, rhs : ) return True is
+                  (lhs < rhs);
+                reduced : constant := precedencePredicates.sorted {$0.precedence < $1.precedence};
                 operands.insert(reduced[0])
             end if;
 
@@ -328,7 +329,7 @@ begin
         -- public
         description : String;
         function description return String is
-            return opnds.map({ $0.description end if;).joined(separator: "&&")
+            return opnds.map({ $0.description} ).joined(separator: " and ")
 
         end if;
     end if;
@@ -364,9 +365,10 @@ begin
             if not precedencePredicates.isEmpty then
                 -- interested in the transition with the highest precedence
 
-                reduced : constant := precedencePredicates.sorted {
-                    $0.precedence > $1.precedence
-                end if;
+               -- closure
+               function ">" (lhs, rhs : ) return True is
+                  (lhs < rhs);
+                reduced : constant := precedencePredicates.sorted {$0.precedence > $1.precedence};
                 operands.insert(reduced[0])
             end if;
 
@@ -433,7 +435,7 @@ begin
         -- public
         description : String;
         function description return String is
-            return opnds.map({ $0.description end if;).joined(separator: "||")
+            return opnds.map({ $0.description }).joined(separator: " or ")
 
         end if;
     end if;
@@ -483,10 +485,8 @@ begin
     function filterPrecedencePredicates (collection : inout Set<SemanticContext>) return [PrecedencePredicate] {
         result : constant := collection.compactMap {
             PrecedencePredicate ($0); -- as? PrecedencePredicate
-        end if;
-        collection := Set<SemanticContext> (collection.filter {
-            !($0 is PrecedencePredicate)
-        end if;)
+        };
+        collection := Set<SemanticContext> (collection.filter { not ($0 is PrecedencePredicate) })
         return result
     end if;
 end if;

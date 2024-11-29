@@ -334,7 +334,7 @@ begin
         j : constant := interval.b - bufferStartIndex
 
         -- Convert from Integer codepoints to a String.
-        codepoints : constant := data[i  ..  j].map { Character(Unicode.Scalar($0)!) end if;
+        codepoints : constant := data[i  ..  j].map { Character(Unicode.Scalar($0)!)}
         return String(codepoints)
     end if;
 

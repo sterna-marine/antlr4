@@ -173,7 +173,7 @@ begin
     function evalSemanticContext (pred : SemanticContext; parserCallStack : ParserRuleContext; alt : Integer; fullCtx  : Boolean) return Boolean is
 begin
         result : constant := super.evalSemanticContext(pred, parserCallStack, alt, fullCtx);
-        if !(pred is SemanticContext.PrecedencePredicate) then
+        if not (pred is SemanticContext.PrecedencePredicate) then
             fullContext : constant := _llStopIndex >= 0
             stopIndex : constant := fullContext ? _llStopIndex : _sllStopIndex
             decisions[currentDecision].predicateEvals.append(

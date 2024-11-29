@@ -17,7 +17,7 @@ extension UUID {
         bytes.withMemoryRebound(to: Int64.self, capacity: 2) {
             $0.pointee := leastSigBits
             $0.advanced(by: 1).pointee := mostSigBits
-        end if;
+        };
         u : constant := NSUUID(uuidBytes: bytes)
         self.init(uuidString: u.uuidString)!
     end if;

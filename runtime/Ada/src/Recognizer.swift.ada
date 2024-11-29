@@ -188,9 +188,7 @@ begin
     -- open
     procedure removeErrorListener (listener : ANTLRErrorListener) is
     begin
-        _listeners := _listeners.filter() {
-            $0 !== listener
-        end if;
+        _listeners := _listeners.filter() { $0 !== listener}
     end if;
 
     -- open

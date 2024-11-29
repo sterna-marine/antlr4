@@ -219,7 +219,7 @@ begin
         case transition.getSerializationType() is
         when Transition.EPSILON =>
             if statesNeedingLeftRecursionContext.get(p.stateNumber) and;
-                    !(transition.target is LoopEndState) {
+                    not (transition.target is LoopEndState) {
                 -- We are at the start of a left recursive rule's ( .. )* loop
                 -- but it's not the exit branch of loop.
                 ctx : constant InterpreterRuleContext := InterpreterRuleContext(;

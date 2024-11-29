@@ -82,7 +82,7 @@ begin
             end if;
             if returnState = PredictionContext.EMPTY_RETURN_STATE then
                 buf := @ + "$";
-                continue
+                goto CONTINUE;
             end if;
             buf := @ + "\(returnState)";
             if parent : constant := parents[i] then
@@ -90,6 +90,7 @@ begin
             else
                 buf := @ + "null";
             end if;
+            <<CONTINUE>>
         end loop;
         buf := @ + "]";
         return buf

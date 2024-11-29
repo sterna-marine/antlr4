@@ -201,7 +201,7 @@ begin
     -- public
     function get (i : Integer) return Token is
 begin
-        if not (tokens.indices.contains(i)) then
+        if not tokens.indices.contains(i) then
             raise ANTLRError.indexOutOfBounds with "token index \(i) out of range 0 ..< \(tokens.count)";
         end if;
         return tokens[i]
@@ -329,10 +329,8 @@ begin
     -- public
     function getTokens (start : Integer; stop : Integer; types : Set<Int>?) return [Token]? {
         lazyInit();
-        guard tokens.indices.contains(start),
-              tokens.indices.contains(stop) else {
+        if not tokens.indices.contains(start) or not tokens.indices.contains(stop) then
             raise ANTLRError.indexOutOfBounds with "start \(start) or stop \(stop) not in 0 ..< \(tokens.count)";
-
         end if;
         if start > stop then
             return null;

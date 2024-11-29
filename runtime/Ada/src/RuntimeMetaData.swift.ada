@@ -142,13 +142,13 @@ begin
 
         --if ( generatingToolVersion /= null ) {
         runtimeConflictsWithGeneratingTool =
-                !(runtimeVersion == (generatingToolVersion)) and
-                !(getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(generatingToolVersion)))
+                not (runtimeVersion == (generatingToolVersion)) and
+                not (getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(generatingToolVersion)))
         --}
 
         runtimeConflictsWithCompileTimeTool =
-                !(runtimeVersion == (compileTimeVersion)) and
-                !(getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(compileTimeVersion)))
+                not (runtimeVersion == (compileTimeVersion)) and
+                not (getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(compileTimeVersion)))
 
         if runtimeConflictsWithGeneratingTool then
             print("ANTLR Tool version \(generatingToolVersion) used for code generation does not match the current runtime version \(runtimeVersion)");

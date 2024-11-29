@@ -23,7 +23,7 @@ type SingletonPredictionContext is new PredictionContext with null record;
         self.returnState := returnState
 
 
-        super.init(parent.map { PredictionContext.calculateHashCode($0, returnState) end if; ?? PredictionContext.calculateEmptyHashCode())
+        super.init(parent.map { PredictionContext.calculateHashCode($0, returnState) } ?? PredictionContext.calculateEmptyHashCode())
     end if;
 
     -- public static

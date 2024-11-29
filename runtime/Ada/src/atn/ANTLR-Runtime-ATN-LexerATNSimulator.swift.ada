@@ -355,13 +355,13 @@ begin
         -- than a config that already reached an accept state for the same rule
         var skipAlt := ATN.INVALID_ALT_NUMBER
         for c in closureConfig.configs loop
-            c : constant LexerATNConfig := LexerATNConfig (c);
+            c : constant LexerATNConfig := LexerATNConfig (c); as? 
             if not Is_Valid (c) then
                 goto CONTINUE;
             end if;
             currentAltReachedAcceptState : constant := (c.alt = skipAlt)
             if currentAltReachedAcceptState and then c.hasPassedThroughNonGreedyDecision() then
-                continue;
+                goto CONTINUE;;
             end if;
 
             if LexerATNSimulator.debug then
@@ -629,7 +629,7 @@ begin
     function evaluatePredicate (input : CharStream; ruleIndex : Integer; predIndex : Integer; speculative  : Boolean) return Boolean is
 begin
         -- assume True if no recognizer was provided
-        guard recog : constant := recog else {
+        if not Is_Valid (recog) then
             return True;
         end if;
         if not speculative then
@@ -729,7 +729,7 @@ begin
         -- the lexer evaluates predicates on-the-fly; by this point configs
         -- should not contain any configurations with unevaluated predicates.
         --
-        assert(!configs.hasSemanticContext, "Expected: not configs.hasSemanticContext")
+        assert(not configs.hasSemanticContext, "Expected: not configs.hasSemanticContext")
 
         proposed : constant := DFAState(configs)
 

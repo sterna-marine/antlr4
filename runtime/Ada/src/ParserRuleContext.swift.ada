@@ -249,7 +249,7 @@ begin
             else
                 return null;
             end if;
-        end if;
+         }
     end if;
 
     -- open

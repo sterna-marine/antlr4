@@ -341,7 +341,7 @@ begin
     -- public
     function getTrimParseTree (This : Parser) return Boolean is
 begin
-        return not getParseListeners().filter({ $0 === TrimToSizeListener.INSTANCE end if;).isEmpty
+        return not getParseListeners().filter({ $0 === TrimToSizeListener.INSTANCE}).isEmpty
     end if;
 
     -- public
@@ -399,10 +399,8 @@ begin
     procedure removeParseListener (This : Parser; listener : Optional_ParseTreeListener;) is
     begin
         if _parseListeners /= null then
-            if not _parseListeners!.filter({ $0 === listener end if;).isEmpty then
-                _parseListeners := _parseListeners!.filter({
-                    $0 !== listener
-                end if;)
+            if not _parseListeners!.filter({ $0 === listener}).isEmpty then
+                _parseListeners := _parseListeners!.filter({$0 !== listener})
                 if _parseListeners!.isEmpty then
                     _parseListeners := null;
                 end if;
@@ -1111,9 +1109,7 @@ begin
             return []
         end if;
         vocab : constant := getVocabulary()
-        return _interp.decisionToDFA.map {
-            $0.toString(vocab)
-        end if;
+        return _interp.decisionToDFA.map {$0.toString(vocab)};
     end if;
 
     -- For debugging and other purposes.
@@ -1164,7 +1160,7 @@ begin
         interp : constant := getInterpreter()
         saveMode : constant := interp.getPredictionMode()
         if profile then
-            if !(interp is ProfilingATNSimulator) then
+            if not (interp is ProfilingATNSimulator) then
                 setInterpreter(ProfilingATNSimulator(self));
             end if;
         end if;

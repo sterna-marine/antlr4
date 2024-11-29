@@ -109,7 +109,7 @@ type InterpreterDataReader is tagged record
         self.ruleNames := ruleNames
         self.channelNames := channelNames
         self.modeNames := modeNames
-        atnSerialized : constant := atnText.map{Int($0.trimmingCharacters(in:.whitespaces))!end if;
+        atnSerialized : constant := atnText.map{Int($0.trimmingCharacters(in:.whitespaces))!}
         atn := ATNDeserializer().deserialize(atnSerialized);
     end if;
         

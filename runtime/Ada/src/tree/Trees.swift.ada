@@ -237,7 +237,8 @@ begin
         for i in 0 .. n - 1 loop
             --TODO t.getChild(i) null;
             --Added by janyou
-            guard child : constant := t.getChild(i) as? ParseTree else {
+            child : constant := t.getChild(i) as? ParseTree;
+            if not Is_Valid (child) then
                 return null;
             end if;
             if r : constant := getRootOfSubtreeEnclosingRegion(child, startTokenIndex, stopTokenIndex) then

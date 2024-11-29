@@ -67,7 +67,7 @@ type LexerActionExecutor is new Hashable with null record;
     -- public static
     function append (lexerActionExecutor : Optional_LexerActionExecutor; lexerAction : LexerAction) return LexerActionExecutor is
 begin
-        guard lexerActionExecutor : constant := lexerActionExecutor else {
+        if not Is_Valid (lexerActionExecutor) then
             return LexerActionExecutor([lexerAction])
         end if;
 
@@ -113,7 +113,7 @@ begin
         updatedLexerActions : [LexerAction]? := null;
         length : constant := lexerActions.count
         for i in 0 .. length - 1 loop
-            if lexerActions[i].isPositionDependent() and then !(lexerActions[i] is LexerIndexedCustomAction) then
+            if lexerActions[i].isPositionDependent() and then not (lexerActions[i] is LexerIndexedCustomAction) then
                 if updatedLexerActions = null then
                     updatedLexerActions := lexerActions;  --lexerActions.clone();
                 end if;
@@ -208,7 +208,7 @@ begin
     end if;
     length : constant := lhs.lexerActions.count
     for i in 0 .. length - 1 loop
-        if !(lhs.lexerActions[i] == rhs.lexerActions[i]) then
+        if not (lhs.lexerActions[i] == rhs.lexerActions[i]) then
             return False;
         end if;
     end loop;

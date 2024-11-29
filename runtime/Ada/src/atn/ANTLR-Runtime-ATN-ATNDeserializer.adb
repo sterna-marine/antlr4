@@ -53,7 +53,7 @@ begin
             -- ignore bad type of states
             if stype = ATNState.INVALID_TYPE then
                 atn.addState(null)
-                continue
+                goto CONTINUE;
             end if;
 
             ruleIndex : constant := data[p]
@@ -64,14 +64,16 @@ begin
                 loopBackStateNumber : constant ATNStates.State := data[p]
                 p := @ + 1;
                 loopBackStateNumbers.append((LoopEndState (s), loopBackStateNumber))
-            end if; else -- elseif
-    s : constant BlockStartState := BlockStartState (s);
-    if Is_Valid (s) then
-                endStateNumber : constant ATNStates.State := data[p]
-                p := @ + 1;
-                endStateNumbers.append((s, endStateNumber))
+            else -- elseif
+               s : constant BlockStartState := BlockStartState (s);
+               if Is_Valid (s) then
+                  endStateNumber : constant ATNStates.State := data[p]
+                  p := @ + 1;
+                  endStateNumbers.append((s, endStateNumber))
+               end if;
             end if;
             atn.addState(s)
+            <<CONTINUE>>
         end loop;
 
         -- delay the assignment of loop back and end states until we know all the state instances have been initialized
@@ -378,7 +380,7 @@ begin
     procedure generateRuleBypassTransitions (atn : ATN) is
     begin
         length : constant := atn.ruleToStartState.count
-        atn.ruleToTokenType := (0 .. length - 1).map { atn.maxTokenType + $0 + 1 end if;
+        atn.ruleToTokenType := (0 .. length - 1).map { atn.maxTokenType + $0 + 1 }
 
         for i in 0 .. length - 1 loop
             bypassStart : constant := BasicBlockStartState()
@@ -401,19 +403,19 @@ begin
                 endState := null;
                 for state in atn.states loop
                     if not Is_Valid (state) or state.ruleIndex /= i or not (state is StarLoopEntryState) then
-                        goto CONTINUE;
+                        goto CONTINUE_STATES;
                     end if;
 
                     maybeLoopEndState : constant := state.transition(state.getNumberOfTransitions() - 1).target
-                    if !(maybeLoopEndState is LoopEndState) then
-                        continue;
+                    if not (maybeLoopEndState is LoopEndState) then
+                        goto CONTINUE_STATES;;
                     end if;
 
                     if maybeLoopEndState.epsilonOnlyTransitions and then maybeLoopEndState.transition(0).target is RuleStopState then
                         endState := state
                         exit when True;
                     end if;
-                    <<CONTINUE>>
+                    <<CONTINUE_STATES>>
                 end loop;
 
                 if endState = null then
@@ -432,7 +434,7 @@ begin
                 end if;
                 for transition in state.transitions loop
                     if transition === excludeTransition! then
-                        continue;
+                        goto CONTINUE;;
                     end if;
 
                     if transition.target = endState then
@@ -483,7 +485,7 @@ begin
 
                 if starLoopEntryState.transition(0).target is StarBlockStartState then
                     checkCondition(starLoopEntryState.transition(1).target is LoopEndState);
-                    checkCondition(!starLoopEntryState.nonGreedy);
+                    checkCondition(not starLoopEntryState.nonGreedy);
                 else
                     if starLoopEntryState.transition(0).target is LoopEndState then
                         checkCondition(starLoopEntryState.transition(1).target is StarBlockStartState);

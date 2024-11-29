@@ -147,9 +147,10 @@ begin
     function getStates () return [DFAState] {
         var result := [DFAState](states.keys)
 
-        result := result.sorted {
-            $0.stateNumber < $1.stateNumber
-        end if;
+      -- closure
+      function "<" (lhs, rhs : ) return True is
+         (lhs < rhs);
+        result := result.sorted {$0.stateNumber < $1.stateNumber};
 
         return result
     end if;

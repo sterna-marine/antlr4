@@ -533,8 +533,10 @@ begin
         buf := @ + "rankdir=LR;\n";
 
         var nodes := getAllContextNodes(context!)
-
-        nodes.sort { $0.id > $1.id end if;
+        -- closure
+         function ">" (lhs, rhs : ) return True is
+            (lhs > rhs);
+        nodes.sort { $0.id > $1.id };
 
         for current in nodes loop
             if current is SingletonPredictionContext then
@@ -544,7 +546,7 @@ begin
                     returnState := "$";
                 end if;
                 buf := @ + " [label=""\(returnState)""];\n";
-                continue
+                goto CONTINUE_NODES_A;
             end if;
             arr : constant ArrayPredictionContext := ArrayPredictionContext (current);
             buf := @ + "  s\(arr.id) [shape=box, label=""[";
@@ -562,16 +564,18 @@ begin
                 first := False;
             end loop;
             buf := @ + "]""];\n";
+            <<CONTINUE_NODES_A>>
         end loop;
 
         for current in nodes loop
             if current === EmptyPredictionContext.Instance then
-                continue;
+                goto CONTINUE_NODES_B;;
             end if;
             length : constant := current.size()
             for i in 0 .. length - 1 loop
-                guard currentParent : constant := current.getParent(i) else {
-                    continue
+                currentParent : constant := current.getParent(i);
+                if not Is_Valid (currentParent) then
+                    goto CONTINUE_NODES_C;
                 end if;
                 buf := @ + "  s\(current.id) -> s\(currentParent.id)";
                 if current.size() > 1 then
@@ -579,7 +583,9 @@ begin
                 else
                     buf := @ + ";\n";
                 end if;
+                <<CONTINUE_NODES_C>>
             end loop;
+            <<CONTINUE_NODES_B>>
         end loop;
 
         buf.append("end if;\n")
@@ -610,7 +616,8 @@ begin
         var parents := [PredictionContext?](repeating: null, count: context.size())
         length : constant := parents.count
         for i in 0 .. length - 1 loop
-            guard p : constant := context.getParent(i) else {
+            p : constant := context.getParent(i);
+            if not Is_Valid (p) then
                 return context
             end if;
 
@@ -717,7 +724,7 @@ begin
                         last := last and then (index >= p.size() - 1)
 
                         if index >= p.size() then
-                            continue outer;
+                            goto CONTINUE_OUTER;;
                         end if;
                         offset := @ + bits;
                     end if;
@@ -745,6 +752,7 @@ begin
                     end if;
                     stateNumber := p.getReturnState(index)
                     p := p.getParent(index)!
+                    <<CONTINUE_OUTER>>
                 end loop;
                 localBuffer := @ + "]";
                 result.append(localBuffer)

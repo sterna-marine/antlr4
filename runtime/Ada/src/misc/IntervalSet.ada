@@ -288,12 +288,12 @@ begin
 
             if rightInterval.b < resultInterval.a then
                 rightI := @ + 1;
-                continue
+                goto CONTINUE;
             end if;
 
             if rightInterval.a > resultInterval.b then
                 resultI := @ + 1;
-                continue
+                goto CONTINUE;
             end if;
 
             beforeCurrent : Optional_Interval; := null;
@@ -313,26 +313,27 @@ begin
                     result.intervals.insert(afterCurrent, at: resultI + 1)
                     resultI := @ + 1;
                     rightI := @ + 1;
-                    continue
+                    goto CONTINUE;
                 else
                     -- replace the current interval
                     result.intervals[resultI] := beforeCurrent
                     resultI := @ + 1;
-                    continue
+                    goto CONTINUE;
                 end if;
             else
                 if afterCurrent : constant := afterCurrent then
                     -- replace the current interval
                     result.intervals[resultI] := afterCurrent
                     rightI := @ + 1;
-                    continue
+                    goto CONTINUE;
                 else
                     -- remove the current interval (thus no need to increment resultI)
                     result.intervals.remove(at: resultI)
                     --result.intervals.remove(resultI);
-                    continue
+                    goto CONTINUE;
                 end if;
             end if;
+            <<CONTINUE>>
         end loop;
 
         -- If rightI reached right.intervals.size(), no more intervals to subtract from result.
@@ -535,7 +536,7 @@ begin
     -- 
     -- public function equals (obj : AnyObject) return Boolean is
 begin
-    -- if ( obj = null or else !(obj is IntervalSet) ) then
+    -- if ( obj = null or else not (obj is IntervalSet) ) then
     -- return False;
     -- }
     -- var other : IntervalSet := IntervalSet (obj);

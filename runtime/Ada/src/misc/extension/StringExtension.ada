@@ -15,7 +15,8 @@ extension String {
         result : String.Index? := null;
         var substring := self[ .. ]
         loop
-            guard targetRange : constant := substring.range(of: target) else {
+            targetRange : constant := substring.range(of: target);
+            if not Is_Valid (targetRange) then
                 return result
             end if;
             result := targetRange.lowerBound

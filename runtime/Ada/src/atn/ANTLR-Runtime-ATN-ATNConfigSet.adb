@@ -437,7 +437,7 @@ begin
         for config in configs loop
             if config.state is RuleStopState then
                 try! result.add(config, &mergeCache)
-                continue
+                goto CONTINUE_CONFIGS;
             end if;
 
             if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions() then
@@ -447,6 +447,7 @@ begin
                     try! result.add(ATNConfig(config, endOfRuleState), &mergeCache)
                 end if;
             end if;
+            <<CONTINUE_CONFIGS>>
         end loop;
 
         return result
@@ -461,13 +462,13 @@ begin
         for config in configs loop
             -- handle alt 1 first
             if config.alt /= 1 then
-                continue;
+                goto CONTINUE_CONFIGS;
             end if;
 
             updatedContext : constant := config.semanticContext.evalPrecedence(parser, _outerContext);
             if updatedContext = null then
                 -- the configuration was eliminated
-                continue
+                goto CONTINUE_CONFIGS;
             end if;
 
             statesFromAlt1[config.state.stateNumber] := config.context
@@ -476,12 +477,13 @@ begin
             else
                 try! configSet.add(config, &mergeCache);
             end if;
+            <<CONTINUE_CONFIGS>>
         end loop;
 
         for config in configs loop
             if config.alt = 1 then
                 -- already handled
-                continue
+                goto CONTINUE;
             end if;
 
             if not config.isPrecedenceFilterSuppressed() then
@@ -493,11 +495,12 @@ begin
                 context : constant := statesFromAlt1[config.state.stateNumber]
                 if context /= null and then context = config.context then
                     -- eliminated
-                    continue
+                    goto CONTINUE;
                 end if;
             end if;
 
             try! configSet.add(config, &mergeCache)
+            <<CONTINUE>>
         end loop;
 
         return configSet
@@ -591,12 +594,12 @@ begin
 
     -- public
     hasConfigInRuleStopState : Boolean {
-        return configs.contains(where: { $0.state is RuleStopState end if;)
+        return configs.contains(where: { $0.state is RuleStopState })
     end if;
 
     -- public
     allConfigsInRuleStopStates : Boolean {
-        return not configs.contains(where: { !($0.state is RuleStopState) end if;)
+        return not configs.contains(where: { not ($0.state is RuleStopState) })
     end if;
 end if;
 

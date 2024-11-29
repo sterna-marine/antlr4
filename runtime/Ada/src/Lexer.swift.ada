@@ -202,7 +202,7 @@ begin
                         _type := ttype;
                     end if;
                     if _type = Lexer.SKIP then
-                        continue outer;
+                        goto CONTINUE_OUTER;;
                     end if;
                   exit when _type = Lexer.MORE;
                 end loop;
@@ -210,6 +210,7 @@ begin
                     emit();
                 end if;
                 return _token!
+                <<CONTINUE_OUTER>>
             end loop OUTER;
         end;
 

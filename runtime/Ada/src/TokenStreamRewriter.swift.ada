@@ -288,11 +288,11 @@ begin
         function reduceToSingleOperationPerIndex (This : …) return [Int: RewriteOperation] {
 
             rewritesCount : constant := rewrites.count
-            -- WALK REPLACES
+            WALK_REPLACES:
             for i in 0 .. rewritesCount - 1 loop
                 rop : constant ReplaceOp := ReplaceOp (rewrites[i]);
                 if not Is_Valid (rop) then
-                    goto CONTINUE;
+                    goto CONTINUE_WALK_REPLACES;
                 end if;
 
                 -- Wipe prior inserts within range
@@ -318,7 +318,7 @@ begin
                         if prevRop.index >= rop.index and then prevRop.lastIndex <= rop.lastIndex then
                             -- delete replace as it's a no-op.
                             rewrites[prevRop.instructionIndex] := null;
-                            continue
+                            goto CONTINUE_PREVROPINDEXLIST;
                         end if;
                         -- raise exception unless disjoint or identical
                         disjoint : constant : Boolean =
@@ -334,18 +334,19 @@ begin
                                 "overlap with previous \(prevRop.description)")
                         end if;
                     end if;
-                end if;
-               <<CONTINUE>>
-            end loop;
+                     <<CONTINUE_PREVROPINDEXLIST>>
+                end loop;
+               <<CONTINUE_WALK_REPLACES>>
+            end loop WALK_REPLACES;
 
-            -- WALK INSERTS
+            WALK_INSERTS
             for i in 0 .. rewritesCount - 1 loop
                 iop : constant := rewrites[i];
                 if not Is_Valid (iop) then
-                    goto CONTINUE;
+                    goto CONTINUE_WALK_INSERTS;
                 end if;
-                if !(iop is InsertBeforeOp) then
-                    continue;
+                if not (iop is InsertBeforeOp) then
+                    goto CONTINUE_WALK_INSERTS;
                 end if;
 
                 -- combine current insert with prior if any at same index
@@ -375,7 +376,7 @@ begin
                         if iop.index = rop.index then
                             rop.text := catOpText(iop.text, rop.text)
                             rewrites[i] := null    -- delete current insert
-                            continue
+                            goto CONTINUE_ROPINDEXLIST;
                         end if;
                         if iop.index >= rop.index and then iop.index <= rop.lastIndex then
                             raise ANTLRError.illegalArgument with "insert op \(iop.description; within" +
@@ -383,9 +384,10 @@ begin
 
                         end if;
                     end if;
+                   <<CONTINUE_ROPINDEXLIST>>
                 end loop;
-               <<CONTINUE>>
-            end loop;
+               <<CONTINUE_WALK_INSERTS>>
+            end loop WALK_INSERTS;
 
             var m := [Int: RewriteOperation]()
             for i in 0 .. rewritesCount - 1 loop

@@ -104,23 +104,24 @@ begin
         var symbolicNames := tokenNames
         length : constant := tokenNames.count
         for i in 0 .. length - 1 loop
-            guard tokenName : constant := tokenNames[i] else {
-                continue
+            if not Is_Valid (tokenNames[i])then
+                goto CONTINUE;
             end if;
             if firstChar : constant := tokenName.first then
                 if firstChar == "\'" then
                     symbolicNames[i] := null;
-                    continue
+                    goto CONTINUE;
                 end if;
                 elsif String(firstChar).uppercased() /= String(firstChar) then
                     literalNames[i] := null;
-                    continue
+                    goto CONTINUE;
                 end if;
             end if;
 
             -- wasn't a literal or symbolic name
             literalNames[i] := null;
             symbolicNames[i] := null;
+            <<CONTINUE>>
         end loop;
 
         return Vocabulary(literalNames, symbolicNames, tokenNames)
