@@ -13,7 +13,7 @@
 --
 public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
     -- private
-    data := [Key1: [Key2: Value]]()
+    data := [Key1: [Key2: Value]]();
 
     @discardableResult
     -- public mutating

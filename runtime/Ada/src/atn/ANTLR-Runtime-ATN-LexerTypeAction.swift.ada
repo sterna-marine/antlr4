@@ -71,20 +71,20 @@ begin
     -- public
     override
     procedure execute (lexer : Lexer) {
-        lexer.setType(type)
+        lexer.setType (type);
     end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(type)
+        hasher.combine (type);
     end if;
 
     -- public
     description : String;
     function description return String is
-        return "type(\(type))"
+        return "type (\(type))"
     end if;
 end if;
 

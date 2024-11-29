@@ -15,7 +15,7 @@ package PredictionMode is
 -- public 
 type PredictionMode is (
     -- 
-    -- The SLL(*) prediction mode. This prediction mode ignores the current
+    -- The SLL (*) prediction mode. This prediction mode ignores the current
     -- parser context when making predictions. This is the fastest prediction
     -- mode, and provides correct results for many grammars. This prediction
     -- mode is more powerful than the prediction mode provided by ANTLR 3, but
@@ -37,7 +37,7 @@ type PredictionMode is (
     -- 
     SLL,
     -- 
-    -- The LL(*) prediction mode. This prediction mode allows the current parser
+    -- The LL (*) prediction mode. This prediction mode allows the current parser
     -- context to be used for resolving SLL conflicts that occur during
     -- prediction. This is the fastest prediction mode that guarantees correct
     -- parse results for all combinations of grammars with syntactically correct
@@ -56,7 +56,7 @@ type PredictionMode is (
     -- 
     LL,
     -- 
-    -- The LL(*) prediction mode with exact ambiguity detection. In addition to
+    -- The LL (*) prediction mode with exact ambiguity detection. In addition to
     -- the correctness guarantees provided by the _#LL_ prediction mode,
     -- this prediction mode instructs the prediction algorithm to determine the
     -- complete and exact set of ambiguous alternatives for every ambiguous
@@ -100,7 +100,7 @@ type PredictionMode is (
     -- configuration, SLL could continue with the hopes that more lookahead will
     -- resolve via one of those non-conflicting configurations.
     -- 
-    -- Here's the prediction termination rule them: SLL (for SLL+LL parsing)
+    -- Here's the prediction termination rule them: SLL (for SLL+LL parsing);
     -- stops when it sees only conflicting configuration subsets. In contrast,
     -- full LL keeps going when there is uncertainty.
     -- 
@@ -168,14 +168,14 @@ type PredictionMode is (
     -- public static
     function hasSLLConflictTerminatingPrediction (mode : PredictionMode;configs : ATNConfigSet) return Boolean is
 begin
-        var configs := configs
+        configs := configs
         -- 
         -- Configs in rule stop states indicate reaching the end of the decision
         -- rule (local context) or end of start rule (full context). If all
         -- configs meet this condition, then none of the configurations is able
         -- to match additional input so we terminate prediction.
         -- 
-        if allConfigsInRuleStopStates(configs) then
+        if allConfigsInRuleStopStates (configs) then
             return True;
         end if;
 
@@ -186,16 +186,16 @@ begin
             -- since we'll often fail over anyway.
             if configs.hasSemanticContext then
                 -- dup configs, tossing out semantic predicates
-                configs := configs.dupConfigsWithoutSemanticPredicates()
+                configs := configs.dupConfigsWithoutSemanticPredicates ();
             end if;
             -- now we have combined contexts for configs with dissimilar preds
         end if;
 
         -- pure SLL or combined SLL+LL mode parsing
 
-        altsets : constant := getConflictingAltSubsets(configs)
+        altsets : constant := getConflictingAltSubsets (configs);
 
-        heuristic : constant := hasConflictingAltSet(altsets) and then not hasStateAssociatedWithOneAlt(configs)
+        heuristic : constant := hasConflictingAltSet (altsets) and then not hasStateAssociatedWithOneAlt (configs);
         return heuristic
     end if;
 
@@ -301,7 +301,7 @@ begin
     -- merge and checking to see if the merged result is either `x` or
     -- `x'`. If the `x` associated with lowest alternative `i`
     -- is the superset, then `i` is the only possible prediction since the
-    -- others resolve to `min(i)` as well. However, if `x` is
+    -- others resolve to `min (i)` as well. However, if `x` is
     -- associated with `j>i` then at least one stack configuration for
     -- `j` is not in conflict with alternative `i`. The algorithm
     -- should keep going, looking for more lookahead due to the uncertainty.
@@ -331,12 +331,12 @@ begin
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s, 3, z)`,
     -- `(s', 1, y)`, `(s', 2, y)` yields non-conflicting set
-    -- `{3`end if; U conflicting sets `min({1,2`)} U `min({1,2`)} =
+    -- `{3`end if; U conflicting sets `min ({1,2`)} U `min ({1,2`)} =
     -- `{1,3`} =&gt; continue
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
     -- `(s', 2, y)`, `(s'', 1, z)` yields non-conflicting set
-    -- `{1`end if; U conflicting sets `min({1,2`)} U `min({1,2`)} =
+    -- `{1`end if; U conflicting sets `min ({1,2`)} U `min ({1,2`)} =
     -- `{1`} =&gt; stop and predict 1
     -- 
     -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
@@ -373,7 +373,7 @@ begin
     -- public static
     function resolvesToJustOneViableAlt (altsets : [BitSet]) return Integer is
 begin
-        return getSingleViableAlt(altsets)
+        return getSingleViableAlt (altsets);
     end if;
 
     -- 
@@ -387,7 +387,7 @@ begin
     -- public static
     function allSubsetsConflict (altsets : [BitSet]) return Boolean is
 begin
-        return not hasNonConflictingAltSet(altsets)
+        return not hasNonConflictingAltSet (altsets);
     end if;
 
     -- 
@@ -402,7 +402,7 @@ begin
     function hasNonConflictingAltSet (altsets : [BitSet]) return Boolean is
 begin
         for alts: BitSet in altsets loop
-            if alts.cardinality() == 1 then
+            if alts.cardinality () == 1 then
                 return True;
             end if;
         end loop;
@@ -421,7 +421,7 @@ begin
     function hasConflictingAltSet (altsets : [BitSet]) return Boolean is
 begin
         for alts: BitSet in altsets loop
-            if alts.cardinality() > 1 then
+            if alts.cardinality () > 1 then
                 return True;
             end if;
         end loop;
@@ -459,9 +459,9 @@ begin
     -- public static
     function getUniqueAlt (altsets : [BitSet]) return Integer is
 begin
-        all : constant BitSet := getAlts(altsets);
-        if all.cardinality() == 1 then
-            return all.firstSetBit();
+        all : constant BitSet := getAlts (altsets);
+        if all.cardinality () == 1 then
+            return all.firstSetBit ();
         end if;
         return ATN.INVALID_ALT_NUMBER
     end if;
@@ -477,9 +477,9 @@ begin
     -- public static
     function getAlts (altsets : Array<BitSet>) return BitSet is
 begin
-        all : constant BitSet := BitSet();
+        all : constant BitSet := BitSet ();
         for alts: BitSet in altsets loop
-            all.or(alts)
+            all.or (alts);
         end if;
         return all
     end if;
@@ -490,7 +490,7 @@ begin
     -- public static
     function getAlts (configs : ATNConfigSet) return BitSet is
 begin
-        return configs.getAltBitSet()
+        return configs.getAltBitSet ();
 
     end if;
 
@@ -506,15 +506,15 @@ begin
 
     -- public static
     function getConflictingAltSubsets (configs : ATNConfigSet) return [BitSet] {
-        return configs.getConflictingAltSubsets()
+        return configs.getConflictingAltSubsets ();
     end if;
 
     -- public static
     function hasStateAssociatedWithOneAlt (configs : ATNConfigSet) return Boolean is
 begin
-        x : constant := configs.getStateToAltMap()
+        x : constant := configs.getStateToAltMap ();
         for alts in x.values loop
-            if alts.cardinality() == 1 then
+            if alts.cardinality () == 1 then
                 return True;
             end if;
         end loop;
@@ -524,16 +524,16 @@ begin
     -- public static
     function getSingleViableAlt (altsets : [BitSet]) return Integer is
 begin
-        viableAlts : constant := BitSet()
+        viableAlts : constant := BitSet ();
         for alts in altsets loop
-            minAlt : constant := alts.firstSetBit()
-            try! viableAlts.set(minAlt)
-            if viableAlts.cardinality() > 1 then
+            minAlt : constant := alts.firstSetBit ();
+            try! viableAlts.set (minAlt);
+            if viableAlts.cardinality () > 1 then
                 -- more than 1 viable alt
                 return ATN.INVALID_ALT_NUMBER
             end if;
         end loop;
-        return viableAlts.firstSetBit()
+        return viableAlts.firstSetBit ();
     end if;
 
 end PredictionMode;

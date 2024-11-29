@@ -16,9 +16,9 @@ type ANTLRFileStream is new ANTLRInputStream with null record;
     -- public 
     procedure Init (Self : in out …; fileName : String; encoding : String.Encoding? := null) {
         self.fileName := fileName
-        fileContents : constant String := To_String(contentsOfFile: fileName, encoding: encoding ?? .utf8);
-        data : constant := Array(fileContents.unicodeScalars)
-        super.init(data, data.count)
+        fileContents : constant String := To_String (contentsOfFile: fileName, encoding: encoding ?? .utf8);
+        data : constant := Array (fileContents.unicodeScalars);
+        super.init (data, data.count);
     end if;
 
     override

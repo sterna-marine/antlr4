@@ -17,7 +17,7 @@ package ANTLR.Runtime.ATN is
       Element_Type : ATNState;
       "=" : "=");
 
-   -- public private(set) final
+   -- public private (set) final
    states : ATNState_Container.Vector := Empty_Vector;
 
    -- public
@@ -40,8 +40,8 @@ package ANTLR.Runtime.ATN is
     -- public
     function nextTokens (s : ATNState; ctx : Optional_RuleContext;) return IntervalSet is
 begin
-        anal : constant := LL1Analyzer(self)
-        next : constant := anal.LOOK(s, ctx)
+        anal : constant := LL1Analyzer (self);
+        next : constant := anal.LOOK (s, ctx);
         return next
     end if;
 
@@ -56,9 +56,9 @@ begin
         if nextTokenWithinRule : constant := s.nextTokenWithinRule then
             return nextTokenWithinRule;
         end if;
-        intervalSet : constant Token := nextTokens(s, null);
+        intervalSet : constant Token := nextTokens (s, null);
         s.nextTokenWithinRule := intervalSet
-        intervalSet.makeReadonly()
+        intervalSet.makeReadonly ();
         return intervalSet
     end if;
 
@@ -70,20 +70,20 @@ begin
             state.stateNumber := states.count
         end if;
 
-        states.append(state)
+        states.append (state);
     end if;
 
     -- public
     procedure removeState (state : ATNState) is
     begin
         states[state.stateNumber] := null;
-        --states.set(state.stateNumber, null); -- just free mem, don't shift states in list
+        --states.set (state.stateNumber, null); -- just free mem, don't shift states in list
     end if;
     @discardableResult
     -- public
     function defineDecisionState (s : DecisionState) return Integer is
 begin
-        decisionToState.append(s)
+        decisionToState.append (s);
         s.decision := decisionToState.count-1
         return s.decision
     end if;
@@ -125,32 +125,32 @@ begin
     -- public
     function getExpectedTokens (stateNumber : ATNStates.State; context : RuleContext) return IntervalSet is
 begin
-        if not states.indices.contains(stateNumber) then
+        if not states.indices.contains (stateNumber) then
             raise ANTLRError.illegalArgument with "Invalid state number.";
         end if;
 
         ctx : Optional_RuleContext; := context;
         s : constant ATNStates.State := states[stateNumber]!
-        var following := nextTokens(s)
-        if not following.contains(CommonToken.EPSILON) then
+        following := nextTokens (s);
+        if not following.contains (CommonToken.EPSILON) then
             return following;
         end if;
 
-        expected : constant := IntervalSet()
-        try! expected.addAll(following)
-        try! expected.remove(CommonToken.EPSILON)
+        expected : constant := IntervalSet ();
+        try! expected.addAll (following);
+        try! expected.remove (CommonToken.EPSILON);
 
-        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
+        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains (CommonToken.EPSILON) loop
             invokingState : constant := states[ctxWrap.invokingState]!
-            rt : constant RuleTransition := RuleTransition (invokingState.transition(0));
-            following := nextTokens(rt.followState)
-            try! expected.addAll(following)
-            try! expected.remove(CommonToken.EPSILON)
+            rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
+            following := nextTokens (rt.followState);
+            try! expected.addAll (following);
+            try! expected.remove (CommonToken.EPSILON);
             ctx := ctxWrap.parent
         end loop;
 
-        if following.contains(CommonToken.EPSILON) then
-            try! expected.add(CommonToken.EOF);
+        if following.contains (CommonToken.EPSILON) then
+            try! expected.add (CommonToken.EOF);
         end if;
 
         return expected
@@ -159,12 +159,12 @@ begin
     -- public final
     procedure appendDecisionToState (state : DecisionState) is
     begin
-        decisionToState.append(state)
+        decisionToState.append (state);
     end if;
     -- public final
     procedure appendModeToStartState (state : TokensStartState) is
     begin
-        modeToStartState.append(state)
+        modeToStartState.append (state);
     end if;
 
 private 
@@ -176,19 +176,19 @@ private
     -- can go back later and build DFA predictors for them.  This includes
     -- all the rules, subrules, optional blocks, ()+, ()* etc .. 
     -- 
-    -- public private(set) final
-    decisionToState := [DecisionState]()
+    -- public private (set) final
+    decisionToState := [DecisionState]();
 
     -- 
     -- Maps from rule index to starting state number.
     -- 
-    -- public internal(set) final var
+    -- public internal (set) final var
     ruleToStartState: [RuleStartState]!;
 
     -- 
     -- Maps from rule index to stop state number.
     -- 
-    -- public internal(set) final var
+    -- public internal (set) final var
     ruleToStopState: [RuleStopState]!;
 
     -- 
@@ -209,17 +209,17 @@ private
     -- type if the `ATNDeserializationOptions.generateRuleBypassTransitions`
     -- deserialization option was specified; otherwise, this is `null`.
     -- 
-    -- public internal(set) final var
+    -- public internal (set) final var
     ruleToTokenType: [Int]!;
 
     -- 
     -- For lexer ATNs, this is an array of _org.antlr.v4.runtime.atn.LexerAction_ objects which may
     -- be referenced by action transitions in the ATN.
     -- 
-    -- public internal(set) final var
+    -- public internal (set) final var
     lexerActions: [LexerAction]!;
 
-    -- public internal(set) final var
+    -- public internal (set) final var
     modeToStartState := [TokensStartState]();
 
 end ANTLR.Runtime.ATN;

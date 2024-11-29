@@ -19,7 +19,7 @@ type ActionTransition is new Transition and CustomStringConvertible with null re
 
     -- public convenience
     procedure Init (Self : in out …; target : ATNState; ruleIndex : Integer) {
-        self.init(target, ruleIndex, -1, False)
+        self.init (target, ruleIndex, -1, False);
     end if;
 
     -- public 
@@ -28,7 +28,7 @@ type ActionTransition is new Transition and CustomStringConvertible with null re
         self.ruleIndex := ruleIndex
         self.actionIndex := actionIndex
         self.isCtxDependent := isCtxDependent
-        super.init(target)
+        super.init (target);
     end if;
 
     override

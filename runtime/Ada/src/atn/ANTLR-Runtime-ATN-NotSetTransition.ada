@@ -8,8 +8,8 @@
 -- public final
 type NotSetTransition is new SetTransition with null record;
 {
---	public override init(_ target : ATNState; inout _ set : Optional_IntervalSet;) {
---		super.init(target, &set);
+--	public override init (_ target : ATNState; inout _ set : Optional_IntervalSet;) {
+--		super.init (target, &set);
 --	}
 
     override
@@ -25,7 +25,7 @@ begin
 begin
         return symbol >= minVocabSymbol
                 and then symbol <= maxVocabSymbol
-                and then not super.matches(symbol, minVocabSymbol, maxVocabSymbol)
+                and then not super.matches (symbol, minVocabSymbol, maxVocabSymbol);
     end if;
 
     override

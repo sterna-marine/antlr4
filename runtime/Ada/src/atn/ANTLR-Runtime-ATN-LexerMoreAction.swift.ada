@@ -22,7 +22,7 @@ type LexerMoreAction is new LexerAction and CustomStringConvertible with null re
     -- Provides a singleton instance of this parameterless lexer action.
     -- 
     -- public static 
-    INSTANCE : constant LexerMoreAction := LexerMoreAction();
+    INSTANCE : constant LexerMoreAction := LexerMoreAction ();
 
     -- 
     -- Constructs the singleton instance of the lexer `more` command.
@@ -64,14 +64,14 @@ begin
     -- public
     procedure execute (lexer : Lexer) is
     begin
-        lexer.more()
+        lexer.more ();
     end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
+        hasher.combine (ObjectIdentifier (self));
     end if;
 
     -- public

@@ -36,7 +36,7 @@ type SemanticContext is new Hashable and CustomStringConvertible with null recor
     -- public
     function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     --
@@ -64,13 +64,13 @@ begin
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- public
     description : String;
     function description return String is
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- public
@@ -81,7 +81,7 @@ begin
         -- a predicate of the form `{True?}.
         --
         -- public static 
-        Instance : constant Empty := Empty();
+        Instance : constant Empty := Empty ();
 
         -- public
         override
@@ -128,15 +128,15 @@ begin
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
             localctx : constant := isCtxDependent ? parserCallStack : null;
-            return parser.sempred(localctx, ruleIndex, predIndex);
+            return parser.sempred (localctx, ruleIndex, predIndex);
         end if;
 
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
-            hasher.combine(ruleIndex)
-            hasher.combine(predIndex)
-            hasher.combine(isCtxDependent)
+            hasher.combine (ruleIndex);
+            hasher.combine (predIndex);
+            hasher.combine (isCtxDependent);
         end if;
 
         override
@@ -169,14 +169,14 @@ begin
         -- public
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
-            return parser.precpred(parserCallStack, precedence)
+            return parser.precpred (parserCallStack, precedence);
         end if;
 
         override
         -- public
         function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
    begin
-            if parser.precpred(parserCallStack, precedence) then
+            if parser.precpred (parserCallStack, precedence) then
                 return SemanticContext.Empty.Instance
             else
                 return null;
@@ -187,14 +187,14 @@ begin
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
-            hasher.combine(precedence)
+            hasher.combine (precedence);
         end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return "{" + String(precedence) + ">=prec}?"
+            return "{" + String (precedence) + ">=prec}?"
 
         end if;
     end if;
@@ -220,7 +220,7 @@ begin
 
         -- public
         function getOperands () return Array<SemanticContext> {
-            fatalError(#function + " must be overridden")
+            fatalError (#function + " must be overridden");
         end if;
     end if;
 
@@ -237,21 +237,21 @@ begin
 
         -- public 
         procedure Init (Self : in out …; a : SemanticContext; b : SemanticContext) {
-            var operands := Set<SemanticContext> ()
+            operands := Set<SemanticContext> ();
             aAnd : constant Optional_AND := Set (a);
             if Is_Valid (aAnd) then
-                operands.formUnion(aAnd.opnds)
+                operands.formUnion (aAnd.opnds);
             else
-                operands.insert(a);
+                operands.insert (a);
             end if;
             bAnd : constant Optional_AND := Set (b);
             if Is_Valid (bAnd) then
-                operands.formUnion(bAnd.opnds)
+                operands.formUnion (bAnd.opnds);
             else
-                operands.insert(b);
+                operands.insert (b);
             end if;
 
-            precedencePredicates : constant := SemanticContext.filterPrecedencePredicates(&operands)
+            precedencePredicates : constant := SemanticContext.filterPrecedencePredicates (&operands);
             if not precedencePredicates.isEmpty then
                 -- interested in the transition with the lowest precedence
 
@@ -259,10 +259,10 @@ begin
                function "<" (lhs, rhs : ) return True is
                   (lhs < rhs);
                 reduced : constant := precedencePredicates.sorted {$0.precedence < $1.precedence};
-                operands.insert(reduced[0])
+                operands.insert (reduced[0]);
             end if;
 
-            opnds := Array(operands)
+            opnds := Array (operands);
         end if;
 
         override
@@ -275,7 +275,7 @@ begin
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
-            hasher.combine(opnds)
+            hasher.combine (opnds);
         end if;
 
         --
@@ -290,7 +290,7 @@ begin
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
             for opnd in opnds loop
-                if not opnd.eval(parser, parserCallStack) then;
+                if not opnd.eval (parser, parserCallStack) then;
                     return False;
                 end if;
             end loop;
@@ -301,20 +301,20 @@ begin
         -- public
         function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
    begin
-            var differs := False;
-            var operands := [SemanticContext]()
+            differs := False;
+            operands := [SemanticContext]();
             for context in opnds loop
-                evaluated : constant := context.evalPrecedence(parser, parserCallStack);
-                --TODO differs := @ or (evaluated /= context)
+                evaluated : constant := context.evalPrecedence (parser, parserCallStack);
+                --TODO differs := @ or (evaluated /= context);
                 --differs := @ or (evaluated /= context);
-                differs := differs or else (evaluated /= context)
+                differs := differs or else (evaluated /= context);
 
                 if evaluated = null then
                     -- The AND context is False if any element is False;
                     return null;
                 elsif evaluated /= SemanticContext.Empty.Instance then
                     -- Reduce the result by skipping True elements
-                    operands.append(evaluated!)
+                    operands.append (evaluated!);
                 end if;
             end loop;
 
@@ -322,14 +322,14 @@ begin
                 return self;
             end if;
 
-            return operands.reduce(SemanticContext.Empty.Instance, SemanticContext.and)
+            return operands.reduce (SemanticContext.Empty.Instance, SemanticContext.and);
         end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return opnds.map({ $0.description} ).joined(separator: " and ")
+            return opnds.map ({ $0.description} ).joined (separator: " and ");
 
         end if;
     end if;
@@ -350,18 +350,18 @@ begin
             operands : Set<SemanticContext> := Set<SemanticContext> ();
             aOr : constant Optional_OR := Set (a);
             if Is_Valid (aOr) then
-                operands.formUnion(aOr.opnds)
+                operands.formUnion (aOr.opnds);
             else
-                operands.insert(a);
+                operands.insert (a);
             end if;
             bOr : constant Optional_OR := Set (b);
             if Is_Valid (bOr) then
-                operands.formUnion(bOr.opnds)
+                operands.formUnion (bOr.opnds);
             else
-                operands.insert(b);
+                operands.insert (b);
             end if;
 
-            precedencePredicates : constant := SemanticContext.filterPrecedencePredicates(&operands)
+            precedencePredicates : constant := SemanticContext.filterPrecedencePredicates (&operands);
             if not precedencePredicates.isEmpty then
                 -- interested in the transition with the highest precedence
 
@@ -369,10 +369,10 @@ begin
                function ">" (lhs, rhs : ) return True is
                   (lhs < rhs);
                 reduced : constant := precedencePredicates.sorted {$0.precedence > $1.precedence};
-                operands.insert(reduced[0])
+                operands.insert (reduced[0]);
             end if;
 
-            self.opnds := Array(operands)
+            self.opnds := Array (operands);
         end if;
 
         override
@@ -384,7 +384,7 @@ begin
         -- public
         override
         procedure hash (into hasher: inout Hasher) {
-            hasher.combine(opnds)
+            hasher.combine (opnds);
         end if;
 
         --
@@ -399,7 +399,7 @@ begin
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
 begin
             for opnd in opnds loop
-                if opnd.eval(parser, parserCallStack) then;
+                if opnd.eval (parser, parserCallStack) then;
                     return True;
                 end if;
             end loop;
@@ -410,17 +410,17 @@ begin
         -- public
         function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
    begin
-            var differs := False;
-            var operands := [SemanticContext]()
+            differs := False;
+            operands := [SemanticContext]();
             for context in opnds loop
-                evaluated : constant := context.evalPrecedence(parser, parserCallStack);
-                differs := differs or else (evaluated /= context)
+                evaluated : constant := context.evalPrecedence (parser, parserCallStack);
+                differs := differs or else (evaluated /= context);
                 if evaluated = SemanticContext.Empty.Instance then
                     -- The OR context is True if any element is True;
                     return SemanticContext.Empty.Instance;
                 elsif evaluated : constant := evaluated then
                     -- Reduce the result by skipping False elements
-                    operands.append(evaluated)
+                    operands.append (evaluated);
                 end if;
             end loop;
 
@@ -428,14 +428,14 @@ begin
                 return self;
             end if;
 
-            return operands.reduce(null, SemanticContext.or)
+            return operands.reduce (null, SemanticContext.or);
         end if;
 
         override
         -- public
         description : String;
         function description return String is
-            return opnds.map({ $0.description }).joined(separator: " or ")
+            return opnds.map ({ $0.description }).joined (separator: " or ");
 
         end if;
     end if;
@@ -449,7 +449,7 @@ begin
         if b = null or else b = SemanticContext.Empty.Instance then
             return a!;
         end if;
-        result : constant AND := AND(a!, b!);
+        result : constant AND := AND (a!, b!);
         if result.opnds.count = 1 then
             return result.opnds[0];
         end if;
@@ -473,7 +473,7 @@ begin
         if a = SemanticContext.Empty.Instance or else b = SemanticContext.Empty.Instance then
             return SemanticContext.Empty.Instance;
         end if;
-        result : constant OR := OR(a!, b!);
+        result : constant OR := OR (a!, b!);
         if result.opnds.count = 1 then
             return result.opnds[0];
         end if;
@@ -486,7 +486,7 @@ begin
         result : constant := collection.compactMap {
             PrecedencePredicate ($0); -- as? PrecedencePredicate
         };
-        collection := Set<SemanticContext> (collection.filter { not ($0 is PrecedencePredicate) })
+        collection := Set<SemanticContext> (collection.filter { not ($0 is PrecedencePredicate) });
         return result
     end if;
 end if;

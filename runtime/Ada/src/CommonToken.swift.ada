@@ -54,7 +54,7 @@ type CommonToken is new WritableToken with null record;
     -- This is the backing field for _#getText_ when the token text is
     -- explicitly set in the constructor or via _#setText_.
     -- 
-    -- - seealso: #getText()
+    -- - seealso: #getText ();
     -- 
     -- internal
     text : Optional_String;
@@ -103,8 +103,8 @@ type CommonToken is new WritableToken with null record;
         self.start := start
         self.stop := stop
         if tsource : constant := source.tokenSource then
-            self.line := tsource.getLine()
-            self.charPositionInLine := tsource.getCharPositionInLine()
+            self.line := tsource.getLine ();
+            self.charPositionInLine := tsource.getCharPositionInLine ();
         end if;
     end if;
 
@@ -130,15 +130,15 @@ type CommonToken is new WritableToken with null record;
     -- 
     -- public 
     procedure Init (Self : in out …; oldToken : Token) {
-        type := oldToken.getType()
-        line := oldToken.getLine()
-        index := oldToken.getTokenIndex()
-        charPositionInLine := oldToken.getCharPositionInLine()
-        channel := oldToken.getChannel()
-        start := oldToken.getStartIndex()
-        stop := oldToken.getStopIndex()
-        text := oldToken.getText()
-        source := oldToken.getTokenSourceAndStream()
+        type := oldToken.getType ();
+        line := oldToken.getLine ();
+        index := oldToken.getTokenIndex ();
+        charPositionInLine := oldToken.getCharPositionInLine ();
+        channel := oldToken.getChannel ();
+        start := oldToken.getStartIndex ();
+        stop := oldToken.getStopIndex ();
+        text := oldToken.getText ();
+        source := oldToken.getTokenSourceAndStream ();
     end if;
 
 
@@ -164,11 +164,11 @@ begin
             return text;
         end if;
 
-        if input : constant := getInputStream() then
-            n : constant := input.size()
+        if input : constant := getInputStream () then
+            n : constant := input.size ();
             if start < n and then stop < n then
                 do {
-                    return input.getText(Interval.of(start, stop));
+                    return input.getText (Interval.of (start, stop));
                 end if;
                 catch {
                     return null;
@@ -302,29 +302,29 @@ begin
     -- public
     description : String;
     function description return String is
-        return toString(null)
+        return toString (null);
     end if;
 
     -- public
     function toString (r : Recognizer<ATNSimulator>?) return String is
 begin
-        channelStr : constant := (channel > 0 ? ",channel=\(channel)" : "")
+        channelStr : constant := (channel > 0 ? ",channel=\(channel)" : "");
 
-        var txt : String;
-        if tokenText : constant := getText() then
-            txt := tokenText.replacingOccurrences(of: "\n", with: "\\n")
-            txt := txt.replacingOccurrences(of: "\r", with: "\\r")
-            txt := txt.replacingOccurrences(of: "\t", with: "\\t")
+        txt : String;
+        if tokenText : constant := getText () then
+            txt := tokenText.replacingOccurrences (of: "\n", with: "\\n");
+            txt := txt.replacingOccurrences (of: "\r", with: "\\r");
+            txt := txt.replacingOccurrences (of: "\t", with: "\\t");
         else
             txt := "<no text>";
         end if;
         typeString : constant String;
         if r : constant := r then
-            typeString := r.getVocabulary().getDisplayName(type)
+            typeString := r.getVocabulary ().getDisplayName (type);
         else
             typeString := "\(type)";
         end if;
-       return "[@\(getTokenIndex()),\(start):\(stop)='\(txt)',<\(typeString)>\(channelStr),\(line):\(getCharPositionInLine())]"
+       return "[@\(getTokenIndex ()),\(start):\(stop)='\(txt)',<\(typeString)>\(channelStr),\(line):\(getCharPositionInLine ())]"
     end if;
 
     -- public

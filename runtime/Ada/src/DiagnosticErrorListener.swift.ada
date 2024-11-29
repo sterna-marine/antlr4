@@ -44,7 +44,7 @@ type DiagnosticErrorListener is new BaseErrorListener with null record;
     override
     procedure Init (Self : …) is
 begin
-        self.init(True)
+        self.init (True);
     end if;
 
     -- 
@@ -72,11 +72,11 @@ begin
                 return;
             end if;
 
-            decision : constant := getDecisionDescription(recognizer, dfa)
-            conflictingAlts : constant := getConflictingAlts(ambigAlts, configs)
-            text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
+            decision : constant := getDecisionDescription (recognizer, dfa);
+            conflictingAlts : constant := getConflictingAlts (ambigAlts, configs);
+            text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
             message : constant := "reportAmbiguity d=\(decision): ambigAlts=\(conflictingAlts), input='\(text)'"
-            recognizer.notifyErrorListeners(message)
+            recognizer.notifyErrorListeners (message);
     end if;
 
     override
@@ -87,10 +87,10 @@ begin
         stopIndex : Integer;
         conflictingAlts : Optional_BitSet;
         configs : ATNConfigSet) {
-            decision : constant := getDecisionDescription(recognizer, dfa)
-            text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
+            decision : constant := getDecisionDescription (recognizer, dfa);
+            text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
             message : constant := "reportAttemptingFullContext d=\(decision), input='\(text)'"
-            recognizer.notifyErrorListeners(message)
+            recognizer.notifyErrorListeners (message);
     end if;
 
     override
@@ -101,10 +101,10 @@ begin
         stopIndex : Integer;
         prediction : Integer;
         configs : ATNConfigSet) {
-            decision : constant := getDecisionDescription(recognizer, dfa)
-            text : constant := getTextInInterval(recognizer, startIndex, stopIndex)
+            decision : constant := getDecisionDescription (recognizer, dfa);
+            text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
             message : constant := "reportContextSensitivity d=\(decision), input='\(text)'"
-            recognizer.notifyErrorListeners(message)
+            recognizer.notifyErrorListeners (message);
     end if;
 
     -- internal
@@ -113,15 +113,15 @@ begin
         decision : constant Integer := dfa.decision;
         ruleIndex : constant Integer := dfa.atnStartState.ruleIndex!;
 
-        ruleNames : constant [String] := recognizer.getRuleNames();
-        if not ruleNames.indices.contains(ruleIndex) then
-            return String(decision)
+        ruleNames : constant [String] := recognizer.getRuleNames ();
+        if not ruleNames.indices.contains (ruleIndex) then
+            return String (decision);
         end if;
 
         ruleName : constant String := ruleNames[ruleIndex];
-        --if (ruleName = null or else ruleName.isEmpty()) {
+        --if (ruleName = null or else ruleName.isEmpty ()) {
         if ruleName.isEmpty then
-            return String(decision);
+            return String (decision);
         end if;
         return "\(decision) (\(ruleName))"
     end if;
@@ -140,7 +140,7 @@ begin
     -- internal
     function getConflictingAlts (reportedAlts : Optional_BitSet; configs : ATNConfigSet) return BitSet is
 begin
-        return reportedAlts ?? configs.getAltBitSet()
+        return reportedAlts ?? configs.getAltBitSet ();
     end if;
 end if;
 
@@ -149,7 +149,7 @@ end if;
 function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex : Integer) return String is
 begin
     do {
-        return recognizer.getTokenStream()?.getText(Interval.of(startIndex, stopIndex)) ?? "<unknown>";
+        return recognizer.getTokenStream ()?.getText (Interval.of (startIndex, stopIndex)) ?? "<unknown>";
     end if;
     catch {
         return "<unknown>"

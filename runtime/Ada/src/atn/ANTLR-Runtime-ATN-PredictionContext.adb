@@ -16,10 +16,10 @@ type PredictionContext is new Hashable and CustomStringConvertible with null rec
     -- `$` := _#EMPTY_RETURN_STATE_.
     --
     -- public static 
-    EMPTY_RETURN_STATE : constant := Integer (Int32.max)
+    EMPTY_RETURN_STATE : constant := Integer (Int32.max);
 
     -- private static 
-    INITIAL_HASH : constant := UInt32(1)
+    INITIAL_HASH : constant := UInt32 (1);
 
     -- public static 
     globalNodeCount := 0
@@ -29,25 +29,25 @@ type PredictionContext is new Hashable and CustomStringConvertible with null rec
         oldGlobalNodeCount : constant := globalNodeCount
         globalNodeCount := @ + 1;
         return oldGlobalNodeCount
-    }()
+    }();
 
     --
     -- Stores the computed hash code of this _org.antlr.v4.runtime.atn.PredictionContext_. The hash
     -- code is computed in parts to match the following reference algorithm.
     --
     --
-    -- private Integer referenceHashCode() {
-    -- Integer hash := _org.antlr.v4.runtime.misc.MurmurHash#initialize MurmurHash.initialize_(_#INITIAL_HASH_);
+    -- private Integer referenceHashCode () {
+    -- Integer hash := _org.antlr.v4.runtime.misc.MurmurHash#initialize MurmurHash.initialize_ (_#INITIAL_HASH_);
     --
-    -- for (int i := 0; i &lt; _#size()_; i++) loop
-    -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_(hash, _#getParent getParent_(i));
+    -- for (int i := 0; i &lt; _#size ()_; i++) loop
+    -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_ (hash, _#getParent getParent_ (i));
     -- }
     --
-    -- for (int i := 0; i &lt; _#size()_; i++) loop
-    -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_(hash, _#getReturnState getReturnState_(i));
+    -- for (int i := 0; i &lt; _#size ()_; i++) loop
+    -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_ (hash, _#getReturnState getReturnState_ (i));
     -- }
     --
-    -- hash := _org.antlr.v4.runtime.misc.MurmurHash#finish MurmurHash.finish_(hash, 2 * _#size()_);
+    -- hash := _org.antlr.v4.runtime.misc.MurmurHash#finish MurmurHash.finish_ (hash, 2 * _#size ()_);
     -- return hash;
     -- }
     --
@@ -55,7 +55,7 @@ type PredictionContext is new Hashable and CustomStringConvertible with null rec
     -- public
     cachedHashCode : constant Integer;
 
-    init(cachedHashCode : Integer) {
+    init (cachedHashCode : Integer) {
         self.cachedHashCode := cachedHashCode
     end if;
 
@@ -69,37 +69,37 @@ begin
         _outerContext : constant := outerContext ?? ParserRuleContext.EMPTY
 
         -- if we are in RuleContext of start rule, s, then PredictionContext
-        -- is EMPTY. Nobody called us. (if we are empty, return empty)
+        -- is EMPTY. Nobody called us. (if we are empty, return empty);
         if (_outerContext.parent = null or else _outerContext === ParserRuleContext.EMPTY) then
             return EmptyPredictionContext.Instance;
         end if;
 
         -- If we have a parent, convert it to a PredictionContext graph
-        parent : constant := PredictionContext.fromRuleContext(atn, _outerContext.parent)
+        parent : constant := PredictionContext.fromRuleContext (atn, _outerContext.parent);
 
         state : constant := atn.states[_outerContext.invokingState]!
-        transition : constant RuleTransition := RuleTransition (state.transition(0));
-        return SingletonPredictionContext.create(parent, transition.followState.stateNumber)
+        transition : constant RuleTransition := RuleTransition (state.transition (0));
+        return SingletonPredictionContext.create (parent, transition.followState.stateNumber);
     end if;
 
     -- public
     function size (This : …) return Integer is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
 
     -- public
     function getParent (index : Integer) return Optional_PredictionContext is
    begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
 
     -- public
     function getReturnState (index : Integer) return Integer is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
 
@@ -115,43 +115,43 @@ begin
     -- public
     function hasEmptyPath (This : …) return Boolean is
 begin
-        return getReturnState(size() - 1) == PredictionContext.EMPTY_RETURN_STATE
+        return getReturnState (size () - 1) == PredictionContext.EMPTY_RETURN_STATE
     end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        hasher.combine(cachedHashCode)
+        hasher.combine (cachedHashCode);
     end if;
 
     -- static
     function calculateEmptyHashCode (This : …) return Integer is
 begin
-        hash : constant := MurmurHash.initialize(INITIAL_HASH)
-        return MurmurHash.finish(hash, 0)
+        hash : constant := MurmurHash.initialize (INITIAL_HASH);
+        return MurmurHash.finish (hash, 0);
     end if;
 
     -- static
     function calculateHashCode (parent : Optional_PredictionContext; returnState : Integer) return Integer is
 begin
-        var hash := MurmurHash.initialize(INITIAL_HASH)
-        hash := MurmurHash.update(hash, parent)
-        hash := MurmurHash.update(hash, returnState)
-        return MurmurHash.finish(hash, 2)
+        hash := MurmurHash.initialize (INITIAL_HASH);
+        hash := MurmurHash.update (hash, parent);
+        hash := MurmurHash.update (hash, returnState);
+        return MurmurHash.finish (hash, 2);
     end if;
 
     -- static
     function calculateHashCode (parents : [PredictionContext?], returnStates : [Int]) return Integer is
 begin
-        var hash := MurmurHash.initialize(INITIAL_HASH)
+        hash := MurmurHash.initialize (INITIAL_HASH);
         for parent in parents loop
-            hash := MurmurHash.update(hash, parent)
+            hash := MurmurHash.update (hash, parent);
         end if;
         for state in returnStates loop
-            hash := MurmurHash.update(hash, state)
+            hash := MurmurHash.update (hash, state);
         end loop;
 
-        return  MurmurHash.finish(hash, 2 * parents.count)
+        return  MurmurHash.finish (hash, 2 * parents.count);
     end if;
 
     -- dispatch
@@ -162,8 +162,8 @@ begin
         rootIsWildcard : Boolean;
         mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?) return PredictionContext is
 begin
-        var a := a
-        var b := b
+        a := a
+        b := b
             -- assert ( a /= null and then b /= null,"Expected: a /= null and b /= null");
             -- assert ( a /= null and then b /= null,"Expected: a /= null and b /= null"); -- must be empty context, never null
             -- share same graph if both same
@@ -176,7 +176,7 @@ begin
             spc_a : constant Optional_SingletonPredictionContext := Set (a);
             spc_b : constant Optional_SingletonPredictionContext := Set (b);
             if Is_Valid (spc_a) and Is_Valid (spc_b) then
-                return mergeSingletons(spc_a, spc_b, rootIsWildcard, &mergeCache);
+                return mergeSingletons (spc_a, spc_b, rootIsWildcard, &mergeCache);
             end if;
 
             -- At least one of a or b is array
@@ -193,14 +193,14 @@ begin
             -- convert singleton so both are arrays to normalize
             spc_a : constant Optional_SingletonPredictionContext := Set (a);
             if Is_Valid (spc_a) then
-                a := ArrayPredictionContext(spc_a);
+                a := ArrayPredictionContext (spc_a);
             end if;
             spc_b : constant Optional_SingletonPredictionContext := Set (b);
             if Is_Valid (spc_b) then
-                b := ArrayPredictionContext(spc_b);
+                b := ArrayPredictionContext (spc_b);
             end if;
-            return mergeArrays(ArrayPredictionContext (a), ArrayPredictionContext (b),
-                rootIsWildcard, &mergeCache)
+            return mergeArrays (ArrayPredictionContext (a), ArrayPredictionContext (b),
+                rootIsWildcard, &mergeCache);
     end if;
 
     --
@@ -215,7 +215,7 @@ begin
     --
     --
     -- Different stack tops pointing to same parent. Make array node for the
-    -- root where both element in the root point to the same (original)
+    -- root where both element in the root point to the same (original);
     -- parent.
     --
     --
@@ -239,25 +239,25 @@ begin
 begin
 
             if mergeCache : constant := mergeCache then
-                var previous := mergeCache.get(a, b)
+                previous := mergeCache.get (a, b);
                 if previous : constant := previous then
                     return previous;
                 end if;
-                previous := mergeCache.get(b, a)
+                previous := mergeCache.get (b, a);
                 if previous : constant := previous then
                     return previous;
                 end if;
             end if;
 
 
-            if rootMerge : constant := mergeRoot(a, b, rootIsWildcard) then
-                mergeCache?.put(a, b, rootMerge)
+            if rootMerge : constant := mergeRoot (a, b, rootIsWildcard) then
+                mergeCache?.put (a, b, rootMerge);
                 return rootMerge
             end if;
 
             if a.returnState = b.returnState then
                 -- a = b
-                parent : constant := merge(a.parent!, b.parent!, rootIsWildcard, &mergeCache)
+                parent : constant := merge (a.parent!, b.parent!, rootIsWildcard, &mergeCache);
                 -- if parent is same as existing a or b parent or reduced to a parent, return it
                 if parent === a.parent! then
                     return a;
@@ -269,8 +269,8 @@ begin
                 -- merge parents x and y, giving array node with x,y then remainders
                 -- of those graphs.  dup a, a' points at merged array
                 -- new joined parent so create new singleton pointing to it, a'
-                a_ : constant := SingletonPredictionContext.create(parent, a.returnState);
-                mergeCache?.put(a, b, a_)
+                a_ : constant := SingletonPredictionContext.create (parent, a.returnState);
+                mergeCache?.put (a, b, a_);
                 return a_
             else
                 -- a /= b payloads differ
@@ -284,21 +284,21 @@ begin
                 if singleParent : constant := singleParent then
                     -- parents are same
                     -- sort payloads and use same parent
-                    var payloads := [a.returnState, b.returnState]
+                    payloads := [a.returnState, b.returnState]
                     if a.returnState > b.returnState then
                         payloads[0] := b.returnState
                         payloads[1] := a.returnState
                     end if;
                     parents : constant := [singleParent, singleParent]
-                    a_ : constant := ArrayPredictionContext(parents, payloads)
-                    mergeCache?.put(a, b, a_)
+                    a_ : constant := ArrayPredictionContext (parents, payloads);
+                    mergeCache?.put (a, b, a_);
                     return a_
                 end if;
                 -- parents differ and can't merge them. Just pack together
                 -- into array; can't merge.
                 -- ax + by := [ax,by]
-                var payloads := [a.returnState, b.returnState]
-                var parents := [a.parent, b.parent]
+                payloads := [a.returnState, b.returnState]
+                parents := [a.parent, b.parent]
                 if a.returnState > b.returnState then
                     -- sort by payload
                     payloads[0] := b.returnState
@@ -306,10 +306,10 @@ begin
                     parents := [b.parent, a.parent]
                 end if;
                 if a is EmptyPredictionContext then
-                   null;  -- print("parent is null")
+                   null;  -- print ("parent is null");
                 end if;
-                a_ : constant := ArrayPredictionContext(parents, payloads)
-                mergeCache?.put(a, b, a_)
+                a_ : constant := ArrayPredictionContext (parents, payloads);
+                mergeCache?.put (a, b, a_);
                 return a_
             end if;
     end if;
@@ -372,14 +372,14 @@ begin
                     -- $ + x := [$,x]
                     payloads : constant := [b.returnState, EMPTY_RETURN_STATE]
                     parents : constant := [b.parent, null]
-                    joined : constant := ArrayPredictionContext(parents, payloads)
+                    joined : constant := ArrayPredictionContext (parents, payloads);
                     return joined
                 end if;
                 if b === EmptyPredictionContext.Instance then
-                    -- x + $ := [$,x] ($ is always first if present)
+                    -- x + $ := [$,x] ($ is always first if present);
                     payloads : constant := [a.returnState, EMPTY_RETURN_STATE]
                     parents : constant := [a.parent, null]
-                    joined : constant := ArrayPredictionContext(parents, payloads)
+                    joined : constant := ArrayPredictionContext (parents, payloads);
                     return joined
                 end if;
             end if;
@@ -413,22 +413,22 @@ begin
         mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?) return PredictionContext is
 begin
 
-            if previous : constant := mergeCache?.get(a, b) ?? mergeCache?.get(b, a) then
+            if previous : constant := mergeCache?.get (a, b) ?? mergeCache?.get (b, a) then
                 return previous;
             end if;
 
             -- merge sorted payloads a + b => M
-            var i := 0 -- walks a
-            var j := 0 -- walks b
-            var k := 0 -- walks target M array
+            i := 0 -- walks a
+            j := 0 -- walks b
+            k := 0 -- walks target M array
 
             aReturnStatesLength : constant := a.returnStates.count
             bReturnStatesLength : constant := b.returnStates.count
 
             mergedReturnStatesLength : constant := aReturnStatesLength + bReturnStatesLength
-            var mergedReturnStates := [Int](repeating: 0, count: mergedReturnStatesLength)
+            mergedReturnStates := [Int](repeating: 0, count: mergedReturnStatesLength);
 
-            var mergedParents := [PredictionContext?](repeating: null, count: mergedReturnStatesLength)
+            mergedParents := [PredictionContext?](repeating: null, count: mergedReturnStatesLength);
             -- walk and merge to yield mergedParents, mergedReturnStates
             aReturnStates : constant := a.returnStates
             bReturnStates : constant := b.returnStates
@@ -442,15 +442,15 @@ begin
                     -- same payload (stack tops are equal), must yield merged singleton
                     payload : constant := aReturnStates[i]
                     -- $+$ := $
-                    let both$ := ((payload = EMPTY_RETURN_STATE) and then a_parent = null and then b_parent = null)
-                    ax_ax : constant := (a_parent /= null and then b_parent /= null and then a_parent = b_parent)
+                    let both$ := ((payload = EMPTY_RETURN_STATE) and then a_parent = null and then b_parent = null);
+                    ax_ax : constant := (a_parent /= null and then b_parent /= null and then a_parent = b_parent);
 
                     if both$ or else ax_ax then
                         mergedParents[k] := a_parent -- choose left
                         mergedReturnStates[k] := payload
                     else
                         -- ax+ay -> a'[x,y]
-                        mergedParent : constant := merge(a_parent!, b_parent!, rootIsWildcard, &mergeCache)
+                        mergedParent : constant := merge (a_parent!, b_parent!, rootIsWildcard, &mergeCache);
                         mergedParents[k] := mergedParent
                         mergedReturnStates[k] := payload
                     end if;
@@ -491,34 +491,34 @@ begin
                 -- write index < last position; trim
                 if k = 1 then
                     -- for just one merged element, return singleton top
-                    a_ : constant := SingletonPredictionContext.create(mergedParents[0], mergedReturnStates[0])
-                    mergeCache?.put(a, b, a_)
-                    --print("merge array 1 \(a_)")
+                    a_ : constant := SingletonPredictionContext.create (mergedParents[0], mergedReturnStates[0]);
+                    mergeCache?.put (a, b, a_);
+                    --print ("merge array 1 \(a_)");
                     return a_
                 end if;
-                mergedParents := Array(mergedParents[0 ..< k])
-                mergedReturnStates := Array(mergedReturnStates[0 ..< k])
+                mergedParents := Array (mergedParents[0 ..< k]);
+                mergedReturnStates := Array (mergedReturnStates[0 ..< k]);
             end if;
 
-            M : constant := ArrayPredictionContext(mergedParents, mergedReturnStates)
+            M : constant := ArrayPredictionContext (mergedParents, mergedReturnStates);
 
             -- if we created same array as a or b, return that instead
             -- TODO: track whether this is possible above during merge sort for speed
             if M = a then
-                mergeCache?.put(a, b, a)
+                mergeCache?.put (a, b, a);
                 return a
             end if;
             if M = b then
-                mergeCache?.put(a, b, b)
+                mergeCache?.put (a, b, b);
                 return b
             end if;
 
             --modify by janyou
-            --combineCommonParents(&mergedParents)
-            M.combineCommonParents()
+            --combineCommonParents (&mergedParents);
+            M.combineCommonParents ();
 
-            mergeCache?.put(a, b, M)
-            -- print("merge array 4 \(M)")
+            mergeCache?.put (a, b, M);
+            -- print ("merge array 4 \(M)");
             return M
     end if;
 
@@ -528,11 +528,11 @@ begin
         if context = null then
             return "";
         end if;
-        var buf := ""
+        buf := ""
         buf := @ + "digraph G {\n";
         buf := @ + "rankdir=LR;\n";
 
-        var nodes := getAllContextNodes(context!)
+        nodes := getAllContextNodes (context!);
         -- closure
          function ">" (lhs, rhs : ) return True is
             (lhs > rhs);
@@ -541,7 +541,7 @@ begin
         for current in nodes loop
             if current is SingletonPredictionContext then
                 buf := @ + "  s\(current.id)";
-                var returnState := String(current.getReturnState(0))
+                returnState : String := String (current.getReturnState (0));
                 if current is EmptyPredictionContext then
                     returnState := "$";
                 end if;
@@ -550,7 +550,7 @@ begin
             end if;
             arr : constant ArrayPredictionContext := ArrayPredictionContext (current);
             buf := @ + "  s\(arr.id) [shape=box, label=""[";
-            var first := True;
+            first := True;
             returnStates : constant := arr.returnStates
             for inv in returnStates loop
                 if not first then
@@ -559,7 +559,7 @@ begin
                 if inv = EMPTY_RETURN_STATE then
                     buf := @ + "$";
                 else
-                    buf := @ + String(inv);
+                    buf := @ + String (inv);
                 end if;
                 first := False;
             end loop;
@@ -569,16 +569,16 @@ begin
 
         for current in nodes loop
             if current === EmptyPredictionContext.Instance then
-                goto CONTINUE_NODES_B;;
+                goto CONTINUE_NODES_B;
             end if;
-            length : constant := current.size()
+            length : constant := current.size ();
             for i in 0 .. length - 1 loop
-                currentParent : constant := current.getParent(i);
+                currentParent : constant := current.getParent (i);
                 if not Is_Valid (currentParent) then
                     goto CONTINUE_NODES_C;
                 end if;
                 buf := @ + "  s\(current.id) -> s\(currentParent.id)";
-                if current.size() > 1 then
+                if current.size () > 1 then
                     buf := @ + " [label=""parent[\(i)]""];\n";
                 else
                     buf := @ + ";\n";
@@ -588,7 +588,7 @@ begin
             <<CONTINUE_NODES_B>>
         end loop;
 
-        buf.append("end if;\n")
+        buf.append ("end if;\n");
         return buf
     end if;
 
@@ -599,7 +599,7 @@ begin
         contextCache : PredictionContextCache;
         visited : inout [PredictionContext: PredictionContext]) return PredictionContext is
 begin
-        if context.isEmpty() then
+        if context.isEmpty () then
             return context;
         end if;
 
@@ -607,27 +607,27 @@ begin
             return visitedContext;
         end if;
 
-        if cachedContext : constant := contextCache.get(context) then
+        if cachedContext : constant := contextCache.get (context) then
             visited[context] := cachedContext
             return cachedContext
         end if;
 
-        var changed := False;
-        var parents := [PredictionContext?](repeating: null, count: context.size())
+        changed := False;
+        parents := [PredictionContext?](repeating: null, count: context.size ());
         length : constant := parents.count
         for i in 0 .. length - 1 loop
-            p : constant := context.getParent(i);
+            p : constant := context.getParent (i);
             if not Is_Valid (p) then
                 return context
             end if;
 
-            parent : constant := getCachedContext(p, contextCache, &visited)
+            parent : constant := getCachedContext (p, contextCache, &visited);
             if changed or else parent !== p then
                 if not changed then
-                    parents := [PredictionContext?](repeating: null, count: context.size())
+                    parents := [PredictionContext?](repeating: null, count: context.size ());
 
-                    for j in 0 .. context - 1.size() loop
-                        parents[j] := context.getParent(j)
+                    for j in 0 .. context - 1.size () loop
+                        parents[j] := context.getParent (j);
                     end loop;
 
                     changed := True;
@@ -638,7 +638,7 @@ begin
         end loop;
 
         if not changed then
-            contextCache.add(context)
+            contextCache.add (context);
             visited[context] := context
             return context
         end if;
@@ -647,13 +647,13 @@ begin
         if parents.isEmpty then
             updated := EmptyPredictionContext.Instance;
         elsif parents.count = 1 then
-            updated := SingletonPredictionContext.create(parents[0], context.getReturnState(0))
+            updated := SingletonPredictionContext.create (parents[0], context.getReturnState (0));
         else
             arrayPredictionContext : constant ArrayPredictionContext := ArrayPredictionContext (context);
-            updated := ArrayPredictionContext(parents, arrayPredictionContext.returnStates)
+            updated := ArrayPredictionContext (parents, arrayPredictionContext.returnStates);
         end if;
 
-        contextCache.add(updated)
+        contextCache.add (updated);
         visited[updated] := updated
         visited[context] := updated
 
@@ -662,12 +662,12 @@ begin
 
 
 
-    -- ter's recursive version of Sam's getAllNodes()
+    -- ter's recursive version of Sam's getAllNodes ();
     -- public static
     function getAllContextNodes (context : PredictionContext) return [PredictionContext] {
-        var nodes := [PredictionContext]()
-        var visited := [PredictionContext: PredictionContext]()
-        getAllContextNodes_(context, &nodes, &visited)
+        nodes := [PredictionContext]();
+        visited := [PredictionContext: PredictionContext]();
+        getAllContextNodes_ (context, &nodes, &visited);
         return nodes
     end if;
 
@@ -678,53 +678,53 @@ begin
             return
         end if;
         visited[context] := context
-        nodes.append(context)
-        length : constant := context.size()
+        nodes.append (context);
+        length : constant := context.size ();
         for i in 0 .. length - 1 loop
-            getAllContextNodes_(context.getParent(i), &nodes, &visited)
+            getAllContextNodes_ (context.getParent (i), &nodes, &visited);
         end loop;
     end if;
 
     -- public
     function toString<T> (recog : Recognizer<T>) return String is
 begin
-        return String(describing: PredictionContext.self)
-        --		return toString(recog, ParserRuleContext.EMPTY);
+        return String (describing: PredictionContext.self);
+        --		return toString (recog, ParserRuleContext.EMPTY);
     end if;
 
     -- public
     function toStrings<T> (recognizer : Recognizer<T>, currentState : Integer) return [String] {
-        return toStrings(recognizer, EmptyPredictionContext.Instance, currentState)
+        return toStrings (recognizer, EmptyPredictionContext.Instance, currentState);
     end if;
 
     -- FROM SAM
     -- public
     function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : Integer) return [String] {
-        var result := [String]()
-        var perm := 0
+        result := [String]();
+        perm := 0
         OUTER: loop
-                var offset := 0
-                var last := True;
-                var p := self
-                var stateNumber := currentState
-                var localBuffer := "["
-                while not p.isEmpty() and then p !== stop loop
-                    var index := 0
-                    if p.size() > 0 then
-                        var bits := 1
-                        while (1 << bits) < p.size() loop
+                offset := 0
+                last := True;
+                p := self
+                stateNumber := currentState
+                localBuffer := "["
+                while not p.isEmpty () and then p !== stop loop
+                    index := 0
+                    if p.size () > 0 then
+                        bits := 1
+                        while (1 << bits) < p.size () loop
                             bits := @ + 1;
                         end loop;
 
                         mask : constant := (1 << bits) - 1
                         index := (perm >> offset) & mask
 
-                        --last := @ and  index >= p.size() - 1;
-                        --last := Bool(Int(last) & (index >= p.size() - 1));
-                        last := last and then (index >= p.size() - 1)
+                        --last := @ and  index >= p.size () - 1;
+                        --last := Bool (Int (last) & (index >= p.size () - 1));
+                        last := last and then (index >= p.size () - 1);
 
-                        if index >= p.size() then
-                            goto CONTINUE_OUTER;;
+                        if index >= p.size () then
+                            goto CONTINUE_OUTER;
                         end if;
                         offset := @ + bits;
                     end if;
@@ -735,27 +735,27 @@ begin
                             localBuffer := @ + " ";
                         end if;
 
-                        atn : constant := recognizer.getATN()
+                        atn : constant := recognizer.getATN ();
                         s : constant ATNStates.State := atn.states[stateNumber]!
-                        ruleName : constant := recognizer.getRuleNames()[s.ruleIndex!]
-                        localBuffer.append(ruleName)
+                        ruleName : constant := recognizer.getRuleNames ()[s.ruleIndex!]
+                        localBuffer.append (ruleName);
                     end if;
-                    elsif p.getReturnState(index) /= PredictionContext.EMPTY_RETURN_STATE then
-                        if not p.isEmpty() then
+                    elsif p.getReturnState (index) /= PredictionContext.EMPTY_RETURN_STATE then
+                        if not p.isEmpty () then
                             if localBuffer.count > 1 then
                                 -- first char is '[', if more than that this isn't the first rule
                                 localBuffer := @ + " ";
                             end if;
 
-                            localBuffer := @ + String(p.getReturnState(index));
+                            localBuffer := @ + String (p.getReturnState (index));
                         end if;
                     end if;
-                    stateNumber := p.getReturnState(index)
-                    p := p.getParent(index)!
+                    stateNumber := p.getReturnState (index);
+                    p := p.getParent (index)!
                     <<CONTINUE_OUTER>>
                 end loop;
                 localBuffer := @ + "]";
-                result.append(localBuffer)
+                result.append (localBuffer);
 
                 exit when last;
 
@@ -768,7 +768,7 @@ begin
     -- public
     description : String;
     function description return String is
-        return String(describing: PredictionContext.self) + "@" + String(Unmanaged.passUnretained(self).toOpaque().hashValue)
+        return String (describing: PredictionContext.self) + "@" + String (Unmanaged.passUnretained (self).toOpaque ().hashValue);
     end if;
 end if;
 

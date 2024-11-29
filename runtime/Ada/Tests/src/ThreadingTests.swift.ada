@@ -25,22 +25,22 @@ begin
             "2 + 8 + 4",
             "890",
         ]
-        exp : constant := expectation(description: "Waiting on async-task")
+        exp : constant := expectation (description: "Waiting on async-task");
         exp.expectedFulfillmentCount := 100
         for i in 1 .. 100 loop
-            DispatchQueue.global().async {
-                lexer : constant := ThreadingLexer(ANTLRInputStream(input[i % 7]))
-                tokenStream : constant Token := CommonTokenStream(lexer);
-                parser : constant := try? ThreadingParser(tokenStream)
+            DispatchQueue.global ().async {
+                lexer : constant := ThreadingLexer (ANTLRInputStream (input[i % 7]));
+                tokenStream : constant Token := CommonTokenStream (lexer);
+                parser : constant := try? ThreadingParser (tokenStream);
 
-                _ : constant := try? parser?.s()
+                _ : constant := try? parser?.s ();
 
-                exp.fulfill()
+                exp.fulfill ();
             end if;
         end loop;
 
-        waitForExpectations(timeout: 30.0) { (_) in
-            print("Completed")
+        waitForExpectations (timeout: 30.0) { (_) in
+            print ("Completed");
         end if;
     end if;
 end if;

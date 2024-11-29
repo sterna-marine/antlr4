@@ -14,7 +14,7 @@
 -- different kinds of errors:
 -- 
 -- * The parser could not figure out which path to take in the ATN (none of
--- the available alternatives could possibly match)
+-- the available alternatives could possibly match);
 -- * The current input does not match what we were looking for
 -- * A predicate evaluated to False;
 -- 
@@ -29,7 +29,7 @@ type ANTLRErrorStrategy is interface;
     -- Reset the error handler state for the specified `recognizer`.
     -- - parameter recognizer: the parser instance
     -- 
-    procedure reset (recognizer : Parser)
+    procedure reset (recognizer : Parser);
 
     -- 
     -- This method is called when an unexpected symbol is encountered during an
@@ -91,9 +91,9 @@ type ANTLRErrorStrategy is interface;
     -- Tests whether or not recognizer is in the process of recovering
     -- from an error. In error recovery mode, _org.antlr.v4.runtime.Parser#consume_ adds
     -- symbols to the parse tree by calling
-    -- _Parser#createErrorNode(ParserRuleContext, Token)_ then
-    -- _ParserRuleContext#addErrorNode(ErrorNode)_ instead of
-    -- _Parser#createTerminalNode(ParserRuleContext, Token)_.
+    -- _Parser#createErrorNode (ParserRuleContext, Token)_ then
+    -- _ParserRuleContext#addErrorNode (ErrorNode)_ instead of
+    -- _Parser#createTerminalNode (ParserRuleContext, Token)_.
     -- 
     -- - parameter recognizer: the parser instance
     -- - returns: `True` if the parser is currently recovering from a parse
@@ -107,7 +107,7 @@ type ANTLRErrorStrategy is interface;
     -- 
     -- - parameter recognizer: the parser instance
     -- 
-    procedure reportMatch (recognizer : Parser)
+    procedure reportMatch (recognizer : Parser);
 
     -- 
     -- Report any kind of _org.antlr.v4.runtime.RecognitionException_. This method is called by
@@ -116,5 +116,5 @@ type ANTLRErrorStrategy is interface;
     -- - parameter recognizer: the parser instance
     -- - parameter e: the recognition exception to report
     -- 
-    procedure reportError (recognizer : Parser; e : RecognitionException)
+    procedure reportError (recognizer : Parser; e : RecognitionException);
 end if;

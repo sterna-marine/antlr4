@@ -22,7 +22,7 @@ type LexerSkipAction is new LexerAction and CustomStringConvertible with null re
     -- Provides a singleton instance of this parameterless lexer action.
     -- 
     -- public static 
-    INSTANCE : constant LexerSkipAction := LexerSkipAction();
+    INSTANCE : constant LexerSkipAction := LexerSkipAction ();
 
     -- 
     -- Constructs the singleton instance of the lexer `skip` command.
@@ -64,14 +64,14 @@ begin
     -- public
     procedure execute (lexer : Lexer) is
     begin
-        lexer.skip()
+        lexer.skip ();
     end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
+        hasher.combine (ObjectIdentifier (self));
     end if;
 
     -- public

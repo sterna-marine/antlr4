@@ -21,7 +21,7 @@ type PredicateEvalInfo is new DecisionEventInfo with null record;
     -- 
     -- The semantic context which was evaluated.
     -- 
-    -- public private(set)
+    -- public private (set);
     semctx: SemanticContext
     -- 
     -- The alternative number for the decision which is guarded by the semantic
@@ -29,12 +29,12 @@ type PredicateEvalInfo is new DecisionEventInfo with null record;
     -- configurations may predict the same alternative which are guarded by
     -- other semantic contexts and/or _org.antlr.v4.runtime.atn.SemanticContext#NONE_.
     -- 
-    -- public private(set)
+    -- public private (set);
     predictedAlt : Integer;
     -- 
     -- The result of evaluating the semantic context _#semctx_.
     -- 
-    -- public private(set)
+    -- public private (set);
     evalResult : Boolean;
 
     -- 
@@ -56,8 +56,8 @@ type PredicateEvalInfo is new DecisionEventInfo with null record;
     -- evaluated during LL prediction; otherwise, `False` if the semantic
     -- context was evaluated during SLL prediction
     -- 
-    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext(org.antlr.v4.runtime.atn.SemanticContext, org.antlr.v4.runtime.ParserRuleContext, int, boolean)
-    -- - seealso: org.antlr.v4.runtime.atn.SemanticContext#eval(org.antlr.v4.runtime.Recognizer, org.antlr.v4.runtime.RuleContext)
+    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext (org.antlr.v4.runtime.atn.SemanticContext, org.antlr.v4.runtime.ParserRuleContext, int, boolean);
+    -- - seealso: org.antlr.v4.runtime.atn.SemanticContext#eval (org.antlr.v4.runtime.Recognizer, org.antlr.v4.runtime.RuleContext);
     -- 
     -- public 
     procedure Init (Self : in out …; decision : Integer;
@@ -72,6 +72,6 @@ type PredicateEvalInfo is new DecisionEventInfo with null record;
         self.semctx := semctx
         self.evalResult := evalResult
         self.predictedAlt := predictedAlt
-        super.init(decision, ATNConfigSet(), input, startIndex, stopIndex, fullCtx)
+        super.init (decision, ATNConfigSet (), input, startIndex, stopIndex, fullCtx);
     end if;
 end if;

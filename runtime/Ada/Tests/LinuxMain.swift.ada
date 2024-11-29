@@ -1,13 +1,13 @@
-#if os(Linux)
+#if os (Linux);
 
 with XCTest;
 @testable with Antlr4Tests;
 
-XCTMain([
+XCTMain ([
     -- Antlr4Tests
-    testCase(TokenStreamTests.allTests),
-    testCase(TokenStreamRewriterTests.allTests),
-    testCase(VisitorTests.allTests)
-])
+    testCase (TokenStreamTests.allTests),
+    testCase (TokenStreamRewriterTests.allTests),
+    testCase (VisitorTests.allTests);
+]);
 
 #endif

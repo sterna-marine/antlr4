@@ -23,7 +23,7 @@ type LexerPopModeAction is new LexerAction and CustomStringConvertible with null
     -- Provides a singleton instance of this parameterless lexer action.
     -- 
     -- public static 
-    INSTANCE : constant LexerPopModeAction := LexerPopModeAction();
+    INSTANCE : constant LexerPopModeAction := LexerPopModeAction ();
 
     -- 
     -- Constructs the singleton instance of the lexer `popMode` command.
@@ -66,14 +66,14 @@ begin
     -- public
     override
     procedure execute (lexer : Lexer) {
-        lexer.popMode();
+        lexer.popMode ();
     end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
+        hasher.combine (ObjectIdentifier (self));
     end if;
 
     -- public

@@ -28,7 +28,7 @@ type IntSet is interface;
     -- 
     -- - parameter set: The set to add to the current set. A `null` argument is
     -- treated as though it were an empty set.
-    -- - returns: `this` (to support chained calls)
+    -- - returns: `this` (to support chained calls);
     -- 
     -- - throws: _ANTLRError.illegalState_ if the current set is read-only
     -- 
@@ -52,8 +52,8 @@ type IntSet is interface;
     -- following expressions are equivalent for input non-null _org.antlr.v4.runtime.misc.IntSet_
     -- instances `x` and `y`.
     -- 
-    -- * `x.complement(y)`
-    -- *`y.subtract(x)`
+    -- * `x.complement (y)`
+    -- *`y.subtract (x)`
     -- 
     -- - parameter elements: The set to compare with the current set. A `null`
     -- argument is treated as though it were an empty set.
@@ -68,7 +68,7 @@ type IntSet is interface;
     -- present in the current set, the specified set `a`, or both.
     -- 
     -- 
-    -- This method is similar to _#addAll(org.antlr.v4.runtime.misc.IntSet)_, but returns a new
+    -- This method is similar to _#addAll (org.antlr.v4.runtime.misc.IntSet)_, but returns a new
     -- _org.antlr.v4.runtime.misc.IntSet_ instance instead of modifying the current set.
     -- 
     -- - parameter a: The set to union with the current set. A `null` argument
@@ -85,8 +85,8 @@ type IntSet is interface;
     -- The following expressions are equivalent for input non-null
     -- _org.antlr.v4.runtime.misc.IntSet_ instances `x` and `y`.
     -- 
-    -- * `y.subtract(x)`
-    -- * `x.complement(y)`
+    -- * `y.subtract (x)`
+    -- * `x.complement (y)`
     -- 
     -- - parameter a: The set to compare with the current set. A `null`
     -- argument is treated as though it were an empty set.

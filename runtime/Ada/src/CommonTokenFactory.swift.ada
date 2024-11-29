@@ -22,7 +22,7 @@ type CommonTokenFactory is new TokenFactory with null record;
     -- tokens.
     -- 
     -- public static 
-    DEFAULT : constant TokenFactory := CommonTokenFactory();
+    DEFAULT : constant TokenFactory := CommonTokenFactory ();
 
     -- 
     -- Indicates whether _org.antlr.v4.runtime.CommonToken#setText_ should be called after
@@ -68,7 +68,7 @@ type CommonTokenFactory is new TokenFactory with null record;
     -- public convenience 
     procedure Init (Self : …) is
 begin
-        self.init(False)
+        self.init (False);
     end if;
 
 
@@ -77,14 +77,14 @@ begin
                        channel : Integer; start : Integer; stop : Integer;
                        line : Integer; charPositionInLine : Integer) return Token is
 begin
-        t : constant Token := CommonToken(source, type, channel, start, stop);
-        t.setLine(line)
-        t.setCharPositionInLine(charPositionInLine)
+        t : constant Token := CommonToken (source, type, channel, start, stop);
+        t.setLine (line);
+        t.setCharPositionInLine (charPositionInLine);
         text : constant Optional_Text := Set (text);
          if Is_Valid (text) then
-            t.setText(text);
+            t.setText (text);
         elsif cStream : constant := source.stream, copyText then
-            t.setText(try! cStream.getText(Interval.of(start, stop)));
+            t.setText (try! cStream.getText (Interval.of (start, stop)));
         end if;
 
         return t
@@ -94,6 +94,6 @@ begin
     -- public
     function create (type : Integer; text : String) return Token is
 begin
-        return CommonToken(type, text)
+        return CommonToken (type, text);
     end if;
 end if;

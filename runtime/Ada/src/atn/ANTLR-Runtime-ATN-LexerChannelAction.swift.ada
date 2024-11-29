@@ -73,15 +73,15 @@ begin
     -- public
     override
     procedure execute (lexer : Lexer) {
-        lexer.setChannel(channel)
+        lexer.setChannel (channel);
     end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(getActionType())
-        hasher.combine(channel)
+        hasher.combine (getActionType ());
+        hasher.combine (channel);
     end if;
 
     -- public

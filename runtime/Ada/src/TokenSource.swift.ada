@@ -5,7 +5,7 @@
 
 
 -- 
--- A source of tokens must provide a sequence of tokens via _#nextToken()_
+-- A source of tokens must provide a sequence of tokens via _#nextToken ()_
 -- and also must reveal it's source of characters; _org.antlr.v4.runtime.CommonToken_'s text is
 -- computed from a _org.antlr.v4.runtime.CharStream_; it only store indices into the char
 -- stream.
@@ -71,7 +71,7 @@ type TokenSource is interface;
     -- 
     -- - Parameter factory: The _org.antlr.v4.runtime.TokenFactory_ to use for creating tokens.
     -- 
-    procedure setTokenFactory (factory : TokenFactory)
+    procedure setTokenFactory (factory : TokenFactory);
 
     -- 
     -- Gets the _org.antlr.v4.runtime.TokenFactory_ this token source is currently using for

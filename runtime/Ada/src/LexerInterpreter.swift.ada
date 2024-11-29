@@ -24,7 +24,7 @@ type LexerInterpreter is new Lexer with null record;
 
     -- internal final
     _decisionToDFA : [DFA];
-    internal _sharedContextCache : constant := PredictionContextCache()
+    internal _sharedContextCache : constant := PredictionContextCache ();
 
     -- public 
     procedure Init (Self : in out …; grammarFileName : String; vocabulary : Vocabulary; ruleNames : Array<String>, channelNames : Array<String>, modeNames : Array<String>, atn : ATN; input : CharStream) {
@@ -36,12 +36,12 @@ type LexerInterpreter is new Lexer with null record;
         self.modeNames := modeNames
         self.vocabulary := vocabulary
 
-        self._decisionToDFA := [DFA]()
-        for i in 0 ..< atn.getNumberOfDecisions() loop
-            _decisionToDFA.append(DFA(atn.getDecisionState(i)!, i))
+        self._decisionToDFA := [DFA]();
+        for i in 0 ..< atn.getNumberOfDecisions () loop
+            _decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
         end loop;
-        super.init(input)
-        self._interp := LexerATNSimulator(self, atn, _decisionToDFA, _sharedContextCache)
+        super.init (input);
+        self._interp := LexerATNSimulator (self, atn, _decisionToDFA, _sharedContextCache);
 
         if atn.grammarType /= ATNType.lexer then
             raise ANTLRError.illegalArgument with "The ATN must be a lexer ATN.";
@@ -50,8 +50,8 @@ type LexerInterpreter is new Lexer with null record;
     end if;
 
     -- public required 
-    init(input : CharStream) {
-        fatalError("Use the other initializer")
+    init (input : CharStream) {
+        fatalError ("Use the other initializer");
     end if;
 
     override
@@ -90,6 +90,6 @@ begin
     -- public
     function getVocabulary (This : …) return Vocabulary is
 begin
-        return vocabulary ?? super.getVocabulary()
+        return vocabulary ?? super.getVocabulary ();
     end if;
 end if;

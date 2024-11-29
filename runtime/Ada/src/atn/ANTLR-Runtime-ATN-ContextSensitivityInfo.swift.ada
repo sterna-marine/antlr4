@@ -43,6 +43,6 @@ type ContextSensitivityInfo is new DecisionEventInfo with null record;
     procedure Init (Self : in out …; decision : Integer;
                 configs : ATNConfigSet;
                 input : TokenStream; startIndex : Integer; stopIndex : Integer) {
-        super.init(decision, configs, input, startIndex, stopIndex, True)
+        super.init (decision, configs, input, startIndex, stopIndex, True);
     end if;
 end if;

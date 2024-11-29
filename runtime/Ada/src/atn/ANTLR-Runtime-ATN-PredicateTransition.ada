@@ -31,7 +31,7 @@ type PredicateTransition is new AbstractPredicateTransition and CustomStringConv
         self.ruleIndex := ruleIndex
         self.predIndex := predIndex
         self.isCtxDependent := isCtxDependent
-        super.init(target)
+        super.init (target);
     end if;
 
     override
@@ -57,7 +57,7 @@ begin
 
     -- public
     function getPredicate () return SemanticContext.Predicate {
-        return SemanticContext.Predicate(ruleIndex, predIndex, isCtxDependent)
+        return SemanticContext.Predicate (ruleIndex, predIndex, isCtxDependent);
     end if;
 
     -- public

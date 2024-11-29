@@ -5,11 +5,11 @@
 --
 public class MultiMap<K:Hashable, V> {
     -- private
-    mapping := [K: Array<V>]()
+    mapping := [K: Array<V>]();
     -- public
     procedure map (key : K; value : V) is
     begin
-        mapping[key, default: Array()].append(value)
+        mapping[key, default: Array ()].append (value);
     end if;
 
     -- public
@@ -17,7 +17,7 @@ public class MultiMap<K:Hashable, V> {
         pairs : Array<(K, V)> := Array<(K, V)>();
         for key: K in mapping.keys loop
             for value: V in mapping[key]! loop
-                pairs.append((key, value))
+                pairs.append ((key, value));
             end loop;
         end loop;
         return pairs

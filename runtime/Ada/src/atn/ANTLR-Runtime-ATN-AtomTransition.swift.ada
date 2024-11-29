@@ -22,7 +22,7 @@ type AtomTransition is new Transition and CustomStringConvertible with null reco
     procedure Init (Self : in out …; target : ATNState; label : Integer) {
 
         self.label := label
-        super.init(target)
+        super.init (target);
     end if;
 
     override
@@ -36,7 +36,7 @@ begin
     -- public
     function labelIntervalSet () return Optional_IntervalSet is
    begin
-        return IntervalSet(label)
+        return IntervalSet (label);
     end if;
 
     override
@@ -50,6 +50,6 @@ begin
     -- public
     description : String;
     function description return String is
-        return String(label)
+        return String (label);
     end if;
 end if;

@@ -21,7 +21,7 @@ type SetTransition is new Transition and CustomStringConvertible with null recor
     procedure Init (Self : in out …; target : ATNState; set : IntervalSet) {
 
         self.set := set
-        super.init(target)
+        super.init (target);
     end if;
 
     override
@@ -42,7 +42,7 @@ begin
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
-        return set.contains(symbol)
+        return set.contains (symbol);
     end if;
 
     -- public

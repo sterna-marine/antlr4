@@ -18,7 +18,7 @@ type RangeTransition is new Transition and CustomStringConvertible with null rec
 
         self.from := from
         self.to := to
-        super.init(target)
+        super.init (target);
     end if;
 
     override
@@ -32,7 +32,7 @@ begin
     -- public
     function labelIntervalSet () return Optional_IntervalSet is
    begin
-        return IntervalSet.of(from, to)
+        return IntervalSet.of (from, to);
     end if;
 
     override
@@ -45,7 +45,7 @@ begin
     -- public
     description : String;
     function description return String is
-        return "'" + String(from) + "'..'" + String(to) + "'"
+        return "'" + String (from) + "'..'" + String (to) + "'"
 
     end if;
 end if;

@@ -14,7 +14,7 @@
 -- public final
 type PredictionContextCache is tagged record
     -- private
-    cache := [PredictionContext: PredictionContext]()
+    cache := [PredictionContext: PredictionContext]();
 
     -- public
     procedure Init (Self : …) is
@@ -34,7 +34,7 @@ begin
             return EmptyPredictionContext.Instance;
         end if;
         if existing : constant := cache[ctx] then
---			print(name+" reuses "+existing);
+--			print (name+" reuses "+existing);
             return existing
         end if;
         cache[ctx] := ctx

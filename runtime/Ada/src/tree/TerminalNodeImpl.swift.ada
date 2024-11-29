@@ -24,9 +24,9 @@ type TerminalNodeImpl is new TerminalNode with null record;
         return null;
     end if;
 
-    open subscript(index : Integer) return ParseTree is
+    open subscript (index : Integer) return ParseTree is
 begin
-        preconditionFailure("Index out of range (TerminalNode never has children)")
+        preconditionFailure ("Index out of range (TerminalNode never has children)");
     end if;
 
     -- public
@@ -58,8 +58,8 @@ begin
 begin
         --if   symbol = null   { return Interval.INVALID; }
 
-        tokenIndex : constant Integer := symbol.getTokenIndex();
-        return Interval(tokenIndex, tokenIndex)
+        tokenIndex : constant Integer := symbol.getTokenIndex ();
+        return Interval (tokenIndex, tokenIndex);
     end if;
 
     -- public
@@ -72,13 +72,13 @@ begin
     -- public
     function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
    begin
-        return visitor.visitTerminal(self)
+        return visitor.visitTerminal (self);
     end if;
 
     -- public
     function getText (This : …) return String is
 begin
-        return (symbol.getText())!
+        return (symbol.getText ())!
     end if;
 
     -- public
@@ -92,10 +92,10 @@ begin
     function description return String is
         --TODO: symbol = null?
         --if    symbol = null   {return "<null>"; }
-        if symbol.getType() == CommonToken.EOF then
+        if symbol.getType () == CommonToken.EOF then
             return "<EOF>";
         end if;
-        return symbol.getText()!
+        return symbol.getText ()!
     end if;
 
     -- public

@@ -45,7 +45,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- 
     -- public convenience
     procedure Init (Self : in out …; ruleName : String; bypassTokenType : Integer) {
-        self.init(ruleName, bypassTokenType, null)
+        self.init (ruleName, bypassTokenType, null);
     end if;
 
     -- 
@@ -200,7 +200,7 @@ begin
     -- public
     description : String;
     function description return String is
-        return ruleName + ":" + String(bypassTokenType)
+        return ruleName + ":" + String (bypassTokenType);
     end if;
 
 

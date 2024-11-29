@@ -41,7 +41,7 @@ extension Token {
     end if;
     
     --
-    -- All tokens go to the parser (unless skip() is called in that rule)
+    -- All tokens go to the parser (unless skip () is called in that rule);
     -- on a particular "channel".  The parser tunes to a particular channel
     -- so that whitespace etc ..  can go to the parser on a "hidden" channel.
     --
@@ -68,7 +68,7 @@ extension Token {
     -- assigned to the predefined channels _#DEFAULT_CHANNEL_ and
     -- _#HIDDEN_CHANNEL_.
     -- 
-    -- - seealso: org.antlr.v4.runtime.Token#getChannel()
+    -- - seealso: org.antlr.v4.runtime.Token#getChannel ();
     -- 
     -- static public
     MIN_USER_CHANNEL_VALUE : Integer {;

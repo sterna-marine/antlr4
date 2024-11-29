@@ -69,7 +69,7 @@ type AmbiguityInfo is new DecisionEventInfo with null record;
                 input : TokenStream; startIndex : Integer; stopIndex : Integer;
                 fullCtx  : Boolean) {
         self.ambigAlts := ambigAlts
-        super.init(decision, configs, input, startIndex, stopIndex, fullCtx)
+        super.init (decision, configs, input, startIndex, stopIndex, fullCtx);
 
     end if;
 end ANTLR.Runtime.ATN.AmbiguityInfo;

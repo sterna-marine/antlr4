@@ -19,7 +19,7 @@ type RecognitionException is tagged record
     -- private final
     recognizer : Optional_RecognizerProtocol;
 
-    private final weak var ctx: Optional_RuleContext;
+    private final weak ctx: Optional_RuleContext;
 
     -- private final
     input : Optional_IntStream;
@@ -48,7 +48,7 @@ type RecognitionException is tagged record
         self.ctx := ctx
         self.message := message
         if recognizer : constant := recognizer then
-            self.offendingState := recognizer.getState();
+            self.offendingState := recognizer.getState ();
         end if;
     end if;
 
@@ -87,7 +87,7 @@ begin
     function getExpectedTokens () return Optional_IntervalSet is
    begin
         if recognizer : constant := recognizer then
-            return try? recognizer.getATN().getExpectedTokens(offendingState, ctx!);
+            return try? recognizer.getATN ().getExpectedTokens (offendingState, ctx!);
         end if;
         return null;
     end if;

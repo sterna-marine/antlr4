@@ -17,7 +17,7 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
     -- Provides a default instance of _org.antlr.v4.runtime.ConsoleErrorListener_.
     -- 
     -- public static 
-    INSTANCE : constant ConsoleErrorListener := ConsoleErrorListener();
+    INSTANCE : constant ConsoleErrorListener := ConsoleErrorListener ();
 
     -- 
     -- 
@@ -38,7 +38,7 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
                                         e : Optional_AnyObject;
     ) {
         if Parser.ConsoleError then
-            errPrint("line \(line):\(charPositionInLine) \(msg)");
+            errPrint ("line \(line):\(charPositionInLine) \(msg)");
         end if;
     end if;
 

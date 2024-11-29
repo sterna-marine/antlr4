@@ -34,12 +34,12 @@ type BufferedTokenStream is new TokenStream with null record;
     -- to `True`.
     -- 
     -- internal
-    tokens := [Token]()
+    tokens := [Token]();
 
     -- 
     -- The index into _#tokens_ of the current token (next token to
     -- _#consume_). _#tokens_`[`_#p_`]` should be
-    -- _#LT LT(1)_.
+    -- _#LT LT (1)_.
     -- 
     -- This field is set to -1 when the stream is first constructed or when
     -- _#setTokenSource_ is called, indicating that the first token has
@@ -101,15 +101,15 @@ begin
     -- public
     procedure reset (This : …) is
 begin
-        seek(0);
+        seek (0);
     end if;
 
 
     -- public
     procedure seek (index : Integer) is
     begin
-        lazyInit();
-        p := adjustSeekIndex(index);
+        lazyInit ();
+        p := adjustSeekIndex (index);
     end if;
 
 
@@ -123,7 +123,7 @@ begin
     -- public
     procedure consume (This : …) is
 begin
-        var skipEofCheck : Boolean;
+        skipEofCheck : Boolean;
         if p >= 0 then
             if fetchedEOF then
                 -- the last token in tokens is EOF. skip check if p indexes any
@@ -138,12 +138,12 @@ begin
             skipEofCheck := False;
         end if;
 
-        if not skipEofCheck and then LA(1) == BufferedTokenStream.EOF then;
+        if not skipEofCheck and then LA (1) == BufferedTokenStream.EOF then;
             raise ANTLRError.illegalState with "cannot consume EOF";
         end if;
 
-        if sync(p + 1) then;
-            p := adjustSeekIndex(p + 1);
+        if sync (p + 1) then;
+            p := adjustSeekIndex (p + 1);
         end if;
     end if;
 
@@ -152,17 +152,17 @@ begin
     -- 
     -- - returns: `True` if a token is located at index `i`, otherwise
     -- `False`.
-    -- - seealso: #get(int i)
+    -- - seealso: #get (int i);
     -- 
     @discardableResult
     -- internal
     function sync (i : Integer) return Boolean is
 begin
-        assert(i >= 0, "Expected: i>=0")
+        assert (i >= 0, "Expected: i>=0");
         n : constant := i - tokens.count + 1 -- how many more elements we need?
-        --print("sync("+i+") needs "+n);
+        --print ("sync ("+i+") needs "+n);
         if n > 0 then
-            fetched : constant := fetch(n);
+            fetched : constant := fetch (n);
             return fetched >= n
         end if;
 
@@ -182,14 +182,14 @@ begin
         end if;
 
         for i in 0 .. n - 1 loop
-            t : constant := tokenSource.nextToken();
+            t : constant := tokenSource.nextToken ();
             wt : constant Optional_WritableToken := Set (t);
             if Is_Valid (wt) then
-                wt.setTokenIndex(tokens.count);
+                wt.setTokenIndex (tokens.count);
             end if;
 
-            tokens.append(t)
-            if t.getType() == BufferedTokenStream.EOF then
+            tokens.append (t);
+            if t.getType () == BufferedTokenStream.EOF then
                 fetchedEOF := True;
                 return i + 1
             end if;
@@ -201,7 +201,7 @@ begin
     -- public
     function get (i : Integer) return Token is
 begin
-        if not tokens.indices.contains(i) then
+        if not tokens.indices.contains (i) then
             raise ANTLRError.indexOutOfBounds with "token index \(i) out of range 0 ..< \(tokens.count)";
         end if;
         return tokens[i]
@@ -212,19 +212,19 @@ begin
     -- 
     -- public
     function get (start : Integer;stop : Integer) return Array<Token>? {
-        var stop := stop
+        stop := stop
         if start < 0 or else stop < 0 then
             return null;
         end if;
-        lazyInit();
-        var subset := [Token]()
+        lazyInit ();
+        subset := [Token]();
         if stop >= tokens.count then
             stop := tokens.count - 1;
         end if;
         for i in start .. stop loop
             t : constant := tokens[i]
-            exit when t.getType() == BufferedTokenStream.EOF;
-            subset.append(t)
+            exit when t.getType () == BufferedTokenStream.EOF;
+            subset.append (t);
         end if;
         return subset
     end if;
@@ -232,7 +232,7 @@ begin
     -- public
     function LA (i : Integer) return Integer is
 begin
-        return LT(i)!.getType();
+        return LT (i)!.getType ();
     end if;
 
     -- internal
@@ -248,16 +248,16 @@ begin
     -- public
     function LT (k : Integer) return Optional_Token is
    begin
-        lazyInit();
+        lazyInit ();
         if k = 0 then
             return null;
         end if;
         if k < 0 then
-            return LB(-k);
+            return LB (-k);
         end if;
 
         i : constant := p + k - 1
-        sync(i);
+        sync (i);
         if i >= tokens.count then
             -- return EOF token
             -- EOF must be last token
@@ -288,15 +288,15 @@ begin
     internal final procedure lazyInit (Self : …) is
 begin
         if p == -1 then
-            setup();
+            setup ();
         end if;
     end if;
 
     -- internal
     procedure setup (This : …) is
 begin
-        sync(0);
-        p := adjustSeekIndex(0);
+        sync (0);
+        p := adjustSeekIndex (0);
     end if;
 
     -- 
@@ -306,7 +306,7 @@ begin
     procedure setTokenSource (tokenSource : TokenSource) is
     begin
         self.tokenSource := tokenSource
-        tokens.removeAll()
+        tokens.removeAll ();
         p := -1
         fetchedEOF := False;
     end if;
@@ -318,7 +318,7 @@ begin
 
     -- public
     function getTokens (start : Integer; stop : Integer) return [Token]? {
-        return getTokens(start, stop, null);
+        return getTokens (start, stop, null);
     end if;
 
     -- 
@@ -328,19 +328,19 @@ begin
     -- 
     -- public
     function getTokens (start : Integer; stop : Integer; types : Set<Int>?) return [Token]? {
-        lazyInit();
-        if not tokens.indices.contains(start) or not tokens.indices.contains(stop) then
+        lazyInit ();
+        if not tokens.indices.contains (start) or not tokens.indices.contains (stop) then
             raise ANTLRError.indexOutOfBounds with "start \(start) or stop \(stop) not in 0 ..< \(tokens.count)";
         end if;
         if start > stop then
             return null;
         end if;
 
-        var filteredTokens := [Token]()
+        filteredTokens := [Token]();
         for i in start .. stop loop
             t : constant := tokens[i]
-            if types?.contains(t.getType()) ?? True then
-                filteredTokens.append(t);
+            if types?.contains (t.getType ()) ?? True then
+                filteredTokens.append (t);
             end if;
         end loop;
         if filteredTokens.isEmpty then
@@ -351,7 +351,7 @@ begin
 
     -- public
     function getTokens (start : Integer; stop : Integer; ttype : Integer) return [Token]? {
-        return getTokens(start, stop, [ttype]);
+        return getTokens (start, stop, [ttype]);
     end if;
 
     -- 
@@ -363,20 +363,20 @@ begin
     -- internal
     function nextTokenOnChannel (i : Integer; channel : Integer) return Integer is
 begin
-        var i := i
-        sync(i);
-        if i >= size() then
-            return size() - 1;
+        i := i
+        sync (i);
+        if i >= size () then
+            return size () - 1;
         end if;
 
-        var token := tokens[i]
-        while token.getChannel() /= channel loop
-            if token.getType() == BufferedTokenStream.EOF then
+        token := tokens[i]
+        while token.getChannel () /= channel loop
+            if token.getType () == BufferedTokenStream.EOF then
                 return i;
             end if;
 
             i := @ + 1;
-            sync(i);
+            sync (i);
             token := tokens[i]
         end loop;
 
@@ -396,16 +396,16 @@ begin
     -- internal
     function previousTokenOnChannel (i : Integer; channel : Integer) return Integer is
 begin
-        var i := i
-        sync(i);
-        if i >= size() then
+        i := i
+        sync (i);
+        if i >= size () then
             -- the EOF token is on every channel
-            return size() - 1
+            return size () - 1
         end if;
 
         while i >= 0 loop
             token : constant := tokens[i]
-            if token.getType() == BufferedTokenStream.EOF or else token.getChannel() == channel then
+            if token.getType () == BufferedTokenStream.EOF or else token.getChannel () == channel then
                 return i;
             end if;
 
@@ -422,22 +422,22 @@ begin
     -- 
     -- public
     function getHiddenTokensToRight (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
-        lazyInit();
-        if not tokens.indices.contains(tokenIndex) then
+        lazyInit ();
+        if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
         end if;
 
-        nextOnChannel : constant Token := nextTokenOnChannel(tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
+        nextOnChannel : constant Token := nextTokenOnChannel (tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         from : constant := tokenIndex + 1
         let to : Integer;
         -- if none onchannel to right, nextOnChannel=-1 so set to := last token
         if nextOnChannel == -1 then
-            to := size() - 1
+            to := size () - 1
         else
             to := nextOnChannel;
         end if;
 
-        return filterForChannel(from, to, channel)
+        return filterForChannel (from, to, channel);
     end if;
 
     --
@@ -447,8 +447,8 @@ begin
     -- 
     -- public
     function getHiddenTokensToLeft (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
-        lazyInit();
-        if not tokens.indices.contains(tokenIndex) then
+        lazyInit ();
+        if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
         end if;
 
@@ -457,27 +457,27 @@ begin
             return null;
         end if;
 
-        prevOnChannel : constant Token := previousTokenOnChannel(tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
+        prevOnChannel : constant Token := previousTokenOnChannel (tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         if prevOnChannel = tokenIndex - 1 then
             return null;
         end if;
         -- if none onchannel to left, prevOnChannel=-1 then from=0
         from : constant := prevOnChannel + 1
         to : constant := tokenIndex - 1
-        return filterForChannel(from, to, channel)
+        return filterForChannel (from, to, channel);
     end if;
 
     -- internal
     function filterForChannel (from : Integer; to : Integer; channel : Integer) return [Token]? {
-        var hidden := [Token]()
+        hidden := [Token]();
         for t in tokens[from .. to] loop
             if channel == -1 then
-                if t.getChannel() /= Lexer.DEFAULT_TOKEN_CHANNEL then
-                    hidden.append(t);
+                if t.getChannel () /= Lexer.DEFAULT_TOKEN_CHANNEL then
+                    hidden.append (t);
                 end if;
             else
-                if t.getChannel() == channel then
-                    hidden.append(t);
+                if t.getChannel () == channel then
+                    hidden.append (t);
                 end if;
             end if;
         end loop;
@@ -491,7 +491,7 @@ begin
     -- public
     function getSourceName (This : …) return String is
 begin
-        return tokenSource.getSourceName()
+        return tokenSource.getSourceName ();
     end if;
 
     -- 
@@ -500,7 +500,7 @@ begin
     -- public
     function getText (This : …) return String is
 begin
-        return getText(Interval.of(0, size() - 1));
+        return getText (Interval.of (0, size () - 1));
     end if;
 
     -- public
@@ -510,12 +510,12 @@ begin
         if start < 0 then
             return "";
         end if;
-        fill();
-        stop : constant := min(tokens.count, interval.b + 1)
-        var buf := ""
+        fill ();
+        stop : constant := min (tokens.count, interval.b + 1);
+        buf := ""
         for t in tokens[start ..< stop] loop
-            exit when t.getType() = BufferedTokenStream.EOF;
-            buf := @ + t.getText()!;
+            exit when t.getType () = BufferedTokenStream.EOF;
+            buf := @ + t.getText ()!;
         end loop;
         return buf
     end if;
@@ -524,7 +524,7 @@ begin
     -- public
     function getText (ctx : RuleContext) return String is
 begin
-        return getText(ctx.getSourceInterval());
+        return getText (ctx.getSourceInterval ());
     end if;
 
 
@@ -532,7 +532,7 @@ begin
     function getText (start : Optional_Token; stop : Optional_Token;) return String is
 begin
         if start : constant := start, stop : constant := stop then
-            return getText(Interval.of(start.getTokenIndex(), stop.getTokenIndex()));
+            return getText (Interval.of (start.getTokenIndex (), stop.getTokenIndex ()));
         end if;
 
         return ""
@@ -544,10 +544,10 @@ begin
     -- public
     procedure fill (This : …) is
 begin
-        lazyInit();
+        lazyInit ();
         blockSize : constant := 1000
         loop
-            fetched : constant := fetch(blockSize);
+            fetched : constant := fetch (blockSize);
             if fetched < blockSize then
                 return;
             end if;

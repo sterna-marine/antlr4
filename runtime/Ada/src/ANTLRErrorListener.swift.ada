@@ -46,7 +46,7 @@ type ANTLRErrorListener is interface;
                         charPositionInLine : Integer;
                         msg : String;
                         e : Optional_AnyObject;
-    )
+    );
 
     -- 
     -- This method is called by the parser when a full-context prediction
@@ -94,7 +94,7 @@ type ANTLRErrorListener is interface;
                          stopIndex : Integer;
                          exact : Boolean;
                          ambigAlts : BitSet;
-                         configs : ATNConfigSet)
+                         configs : ATNConfigSet);
 
     -- 
     -- This method is called when an SLL conflict occurs and the parser is about
@@ -124,7 +124,7 @@ type ANTLRErrorListener is interface;
                                      startIndex : Integer;
                                      stopIndex : Integer;
                                      conflictingAlts : Optional_BitSet;
-                                     configs : ATNConfigSet)
+                                     configs : ATNConfigSet);
 
     -- 
     -- This method is called by the parser when a full-context prediction has a
@@ -169,5 +169,5 @@ type ANTLRErrorListener is interface;
                                   startIndex : Integer;
                                   stopIndex : Integer;
                                   prediction : Integer;
-                                  configs : ATNConfigSet)
+                                  configs : ATNConfigSet);
 end if;

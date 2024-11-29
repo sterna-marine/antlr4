@@ -17,12 +17,12 @@ type MurmurHash is tagged record
     -- private static
     DEFAULT_SEED : constant UInt32 := 0;
 
-    private static c1 : constant := UInt32(0xCC9E2D51)
-    private static c2 : constant := UInt32(0x1B873593)
-    private static r1 : constant := UInt32(15)
-    private static r2 : constant := UInt32(13)
-    private static m : constant := UInt32(5)
-    private static n : constant := UInt32(0xE6546B64)
+    private static c1 : constant := UInt32 (0xCC9E2D51);
+    private static c2 : constant := UInt32 (0x1B873593);
+    private static r1 : constant := UInt32 (15);
+    private static r2 : constant := UInt32 (13);
+    private static m : constant := UInt32 (5);
+    private static n : constant := UInt32 (0xE6546B64);
 
     -- 
     -- Initialize the hash using the default seed value.
@@ -32,7 +32,7 @@ type MurmurHash is tagged record
     -- public static
     function initialize (This : …) return UInt32 is
 begin
-        return initialize(DEFAULT_SEED)
+        return initialize (DEFAULT_SEED);
     end if;
 
     -- 
@@ -50,9 +50,9 @@ begin
     -- private static
     function calcK (value : UInt32) return UInt32 is
 begin
-        var k := value
+        k := value
         k := k &* c1
-        k := (k << r1) | (k >> (32 - r1))
+        k := (k << r1) | (k >> (32 - r1));
         k := k &* c2
         return k
      end if;
@@ -67,19 +67,19 @@ begin
     -- public static
     function update2 (hashIn : UInt32; value : Integer) return UInt32 is
 begin
-        return updateInternal(hashIn, UInt32(truncatingIfNeeded: value))
+        return updateInternal (hashIn, UInt32 (truncatingIfNeeded: value));
     end if;
 
 
     -- private static
     function updateInternal (hashIn : UInt32; value : UInt32) return UInt32 is
 begin
-        k : constant := calcK(value)
-        var hash := hashIn
+        k : constant := calcK (value);
+        hash := hashIn
         hash := hash ^ k
-        hash := (hash << r2) | (hash >> (32 - r2))
+        hash := (hash << r2) | (hash >> (32 - r2));
         hash := hash &* m &+ n
-        -- print("murmur update2 : \(hash)")
+        -- print ("murmur update2 : \(hash)");
         return hash
     end if;
 
@@ -93,7 +93,7 @@ begin
     -- public static
     function update<T:Hashable> (hash : UInt32; value : Optional_T;) return UInt32 is
 begin
-        return update2(hash, value?.hashValue ?? 0)
+        return update2 (hash, value?.hashValue ?? 0);
     end if;
 
     -- 
@@ -107,21 +107,21 @@ begin
     -- public static
     function finish (hashin : UInt32; numberOfWords : Integer) return Integer is
 begin
-        return Integer (finish(hashin, byteCount: (numberOfWords &* 4)))
+        return Integer (finish (hashin, byteCount: (numberOfWords &* 4)));
     end if;
 
     -- private static
     function finish (hashin : UInt32; byteCount byteCountInt : Integer) return UInt32 is
 begin
-        byteCount : constant := UInt32(truncatingIfNeeded: byteCountInt)
-        var hash := hashin
+        byteCount : constant := UInt32 (truncatingIfNeeded: byteCountInt);
+        hash := hashin
         hash ^= byteCount
-        hash ^= (hash >> 16)
+        hash ^= (hash >> 16);
         hash := hash &* 0x85EBCA6B
-        hash ^= (hash >> 13)
+        hash ^= (hash >> 13);
         hash := hash &* 0xC2B2AE35
-        hash ^= (hash >> 16)
-        --print("murmur finish : \(hash)")
+        hash ^= (hash >> 16);
+        --print ("murmur finish : \(hash)");
         return hash
     end if;
 
@@ -137,12 +137,12 @@ begin
     -- public static
     function hashCode<T:Hashable> (data : [T], seed : Integer) return Integer is
 begin
-        var hash := initialize(UInt32(truncatingIfNeeded: seed))
+        hash := initialize (UInt32 (truncatingIfNeeded: seed));
         for value in data loop
-            hash := update(hash, value)
+            hash := update (hash, value);
         end loop;
 
-        return finish(hash, data.count)
+        return finish (hash, data.count);
     end if;
 
     --
@@ -160,8 +160,8 @@ begin
     -- public static
     function hashString (s : String; seed : UInt32) return UInt32 is
 begin
-        bytes : constant := Array(s.utf8)
-        return hashBytesLittleEndian(bytes, seed)
+        bytes : constant := Array (s.utf8);
+        return hashBytesLittleEndian (bytes, seed);
     end if;
 
     -- private static
@@ -169,27 +169,27 @@ begin
 begin
         byteCount : constant := bytes.count
 
-        var hash := seed
-        for i in stride(from: 0, to: byteCount - 3, by: 4) loop
-            var word := UInt32(bytes[i])
-            word := @ or UInt32(bytes[i + 1]) << 8
-            word := @ or UInt32(bytes[i + 2]) << 16
-            word := @ or UInt32(bytes[i + 3]) << 24
+        hash := seed
+        for i in stride (from: 0, to: byteCount - 3, by: 4) loop
+            word := UInt32 (bytes[i]);
+            word := @ or UInt32 (bytes[i + 1]) << 8
+            word := @ or UInt32 (bytes[i + 2]) << 16
+            word := @ or UInt32 (bytes[i + 3]) << 24
 
-            hash := updateInternal(hash, word)
+            hash := updateInternal (hash, word);
         end loop;
         remaining : constant := byteCount & 3
         if remaining /= 0 then
-            var lastWord := UInt32(0)
+            lastWord := UInt32 (0);
             for r in 0 ..< remaining loop
-                lastWord := @ or UInt32(bytes[byteCount - 1 - r]) << (8 * (remaining - 1 - r))
+                lastWord := @ or UInt32 (bytes[byteCount - 1 - r]) << (8 * (remaining - 1 - r));
             end loop;
 
-            k : constant := calcK(lastWord)
+            k : constant := calcK (lastWord);
             hash ^= k
         end if;
 
-        return finish(hash, byteCount: byteCount)
+        return finish (hash, byteCount: byteCount);
     end if;
 
     -- private

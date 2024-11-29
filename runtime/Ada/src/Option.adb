@@ -43,20 +43,20 @@ package body Option is
    end Unset;
 
    function As (Element : Element_Type) return Optional is
-      Var : Optional (Is_Valid => True);
+      : Optional (Is_Valid => True);
    begin
       declare
       begin
-         Var := (Is_Valid => True, Element => Element);
+         := (Is_Valid => True, Element => Element);
       exception
          when Constraint_Error =>
-            Var := (Is_Valid => False);
+            := (Is_Valid => False);
       end;
       return Var;
    end As;
 
    -- ------------------------------
-   -- with a common (shared objectt)
+   -- with a common (shared objectt);
    -- ------------------------------
    Object : Optional;
 

@@ -37,7 +37,7 @@ type RuleTransition is new Transition with null record;
         self.precedence := precedence
         self.followState := followState
 
-        super.init(ruleStart)
+        super.init (ruleStart);
     end if;
 
     override

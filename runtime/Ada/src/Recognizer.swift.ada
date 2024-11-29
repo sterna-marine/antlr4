@@ -31,7 +31,7 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
 
     -- open
     function getRuleNames () return [String] {
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     --
@@ -43,7 +43,7 @@ open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
     -- open
     function getVocabulary (This : …) return Vocabulary is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- 
@@ -58,16 +58,16 @@ begin
 
     -- public lazy
     tokenTypeMap : [String: Int] := {;
-        vocabulary : constant := getVocabulary()
+        vocabulary : constant := getVocabulary ();
 
-        var result := [String: Int]()
-        length : constant := getATN().maxTokenType
+        result := [String: Int]();
+        length : constant := getATN ().maxTokenType
         for i in 0 .. length loop
-            if literalName : constant := vocabulary.getLiteralName(i) then
+            if literalName : constant := vocabulary.getLiteralName (i) then
                 result[literalName] := i;
             end if;
 
-            if symbolicName : constant := vocabulary.getSymbolicName(i) then
+            if symbolicName : constant := vocabulary.getSymbolicName (i) then
                 result[symbolicName] := i;
             end if;
         end loop;
@@ -75,7 +75,7 @@ begin
         result["EOF"] := CommonToken.EOF
 
         return result
-    end if;()
+    end if;();
 
 
     -- 
@@ -90,15 +90,15 @@ begin
 
     -- public lazy
     ruleIndexMap : [String: Int] := {;
-        ruleNames : constant := getRuleNames()
-        return Utils.toMap(ruleNames)
-    end if;()
+        ruleNames : constant := getRuleNames ();
+        return Utils.toMap (ruleNames);
+    end if;();
 
 
     -- public
     function getTokenType (tokenName : String) return Integer is
 begin
-        return getTokenTypeMap()[tokenName] ?? CommonToken.INVALID_TYPE
+        return getTokenTypeMap ()[tokenName] ?? CommonToken.INVALID_TYPE
     end if;
 
     -- 
@@ -110,7 +110,7 @@ begin
     -- 
     -- open
     function getSerializedATN () return [Int] {
-        fatalError("there is no serialized ATN")
+        fatalError ("there is no serialized ATN");
     end if;
 
     -- For debugging and other purposes, might want the grammar name.
@@ -119,7 +119,7 @@ begin
     -- open
     function getGrammarFileName (This : …) return String is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- 
@@ -130,7 +130,7 @@ begin
     -- open
     function getATN (This : …) return ATN is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- 
@@ -173,28 +173,28 @@ begin
     -- open
     function getErrorHeader (e : RecognitionException) return String is
 begin
-        offending : constant := e.getOffendingToken()
-        line : constant := offending.getLine()
-        charPositionInLine : constant := offending.getCharPositionInLine()
+        offending : constant := e.getOffendingToken ();
+        line : constant := offending.getLine ();
+        charPositionInLine : constant := offending.getCharPositionInLine ();
         return "line \(line):\(charPositionInLine)"
     end if;
 
     -- open
     procedure addErrorListener (listener : ANTLRErrorListener) is
     begin
-        _listeners.append(listener)
+        _listeners.append (listener);
     end if;
 
     -- open
     procedure removeErrorListener (listener : ANTLRErrorListener) is
     begin
-        _listeners := _listeners.filter() { $0 !== listener}
+        _listeners := _listeners.filter () { $0 !== listener}
     end if;
 
     -- open
     procedure removeErrorListeners (This : …) is
 begin
-        _listeners.removeAll()
+        _listeners.removeAll ();
     end if;
 
     -- open
@@ -205,7 +205,7 @@ begin
     -- open
     function getErrorListenerDispatch (This : …) return ANTLRErrorListener is
 begin
-        return ProxyErrorListener(getErrorListeners())
+        return ProxyErrorListener (getErrorListeners ());
     end if;
 
     -- subclass needs to override these if there are sempreds or actions
@@ -243,32 +243,32 @@ begin
     -- public final
     procedure setState (atnState : Integer) is
     begin
---		System.err.println("setState "+atnState);
+--		System.err.println ("setState "+atnState);
         _stateNumber := atnState
---		if ( traceATNStates ) _ctx.trace(atnState);
+--		if ( traceATNStates ) _ctx.trace (atnState);
     end if;
 
     -- open
     function getInputStream () return Optional_IntStream is
    begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- open
     procedure setInputStream (input : IntStream) is
     begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- open
     function getTokenFactory (This : …) return TokenFactory is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- open
     procedure setTokenFactory (input : TokenFactory) is
     begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 end if;

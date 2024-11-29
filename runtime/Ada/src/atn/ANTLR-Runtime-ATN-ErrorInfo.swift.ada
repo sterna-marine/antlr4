@@ -12,7 +12,7 @@
 -- algorithm is unable to identify an alternative which would lead to a
 -- successful parse.
 -- 
--- - seealso: org.antlr.v4.runtime.Parser#notifyErrorListeners(org.antlr.v4.runtime.Token, String, org.antlr.v4.runtime.RecognitionException)
+-- - seealso: org.antlr.v4.runtime.Parser#notifyErrorListeners (org.antlr.v4.runtime.Token, String, org.antlr.v4.runtime.RecognitionException);
 -- - seealso: org.antlr.v4.runtime.ANTLRErrorListener#syntaxError
 -- 
 -- -  4.3
@@ -40,6 +40,6 @@ type ErrorInfo is new DecisionEventInfo with null record;
                 configs : ATNConfigSet;
                 input : TokenStream; startIndex : Integer; stopIndex : Integer;
                 fullCtx  : Boolean) {
-        super.init(decision, configs, input, startIndex, stopIndex, fullCtx)
+        super.init (decision, configs, input, startIndex, stopIndex, fullCtx);
     end if;
 end if;

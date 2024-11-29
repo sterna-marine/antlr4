@@ -123,30 +123,33 @@ type ATNState is new Hashable and CustomStringConvertible with null record;
     -- public final 
      atn: Optional_ATN; := null;
 
-    public internal(set) final var stateNumber: ATNStates.State := ATNStates.INVALID_STATE_NUMBER;
+    -- public internal (set) final
+    stateNumber: ATNStates.State := ATNStates.INVALID_STATE_NUMBER;
 
-    public internal(set) final var ruleIndex: Optional_Int;
+    -- public internal (set) final
+    ruleIndex: Optional_Int;
     -- at runtime, we don't have Rule objects
 
-    -- public private(set) final var
+    -- public private (set) final var
     epsilonOnlyTransitions : Boolean := False;
 
     -- 
     -- Track the transitions emanating from this ATN state.
     -- 
-    -- internal private(set) final
-    transitions := [Transition]()
+    -- internal private (set) final
+    transitions := [Transition]();
 
     -- 
     -- Used to cache lookahead during parsing, not used during construction
     -- 
-    public internal(set) final var nextTokenWithinRule: Optional_IntervalSet;
+    -- public internal (set) final
+    nextTokenWithinRule: Optional_IntervalSet;
 
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        hasher.combine(stateNumber)
+        hasher.combine (stateNumber);
     end if;
 
     -- public
@@ -160,7 +163,7 @@ begin
     description : String;
     function description return String is
         --return "MyClass \(string)"
-        return String(stateNumber)
+        return String (stateNumber);
     end if;
     -- public final
     function getTransitions () return [Transition] {
@@ -177,22 +180,22 @@ begin
     procedure addTransition (e : Transition) is
     begin
         if transitions.isEmpty then
-            epsilonOnlyTransitions := e.isEpsilon();
-        elsif epsilonOnlyTransitions /= e.isEpsilon() then
-            print("ATN state %d has both epsilon and non-epsilon transitions.\n", String(stateNumber))
+            epsilonOnlyTransitions := e.isEpsilon ();
+        elsif epsilonOnlyTransitions /= e.isEpsilon () then
+            print ("ATN state %d has both epsilon and non-epsilon transitions.\n", String (stateNumber));
             epsilonOnlyTransitions := False;
         end if;
 
-        var alreadyPresent := False;
+        alreadyPresent := False;
         for t in transitions loop
             if t.target.stateNumber = e.target.stateNumber then
-                if tLabel : constant := t.labelIntervalSet(), eLabel : constant := e.labelIntervalSet(), tLabel = eLabel then
-                    -- print("Repeated transition upon " & \(eLabel) & " from " & ATNStates.State'Image (stateNumber) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
+                if tLabel : constant := t.labelIntervalSet (), eLabel : constant := e.labelIntervalSet (), tLabel = eLabel then
+                    -- print ("Repeated transition upon " & \(eLabel) & " from " & ATNStates.State'Image (stateNumber) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
                     alreadyPresent := True;
                     exit when True;
                 end if;
-                elsif t.isEpsilon() and then e.isEpsilon() then
-                    -- print("Repeated epsilon transition from " & ATNStates.State'Image (stateNumber(stateNumber)) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
+                elsif t.isEpsilon () and then e.isEpsilon () then
+                    -- print ("Repeated epsilon transition from " & ATNStates.State'Image (stateNumber (stateNumber)) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
                     alreadyPresent := True;
                     exit when True;
                 end if;
@@ -200,7 +203,7 @@ begin
         end loop;
 
         if not alreadyPresent then
-            transitions.append(e);
+            transitions.append (e);
         end if;
     end if;
 
@@ -220,13 +223,13 @@ begin
     function removeTransition (index : Integer) return Transition is
 begin
 
-        return transitions.remove(at: index)
+        return transitions.remove (at: index);
     end if;
 
     -- public
     function getStateType (This : …) return Integer is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- public final

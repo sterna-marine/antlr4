@@ -13,13 +13,13 @@
 
 with Foundation;
 --public struct DefaultATNConfig: ATNConfig {
---    public var state: ATNState
---    public var alt : Integer;
---    public var context: Optional_PredictionContext;
---    public var semanticContext: SemanticContext
---    public var hashValue: Integer {
+--    public state: ATNState
+--    public alt : Integer;
+--    public context: Optional_PredictionContext;
+--    public semanticContext: SemanticContext
+--    public hashValue: Integer {
 --
---        var hashCode: Integer := 7
+--        hashCode: Integer := 7
 --        hashCode := 31 * hashCode + state.stateNumber
 --        hashCode := 31 * hashCode + alt
 --        hashCode := 31 * hashCode + semanticContext.hashValue
@@ -49,9 +49,9 @@ begin
 {
 --
 --    override
---    public var hashValue: Integer {
+--    public hashValue: Integer {
 --
---        var hashCode: Integer := 7
+--        hashCode: Integer := 7
 --        hashCode := 31 * hashCode + state.stateNumber
 --        hashCode := 31 * hashCode + alt
 --        hashCode := 31 * hashCode + semanticContext.hashValue

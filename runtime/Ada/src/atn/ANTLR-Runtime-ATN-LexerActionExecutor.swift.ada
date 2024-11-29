@@ -41,12 +41,12 @@ type LexerActionExecutor is new Hashable with null record;
     procedure Init (Self : in out …; lexerActions : [LexerAction]) {
         self.lexerActions := lexerActions
 
-        var hash := MurmurHash.initialize()
+        hash := MurmurHash.initialize ();
         for lexerAction: LexerAction in lexerActions loop
-            hash := MurmurHash.update(hash, lexerAction)
+            hash := MurmurHash.update (hash, lexerAction);
         end loop;
 
-        self.hashCode := MurmurHash.finish(hash, lexerActions.count)
+        self.hashCode := MurmurHash.finish (hash, lexerActions.count);
     end if;
 
     -- 
@@ -68,14 +68,14 @@ type LexerActionExecutor is new Hashable with null record;
     function append (lexerActionExecutor : Optional_LexerActionExecutor; lexerAction : LexerAction) return LexerActionExecutor is
 begin
         if not Is_Valid (lexerActionExecutor) then
-            return LexerActionExecutor([lexerAction])
+            return LexerActionExecutor ([lexerAction]);
         end if;
 
-        --var lexerActions : [LexerAction] := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
+        --lexerActions : [LexerAction] := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
         lexerActions : [LexerAction] := lexerActionExecutor.lexerActions;
-        lexerActions.append(lexerAction)
+        lexerActions.append (lexerAction);
         --lexerActions[lexerActions.length - 1] := lexerAction;
-        return LexerActionExecutor(lexerActions)
+        return LexerActionExecutor (lexerActions);
     end if;
 
     -- 
@@ -113,12 +113,12 @@ begin
         updatedLexerActions : [LexerAction]? := null;
         length : constant := lexerActions.count
         for i in 0 .. length - 1 loop
-            if lexerActions[i].isPositionDependent() and then not (lexerActions[i] is LexerIndexedCustomAction) then
+            if lexerActions[i].isPositionDependent () and then not (lexerActions[i] is LexerIndexedCustomAction) then
                 if updatedLexerActions = null then
-                    updatedLexerActions := lexerActions;  --lexerActions.clone();
+                    updatedLexerActions := lexerActions;  --lexerActions.clone ();
                 end if;
 
-                updatedLexerActions![i] := LexerIndexedCustomAction(offset, lexerActions[i])
+                updatedLexerActions![i] := LexerIndexedCustomAction (offset, lexerActions[i]);
             end if;
         end loop;
 
@@ -126,7 +126,7 @@ begin
             return self;
         end if;
 
-        return LexerActionExecutor(updatedLexerActions!)
+        return LexerActionExecutor (updatedLexerActions!);
     end if;
 
     -- 
@@ -160,11 +160,11 @@ begin
     -- public
     procedure execute (lexer : Lexer; input : CharStream; startIndex : Integer) is
     begin
-        var requiresSeek : Boolean := False;
-        stopIndex : constant Integer := input.index();
+        requiresSeek : Boolean := False;
+        stopIndex : constant Integer := input.index ();
         defer {
             if requiresSeek then
-                try! input.seek(stopIndex);
+                try! input.seek (stopIndex);
             end if;
         end if;
         --{;
@@ -172,18 +172,18 @@ begin
         lexerAction : LexerAction in self.lexerActions loop
             runLexerAction : constant Optional_LexerIndexedCustomAction := Set (lexerAction);
             if Is_Valid (runLexerAction) then
-                offset : constant Integer := runLexerAction.getOffset();
-                input.seek(startIndex + offset);
-                lexerAction := runLexerAction.getAction()
+                offset : constant Integer := runLexerAction.getOffset ();
+                input.seek (startIndex + offset);
+                lexerAction := runLexerAction.getAction ();
                 requiresSeek := (startIndex + offset) /= stopIndex
             else
-                if lexerAction.isPositionDependent() then
-                    input.seek(stopIndex);
+                if lexerAction.isPositionDependent () then
+                    input.seek (stopIndex);
                     requiresSeek := False;
                 end if;
             end if;
 
-            lexerAction.execute(lexer);
+            lexerAction.execute (lexer);
         end loop;
         --}
 
@@ -193,7 +193,7 @@ begin
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        hasher.combine(hashCode)
+        hasher.combine (hashCode);
     end if;
 end if;
 

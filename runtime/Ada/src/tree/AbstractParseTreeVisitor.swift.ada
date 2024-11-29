@@ -11,7 +11,7 @@ type AbstractParseTreeVisitor<T> is new ParseTreeVisitor<T> with null record;
     override
     procedure Init (Self : …) is
 begin
-        super.init()
+        super.init ();
     end if;
 
     -- 
@@ -22,12 +22,12 @@ begin
     override
     function visit (tree : ParseTree) return Optional_T is
    begin
-        return tree.accept(self)
+        return tree.accept (self);
     end if;
 
     --
     -- The default implementation initializes the aggregate result to
-    -- _#defaultResult defaultResult()_. Before visiting each child, it
+    -- _#defaultResult defaultResult ()_. Before visiting each child, it
     -- calls _#shouldVisitNextChild shouldVisitNextChild_; if the result
     -- is `False` no more children are visited and the current aggregate
     -- result is returned. After visiting a child, the aggregate result is
@@ -42,15 +42,15 @@ begin
     override
     function visitChildren (node : RuleNode) return Optional_T is
    begin
-        result : Optional_T; := defaultResult();
-        n : constant := node.getChildCount()
+        result : Optional_T; := defaultResult ();
+        n : constant := node.getChildCount ();
 
         for i in 0 .. n - 1 loop
-            exit when not shouldVisitNextChild(node, result);
+            exit when not shouldVisitNextChild (node, result);
 
             c : constant := node[i]
-            childResult : constant := c.accept(self)
-            result := aggregateResult(result, childResult)
+            childResult : constant := c.accept (self);
+            result := aggregateResult (result, childResult);
         end loop;
 
         return result
@@ -64,7 +64,7 @@ begin
     override
     function visitTerminal (node : TerminalNode) return Optional_T is
    begin
-        return defaultResult()
+        return defaultResult ();
     end if;
 
     --
@@ -75,7 +75,7 @@ begin
     -- open
     function visitErrorNode (node : ErrorNode) return Optional_T is
    begin
-        return defaultResult()
+        return defaultResult ();
     end if;
 
     -- 

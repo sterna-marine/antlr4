@@ -14,23 +14,23 @@ type EpsilonTransition is new Transition and CustomStringConvertible with null r
 
     -- public convenience 
     override
-    init(target : ATNState) {
-        self.init(target, -1)
+    init (target : ATNState) {
+        self.init (target, -1);
     end if;
 
     -- public 
     procedure Init (Self : in out …; target : ATNState; outermostPrecedenceReturn : Integer) {
 
         self.outermostPrecedenceReturnInside := outermostPrecedenceReturn
-        super.init(target)
+        super.init (target);
     end if;
 
     -- 
     -- - returns: the rule index of a precedence rule for which this transition is
     -- returning from, where the precedence value is 0; otherwise, -1.
     -- 
-    -- - seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed()
-    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#applyPrecedenceFilter(org.antlr.v4.runtime.atn.ATNConfigSet)
+    -- - seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed ();
+    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#applyPrecedenceFilter (org.antlr.v4.runtime.atn.ATNConfigSet);
     -- -  4.4.1
     -- 
     -- public

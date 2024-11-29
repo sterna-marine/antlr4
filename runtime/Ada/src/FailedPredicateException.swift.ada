@@ -18,10 +18,10 @@ type FailedPredicateException is new RecognitionException with null record;
 	private let predicateIndex : Integer;
 	private let predicate: Optional_String;
 
-	public init(recognizer : Parser; predicate : Optional_String; := null, message : Optional_String; := null) {
-		s : constant := recognizer.getInterpreter().atn.states[recognizer.getState()]!
+	public init (recognizer : Parser; predicate : Optional_String; := null, message : Optional_String; := null) {
+		s : constant := recognizer.getInterpreter ().atn.states[recognizer.getState ()]!
 
-		trans : constant AbstractPredicateTransition := AbstractPredicateTransition (s.transition(0));
+		trans : constant AbstractPredicateTransition := AbstractPredicateTransition (s.transition (0));
 		predex : constant PredicateTransition := PredicateTransition (trans);
 		if Is_Valid (predex) then
 			self.ruleIndex := predex.ruleIndex
@@ -33,9 +33,9 @@ type FailedPredicateException is new RecognitionException with null record;
 
 		self.predicate := predicate
 
-        super.init(recognizer, recognizer.getInputStream()!, recognizer._ctx, FailedPredicateException.formatMessage(predicate, message))
-        if token : constant := try? recognizer.getCurrentToken() then
-            setOffendingToken(token);
+        super.init (recognizer, recognizer.getInputStream ()!, recognizer._ctx, FailedPredicateException.formatMessage (predicate, message));
+        if token : constant := try? recognizer.getCurrentToken () then
+            setOffendingToken (token);
         end if;
 	end if;
 

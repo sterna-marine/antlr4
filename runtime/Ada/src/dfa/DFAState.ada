@@ -27,34 +27,34 @@
 -- the chain of rules (if any) followed to arrive at that state.
 --
 -- A DFA state may have multiple references to a particular state,
--- but with different ATN contexts (with same or different alts)
+-- but with different ATN contexts (with same or different alts);
 -- meaning that state was reached via a different set of rule invocations.
 --
 
 -- public final
 type DFAState is new Hashable and CustomStringConvertible with null record;
 {
-    -- public internal(set)
+    -- public internal (set);
     stateNumber : ATNStates.State := ATNState.INVALID_STATE_NUMBER;
 
-    public internal(set) var configs: ATNConfigSet
+    public internal (set) configs: ATNConfigSet
 
     --
-    -- `edges[symbol]` points to target of symbol. Shift up by 1 so (-1)
+    -- `edges[symbol]` points to target of symbol. Shift up by 1 so (-1);
     -- _org.antlr.v4.runtime.Token#EOF_ maps to `edges[0]`.
     --
-    public internal(set) var edges: [DFAState?]!
+    public internal (set) edges: [DFAState?]!
 
-    public internal(set) var isAcceptState := False;
+    public internal (set) isAcceptState := False;
 
     --
     -- if accept state, what ttype do we match or alt do we predict?
     -- This is set to _org.antlr.v4.runtime.atn.ATN#INVALID_ALT_NUMBER_ when _#predicates_`!=null` or
     -- _#requiresFullContext_.
     --
-    public internal(set) var prediction := ATN.INVALID_ALT_NUMBER
+    public internal (set) prediction := ATN.INVALID_ALT_NUMBER
 
-    public internal(set) var lexerActionExecutor: Optional_LexerActionExecutor;
+    public internal (set) lexerActionExecutor: Optional_LexerActionExecutor;
 
     --
     -- Indicates that this state was created during SLL prediction that
@@ -62,7 +62,7 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     -- _org.antlr.v4.runtime.atn.ParserATNSimulator#execATN_ invocations immediately jumped doing
     -- full context prediction if this field is True.
     --
-    public internal(set) var requiresFullContext := False;
+    public internal (set) requiresFullContext := False;
 
     --
     -- During SLL parsing, this is a list of predicates associated with the
@@ -78,13 +78,13 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     -- This list is computed by _org.antlr.v4.runtime.atn.ParserATNSimulator#predicateDFAState_.
     --
 
-    public internal(set) var predicates: [PredPrediction]?
+    public internal (set) predicates: [PredPrediction]?
 
     --
     -- mutex for states changes.
     --
-    -- internal private(set)
-    mutex := Mutex()
+    -- internal private (set);
+    mutex := Mutex ();
 
     --
     -- Map a predicate to a predicted alternative.
@@ -123,26 +123,26 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     --
     -- public
     function getAltSet () return Set<Int>? {
-        return configs.getAltSet()
+        return configs.getAltSet ();
     end if;
 
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        hasher.combine(configs)
+        hasher.combine (configs);
     end if;
 
     -- public
     description : String;
     function description return String is
-        var buf := ATNState.State'Image (stateNumber) & ":" & \(configs)
+        buf := ATNState.State'Image (stateNumber) & ":" & \(configs);
         if isAcceptState then
             buf := @ + "=>";
             if predicates : constant := predicates then
-                buf := @ + String(describing: predicates);
+                buf := @ + String (describing: predicates);
             else
-                buf := @ + String(prediction);
+                buf := @ + String (prediction);
             end if;
         end if;
         return buf
@@ -168,5 +168,5 @@ begin
     if lhs === rhs then
         return True;
     end if;
-    return (lhs.configs = rhs.configs)
+    return (lhs.configs = rhs.configs);
 end if;

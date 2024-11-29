@@ -20,7 +20,7 @@ bypassAltsAtnCache : Optional_ATN; := null;
 --
 -- mutex for bypassAltsAtnCache updates
 --
-private bypassAltsAtnCacheMutex : constant := Mutex()
+private bypassAltsAtnCacheMutex : constant := Mutex ();
 
 
 --
@@ -32,22 +32,22 @@ private bypassAltsAtnCacheMutex : constant := Mutex()
         host: Parser
       end record;
 
-        procedure Init(Self : in out TraceListener; host : Parser) {
+        procedure Init (Self : in out TraceListener; host : Parser) {
             self.host := host
         end Init;
 
         -- public
         procedure enterEveryRule (This : TraceListener; ctx : ParserRuleContext) is
         begin
-            ruleName : constant := host.getRuleNames()[ctx.getRuleIndex()]
-            lt1 : constant := host._input.LT(1)!.getText()!;
-            print("enter   \(ruleName), LT(1)=\(lt1)")
+            ruleName : constant := host.getRuleNames ()[ctx.getRuleIndex ()]
+            lt1 : constant := host._input.LT (1)!.getText ()!;
+            print ("enter   \(ruleName), LT (1)=\(lt1)");
         end if;
 
         -- public
         procedure visitTerminal (This :TraceListener; node : TerminalNode) is
         begin
-            print("consume \(String(describing: node.getSymbol())) rule \(host.getRuleNames()[host._ctx!.getRuleIndex()])")
+            print ("consume \(String (describing: node.getSymbol ())) rule \(host.getRuleNames ()[host._ctx!.getRuleIndex ()])");
         end if;
 
         -- public
@@ -59,9 +59,9 @@ private bypassAltsAtnCacheMutex : constant := Mutex()
         -- public
         procedure exitEveryRule (This :TraceListener; ctx : ParserRuleContext) is
         begin
-            ruleName : constant := host.getRuleNames()[ctx.getRuleIndex()]
-            lt1 : constant := host._input.LT(1)!.getText()!;
-            print("exit    \(ruleName), LT(1)=\(lt1)")
+            ruleName : constant := host.getRuleNames ()[ctx.getRuleIndex ()]
+            lt1 : constant := host._input.LT (1)!.getText ()!;
+            print ("exit    \(ruleName), LT (1)=\(lt1)");
         end if;
     end if;
 
@@ -69,7 +69,7 @@ private bypassAltsAtnCacheMutex : constant := Mutex()
     type TrimToSizeListener is new ParseTreeListener with record
 
         -- public static 
-        INSTANCE : constant := TrimToSizeListener()
+        INSTANCE : constant := TrimToSizeListener ();
    end record;
 
         -- public
@@ -101,7 +101,7 @@ type Parser is new Recognizer<ParserATNSimulator> with record
     -- public static 
     EOF : constant := -1
     -- public static 
-    var ConsoleError := True;
+    ConsoleError := True;
 
     TraceListener : TraceListener;
    end record;
@@ -116,7 +116,7 @@ type Parser is new Recognizer<ParserATNSimulator> with record
     -- - SeeAlso: #setErrorHandler
     -- 
     -- public
-    _errHandler : ANTLRErrorStrategy := DefaultErrorStrategy()
+    _errHandler : ANTLRErrorStrategy := DefaultErrorStrategy ();
 
     -- 
     -- The input stream.
@@ -129,10 +129,10 @@ type Parser is new Recognizer<ParserATNSimulator> with record
 
     -- internal
     _precedenceStack : Stack<Int> := {
-        var precedenceStack := Stack<Int> ()
-        precedenceStack.push(0)
+        precedenceStack := Stack<Int> ();
+        precedenceStack.push (0);
         return precedenceStack
-    end if;()
+    end if;();
 
 
     -- 
@@ -182,25 +182,25 @@ end record;
     -- public 
     procedure Init (Self : in out Parser; input : TokenStream) {
         self._input := input
-        super.init()
-        setInputStream(input);
+        super.init ();
+        setInputStream (input);
     end if;
 
     -- reset the parser's state
     -- public
     procedure reset (This : Parser) is
 begin
-        getInputStream()?.seek(0);
-        _errHandler.reset(self)
+        getInputStream ()?.seek (0);
+        _errHandler.reset (self);
         _ctx := null;
         _syntaxErrors := 0
-        setTrace(False)
-        _precedenceStack.clear()
-        _precedenceStack.push(0)
+        setTrace (False);
+        _precedenceStack.clear ();
+        _precedenceStack.push (0);
 
-        --  getInterpreter();
+        --  getInterpreter ();
         if interpreter : constant := _interp then
-            interpreter.reset();
+            interpreter.reset ();
         end if;
     end if;
 
@@ -214,8 +214,8 @@ begin
     -- strategy to attempt recovery. If _#getBuildParseTree_ is
     -- `True` and the token index of the symbol returned by
     -- _org.antlr.v4.runtime.ANTLRErrorStrategy#recoverInline_ is -1, the symbol is added to
-    -- the parse tree by calling _#createErrorNode(ParserRuleContext, Token)_ then
-    -- _ParserRuleContext#addErrorNode(ErrorNode)_.
+    -- the parse tree by calling _#createErrorNode (ParserRuleContext, Token)_ then
+    -- _ParserRuleContext#addErrorNode (ErrorNode)_.
     -- 
     -- - Parameter ttype: the token type to match
     -- - Throws: org.antlr.v4.runtime.RecognitionException if the current input symbol did not match
@@ -227,16 +227,16 @@ begin
     -- public
     function match (This : Parser; ttype : Integer) return Token is
 begin
-        var t := getCurrentToken();
-        if t.getType() == ttype then
-            _errHandler.reportMatch(self)
-            consume();
+        t := getCurrentToken ();
+        if t.getType () == ttype then
+            _errHandler.reportMatch (self);
+            consume ();
         else
-            t := _errHandler.recoverInline(self);
-            if _buildParseTrees and then t.getTokenIndex() == -1 then
+            t := _errHandler.recoverInline (self);
+            if _buildParseTrees and then t.getTokenIndex () == -1 then
                 -- we must have conjured up a new token during single token insertion
                 -- if it's not the current symbol
-                _ctx!.addErrorNode(createErrorNode(parent: _ctx!, t: t));
+                _ctx!.addErrorNode (createErrorNode (parent: _ctx!, t: t));
             end if;
         end if;
         return t
@@ -252,8 +252,8 @@ begin
     -- strategy to attempt recovery. If _#getBuildParseTree_ is
     -- `True` and the token index of the symbol returned by
     -- _org.antlr.v4.runtime.ANTLRErrorStrategy#recoverInline_ is -1, the symbol is added to
-    -- the parse tree by calling _#createErrorNode(ParserRuleContext, Token)_ then
-    -- _ParserRuleContext#addErrorNode(ErrorNode)_.
+    -- the parse tree by calling _#createErrorNode (ParserRuleContext, Token)_ then
+    -- _ParserRuleContext#addErrorNode (ErrorNode)_.
     -- 
     -- - Throws: org.antlr.v4.runtime.RecognitionException if the current input symbol did not match
     -- a wildcard and the error strategy could not recover from the mismatched
@@ -264,16 +264,16 @@ begin
     -- public
     function matchWildcard (This : Parser) return Token is
 begin
-        var t := getCurrentToken();
-        if t.getType() > 0 then
-            _errHandler.reportMatch(self)
-            consume();
+        t := getCurrentToken ();
+        if t.getType () > 0 then
+            _errHandler.reportMatch (self);
+            consume ();
         else
-            t := _errHandler.recoverInline(self);
-            if _buildParseTrees and then t.getTokenIndex() == -1 then
+            t := _errHandler.recoverInline (self);
+            if _buildParseTrees and then t.getTokenIndex () == -1 then
                 -- we must have conjured up a new token during single token insertion
                 -- if it's not the current symbol
-                _ctx!.addErrorNode(createErrorNode(parent: _ctx!, t: t));
+                _ctx!.addErrorNode (createErrorNode (parent: _ctx!, t: t));
             end if;
         end if;
 
@@ -325,12 +325,12 @@ begin
     procedure setTrimParseTree (This : Parser; trimParseTrees  : Boolean) is
     begin
         if trimParseTrees then
-            if getTrimParseTree() then
+            if getTrimParseTree () then
                 return;
             end if;
-            addParseListener(TrimToSizeListener.INSTANCE)
+            addParseListener (TrimToSizeListener.INSTANCE);
         else
-            removeParseListener(TrimToSizeListener.INSTANCE);
+            removeParseListener (TrimToSizeListener.INSTANCE);
         end if;
     end if;
 
@@ -341,12 +341,12 @@ begin
     -- public
     function getTrimParseTree (This : Parser) return Boolean is
 begin
-        return not getParseListeners().filter({ $0 === TrimToSizeListener.INSTANCE}).isEmpty
+        return not getParseListeners ().filter ({ $0 === TrimToSizeListener.INSTANCE}).isEmpty
     end if;
 
     -- public
     function getParseListeners () return [ParseTreeListener] {
-        return _parseListeners ?? [ParseTreeListener]()
+        return _parseListeners ?? [ParseTreeListener]();
     end if;
 
     -- 
@@ -381,7 +381,7 @@ begin
             _parseListeners := [ParseTreeListener]();
         end if;
 
-        _parseListeners!.append(listener)
+        _parseListeners!.append (listener);
     end if;
 
     -- 
@@ -399,8 +399,8 @@ begin
     procedure removeParseListener (This : Parser; listener : Optional_ParseTreeListener;) is
     begin
         if _parseListeners /= null then
-            if not _parseListeners!.filter({ $0 === listener}).isEmpty then
-                _parseListeners := _parseListeners!.filter({$0 !== listener})
+            if not _parseListeners!.filter ({ $0 === listener}).isEmpty then
+                _parseListeners := _parseListeners!.filter ({$0 !== listener});
                 if _parseListeners!.isEmpty then
                     _parseListeners := null;
                 end if;
@@ -429,8 +429,8 @@ begin
 begin
         if _parseListeners : constant := _parseListeners, _ctx : constant := _ctx then
             for listener: ParseTreeListener in _parseListeners loop
-                listener.enterEveryRule(_ctx);
-                _ctx.enterRule(listener)
+                listener.enterEveryRule (_ctx);
+                _ctx.enterRule (listener);
             end loop;
         end if;
     end if;
@@ -445,9 +445,9 @@ begin
 begin
         -- reverse order walk of listeners
         if Is_Valid (_parseListeners) or Is_Valid (_ctx) then
-            for listener in _parseListeners.reversed() loop
-                _ctx.exitRule(listener)
-                listener.exitEveryRule(_ctx);
+            for listener in _parseListeners.reversed () loop
+                _ctx.exitRule (listener);
+                listener.exitEveryRule (_ctx);
             end loop;
         end if;
     end if;
@@ -468,7 +468,7 @@ begin
     -- open
     function getTokenFactory (This : Parser; ) return TokenFactory is
 begin
-        return _input.getTokenSource().getTokenFactory()
+        return _input.getTokenSource ().getTokenFactory ();
     end if;
 
     -- Tell our token source and error strategy about a new way to create tokens.
@@ -476,7 +476,7 @@ begin
     -- open
     procedure setTokenFactory (This : Parser; factory : TokenFactory) is
     begin
-        _input.getTokenSource().setTokenFactory(factory)
+        _input.getTokenSource ().setTokenFactory (factory);
     end if;
 
     -- 
@@ -486,16 +486,16 @@ begin
     -- public
     function getATNWithBypassAlts (TThis : Parser; ) return ATN is
 begin
-        serializedAtn : constant := getSerializedATN()
+        serializedAtn : constant := getSerializedATN ();
 
         return bypassAltsAtnCacheMutex.synchronized {
             if cachedResult : constant := bypassAltsAtnCache then
                 return cachedResult;
             end if;
 
-            var opts := ATNDeserializationOptions()
+            opts := ATNDeserializationOptions ();
             opts.generateRuleBypassTransitions := True;
-            result : constant := try! ATNDeserializer(opts).deserialize(serializedAtn)
+            result : constant := try! ATNDeserializer (opts).deserialize (serializedAtn);
             bypassAltsAtnCache := result
             return bypassAltsAtnCache!
         end if;
@@ -506,36 +506,36 @@ begin
     -- sample use:
     -- 
     -- 
-    -- ParseTree t := parser.expr();
-    -- ParseTreePattern p := parser.compileParseTreePattern("&lt;ID&gt;+0", MyParser.RULE_expr);
-    -- ParseTreeMatch m := p.match(t);
-    -- String id := m.get("ID");
+    -- ParseTree t := parser.expr ();
+    -- ParseTreePattern p := parser.compileParseTreePattern ("&lt;ID&gt;+0", MyParser.RULE_expr);
+    -- ParseTreeMatch m := p.match (t);
+    -- String id := m.get ("ID");
     -- 
     -- 
     -- public
     function compileParseTreePattern (This : Parser; pattern : String; patternRuleIndex : Integer) return ParseTreePattern is
 begin
-        tokenStream : constant Optional_Token := Set (getTokenStream());
+        tokenStream : constant Optional_Token := Set (getTokenStream ());
          if Is_Valid (tokenStream) then
-            tokenSource : constant := tokenStream.getTokenSource()
+            tokenSource : constant := tokenStream.getTokenSource ();
             lexer : constant Optional_Lexer := Set (tokenSource);
             if Is_Valid (lexer) then
-                return compileParseTreePattern(pattern, patternRuleIndex, lexer);
+                return compileParseTreePattern (pattern, patternRuleIndex, lexer);
             end if;
         end if;
         raise ANTLRError.unsupportedOperation with "Parser can't discover a lexer to use";
     end if;
 
     -- 
-    -- The same as _#compileParseTreePattern(String, int)_ but specify a
+    -- The same as _#compileParseTreePattern (String, int)_ but specify a
     -- _org.antlr.v4.runtime.Lexer_ rather than trying to deduce it from this parser.
     -- 
     -- public
     procedure compileParseTreePattern (This : Parser; pattern : String; patternRuleIndex : Integer;
                                         lexer : Lexer) return ParseTreePattern is
 begin
-        m : constant := ParseTreePatternMatcher(lexer, self)
-        return m.compile(pattern, patternRuleIndex);
+        m : constant := ParseTreePatternMatcher (lexer, self);
+        return m.compile (pattern, patternRuleIndex);
     end if;
 
 
@@ -555,14 +555,14 @@ begin
     -- open
     function getInputStream (This : Parser) return Optional_IntStream is
    begin
-        return getTokenStream()
+        return getTokenStream ();
     end if;
 
     override
     -- public final
     procedure setInputStream (This : Parser; input : IntStream) is
     begin
-        setTokenStream(TokenStream (input));
+        setTokenStream (TokenStream (input));
     end if;
 
     -- public
@@ -577,7 +577,7 @@ begin
     begin
         --TODO self._input := null;
         self._input := null;
-        reset();
+        reset ();
         self._input := input
     end if;
 
@@ -588,30 +588,30 @@ begin
     -- public
     function getCurrentToken (This : Parser) return Token is
 begin
-        return _input.LT(1)!;
+        return _input.LT (1)!;
     end if;
 
     -- public final
     procedure notifyErrorListeners (This : Parser; msg : String) is
     begin
-        token : constant := try? getCurrentToken()
-        notifyErrorListeners(token, msg, null)
+        token : constant := try? getCurrentToken ();
+        notifyErrorListeners (token, msg, null);
     end if;
 
     -- public
     procedure notifyErrorListeners (This : Parser; offendingToken : Optional_Token; msg : String; e : Optional_AnyObject;) is
     begin
         _syntaxErrors := @ + 1;
-        var line := -1
-        var charPositionInLine := -1
+        line := -1
+        charPositionInLine := -1
         offendingToken : constant Optional_Token := Set (offendingToken);
          if Is_Valid (offendingToken) then
-            line := offendingToken.getLine()
-            charPositionInLine := offendingToken.getCharPositionInLine()
+            line := offendingToken.getLine ();
+            charPositionInLine := offendingToken.getCharPositionInLine ();
         end if;
 
-        listener : constant := getErrorListenerDispatch()
-        listener.syntaxError(self, offendingToken, line, charPositionInLine, msg, e)
+        listener : constant := getErrorListenerDispatch ();
+        listener.syntaxError (self, offendingToken, line, charPositionInLine, msg, e);
     end if;
 
     -- 
@@ -627,11 +627,11 @@ begin
     -- 
     -- 
     -- If the parser is not in error recovery mode, the consumed symbol is added
-    -- to the parse tree using _ParserRuleContext#addChild(TerminalNode)_, and
+    -- to the parse tree using _ParserRuleContext#addChild (TerminalNode)_, and
     -- _org.antlr.v4.runtime.tree.ParseTreeListener#visitTerminal_ is called on any parse listeners.
     -- If the parser __is__ in error recovery mode, the consumed symbol is
-    -- added to the parse tree using _#createErrorNode(ParserRuleContext, Token)_ then
-    -- _ParserRuleContext#addErrorNode(ErrorNode)_ and
+    -- added to the parse tree using _#createErrorNode (ParserRuleContext, Token)_ then
+    -- _ParserRuleContext#addErrorNode (ErrorNode)_ and
     -- _org.antlr.v4.runtime.tree.ParseTreeListener#visitErrorNode_ is called on any parse
     -- listeners.
     -- 
@@ -639,9 +639,9 @@ begin
     -- public
     function consume (This : Parser; ) return Token is
 begin
-        o : constant Token := getCurrentToken();
-        if o.getType() /= Parser.EOF then
-            getInputStream()!.consume();
+        o : constant Token := getCurrentToken ();
+        if o.getType () /= Parser.EOF then
+            getInputStream ()!.consume ();
         end if;
         if not Is_Valid (_ctx) then
             return o;
@@ -649,20 +649,20 @@ begin
         hasListener : constant := _parseListeners /= null and then not _parseListeners!.isEmpty
 
         if _buildParseTrees or else hasListener then
-            if _errHandler.inErrorRecoveryMode(self) then
-                node : constant := createErrorNode(parent: _ctx, t: o)
-                _ctx.addErrorNode(node)
+            if _errHandler.inErrorRecoveryMode (self) then
+                node : constant := createErrorNode (parent: _ctx, t: o);
+                _ctx.addErrorNode (node);
                 if _parseListeners : constant := _parseListeners then
                     for listener in _parseListeners loop
-                        listener.visitErrorNode(node)
+                        listener.visitErrorNode (node);
                     end loop;
                 end if;
             else
-                node : constant := createTerminalNode(parent: _ctx, t: o)
-                _ctx.addChild(node)
+                node : constant := createTerminalNode (parent: _ctx, t: o);
+                _ctx.addChild (node);
                 if _parseListeners : constant := _parseListeners then
                     for listener in _parseListeners loop
-                        listener.visitTerminal(node)
+                        listener.visitTerminal (node);
                     end loop;
                 end if;
             end if;
@@ -678,7 +678,7 @@ begin
     -- public
     function createTerminalNode (This : Parser; parent: ParserRuleContext, t: Token) return TerminalNode is
 begin
-        return TerminalNodeImpl(t)
+        return TerminalNodeImpl (t);
     end if;
 
     -- How to create an error node, given a token, associated with a parent.
@@ -689,7 +689,7 @@ begin
     -- public
     function createErrorNode (This : Parser; parent: ParserRuleContext, t: Token) return ErrorNode is
 begin
-        return ErrorNode(t)
+        return ErrorNode (t);
     end if;
 
     -- internal
@@ -699,7 +699,7 @@ begin
         -- add current context to parent if we have a parent
         parent : constant ParserRuleContext := ParserRuleContext (_ctx?.parent);
         if Is_Valid (parent) then
-            parent.addChild(_ctx!);
+            parent.addChild (_ctx!);
         end if;
     end if;
 
@@ -710,11 +710,11 @@ begin
     -- public
     procedure enterRule (This : Parser; localctx : ParserRuleContext; state : Integer; ruleIndex : Integer) is
     begin
-        setState(state)
+        setState (state);
         _ctx := localctx
-        _ctx!.start := _input.LT(1);
+        _ctx!.start := _input.LT (1);
         if _buildParseTrees then
-            addContextToParseTree();
+            addContextToParseTree ();
         end if;
     end if;
 
@@ -725,31 +725,31 @@ begin
         if not Is_Valid (ctx) then
             exit;
         end if;
-        ctx.stop := _input.LT(-1);
+        ctx.stop := _input.LT (-1);
         -- trigger event on _ctx, before it reverts to parent
         if _parseListeners /= null then
-            triggerExitRuleEvent();
+            triggerExitRuleEvent ();
         end if;
-        setState(ctx.invokingState)
+        setState (ctx.invokingState);
         _ctx := Is_Valid (ctx.parent); -- as ParserRuleContext
     end if;
 
     -- public
     procedure enterOuterAlt (This : Parser; localctx : ParserRuleContext; altNum : Integer) is
     begin
-        localctx.setAltNumber(altNum)
+        localctx.setAltNumber (altNum);
         -- if we have new localctx, make sure we replace existing ctx
         -- that is previous child of parse tree
         if _buildParseTrees and then _ctx! !== localctx then
             parent : constant ParserRuleContext := ParserRuleContext (_ctx?.parent);
             if Is_Valid (parent) then
-                parent.removeLastChild()
-                parent.addChild(localctx)
+                parent.removeLastChild ();
+                parent.addChild (localctx);
             end if;
         end if;
         _ctx := localctx
         if _parseListeners /= null then
-            triggerEnterRuleEvent();
+            triggerEnterRuleEvent ();
         end if;
     end if;
 
@@ -766,12 +766,12 @@ begin
             return -1;
         end if;
 
-        return _precedenceStack.peek() ?? -1
+        return _precedenceStack.peek () ?? -1
     end if;
 
     -- 
     -- Use
-    -- _#enterRecursionRule(org.antlr.v4.runtime.ParserRuleContext, int, int, int)_ instead.
+    -- _#enterRecursionRule (org.antlr.v4.runtime.ParserRuleContext, int, int, int)_ instead.
     -- 
     -- 
     -- /@Deprecated
@@ -779,18 +779,18 @@ begin
     -- public
     procedure enterRecursionRule (This : Parser; localctx : ParserRuleContext; ruleIndex : Integer) is
     begin
-        enterRecursionRule(localctx, getATN().ruleToStartState[ruleIndex].stateNumber, ruleIndex, 0);
+        enterRecursionRule (localctx, getATN ().ruleToStartState[ruleIndex].stateNumber, ruleIndex, 0);
     end if;
 
     -- public
     procedure enterRecursionRule (This : Parser; localctx : ParserRuleContext; state : Integer; ruleIndex : Integer; precedence : Integer) is
     begin
-        setState(state)
-        _precedenceStack.push(precedence)
+        setState (state);
+        _precedenceStack.push (precedence);
         _ctx := localctx
-        _ctx!.start := _input.LT(1);
+        _ctx!.start := _input.LT (1);
         if _parseListeners /= null then
-            triggerEnterRuleEvent(); -- simulates rule enfor left-recursive rules;
+            triggerEnterRuleEvent (); -- simulates rule enfor left-recursive rules;
         end if;
     end if;
 
@@ -803,30 +803,30 @@ begin
         previous : constant := _ctx!
         previous.parent := localctx
         previous.invokingState := state
-        previous.stop := _input.LT(-1);
+        previous.stop := _input.LT (-1);
 
         _ctx := localctx
         _ctx!.start := previous.start
         if _buildParseTrees then
-            _ctx!.addChild(previous);
+            _ctx!.addChild (previous);
         end if;
 
         if _parseListeners /= null then
-            triggerEnterRuleEvent(); -- simulates rule enfor left-recursive rules;
+            triggerEnterRuleEvent (); -- simulates rule enfor left-recursive rules;
         end if;
     end if;
 
     -- public
     procedure unrollRecursionContexts (This : Parser; _parentctx : Optional_ParserRuleContext;) is
     begin
-        _precedenceStack.pop()
-        _ctx!.stop := _input.LT(-1);
-        retctx : constant := _ctx! -- save current ctx (return value)
+        _precedenceStack.pop ();
+        _ctx!.stop := _input.LT (-1);
+        retctx : constant := _ctx! -- save current ctx (return value);
 
         -- unroll so _ctx is as it was before call to recursive method
         if _parseListeners /= null then
             while ctxWrap : constant := _ctx, ctxWrap !== _parentctx loop
-                triggerExitRuleEvent();
+                triggerExitRuleEvent ();
                 _ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
             end loop;
         else
@@ -838,16 +838,16 @@ begin
 
         if _buildParseTrees and then _parentctx /= null then
             -- add return ctx into invoking rule's tree
-            _parentctx!.addChild(retctx)
+            _parentctx!.addChild (retctx);
         end if;
     end if;
 
     -- public
     function getInvokingContext (This : Parser; ruleIndex : Integer) return Optional_ParserRuleContext is
    begin
-        var p := _ctx
+        p := _ctx
         while pWrap : constant := p loop
-            if pWrap.getRuleIndex() == ruleIndex then
+            if pWrap.getRuleIndex () == ruleIndex then
                 return pWrap;
             end if;
             p := Is_Valid (pWrap.parent); -- as ParserRuleContext
@@ -871,7 +871,7 @@ begin
     -- open
     function precpred (This : Parser; localctx : Optional_RuleContext; precedence : Integer) return Boolean is
 begin
-        return precedence >= _precedenceStack.peek()!
+        return precedence >= _precedenceStack.peek ()!
     end if;
 
     -- public
@@ -896,7 +896,7 @@ begin
     -- This method resets/seeks within but does not alter originalParser.
     -- The input position is restored upon exit from this method.
     -- Parsers using a _org.antlr.v4.runtime.UnbufferedTokenStream_ may not be able to
-    -- perform the necessary save index() / seek(saved_index) operation.
+    -- perform the necessary save index () / seek (saved_index) operation.
     -- 
     -- The trees are rooted at the node whose start .. stop token indices
     -- include the start and stop indices of this ambiguity event. That is,
@@ -920,7 +920,7 @@ begin
     -- - Parameter originalParser: The parser used to create ambiguityInfo; it
     -- is not modified by this routine and can be either
     -- a generated or interpreted parser. It's token
-    -- stream *is* reset/seek()'d.
+    -- stream *is* reset/seek ()'d.
     -- - Parameter ambiguityInfo:  The information about an ambiguous decision event
     -- for which you want ambiguous parse trees.
     -- - Parameter startRuleIndex: The start rule for the entire grammar, not
@@ -942,49 +942,49 @@ begin
 --																 _ ambiguityInfo : AmbiguityInfo;
 --																 _ startRuleIndex : Integer) return Array<ParserRuleContext>  --; RecognitionException
 --	{
---		var trees : Array<ParserRuleContext> := Array<ParserRuleContext> ();
---		var saveTokenInputPosition : Integer := originalParser.getTokenStream().index();
+--		trees : Array<ParserRuleContext> := Array<ParserRuleContext> ();
+--		saveTokenInputPosition : Integer := originalParser.getTokenStream ().index ();
 --		--{;
 --			-- Create a new parser interpreter to parse the ambiguous subphrase
---			var parser : ParserInterpreter;
+--			parser : ParserInterpreter;
 --			if ( originalParser is ParserInterpreter ) {
---				parser := ParserInterpreter( ParserInterpreter (originalParser));
+--				parser := ParserInterpreter ( ParserInterpreter (originalParser));
 --			}
 --			else {
---				var serializedAtn : [Character] := ATNSerializer.getSerializedAsChars(originalParser.getATN());
---				var deserialized : ATN := ATNDeserializer().deserialize(serializedAtn);
---				parser := ParserInterpreter(originalParser.getGrammarFileName(),
---											   originalParser.getVocabulary(),
---											    originalParser.getRuleNames() ,
+--				serializedAtn : [Character] := ATNSerializer.getSerializedAsChars (originalParser.getATN ());
+--				deserialized : ATN := ATNDeserializer ().deserialize (serializedAtn);
+--				parser := ParserInterpreter (originalParser.getGrammarFileName (),
+--											   originalParser.getVocabulary (),
+--											    originalParser.getRuleNames () ,
 --											   deserialized,
---											   originalParser.getTokenStream());
+--											   originalParser.getTokenStream ());
 --			}
 --
 --			-- Make sure that we don't get any error messages from using this temporary parser
---			parser.removeErrorListeners();
---			parser.removeParseListeners();
---			parser.getInterpreter()!.setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION);
+--			parser.removeErrorListeners ();
+--			parser.removeParseListeners ();
+--			parser.getInterpreter ()!.setPredictionMode (PredictionMode.LL_EXACT_AMBIG_DETECTION);
 --
 --			-- get ambig trees
---			var alt : Integer := ambiguityInfo.ambigAlts.firstSetBit();
+--			alt : Integer := ambiguityInfo.ambigAlts.firstSetBit ();
 --			while  alt>=0  loop
 --				-- re-parse entire input for all ambiguous alternatives
 --				-- (don't have to do first as it's been parsed, but do again for simplicity
---				--  using this temp parser.)
---				parser.reset();
---				parser.getTokenStream().seek(0); -- rewind the input all the way for re-parsing
+--				--  using this temp parser.);
+--				parser.reset ();
+--				parser.getTokenStream ().seek (0); -- rewind the input all the way for re-parsing
 --				parser.overrideDecision := ambiguityInfo.decision;
 --				parser.overrideDecisionInputIndex := ambiguityInfo.startIndex;
 --				parser.overrideDecisionAlt := alt;
---				var t : ParserRuleContext := parser.parse(startRuleIndex);
---				var ambigSubTree : ParserRuleContext =
---					Trees.getRootOfSubtreeEnclosingRegion(t, ambiguityInfo.startIndex, ambiguityInfo.stopIndex)!;
---				trees.append(ambigSubTree);
---				alt := ambiguityInfo.ambigAlts.nextSetBit(alt+1);
+--				t : ParserRuleContext := parser.parse (startRuleIndex);
+--				ambigSubTree : ParserRuleContext =
+--					Trees.getRootOfSubtreeEnclosingRegion (t, ambiguityInfo.startIndex, ambiguityInfo.stopIndex)!;
+--				trees.append (ambigSubTree);
+--				alt := ambiguityInfo.ambigAlts.nextSetBit (alt+1);
 --			end loop;
 --		--}
 --		defer {
---			originalParser.getTokenStream().seek(saveTokenInputPosition);
+--			originalParser.getTokenStream ().seek (saveTokenInputPosition);
 --		}
 --
 --		return trees;
@@ -997,7 +997,7 @@ begin
     -- need to be explicitly constructed.
     -- 
     -- 
-    -- return getExpectedTokens().contains(symbol);
+    -- return getExpectedTokens ().contains (symbol);
     -- 
     -- 
     -- - Parameter symbol: the symbol type to check
@@ -1007,30 +1007,30 @@ begin
     -- public
     function isExpectedToken (This : Parser; symbol : Integer) return Boolean is
 begin
-        atn : constant := getInterpreter().atn
+        atn : constant := getInterpreter ().atn
         ctx : Optional_ParserRuleContext; := _ctx;
-        s : constant := atn.states[getState()]!
-        var following := atn.nextTokens(s)
-        if following.contains(symbol) then
+        s : constant := atn.states[getState ()]!
+        following := atn.nextTokens (s);
+        if following.contains (symbol) then
             return True;
         end if;
---        System.out.println("following "+s+"="+following);
-        if not following.contains(CommonToken.EPSILON) then
+--        System.out.println ("following "+s+"="+following);
+        if not following.contains (CommonToken.EPSILON) then
             return False;
         end if;
 
-        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains(CommonToken.EPSILON) loop
+        while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 and then following.contains (CommonToken.EPSILON) loop
             invokingState : constant := atn.states[ctxWrap.invokingState]!
-            rt : constant RuleTransition := RuleTransition (invokingState.transition(0));
-            following := atn.nextTokens(rt.followState)
-            if following.contains(symbol) then
+            rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
+            following := atn.nextTokens (rt.followState);
+            if following.contains (symbol) then
                 return True;
             end if;
 
             ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
         end loop;
 
-        if following.contains(CommonToken.EPSILON) and then symbol = CommonToken.EOF then
+        if following.contains (CommonToken.EPSILON) and then symbol = CommonToken.EOF then
             return True;
         end if;
 
@@ -1042,28 +1042,28 @@ begin
     -- state and context, as given by _#getState_ and _#getContext_,
     -- respectively.
     -- 
-    -- - SeeAlso: org.antlr.v4.runtime.atn.ATN#getExpectedTokens(int, org.antlr.v4.runtime.RuleContext)
+    -- - SeeAlso: org.antlr.v4.runtime.atn.ATN#getExpectedTokens (int, org.antlr.v4.runtime.RuleContext);
     -- 
     -- public
     function getExpectedTokens (This : Parser) return IntervalSet is
 begin
-        return getATN().getExpectedTokens(getState(), getContext()!);
+        return getATN ().getExpectedTokens (getState (), getContext ()!);
     end if;
 
 
     -- public
     function getExpectedTokensWithinCurrentRule (This : Parser) return IntervalSet is
 begin
-        atn : constant := getInterpreter().atn
-        s : constant := atn.states[getState()]!
-        return atn.nextTokens(s)
+        atn : constant := getInterpreter ().atn
+        s : constant := atn.states[getState ()]!
+        return atn.nextTokens (s);
     end if;
 
     -- Get a rule's index (i.e., `RULE_ruleName` field) or -1 if not found.
     -- public
     function getRuleIndex (This : Parser; ruleName : String) return Integer is
 begin
-        return getRuleIndexMap()[ruleName] ?? -1
+        return getRuleIndexMap ()[ruleName] ?? -1
     end if;
 
     -- public
@@ -1081,21 +1081,21 @@ begin
     -- 
     -- public
     function getRuleInvocationStack (This : Parser) return [String] {
-        return getRuleInvocationStack(_ctx)
+        return getRuleInvocationStack (_ctx);
     end if;
 
     -- public
     function getRuleInvocationStack (This : Parser; p : Optional_RuleContext;) return [String] {
-        var p := p
-        ruleNames : constant := getRuleNames()
-        var stack := [String]()
+        p := p
+        ruleNames : constant := getRuleNames ();
+        stack := [String]();
         while pWrap : constant := p loop
             -- compute what follows who invoked us
-            ruleIndex : constant := pWrap.getRuleIndex()
+            ruleIndex : constant := pWrap.getRuleIndex ();
             if ruleIndex < 0 then
-                stack.append("n/a")
+                stack.append ("n/a");
             else
-                stack.append(ruleNames[ruleIndex]);
+                stack.append (ruleNames[ruleIndex]);
             end if;
             p := pWrap.parent
         end loop;
@@ -1108,8 +1108,8 @@ begin
         if not Is_Valid (_interp) then
             return []
         end if;
-        vocab : constant := getVocabulary()
-        return _interp.decisionToDFA.map {$0.toString(vocab)};
+        vocab : constant := getVocabulary ();
+        return _interp.decisionToDFA.map {$0.toString (vocab)};
     end if;
 
     -- For debugging and other purposes.
@@ -1119,15 +1119,15 @@ begin
         if not Is_Valid (_interp) then
             return
         end if;
-        var seenOne := False;
-        vocab : constant := getVocabulary()
+        seenOne := False;
+        vocab : constant := getVocabulary ();
         for dfa in _interp.decisionToDFA loop
             if not dfa.states.isEmpty then
                 if seenOne then
-                    print("");
+                    print ("");
                 end if;
-                print("Decision \(dfa.decision):")
-                print(dfa.toString(vocab), terminator: "")
+                print ("Decision \(dfa.decision):");
+                print (dfa.toString (vocab), terminator: "");
                 seenOne := True;
             end if;
         end loop;
@@ -1136,17 +1136,17 @@ begin
     -- public
     function getSourceName (This : Parser) return String is
 begin
-        return _input.getSourceName()
+        return _input.getSourceName ();
     end if;
 
     override
     -- open
     function getParseInfo (This : Parser) return Optional_ParseInfo is
    begin
-        interp : constant := getInterpreter()
+        interp : constant := getInterpreter ();
         interp : constant Optional_ProfilingATNSimulator := Set (interp);
         if Is_Valid (interp) then
-            return ParseInfo(interp);
+            return ParseInfo (interp);
         end if;
         return null;
     end if;
@@ -1157,18 +1157,18 @@ begin
     -- public
     procedure setProfile (This : Parser; profile  : Boolean) is
     begin
-        interp : constant := getInterpreter()
-        saveMode : constant := interp.getPredictionMode()
+        interp : constant := getInterpreter ();
+        saveMode : constant := interp.getPredictionMode ();
         if profile then
             if not (interp is ProfilingATNSimulator) then
-                setInterpreter(ProfilingATNSimulator(self));
+                setInterpreter (ProfilingATNSimulator (self));
             end if;
         end if;
         elsif interp is ProfilingATNSimulator then
-            sim : constant := ParserATNSimulator(self, getATN(), interp.decisionToDFA, interp.getSharedContextCache())
-            setInterpreter(sim)
+            sim : constant := ParserATNSimulator (self, getATN (), interp.decisionToDFA, interp.getSharedContextCache ());
+            setInterpreter (sim);
         end if;
-        getInterpreter().setPredictionMode(saveMode)
+        getInterpreter ().setPredictionMode (saveMode);
     end if;
 
     -- During a parse is sometimes useful to listen in on the rule enand exit;
@@ -1178,15 +1178,15 @@ begin
     procedure setTrace (This : Parser; trace  : Boolean) is
     begin
         if not trace then
-            removeParseListener(_tracer)
+            removeParseListener (_tracer);
             _tracer := null;
         else
             if _tracer : constant := _tracer then
-                removeParseListener(_tracer)
+                removeParseListener (_tracer);
             else
-                _tracer := TraceListener(self);
+                _tracer := TraceListener (self);
             end if;
-            addParseListener(_tracer!)
+            addParseListener (_tracer!);
         end if;
     end if;
 
@@ -1194,7 +1194,7 @@ begin
     -- Gets whether a _org.antlr.v4.runtime.Parser.TraceListener_ is registered as a parse listener
     -- for the parser.
     -- 
-    -- - SeeAlso: #setTrace(boolean)
+    -- - SeeAlso: #setTrace (boolean);
     -- 
     -- public
     function isTrace (This : Parser) return Boolean is

@@ -34,7 +34,7 @@ type ParserInterpreter is new Parser with null record;
     -- internal final
     decisionToDFA : [DFA];
     -- not shared like it is for generated parsers
-    internal sharedContextCache : constant := PredictionContextCache()
+    internal sharedContextCache : constant := PredictionContextCache ();
 
     -- internal
     ruleNames : constant [String];
@@ -45,7 +45,7 @@ type ParserInterpreter is new Parser with null record;
     -- Tracks LR rules for adjusting the contexts
     -- internal final
     _parentContextStack : Array<(ParserRuleContext?, Int)> =;
-    Array<(ParserRuleContext?, Int)>()
+    Array<(ParserRuleContext?, Int)>();
 
     -- We need a map from (decision,inputIndex)->forced alt for computing ambiguous
     -- parse trees. For now, we allow exactly one override.
@@ -73,10 +73,10 @@ type ParserInterpreter is new Parser with null record;
         self.decisionToDFA := old.decisionToDFA
         self.ruleNames := old.ruleNames
         self.vocabulary := old.vocabulary
-        super.init(old.getTokenStream()!)
-        setInterpreter(ParserATNSimulator(self, atn,
+        super.init (old.getTokenStream ()!);
+        setInterpreter (ParserATNSimulator (self, atn,
                 decisionToDFA,
-                sharedContextCache))
+                sharedContextCache));
     end if;
 
     -- public 
@@ -87,27 +87,27 @@ type ParserInterpreter is new Parser with null record;
         self.atn := atn
         self.ruleNames := ruleNames
         self.vocabulary := vocabulary
-        self.decisionToDFA := [DFA]()
-        for i in 0 ..< atn.getNumberOfDecisions() loop
-            decisionToDFA.append(DFA(atn.getDecisionState(i)!, i))
+        self.decisionToDFA := [DFA]();
+        for i in 0 ..< atn.getNumberOfDecisions () loop
+            decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
         end loop;
 
-        -- identify the ATN states where pushNewRecursionContext() must be called
-        self.statesNeedingLeftRecursionContext := try! BitSet(atn.states.count)
+        -- identify the ATN states where pushNewRecursionContext () must be called
+        self.statesNeedingLeftRecursionContext := try! BitSet (atn.states.count);
         for  state in atn.states loop
             state : constant Optional_StarLoopEntryState := Set (state);
             if Is_Valid (state) then
                 if state.precedenceRuleDecision then
-                    try! self.statesNeedingLeftRecursionContext.set(state.stateNumber);
+                    try! self.statesNeedingLeftRecursionContext.set (state.stateNumber);
                 end if;
             end if;
 
         end loop;
-        super.init(input);
+        super.init (input);
         -- get atn simulator that knows how to do predictions
-        setInterpreter(ParserATNSimulator(self, atn,
+        setInterpreter (ParserATNSimulator (self, atn,
                 decisionToDFA,
-                sharedContextCache))
+                sharedContextCache));
     end if;
 
     override
@@ -143,42 +143,42 @@ begin
 begin
         startRuleStartState : constant := atn.ruleToStartState[startRuleIndex]
 
-        rootContext : constant := InterpreterRuleContext(null, ATNState.INVALID_STATE_NUMBER, startRuleIndex)
+        rootContext : constant := InterpreterRuleContext (null, ATNState.INVALID_STATE_NUMBER, startRuleIndex);
         if startRuleStartState.isPrecedenceRule then
-            enterRecursionRule(rootContext, startRuleStartState.stateNumber, startRuleIndex, 0);
+            enterRecursionRule (rootContext, startRuleStartState.stateNumber, startRuleIndex, 0);
         else
-            enterRule(rootContext, startRuleStartState.stateNumber, startRuleIndex);
+            enterRule (rootContext, startRuleStartState.stateNumber, startRuleIndex);
         end if;
 
         loop
-            p : constant := getATNState()!
-            case p.getStateType() is
+            p : constant := getATNState ()!
+            case p.getStateType () is
                when ATNState.RULE_STOP =>
                   -- pop; return from rule
-                  if _ctx!.isEmpty() then
+                  if _ctx!.isEmpty () then
                      if startRuleStartState.isPrecedenceRule then
                            result : constant ParserRuleContext := _ctx!;
-                           parentContext : constant (ParserRuleContext?, Int) := _parentContextStack.pop();
-                           unrollRecursionContexts(parentContext.0!);
+                           parentContext : constant (ParserRuleContext?, Int) := _parentContextStack.pop ();
+                           unrollRecursionContexts (parentContext.0!);
                            return result
                      else
-                           exitRule();
+                           exitRule ();
                            return rootContext
                      end if;
                   end if;
 
-                  visitRuleStopState(p);
+                  visitRuleStopState (p);
 
 
                when others =>
                   do {
-                     self.visitState(p);
+                     self.visitState (p);
                   end if;
-                  catch ANTLRException.recognition(let e) {
-                     setState(self.atn.ruleToStopState[p.ruleIndex!].stateNumber)
-                     getContext()!.exception := e
-                     getErrorHandler().reportError(self, e)
-                     getErrorHandler().recover(self, e);
+                  catch ANTLRException.recognition (let e) {
+                     setState (self.atn.ruleToStopState[p.ruleIndex!].stateNumber);
+                     getContext ()!.exception := e
+                     getErrorHandler ().reportError (self, e);
+                     getErrorHandler ().recover (self, e);
                   end if;
             end case;
         end loop;
@@ -189,84 +189,84 @@ begin
     procedure enterRecursionRule (localctx : ParserRuleContext; state : Integer; ruleIndex : Integer; precedence : Integer) is
     begin
         pair : constant (ParserRuleContext?, Int) := (_ctx, localctx.invokingState);
-        _parentContextStack.push(pair)
-        super.enterRecursionRule(localctx, state, ruleIndex, precedence);
+        _parentContextStack.push (pair);
+        super.enterRecursionRule (localctx, state, ruleIndex, precedence);
     end if;
 
     -- internal
     function getATNState () return Optional_ATNState is
    begin
-        return atn.states[getState()]
+        return atn.states[getState ()]
     end if;
 
     -- internal
     procedure visitState (p : ATNState) is
     begin
-        var altNum : Integer;
-        if p.getNumberOfTransitions() > 1 then
-            getErrorHandler().sync(self);
+        altNum : Integer;
+        if p.getNumberOfTransitions () > 1 then
+            getErrorHandler ().sync (self);
             decision : constant DecisionState := DecisionState ((p);).decision
-            if decision = overrideDecision and then _input.index() == overrideDecisionInputIndex then
+            if decision = overrideDecision and then _input.index () == overrideDecisionInputIndex then
                 altNum := overrideDecisionAlt
             else
-                altNum := getInterpreter().adaptivePredict(_input, decision, _ctx);
+                altNum := getInterpreter ().adaptivePredict (_input, decision, _ctx);
             end if;
         else
             altNum := 1;
         end if;
 
-        transition : constant := p.transition(altNum - 1)
-        case transition.getSerializationType() is
+        transition : constant := p.transition (altNum - 1);
+        case transition.getSerializationType () is
         when Transition.EPSILON =>
-            if statesNeedingLeftRecursionContext.get(p.stateNumber) and;
+            if statesNeedingLeftRecursionContext.get (p.stateNumber) and;
                     not (transition.target is LoopEndState) {
                 -- We are at the start of a left recursive rule's ( .. )* loop
                 -- but it's not the exit branch of loop.
-                ctx : constant InterpreterRuleContext := InterpreterRuleContext(;
-                _parentContextStack.last!.0, --peek()
-                        _parentContextStack.last!.1, --peek()
+                ctx : constant InterpreterRuleContext := InterpreterRuleContext (;
+                _parentContextStack.last!.0, --peek ();
+                        _parentContextStack.last!.1, --peek ();
 
-                        _ctx!.getRuleIndex())
-                  pushNewRecursionContext(ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, _ctx!.getRuleIndex())
+                        _ctx!.getRuleIndex ());
+                  pushNewRecursionContext (ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, _ctx!.getRuleIndex ());
             end if;
 
         when Transition.ATOM =>
-            match((AtomTransition (transition)).label);
+            match ((AtomTransition (transition)).label);
 
         when Transition.RANGE => fallthrough;
         when Transition.SET => fallthrough;
         when Transition.NOT_SET =>
-            if not transition.matches(_input.LA(1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then;
-                _errHandler.recoverInline(self);
+            if not transition.matches (_input.LA (1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then;
+                _errHandler.recoverInline (self);
             end if;
-            matchWildcard();
+            matchWildcard ();
 
         when Transition.WILDCARD =>
-            matchWildcard();
+            matchWildcard ();
 
         when Transition.RULE =>
             ruleStartState : constant RuleStartState := RuleStartState (transition.target);
             ruleIndex : constant := ruleStartState.ruleIndex!
-            ctx : constant := InterpreterRuleContext(_ctx, p.stateNumber, ruleIndex)
+            ctx : constant := InterpreterRuleContext (_ctx, p.stateNumber, ruleIndex);
             if ruleStartState.isPrecedenceRule then
-                enterRecursionRule(ctx, ruleStartState.stateNumber, ruleIndex, (RuleTransition (transition)).precedence);
+                enterRecursionRule (ctx, ruleStartState.stateNumber, ruleIndex, (RuleTransition (transition)).precedence);
             else
-                enterRule(ctx, transition.target.stateNumber, ruleIndex);
+                enterRule (ctx, transition.target.stateNumber, ruleIndex);
             end if;
 
         when Transition.PREDICATE =>
             predicateTransition : constant PredicateTransition := PredicateTransition (transition);
-            if not sempred(_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then;
-                raise ANTLRException.recognition with FailedPredicateException(self);
+            if not sempred (_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then;
+                raise ANTLRException.recognition with FailedPredicateException (self);
             end if;
 
         when Transition.ACTION =>
             actionTransition : constant ActionTransition := ActionTransition (transition);
-            action(_ctx, actionTransition.ruleIndex, actionTransition.actionIndex);
+            action (_ctx, actionTransition.ruleIndex, actionTransition.actionIndex);
 
         when Transition.PRECEDENCE =>
-            if not precpred(_ctx!, (PrecedencePredicateTransition (transition)).precedence) then
-                raise ANTLRException.recognition with FailedPredicateException(self, "precpred(_ctx,\((PrecedencePredicateTransition (transition)).precedence))");
+            if not precpred (_ctx!, (PrecedencePredicateTransition (transition)).precedence) then
+                raise ANTLRException.recognition with FailedPredicateException (self, "precpred (_ctx,\((PrecedencePredicateTransition (transition)).precedence))");
             end if;
 
         when others =>
@@ -274,7 +274,7 @@ begin
 
         end case;
 
-        setState(transition.target.stateNumber)
+        setState (transition.target.stateNumber);
     end if;
 
     -- internal
@@ -282,15 +282,15 @@ begin
     begin
         ruleStartState : constant := atn.ruleToStartState[p.ruleIndex!]
         if ruleStartState.isPrecedenceRule then
-            let (parentContext, parentState) := _parentContextStack.pop()
-            unrollRecursionContexts(parentContext!);
-            setState(parentState)
+            let (parentContext, parentState) := _parentContextStack.pop ();
+            unrollRecursionContexts (parentContext!);
+            setState (parentState);
         else
-            exitRule();
+            exitRule ();
         end if;
 
-        ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState()]!.transition(0));
-        setState(ruleTransition.followState.stateNumber)
+        ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState ()]!.transition (0));
+        setState (ruleTransition.followState.stateNumber);
     end if;
 
     -- Override this parser interpreters normal decision-making process
@@ -329,7 +329,7 @@ begin
     -- invocation.
     -- 
     -- Only parser interpreters can override decisions so as to avoid inserting
-    -- override checking code in the critical ALL(*) prediction execution path.
+    -- override checking code in the critical ALL (*) prediction execution path.
     -- 
     -- - Since: 4.5.1
     -- 

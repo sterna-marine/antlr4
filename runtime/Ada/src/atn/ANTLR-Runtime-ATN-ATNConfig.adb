@@ -13,7 +13,7 @@ package body ANTLR.Runtime.ATNConfig is
 --
 -- A tuple: (ATN state, predicted alt, syntactic, semantic context).
 -- The syntactic context is a graph-structured stack node whose
--- path(s) to the root is the rule invocation(s)
+-- path (s) to the root is the rule invocation (s);
 -- chain used to arrive at the state.  The semantic context is
 -- the tree of semantic predicates encountered before reaching
 -- an ATN state.
@@ -56,7 +56,7 @@ package body ANTLR.Runtime.ATNConfig is
       alt : Integer;
       -- What alt (or lexer rule) is predicted by this configuration
 
--- public internal(set) final var 
+-- public internal (set) final 
       context : Optional_PredictionContext;
       -- The stack of invoking states leading to the rule/states associated
       -- with this config.  We track only those contexts pushed during
@@ -69,7 +69,7 @@ package body ANTLR.Runtime.ATNConfig is
       -- invokes the ATN simulator.
       --
       --
-      -- closure() tracks the depth of how far we dip into the outer context:
+      -- closure () tracks the depth of how far we dip into the outer context:
       -- depth &gt; 0.  Note that it may not be totally accurate depth since I
       -- don't ever decrement. TODO: make it a boolean then
       --
@@ -81,10 +81,10 @@ package body ANTLR.Runtime.ATNConfig is
       -- compares this value to 0 would be affected by the new purpose of the
       -- flag. It also ensures the performance of the existing _org.antlr.v4.runtime.atn.ATNConfig_
       -- constructors as well as certain operations like
-      -- _org.antlr.v4.runtime.atn.ATNConfigSet#add(org.antlr.v4.runtime.atn.ATNConfig, DoubleKeyMap)_ method are
+      -- _org.antlr.v4.runtime.atn.ATNConfigSet#add (org.antlr.v4.runtime.atn.ATNConfig, DoubleKeyMap)_ method are
       -- __completely__ unaffected by the change.
       --
-      -- public internal(set) final var
+      -- public internal (set) final var
       reachesIntoOuterContext : Integer := 0;
 
       -- public final let 
@@ -117,7 +117,7 @@ package body ANTLR.Runtime.ATNConfig is
                    state : ATNState;
                    semanticContext : SemanticContext) is
    begin
-        Init(Self, state, c.alt, c.context, semanticContext);
+        Init (Self, state, c.alt, c.context, semanticContext);
    end Init;
 
 -- public convenience
@@ -132,7 +132,7 @@ package body ANTLR.Runtime.ATNConfig is
                    c : ATNConfig;
                    state : ATNState;
                    context : Optional_PredictionContext;) {
-        Init (Self, state, c.alt, context, c.semanticContext)
+        Init (Self, state, c.alt, context, c.semanticContext);
     end Init;
 
 -- public
@@ -184,7 +184,7 @@ package body ANTLR.Runtime.ATNConfig is
 
 -- public
    function Image (This : ATNConfig) return String is
-        return toString(null, True)
+        return toString (null, True);
    end Image;
 
 -- public
@@ -241,7 +241,7 @@ package body ANTLR.Runtime.ATNConfig is
         return False;
     end if;
 
-    if lhs.isPrecedenceFilterSuppressed() /= rhs.isPrecedenceFilterSuppressed() then
+    if lhs.isPrecedenceFilterSuppressed () /= rhs.isPrecedenceFilterSuppressed () then
         return False;
     end if;
 

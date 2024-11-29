@@ -24,7 +24,7 @@ type LexerATNConfig is new ATNConfig with null record;
 
         self.passedThroughNonGreedyDecision := False;
         self.lexerActionExecutor := null;
-        super.init(state, alt, context, SemanticContext.Empty.Instance)
+        super.init (state, alt, context, SemanticContext.Empty.Instance);
     end if;
 
     -- public 
@@ -35,14 +35,14 @@ type LexerATNConfig is new ATNConfig with null record;
 
         self.lexerActionExecutor := lexerActionExecutor
         self.passedThroughNonGreedyDecision := False;
-        super.init(state, alt, context, SemanticContext.Empty.Instance)
+        super.init (state, alt, context, SemanticContext.Empty.Instance);
     end if;
 
     -- public 
     procedure Init (Self : in out …; c : LexerATNConfig; state : ATNState) {
         self.lexerActionExecutor := c.lexerActionExecutor
-        self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision(c, state)
-        super.init(c, state, c.context, c.semanticContext)
+        self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision (c, state);
+        super.init (c, state, c.context, c.semanticContext);
 
     end if;
 
@@ -51,8 +51,8 @@ type LexerATNConfig is new ATNConfig with null record;
                 lexerActionExecutor : Optional_LexerActionExecutor;) {
 
         self.lexerActionExecutor := lexerActionExecutor
-        self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision(c, state)
-        super.init(c, state, c.context, c.semanticContext)
+        self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision (c, state);
+        super.init (c, state, c.context, c.semanticContext);
     end if;
 
     -- public 
@@ -60,9 +60,9 @@ type LexerATNConfig is new ATNConfig with null record;
                 context : PredictionContext) {
 
         self.lexerActionExecutor := c.lexerActionExecutor
-        self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision(c, state)
+        self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision (c, state);
 
-        super.init(c, state, context, c.semanticContext)
+        super.init (c, state, context, c.semanticContext);
     end if;
 
     -- private static
@@ -73,7 +73,7 @@ begin
     end if;
     --
     -- Gets the _org.antlr.v4.runtime.atn.LexerActionExecutor_ capable of executing the embedded
-    -- action(s) for the current configuration.
+    -- action (s) for the current configuration.
     --
     -- public final
     function getLexerActionExecutor () return Optional_LexerActionExecutor is
@@ -90,12 +90,12 @@ begin
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(state.stateNumber)
-        hasher.combine(alt)
-        hasher.combine(context)
-        hasher.combine(semanticContext)
-        hasher.combine(passedThroughNonGreedyDecision)
-        hasher.combine(lexerActionExecutor)
+        hasher.combine (state.stateNumber);
+        hasher.combine (alt);
+        hasher.combine (context);
+        hasher.combine (semanticContext);
+        hasher.combine (passedThroughNonGreedyDecision);
+        hasher.combine (lexerActionExecutor);
     end if;
 end if;
 
@@ -123,11 +123,11 @@ begin
         return False;
     end if;
 
-    if lhs.isPrecedenceFilterSuppressed() /= rhs.isPrecedenceFilterSuppressed() then
+    if lhs.isPrecedenceFilterSuppressed () /= rhs.isPrecedenceFilterSuppressed () then
         return False;
     end if;
 
-    if lhs.getLexerActionExecutor() /= rhs.getLexerActionExecutor() then
+    if lhs.getLexerActionExecutor () /= rhs.getLexerActionExecutor () then
         return False;
     end if;
 

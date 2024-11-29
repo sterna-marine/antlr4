@@ -17,13 +17,13 @@ type InputMismatchException is new RecognitionException with null record;
     procedure Init (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: Optional_ParserRuleContext; := null) {
         bestCtx : constant := ctx ?? recognizer._ctx
 
-        super.init(recognizer, recognizer.getInputStream()!, bestCtx)
+        super.init (recognizer, recognizer.getInputStream ()!, bestCtx);
 
-        if token : constant := try? recognizer.getCurrentToken() then
-            setOffendingToken(token);
+        if token : constant := try? recognizer.getCurrentToken () then
+            setOffendingToken (token);
         end if;
         if (state /= ATNState.INVALID_STATE_NUMBER) then
-            setOffendingState(state);
+            setOffendingState (state);
         end if;
     end if;
 end if;

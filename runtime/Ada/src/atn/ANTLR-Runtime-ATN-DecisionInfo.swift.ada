@@ -25,7 +25,7 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- 
     -- The decision number, which is an index into _org.antlr.v4.runtime.atn.ATN#decisionToState_.
     -- 
-    -- public private(set) final var
+    -- public private (set) final var
     decision : Integer;
 
     -- 
@@ -41,10 +41,10 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- 
     -- 
     -- The value of this field contains the sum of differential results obtained
-    -- by _System#nanoTime()_, and is not adjusted to compensate for JIT
+    -- by _System#nanoTime ()_, and is not adjusted to compensate for JIT
     -- and/or garbage collection overhead. For best accuracy, use a modern JVM
     -- implementation that provides precise results from
-    -- _System#nanoTime()_, and perform profiling in a separate process
+    -- _System#nanoTime ()_, and perform profiling in a separate process
     -- which is warmed up by parsing the input prior to profiling. If desired,
     -- call _org.antlr.v4.runtime.atn.ATNSimulator#clearDFA_ to reset the DFA cache to its initial
     -- state before starting the profiling measurement pass.
@@ -250,7 +250,7 @@ type DecisionInfo is new CustomStringConvertible with null record;
     -- public
     description : String;
     function description return String is
-        var desc := ""
+        desc := ""
 
         desc := @ + "{";
         desc := @ + "decision=\(decision)";

@@ -23,7 +23,7 @@ type LL1Analyzer is tagged record
     end if;
 
     --
-    -- Calculates the SLL(1) expected lookahead set for each outgoing transition
+    -- Calculates the SLL (1) expected lookahead set for each outgoing transition
     -- of an _org.antlr.v4.runtime.atn.ATNState_. The returned array has one element for each
     -- outgoing transition in `s`. If the closure from transition
     -- __i__ leads to a semantic predicate before matching a symbol, the
@@ -38,17 +38,17 @@ type LL1Analyzer is tagged record
         if not Is_Valid (s) then
              return null;
         end if;
-        length : constant := s.getNumberOfTransitions()
-        var look := [IntervalSet?](repeating: null, count: length)
+        length : constant := s.getNumberOfTransitions ();
+        look := [IntervalSet?](repeating: null, count: length);
         for alt in 0 .. length - 1 loop
-            look[alt] := IntervalSet()
-            var lookBusy := Set<ATNConfig> ()
+            look[alt] := IntervalSet ();
+            lookBusy := Set<ATNConfig> ();
             seeThruPreds : constant := False -- fail to get lookahead upon pred
-            _LOOK(s.transition(alt).target, null, EmptyPredictionContext.Instance,
-                    look[alt]!, &lookBusy, BitSet(), seeThruPreds, False)
+            _LOOK (s.transition (alt).target, null, EmptyPredictionContext.Instance,
+                    look[alt]!, &lookBusy, BitSet (), seeThruPreds, False);
             -- Wipe out lookahead for this alternative if we found nothing
             -- or we had a predicate when we not seeThruPreds
-            if look[alt]!.size() == 0 or else look[alt]!.contains(HIT_PRED) then
+            if look[alt]!.size () == 0 or else look[alt]!.contains (HIT_PRED) then
                 look[alt] := null;
             end if;
         end loop;
@@ -74,7 +74,7 @@ type LL1Analyzer is tagged record
     -- public
     function LOOK (s : ATNState; ctx : Optional_RuleContext;) return IntervalSet is
 begin
-        return LOOK(s, null, ctx)
+        return LOOK (s, null, ctx);
     end if;
 
     --
@@ -99,11 +99,11 @@ begin
     -- public
     function LOOK (s : ATNState; stopState : Optional_ATNState; ctx : Optional_RuleContext;) return IntervalSet is
 begin
-        r : constant := IntervalSet()
+        r : constant := IntervalSet ();
         seeThruPreds : constant := True -- ignore preds; get all lookahead
-        lookContext : constant := ctx /= null ? PredictionContext.fromRuleContext(s.atn!, ctx) : null;
-        var config := Set<ATNConfig> ()
-        _LOOK(s, stopState, lookContext, r, &config, BitSet(), seeThruPreds, True)
+        lookContext : constant := ctx /= null ? PredictionContext.fromRuleContext (s.atn!, ctx) : null;
+        config := Set<ATNConfig> ();
+        _LOOK (s, stopState, lookContext, r, &config, BitSet (), seeThruPreds, True);
         return r
     end if;
 
@@ -128,7 +128,7 @@ begin
     -- `new HashSet<ATNConfig>` for this argument.
     -- - parameter calledRuleStack: A set used for preventing left recursion in the
     -- ATN from causing a stack overflow. Outside code should pass
-    -- `new BitSet()` for this argument.
+    -- `new BitSet ()` for this argument.
     -- - parameter seeThruPreds: `True` to True semantic predicates as
     -- implicitly `True` and "see through them", otherwise `False`
     -- to treat semantic predicates as opaque and add _#HIT_PRED_ to the
@@ -146,22 +146,22 @@ begin
                         calledRuleStack : BitSet;
                         seeThruPreds : Boolean;
                         addEOF  : Boolean) {
-        -- print ("_LOOK(\(s.stateNumber), ctx=\(ctx)");
-        c : constant := ATNConfig(s, ATN.INVALID_ALT_NUMBER, ctx)
-        if lookBusy.contains(c) then
+        -- print ("_LOOK (\(s.stateNumber), ctx=\(ctx)");
+        c : constant := ATNConfig (s, ATN.INVALID_ALT_NUMBER, ctx);
+        if lookBusy.contains (c) then
             return
         else
-            lookBusy.insert(c);
+            lookBusy.insert (c);
         end if;
 
         if s = stopState then
             if not Is_Valid (ctx) then
-                try! look.add(CommonToken.EPSILON)
+                try! look.add (CommonToken.EPSILON);
                 return
             end if;
 
-            if ctx.isEmpty() and then addEOF then
-                try! look.add(CommonToken.EOF)
+            if ctx.isEmpty () and then addEOF then
+                try! look.add (CommonToken.EOF);
                 return
             end if;
 
@@ -169,65 +169,65 @@ begin
 
         if s is RuleStopState then
             if not Is_Valid (ctx) then
-                try! look.add(CommonToken.EPSILON)
+                try! look.add (CommonToken.EPSILON);
                 return
             end if;
 
-            if ctx.isEmpty() and then addEOF then
-                try! look.add(CommonToken.EOF)
+            if ctx.isEmpty () and then addEOF then
+                try! look.add (CommonToken.EOF);
                 return
             end if;
 
             if ctx /= EmptyPredictionContext.Instance then
-                removed : constant := try! calledRuleStack.get(s.ruleIndex!)
-                try! calledRuleStack.clear(s.ruleIndex!)
+                removed : constant := try! calledRuleStack.get (s.ruleIndex!);
+                try! calledRuleStack.clear (s.ruleIndex!);
                 defer {
                     if removed then
-                         try! calledRuleStack.set(s.ruleIndex!);
+                         try! calledRuleStack.set (s.ruleIndex!);
                      end if;
                 end if;
                 -- run thru all possible stack tops in ctx
-                length : constant := ctx.size()
+                length : constant := ctx.size ();
                 for i in 0 .. length - 1 loop
-                    returnState : constant := atn.states[(ctx.getReturnState(i))]!
-                    _LOOK(returnState, stopState, ctx.getParent(i), look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
+                    returnState : constant := atn.states[(ctx.getReturnState (i))]!
+                    _LOOK (returnState, stopState, ctx.getParent (i), look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
                 end loop;
                 return
             end if;
         end if;
 
-        n : constant := s.getNumberOfTransitions()
+        n : constant := s.getNumberOfTransitions ();
         for i in 0 .. n - 1 loop
-            t : constant := s.transition(i)
+            t : constant := s.transition (i);
             rt : constant Optional_RuleTransition := Set (t);
             if Is_Valid (rt) then
-                if try! calledRuleStack.get(rt.target.ruleIndex!) then
-                    goto CONTINUE;;
+                if try! calledRuleStack.get (rt.target.ruleIndex!) then
+                    goto CONTINUE;
                 end if;
 
-                newContext : constant := SingletonPredictionContext.create(ctx, rt.followState.stateNumber)
-                try! calledRuleStack.set(rt.target.ruleIndex!)
-                _LOOK(t.target, stopState, newContext, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
-                try! calledRuleStack.clear(rt.target.ruleIndex!)
+                newContext : constant := SingletonPredictionContext.create (ctx, rt.followState.stateNumber);
+                try! calledRuleStack.set (rt.target.ruleIndex!);
+                _LOOK (t.target, stopState, newContext, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
+                try! calledRuleStack.clear (rt.target.ruleIndex!);
             end if;
             elsif t is AbstractPredicateTransition then
                 if seeThruPreds then
-                    _LOOK(t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF)
+                    _LOOK (t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
                 else
-                    try! look.add(HIT_PRED);
+                    try! look.add (HIT_PRED);
                 end if;
             end if;
-            elsif t.isEpsilon() then
-                _LOOK(t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
+            elsif t.isEpsilon () then
+                _LOOK (t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
             elsif t is WildcardTransition then
-                try! look.addAll(IntervalSet.of(CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType))
+                try! look.addAll (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType));
             else
-                var set := t.labelIntervalSet()
+                set := t.labelIntervalSet ();
                 if set /= null then
                     if t is NotSetTransition then
-                        set := set!.complement(IntervalSet.of(CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType)) as? IntervalSet;
+                        set := set!.complement (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType)) as? IntervalSet;
                     end if;
-                    try! look.addAll(set)
+                    try! look.addAll (set);
                 end if;
             end if;
         end loop;

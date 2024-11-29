@@ -21,7 +21,7 @@ type PrecedencePredicateTransition is new AbstractPredicateTransition and Custom
     procedure Init (Self : in out …; target : ATNState; precedence : Integer) {
 
         self.precedence := precedence
-        super.init(target)
+        super.init (target);
     end if;
 
     override
@@ -47,7 +47,7 @@ begin
 
     -- public
     function getPredicate () return SemanticContext.PrecedencePredicate {
-        return SemanticContext.PrecedencePredicate(precedence)
+        return SemanticContext.PrecedencePredicate (precedence);
     end if;
 
     -- public

@@ -12,25 +12,25 @@
 type ParseTreeMatch is new CustomStringConvertible with null record;
 {
     -- 
-    -- This is the backing field for _#getTree()_.
+    -- This is the backing field for _#getTree ()_.
     -- 
     -- private 
     tree : constant ParseTree;
 
     -- 
-    -- This is the backing field for _#getPattern()_.
+    -- This is the backing field for _#getPattern ()_.
     -- 
     -- private 
     pattern : constant ParseTreePattern;
 
     -- 
-    -- This is the backing field for _#getLabels()_.
+    -- This is the backing field for _#getLabels ()_.
     -- 
     -- private 
     labels : constant MultiMap<String, ParseTree>;
 
     -- 
-    -- This is the backing field for _#getMismatchedNode()_.
+    -- This is the backing field for _#getMismatchedNode ()_.
     -- 
     -- private 
     mismatchedNode : constant ParseTree?;
@@ -62,7 +62,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
     -- Get the last node associated with a specific `label`.
     -- 
-    -- For example, for pattern `<id:ID>`, `get("id")` returns the
+    -- For example, for pattern `<id:ID>`, `get ("id")` returns the
     -- node matched for that `ID`. If more than one node
     -- matched the specified label, only the last is returned. If there is
     -- no node associated with the label, this returns `null`.
@@ -79,7 +79,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- public
     function get (label : String) return Optional_ParseTree is
    begin
-        if parseTrees : constant := labels.get(label) , parseTrees.count > 0 then
+        if parseTrees : constant := labels.get (label) , parseTrees.count > 0 then
             return parseTrees[parseTrees.count - 1]   -- return last if multiple
         else
             return null;
@@ -110,7 +110,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
     -- public
     function getAll (label : String) return Array<ParseTree> {
-        return labels.get(label) ?? []
+        return labels.get (label) ?? []
     end if;
 
     -- 
@@ -118,7 +118,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
     -- The map includes special entries corresponding to the names of rules and
     -- tokens referenced in tags in the original pattern. For additional
-    -- information, see the description of _#getAll(String)_.
+    -- information, see the description of _#getAll (String)_.
     -- 
     -- - Returns: A mapping from labels to parse tree nodes. If the parse tree
     -- pattern did not contain any rule or token tags, this map will be empty.
@@ -177,7 +177,7 @@ begin
     -- public
     description : String;
     function description return String is
-        info : constant := succeeded() ? "succeeded" : "failed"
-        return "Match \(info); found \(getLabels().size()) labels"
+        info : constant := succeeded () ? "succeeded" : "failed"
+        return "Match \(info); found \(getLabels ().size ()) labels"
     end if;
 end if;

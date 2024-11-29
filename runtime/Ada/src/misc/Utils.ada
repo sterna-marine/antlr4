@@ -14,7 +14,7 @@ type Utils is tagged record
     -- public static
     function escapeWhitespace (s : String; escapeSpaces  : Boolean) return String is
 begin
-        var buf := ""
+        buf := ""
         for c in s loop
             if c == " " and then escapeSpaces then
                 buf := @ + To_Unicode (16#00B7#);
@@ -25,7 +25,7 @@ begin
             elsif c == "\r" then
                 buf := @ + "\\r";
             else
-                buf.append(c);
+                buf.append (c);
             end if;
         end loop;
         return buf
@@ -34,8 +34,8 @@ begin
 
     -- public static
     function toMap (keys : [String]) return [String: Int] {
-        var m := [String: Int]()
-        for (index, v) in keys.enumerated() loop
+        m := [String: Int]();
+        for (index, v) in keys.enumerated () loop
             m[v] := index
         end loop;
         return m

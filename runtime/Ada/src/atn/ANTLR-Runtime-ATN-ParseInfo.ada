@@ -32,7 +32,7 @@ type ParseInfo is tagged record
     -- 
     -- public
     function getDecisionInfo () return [DecisionInfo] {
-        return atnSimulator.getDecisionInfo()
+        return atnSimulator.getDecisionInfo ();
     end if;
 
     -- 
@@ -45,14 +45,14 @@ type ParseInfo is tagged record
     -- 
     -- public
     function getLLDecisions () return Array<Int> {
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         LL : Array<Int> := Array<Int> ();
         length : constant := decisions.count
         for i in 0 .. length - 1 loop
             fallBack : constant Int64 := decisions[i].LL_Fallback;
             if fallBack > 0 then
-                LL.append(i)
-                -- LL.add(i);
+                LL.append (i);
+                -- LL.add (i);
             end if;
         end loop;
         return LL
@@ -66,7 +66,7 @@ type ParseInfo is tagged record
     -- public
     function getTotalTimeInPrediction (This : …) return Int64 is
 begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         t : Int64 := 0;
         for d in decisions loop
             t := @ + d.timeInPrediction;
@@ -82,7 +82,7 @@ begin
     -- public
     function getTotalSLLLookaheadOps (This : …) return Int64 is
 begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         k : Int64 := 0;
         for d in decisions loop
             k := @ + d.SLL_TotalLook;
@@ -98,7 +98,7 @@ begin
     -- public
     function getTotalLLLookaheadOps (This : …) return Int64 is
 begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         k : Int64 := 0;
         for d in decisions loop
             k := @ + d.LL_TotalLook;
@@ -113,7 +113,7 @@ begin
     -- public
     function getTotalSLLATNLookaheadOps (This : …) return Int64 is
 begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         k : Int64 := 0;
         for d in decisions loop
             k := @ + d.SLL_ATNTransitions;
@@ -128,7 +128,7 @@ begin
     -- public
     function getTotalLLATNLookaheadOps (This : …) return Int64 is
 begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         k : Int64 := 0;
         for d in decisions loop
             k := @ + d.LL_ATNTransitions;
@@ -147,7 +147,7 @@ begin
     -- public
     function getTotalATNLookaheadOps (This : …) return Int64 is
 begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo();
+        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
         k : Int64 := 0;
         for d in decisions loop
             k := @ + d.SLL_ATNTransitions;
@@ -167,7 +167,7 @@ begin
         decisionToDFA : constant [DFA] := atnSimulator.decisionToDFA;
         length : constant := decisionToDFA.count
         for i in 0 .. length - 1 loop
-            n := @ + getDFASize(i);
+            n := @ + getDFASize (i);
         end loop;
         return n
     end if;

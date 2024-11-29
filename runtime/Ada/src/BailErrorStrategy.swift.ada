@@ -27,9 +27,9 @@
 -- the _org.antlr.v4.runtime.BailErrorStrategy_ avoids wasting work on recovering from errors
 -- when the result will be ignored either way.
 -- 
--- `myparser.setErrorHandler(new BailErrorStrategy());`
+-- `myparser.setErrorHandler (new BailErrorStrategy ());`
 -- 
--- - seealso: org.antlr.v4.runtime.Parser#setErrorHandler(org.antlr.v4.runtime.ANTLRErrorStrategy)
+-- - seealso: org.antlr.v4.runtime.Parser#setErrorHandler (org.antlr.v4.runtime.ANTLRErrorStrategy);
 -- 
 -- 
 -- open
@@ -44,16 +44,16 @@ begin
     -- 
     -- Instead of recovering from exception `e`, re-throw it wrapped
     -- in a _org.antlr.v4.runtime.misc.ParseCancellationException_ so it is not caught by the
-    -- rule function catches.  Use _Exception#getCause()_ to get the
+    -- rule function catches.  Use _Exception#getCause ()_ to get the
     -- original _org.antlr.v4.runtime.RecognitionException_.
     -- 
     -- open
     override
     procedure recover (recognizer : Parser; e : RecognitionException) {
-        var context := recognizer.getContext()
+        context := recognizer.getContext ();
         while contextWrap : constant := context loop
             contextWrap.exception := e
-            context := (contextWrap.getParent() as? ParserRuleContext)
+            context := (contextWrap.getParent () as? ParserRuleContext);
         end loop;
 
         raise ANTLRException.parseCancellation with e;
@@ -67,11 +67,11 @@ begin
     -- open
     function recoverInline (recognizer : Parser) return Token is
 begin
-        e : constant := InputMismatchException(recognizer)
-        var context := recognizer.getContext()
+        e : constant := InputMismatchException (recognizer);
+        context := recognizer.getContext ();
         while contextWrap : constant := context loop
              contextWrap.exception := e
-             context := (contextWrap.getParent() as? ParserRuleContext)
+             context := (contextWrap.getParent () as? ParserRuleContext);
         end loop;
 
         raise ANTLRException.parseCancellation with e;

@@ -28,17 +28,17 @@ extension Character {
     
     -- public 
     procedure Init (Self : in out …; integerLiteral value: IntegerLiteralType) {
-        self := Character(UnicodeScalar(value)!)
+        self := Character (UnicodeScalar (value)!);
     end if;
     utf8Value : Ada.Interface.C.unsigned_short {;
-        for s in String(self).utf8 loop
+        for s in String (self).utf8 loop
             return s
         end loop;
         return 0
     end if;
 
     utf16Value : Ada.Interface.C.unsigned {;
-        for s in String(self).utf16 loop
+        for s in String (self).utf16 loop
             return s
         end loop;
         return 0
@@ -46,7 +46,7 @@ extension Character {
 
     --char ->  int
     unicodeValue : Integer {;
-        return Integer (String(self).unicodeScalars.first?.value ?? 0)
+        return Integer (String (self).unicodeScalars.first?.value ?? 0);
     end if;
 
     -- public static 
@@ -63,17 +63,17 @@ extension Character {
     -- public static
     function isJavaIdentifierStart (char : Integer) return Boolean is
 begin
-        ch : constant := Character(integerLiteral: char)
-        return ch == "_" or else ch == "$" or else ("a" <= ch and then ch <= "z")
-                or else ("A" <= ch and then ch <= "Z")
+        ch : constant := Character (integerLiteral: char);
+        return ch == "_" or else ch == "$" or else ("a" <= ch and then ch <= "z");
+                or else ("A" <= ch and then ch <= "Z");
 
     end if;
 
     -- public static
     function isJavaIdentifierPart (char : Integer) return Boolean is
 begin
-        ch : constant := Character(integerLiteral: char)
-        return isJavaIdentifierStart(char) or else ("0" <= ch and then ch <= "9")
+        ch : constant := Character (integerLiteral: char);
+        return isJavaIdentifierStart (char) or else ("0" <= ch and then ch <= "9");
     end if;
 
     -- public static
@@ -83,8 +83,8 @@ begin
         MIN_HIGH_SURROGATE : constant Integer := 0xd800 --To_Unicode (16#dbff#)  --"To_Unicode (16#DBFF#)"  --"To_Unicode (16#DBFF#)";
         MIN_LOW_SURROGATE : constant Integer := 0xdc00 --"To_Unicode (16#dc00#)" --"To_Unicode (16#DC00#)";
         return ((high << 10) + low) + (MIN_SUPPLEMENTARY_CODE_POINT
-                - (MIN_HIGH_SURROGATE << 10)
-                - MIN_LOW_SURROGATE)
+                - (MIN_HIGH_SURROGATE << 10);
+                - MIN_LOW_SURROGATE);
     end if;
 
 

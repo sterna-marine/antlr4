@@ -29,22 +29,22 @@ type DFASerializer is new CustomStringConvertible with null record;
         if dfa.s0 = null then
             return "";
         end if;
-        var buf := ""
-        states : constant := dfa.getStates()
+        buf := ""
+        states : constant := dfa.getStates ();
         for s in states loop
             edges : constant := s.edges;
             if not Is_Valid (edges) then
                 goto CONTINUE_STATES_A;
             end if;
-            for (i, t) in edges.enumerated() loop
+            for (i, t) in edges.enumerated () loop
                 t : constant ATNStates.State := t
                 if not Is_Valid (t) or not t.stateNumber /= ATNStates.INVALID_STATE_NUMBER then
                     goto CONTINUE_STATES_B;
                 end if;
-                edgeLabel : constant := getEdgeLabel(i)
+                edgeLabel : constant := getEdgeLabel (i);
                 buf := @ + ATNStates.State'Image (s);
                 buf := @ + "-\(edgeLabel)->";
-                buf := @ + getStateString(t);
+                buf := @ + getStateString (t);
                 buf := @ + "\n";
                 <<CONTINUE_STATES_B>>
             end loop;
@@ -57,7 +57,7 @@ type DFASerializer is new CustomStringConvertible with null record;
     -- internal
     function getEdgeLabel (i : Integer) return String is
 begin
-        return vocabulary.getDisplayName(i - 1)
+        return vocabulary.getDisplayName (i - 1);
     end if;
 
 
@@ -68,7 +68,7 @@ begin
 
         s1 : constant := s.isAcceptState ? ":" : ""
         s2 : constant := s.requiresFullContext ? "^" : ""
-        baseStateStr : constant := s1 + "s" + String(n) + s2
+        baseStateStr : constant := s1 + "s" + String (n) + s2
         if s.isAcceptState then
             if predicates : constant := s.predicates then
                 return baseStateStr + "=>\(predicates)"

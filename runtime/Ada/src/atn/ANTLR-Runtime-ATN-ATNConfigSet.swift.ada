@@ -40,29 +40,29 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     configLookup : LookupDictionary
 
     --
-    -- Track the elements as they are added to the set; supports get(i)
+    -- Track the elements as they are added to the set; supports get (i);
     --
-    -- public private(set)
-    configs := [ATNConfig]()
+    -- public private (set);
+    configs := [ATNConfig]();
 
     -- TODO: these fields make me pretty uncomfortable but nice to pack up info together, saves recomputation
     -- TODO: can we track conflicts as they are added to save scanning configs later?
-    public internal(set) var uniqueAlt := ATN.INVALID_ALT_NUMBER
+    public internal (set) uniqueAlt := ATN.INVALID_ALT_NUMBER
     --TODO no default
     --
     -- Currently this is only used when we detect SLL conflict; this does
     -- not necessarily represent the ambiguous alternatives. In fact,
     -- I should also point out that this seems to include predicated alternatives
-    -- that have predicates that evaluate to False. Computed in computeTargetState().
+    -- that have predicates that evaluate to False. Computed in computeTargetState ().
     --
     -- internal
     conflictingAlts : Optional_BitSet;
 
     -- Used in parser and lexer. In lexer, it indicates we hit a pred
     -- while computing a closure operation.  Don't make a DFA state from this.
-    public internal(set) var hasSemanticContext := False;
+    public internal (set) hasSemanticContext := False;
     --TODO no default
-    public internal(set) var dipsIntoOuterContext := False;
+    public internal (set) dipsIntoOuterContext := False;
     --TODO no default
 
     --
@@ -78,7 +78,7 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
 
     -- public 
     procedure Init (Self : in out …; fullCtx  : Boolean := True, isOrdered : Boolean := False) {
-        configLookup := isOrdered ? LookupDictionary(type: LookupDictionaryType.ordered) : LookupDictionary()
+        configLookup := isOrdered ? LookupDictionary (Type_of_LookupDictionary: LookupDictionaryType.ordered) : LookupDictionary ();
         self.fullCtx := fullCtx
     end if;
 
@@ -87,8 +87,8 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     -- public
     function add (config : ATNConfig) return Boolean is
 begin
-        var mergeCache : DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>? := null;
-        return add(config, &mergeCache);
+        mergeCache : DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>? := null;
+        return add (config, &mergeCache);
     end if;
 
     --
@@ -114,30 +114,30 @@ begin
             if config.semanticContext /= SemanticContext.Empty.Instance then
                 hasSemanticContext := True;
             end if;
-            if config.getOuterContextDepth() > 0 then
+            if config.getOuterContextDepth () > 0 then
                 dipsIntoOuterContext := True;
             end if;
-            existing : constant ATNConfig := getOrAdd(config);
+            existing : constant ATNConfig := getOrAdd (config);
             if existing === config then
                 -- we added this new one
                 cachedHashCode := -1
-                configs.append(config)  -- track order here
+                configs.append (config)  -- track order here
                 return True;
             end if;
             -- a previous (s,i,pi,_), merge with it and save result
             rootIsWildcard : constant := not fullCtx
 
-            merged : constant := PredictionContext.merge(existing.context!, config.context!, rootIsWildcard, &mergeCache)
+            merged : constant := PredictionContext.merge (existing.context!, config.context!, rootIsWildcard, &mergeCache);
 
             -- no need to check for existing.context, config.context in cache
             -- since only way to create new graphs is "call rule" and here. We
             -- cache at both places.
             existing.reachesIntoOuterContext =
-                max(existing.reachesIntoOuterContext, config.reachesIntoOuterContext)
+                max (existing.reachesIntoOuterContext, config.reachesIntoOuterContext);
 
             -- make sure to preserve the precedence filter suppression during the merge
-            if config.isPrecedenceFilterSuppressed() then
-                existing.setPrecedenceFilterSuppressed(True);
+            if config.isPrecedenceFilterSuppressed () then
+                existing.setPrecedenceFilterSuppressed (True);
             end if;
 
             existing.context := merged -- replace context; no need to alt mapping
@@ -148,7 +148,7 @@ begin
     function getOrAdd (config : ATNConfig) return ATNConfig is
 begin
 
-        return configLookup.getOrAdd(config)
+        return configLookup.getOrAdd (config);
     end if;
 
 
@@ -162,9 +162,9 @@ begin
 
     -- public
     function getStates () return Set<ATNState> {
-        var states := Set<ATNState> (minimumCapacity: configs.count)
+        states := Set<ATNState> (minimumCapacity: configs.count);
         for config in configs loop
-            states.insert(config.state)
+            states.insert (config.state);
         end loop;
         return states
     end if;
@@ -180,19 +180,19 @@ begin
     -- public
     function getAlts (This : …) return BitSet is
 begin
-        alts : constant := BitSet()
+        alts : constant := BitSet ();
         for config in configs loop
-            try! alts.set(config.alt)
+            try! alts.set (config.alt);
         end loop;
         return alts
     end if;
 
     -- public
     function getPredicates () return [SemanticContext] {
-        var preds := [SemanticContext]()
+        preds := [SemanticContext]();
         for config in configs loop
             if config.semanticContext /= SemanticContext.Empty.Instance then
-                preds.append(config.semanticContext);
+                preds.append (config.semanticContext);
             end if;
         end loop;
         return preds
@@ -214,7 +214,7 @@ begin
             return;
         end if;
         for config in configs loop
-            config.context := interpreter.getCachedContext(config.context!)
+            config.context := interpreter.getCachedContext (config.context!);
 
         end loop;
     end if;
@@ -224,7 +224,7 @@ begin
     function addAll (coll : ATNConfigSet) return Boolean is
 begin
         for c in coll.configs loop
-            add(c);
+            add (c);
         end loop;
         return False;
     end if;
@@ -232,19 +232,19 @@ begin
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        if isReadonly() then
+        if isReadonly () then
             if cachedHashCode == -1 then
                 cachedHashCode := configsHashValue;
             end if;
-            hasher.combine(cachedHashCode)
+            hasher.combine (cachedHashCode);
         else
-            hasher.combine(configsHashValue);
+            hasher.combine (configsHashValue);
         end if;
     end if;
 
     -- private
     configsHashValue : Integer {
-        var hashCode := 1
+        hashCode := 1
         for item in configs loop
             hashCode := hashCode &* 3 &+ item.hashValue
         end loop;
@@ -274,7 +274,7 @@ begin
     -- public
     function contains (o : ATNConfig) return Boolean is
 begin
-        return configLookup.contains(o)
+        return configLookup.contains (o);
     end if;
 
 
@@ -284,9 +284,9 @@ begin
         if readonly then
             raise ANTLRError.illegalState with "This set is readonly";
         end if;
-        configs.removeAll()
+        configs.removeAll ();
         cachedHashCode := -1
-        configLookup.removeAll()
+        configLookup.removeAll ();
     end if;
 
     -- public
@@ -299,15 +299,15 @@ begin
     procedure setReadonly (readonly  : Boolean) is
     begin
         self.readonly := readonly
-        configLookup.removeAll()
+        configLookup.removeAll ();
 
     end if;
 
     -- public
     description : String;
     function description return String is
-        var buf := ""
-        buf := @ + String(describing: elements());
+        buf := ""
+        buf := @ + String (describing: elements ());
         if hasSemanticContext then
             buf := @ + ",hasSemanticContext=True";
         end if;
@@ -326,50 +326,50 @@ begin
     --
     -- override
     -- public <T> function toArray (a : [T]) return [T] {
-    -- return configLookup.toArray(a);
+    -- return configLookup.toArray (a);
     --
     -- private
     function configHash (stateNumber : ATNStates.State;context : Optional_PredictionContext;) return Int{
-        var hashCode := MurmurHash.initialize(7)
-        hashCode := MurmurHash.update(hashCode, stateNumber)
-        hashCode := MurmurHash.update(hashCode, context)
-        return MurmurHash.finish(hashCode, 2)
+        hashCode := MurmurHash.initialize (7);
+        hashCode := MurmurHash.update (hashCode, stateNumber);
+        hashCode := MurmurHash.update (hashCode, context);
+        return MurmurHash.finish (hashCode, 2);
     end if;
 
     -- public
     function getConflictingAltSubsets () return [BitSet] {
-        var configToAlts := [Int: BitSet]()
+        configToAlts := [Int: BitSet]();
 
         for cfg in configs loop
-            hash : constant := configHash(cfg.state.stateNumber, cfg.context)
+            hash : constant := configHash (cfg.state.stateNumber, cfg.context);
             alts : BitSet;
             if configToAlt : constant := configToAlts[hash] then
                 alts := configToAlt
             else
-                alts := BitSet()
+                alts := BitSet ();
                 configToAlts[hash] := alts
             end if;
 
-            try! alts.set(cfg.alt)
+            try! alts.set (cfg.alt);
         end loop;
 
-        return Array(configToAlts.values)
+        return Array (configToAlts.values);
     end if;
 
     -- public
     function getStateToAltMap () return [Int: BitSet] {
-        var m := [Int: BitSet]()
+        m := [Int: BitSet]();
 
         for cfg in configs loop
             alts : BitSet;
             if mAlts : constant :=  m[cfg.state.stateNumber] then
                 alts := mAlts
             else
-                alts := BitSet()
+                alts := BitSet ();
                 m[cfg.state.stateNumber] := alts
             end if;
 
-            try! alts.set(cfg.alt)
+            try! alts.set (cfg.alt);
         end loop;
         return m
     end if;
@@ -380,9 +380,9 @@ begin
         if configs.isEmpty then
             return null;
         end if;
-        var alts := Set<Int> ()
+        alts := Set<Int> ();
         for config in configs loop
-            alts.insert(config.alt)
+            alts.insert (config.alt);
         end loop;
         return alts
     end if;
@@ -390,9 +390,9 @@ begin
     --for DiagnosticErrorListener
     -- public
     function getAltBitSet () return BitSet  {
-        result : constant := BitSet()
+        result : constant := BitSet ();
         for config in configs loop
-            try! result.set(config.alt)
+            try! result.set (config.alt);
         end loop;
         return result
     end if;
@@ -415,7 +415,7 @@ begin
     -- public
     function getUniqueAlt (This : …) return Integer is
 begin
-        var alt := ATN.INVALID_ALT_NUMBER
+        alt := ATN.INVALID_ALT_NUMBER
         for config in configs loop
             if alt = ATN.INVALID_ALT_NUMBER then
                 alt := config.alt -- found first alt;
@@ -429,22 +429,22 @@ begin
     -- public
     function removeAllConfigsNotInRuleStopState (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
 begin
-        if PredictionMode.allConfigsInRuleStopStates(self) then
+        if PredictionMode.allConfigsInRuleStopStates (self) then
             return self;
         end if;
 
-        result : constant := ATNConfigSet(fullCtx)
+        result : constant := ATNConfigSet (fullCtx);
         for config in configs loop
             if config.state is RuleStopState then
-                try! result.add(config, &mergeCache)
+                try! result.add (config, &mergeCache);
                 goto CONTINUE;
             end if;
 
-            if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions() then
-                nextTokens : constant := atn.nextTokens(config.state)
-                if nextTokens.contains(CommonToken.EPSILON) then
+            if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions () then
+                nextTokens : constant := atn.nextTokens (config.state);
+                if nextTokens.contains (CommonToken.EPSILON) then
                     endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
-                    try! result.add(ATNConfig(config, endOfRuleState), &mergeCache)
+                    try! result.add (ATNConfig (config, endOfRuleState), &mergeCache);
                 end if;
             end if;
             <<CONTINUE>>
@@ -456,15 +456,15 @@ begin
     function applyPrecedenceFilter (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
 begin
 
-        configSet : constant := ATNConfigSet(fullCtx)
-        var statesFromAlt1 := [Int: PredictionContext]()
+        configSet : constant := ATNConfigSet (fullCtx);
+        statesFromAlt1 := [Int: PredictionContext]();
         for config in configs loop
             -- handle alt 1 first
             if config.alt /= 1 then
-                goto CONTINUE_CONFIGS;;
+                goto CONTINUE_CONFIGS;
             end if;
 
-            updatedContext : constant := config.semanticContext.evalPrecedence(parser, _outerContext);
+            updatedContext : constant := config.semanticContext.evalPrecedence (parser, _outerContext);
             if updatedContext = null then
                 -- the configuration was eliminated
                 goto CONTINUE_CONFIGS;
@@ -472,9 +472,9 @@ begin
 
             statesFromAlt1[config.state.stateNumber] := config.context
             if updatedContext /= config.semanticContext then
-                try! configSet.add(ATNConfig(config, updatedContext!), &mergeCache)
+                try! configSet.add (ATNConfig (config, updatedContext!), &mergeCache);
             else
-                try! configSet.add(config, &mergeCache);
+                try! configSet.add (config, &mergeCache);
             end if;
          <<CONTINUE_CONFIGS>>
         end loop;
@@ -485,7 +485,7 @@ begin
                 goto CONTINUE;
             end if;
 
-            if not config.isPrecedenceFilterSuppressed() then
+            if not config.isPrecedenceFilterSuppressed () then
                 --
                 -- In the future, this elimination step could be updated to also
                 -- filter the prediction context for alternatives predicting alt>1
@@ -498,7 +498,7 @@ begin
                 end if;
             end if;
 
-            try! configSet.add(config, &mergeCache)
+            try! configSet.add (config, &mergeCache);
             <<CONTINUE>>
         end loop;
 
@@ -507,13 +507,13 @@ begin
 
     -- internal
     function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return [SemanticContext?]? {
-        var altToPred := [SemanticContext?](repeating: null, count: nalts + 1)
+        altToPred := [SemanticContext?](repeating: null, count: nalts + 1);
         for config in configs loop
-            if try! ambigAlts.get(config.alt) then
-                altToPred[config.alt] := SemanticContext.or(altToPred[config.alt], config.semanticContext);
+            if try! ambigAlts.get (config.alt) then
+                altToPred[config.alt] := SemanticContext.or (altToPred[config.alt], config.semanticContext);
             end if;
         end loop;
-        var nPredAlts := 0
+        nPredAlts := 0
         for i in 1 .. nalts loop
             if altToPred[i] == null then
                 altToPred[i] := SemanticContext.Empty.Instance;
@@ -522,31 +522,31 @@ begin
             end if;
         end loop;
 
-        --		-- Optimize away p or p and p and p TODO: optimize() was a no-op
+        --		-- Optimize away p or p and p and p TODO: optimize () was a no-op
         --		for i in 0 .. altToPred.length - 1 loop
-        --			altToPred[i] := altToPred[i].optimize();
+        --			altToPred[i] := altToPred[i].optimize ();
         --       i := @ + 1;
         --		end loop;
 
         -- nonambig alts are null in altToPred
-        return (nPredAlts = 0 ? null : altToPred)
+        return (nPredAlts = 0 ? null : altToPred);
     end if;
 
     -- public
     function getAltThatFinishedDecisionEntryRule (This : …) return Integer is
 begin
-        alts : constant := IntervalSet()
+        alts : constant := IntervalSet ();
         for config in configs loop
-            if config.getOuterContextDepth() > 0 or else
+            if config.getOuterContextDepth () > 0 or else
                 (config.state is RuleStopState and
-                    config.context!.hasEmptyPath()) {
-                try! alts.add(config.alt)
+                    config.context!.hasEmptyPath ()) {
+                try! alts.add (config.alt);
             end if;
         end loop;
-        if alts.size() == 0 then
+        if alts.size () == 0 then
             return ATN.INVALID_ALT_NUMBER;
         end if;
-        return alts.getMinElement()
+        return alts.getMinElement ();
     end if;
 
     --
@@ -563,42 +563,42 @@ begin
     procedure splitAccordingToSemanticValidity (
         outerContext : ParserRuleContext;
         evalSemanticContext : (SemanticContext, ParserRuleContext, Int, Bool) return Bool) rereturn (ATNConfigSet, ATNConfigSet) {
-        succeeded : constant := ATNConfigSet(fullCtx)
-        failed : constant := ATNConfigSet(fullCtx)
+        succeeded : constant := ATNConfigSet (fullCtx);
+        failed : constant := ATNConfigSet (fullCtx);
         for config in configs loop
             if config.semanticContext /= SemanticContext.Empty.Instance then
-                predicateEvaluationResult : constant := evalSemanticContext(config.semanticContext, outerContext, config.alt,fullCtx);
+                predicateEvaluationResult : constant := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
                 if predicateEvaluationResult then
-                    try! succeeded.add(config)
+                    try! succeeded.add (config);
                 else
-                    try! failed.add(config);
+                    try! failed.add (config);
                 end if;
             else
-                try! succeeded.add(config);
+                try! succeeded.add (config);
             end if;
         end loop;
-        return (succeeded, failed)
+        return (succeeded, failed);
     end if;
 
     -- public
     function dupConfigsWithoutSemanticPredicates (This : …) return ATNConfigSet is
 begin
-        dup : constant := ATNConfigSet()
+        dup : constant := ATNConfigSet ();
         for config in configs loop
-            c : constant := ATNConfig(config, SemanticContext.Empty.Instance)
-            try! dup.add(c)
+            c : constant := ATNConfig (config, SemanticContext.Empty.Instance);
+            try! dup.add (c);
         end loop;
         return dup
     end if;
 
     -- public
     hasConfigInRuleStopState : Boolean {
-        return configs.contains(where: { $0.state is RuleStopState })
+        return configs.contains (where: { $0.state is RuleStopState });
     end if;
 
     -- public
     allConfigsInRuleStopStates : Boolean {
-        return not configs.contains(where: { not ($0.state is RuleStopState) })
+        return not configs.contains (where: { not ($0.state is RuleStopState) });
     end if;
 end if;
 

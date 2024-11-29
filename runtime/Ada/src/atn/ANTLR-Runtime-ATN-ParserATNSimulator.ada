@@ -7,7 +7,7 @@
 
 
 --
--- The embodiment of the adaptive LL(*), ALL(*), parsing strategy.
+-- The embodiment of the adaptive LL (*), ALL (*), parsing strategy.
 --
 --
 -- The basic complexity of the adaptive strategy makes it harder to understand.
@@ -26,8 +26,8 @@
 -- created during prediction beginning in the decision rule. For example, if
 -- prediction occurs without invoking another rule's ATN, there are no context
 -- stacks in the configurations. When lack of context leads to a conflict, we
--- don't know if it's an ambiguity or a weakness in the strong LL(*) parsing
--- strategy (versus full LL(*)).
+-- don't know if it's an ambiguity or a weakness in the strong LL (*) parsing
+-- strategy (versus full LL (*)).
 --
 --
 -- When SLL yields a configuration set with conflict, we rewind the input and
@@ -37,7 +37,7 @@
 -- definitively say we have a True ambiguity for that input sequence. If we
 -- don't get a conflict, it implies that the decision is sensitive to the outer
 -- context. (It is not context-sensitive in the sense of context-sensitive
--- grammars.)
+-- grammars.);
 --
 --
 -- The next time we reach this DFA state with an SLL conflict, through DFA
@@ -74,7 +74,7 @@
 --
 --
 -- Something should be done for left-recursive expression predictions. They are
--- likely LL(1) + pred eval. Easier to do the whole SLL unless error and retry
+-- likely LL (1) + pred eval. Easier to do the whole SLL unless error and retry
 -- with full LL thing Sam does.
 --
 --
@@ -195,8 +195,8 @@
 -- mode with the _org.antlr.v4.runtime.BailErrorStrategy_:
 --
 --
--- parser._org.antlr.v4.runtime.Parser#getInterpreter() getInterpreter()_._#setPredictionMode setPredictionMode_`(`_PredictionMode#SLL_`)`;
--- parser._org.antlr.v4.runtime.Parser#setErrorHandler setErrorHandler_(new _org.antlr.v4.runtime.BailErrorStrategy_());
+-- parser._org.antlr.v4.runtime.Parser#getInterpreter () getInterpreter ()_._#setPredictionMode setPredictionMode_`(`_PredictionMode#SLL_`)`;
+-- parser._org.antlr.v4.runtime.Parser#setErrorHandler setErrorHandler_ (new _org.antlr.v4.runtime.BailErrorStrategy_ ());
 --
 --
 --
@@ -249,14 +249,14 @@ type ParserATNSimulator is new ATNSimulator with null record;
     -- public static 
     TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT : constant : Boolean := {
         if value : constant := ProcessInfo.processInfo.environment["TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT"] then
-            return NSString(string: value).boolValue;
+            return NSString (string: value).boolValue;
         end if;
         return False;
-    end if;()
+    end if;();
 
     internal final unowned let parser: Parser
 
-    -- public private(set) final var
+    -- public private (set) final var
     decisionToDFA : [DFA];
 
     --
@@ -264,7 +264,7 @@ type ParserATNSimulator is new ATNSimulator with null record;
     --
 
     -- private
-    mode := PredictionMode.LL
+    mode : PredictionMode := PredictionMode.LL
 
     --
     -- Each prediction operation uses a cache for merge of prediction contexts.
@@ -289,9 +289,9 @@ type ParserATNSimulator is new ATNSimulator with null record;
     _dfa : Optional_DFA;
 
 --    -- Testing only!
---    public convenience init(_ atn : ATN; _ decisionToDFA : [DFA],
+--    public convenience init (_ atn : ATN; _ decisionToDFA : [DFA],
 --                              _ sharedContextCache : PredictionContextCache) {
---        self.init(null, atn, decisionToDFA, sharedContextCache);
+--        self.init (null, atn, decisionToDFA, sharedContextCache);
 --    }
 
     -- public 
@@ -301,10 +301,10 @@ type ParserATNSimulator is new ATNSimulator with null record;
 
             self.parser := parser
             self.decisionToDFA := decisionToDFA
-            super.init(atn, sharedContextCache)
-            --		DOTGenerator dot := new DOTGenerator(null);
-            --		print(dot.getDOT(atn.rules.get(0), parser.getRuleNames()));
-            --		print(dot.getDOT(atn.rules.get(1), parser.getRuleNames()));
+            super.init (atn, sharedContextCache);
+            --		DOTGenerator dot := new DOTGenerator (null);
+            --		print (dot.getDOT (atn.rules.get (0), parser.getRuleNames ()));
+            --		print (dot.getDOT (atn.rules.get (1), parser.getRuleNames ()));
     end if;
 
     override
@@ -318,7 +318,7 @@ begin
     procedure clearDFA (This : …) is
 begin
         for d in 0 .. decisionToDFA - 1.count loop
-            decisionToDFA[d] := DFA(atn.getDecisionState(d)!, d)
+            decisionToDFA[d] := DFA (atn.getDecisionState (d)!, d);
         end loop;
     end if;
 
@@ -326,23 +326,23 @@ begin
     procedure adaptivePredict (input : TokenStream; decision : Integer;
         outerContext : Optional_ParserRuleContext;) return Integer is
 begin
-        var outerContext := outerContext
+        outerContext := outerContext
         if debug or else trace_atn_sim then
-            var debugInfo := "adaptivePredict decision \(decision) "
-            debugInfo := @ + "exec LA(1)==\(getLookaheadName(input)) ";
-            debugInfo := @ + "line \(input.LT(1)!.getLine()):";
-            debugInfo := @ + "\(input.LT(1)!.getCharPositionInLine())";
-            print(debugInfo)
+            debugInfo := "adaptivePredict decision \(decision) "
+            debugInfo := @ + "exec LA (1)==\(getLookaheadName (input)) ";
+            debugInfo := @ + "line \(input.LT (1)!.getLine ()):";
+            debugInfo := @ + "\(input.LT (1)!.getCharPositionInLine ())";
+            print (debugInfo);
         end if;
 
 
         _input := input
-        _startIndex := input.index()
+        _startIndex := input.index ();
         _outerContext := outerContext
         dfa : constant := decisionToDFA[decision]
         _dfa := dfa
 
-        m : constant := input.mark()
+        m : constant := input.mark ();
         index : constant := _startIndex
 
         -- Now we are certain to have a specific decision's DFA
@@ -350,10 +350,10 @@ begin
         --TODO: exception handler
         do {
             s0 : Optional_DFAState;
-            if dfa.isPrecedenceDfa() then
+            if dfa.isPrecedenceDfa () then
                 -- the start state for a precedence DFA depends on the current
                 -- parser precedence, and is provided by a DFA method.
-                s0 := dfa.getPrecedenceStartState(parser.getPrecedence());
+                s0 := dfa.getPrecedenceStartState (parser.getPrecedence ());
             else
                 -- the start state for a "regular" DFA is just s0
                 s0 := dfa.s0
@@ -365,16 +365,16 @@ begin
                     outerContext := ParserRuleContext.EMPTY;
                 end if;
                 if debug or else trace_atn_sim then
-                    var debugInfo := "predictATN decision \(dfa.decision) "
-                    debugInfo := @ + "exec LA(1)==\(getLookaheadName(input)), ";
-                    debugInfo := @ + "outerContext=\(outerContext!.toString(parser))";
-                    print(debugInfo)
+                    debugInfo := "predictATN decision \(dfa.decision) "
+                    debugInfo := @ + "exec LA (1)==\(getLookaheadName (input)), ";
+                    debugInfo := @ + "outerContext=\(outerContext!.toString (parser))";
+                    print (debugInfo);
                 end if;
 
                 fullCtx : constant := False;
-                var s0_closure := computeStartState(dfa.atnStartState, ParserRuleContext.EMPTY, fullCtx);
+                s0_closure := computeStartState (dfa.atnStartState, ParserRuleContext.EMPTY, fullCtx);
 
-                if dfa.isPrecedenceDfa() then
+                if dfa.isPrecedenceDfa () then
                     --
                     -- If this is a precedence DFA, we use applyPrecedenceFilter
                     -- to convert the computed start state to a precedence start
@@ -384,23 +384,23 @@ begin
                     --
                     --added by janyou 20160224
                     -- dfa.s0!.configs := s0_closure -- not used for prediction but useful to know start configs anyway
-                    s0_closure := applyPrecedenceFilter(s0_closure);
-                    s0 := addDFAState(dfa, DFAState(s0_closure))
-                    dfa.setPrecedenceStartState(parser.getPrecedence(), s0!);
+                    s0_closure := applyPrecedenceFilter (s0_closure);
+                    s0 := addDFAState (dfa, DFAState (s0_closure));
+                    dfa.setPrecedenceStartState (parser.getPrecedence (), s0!);
                 else
-                    s0 := addDFAState(dfa, DFAState(s0_closure))
+                    s0 := addDFAState (dfa, DFAState (s0_closure));
                     dfa.s0 := s0
                 end if;
             end if;
 
-            alt : constant := execATN(dfa, s0!, input, index, outerContext!);
+            alt : constant := execATN (dfa, s0!, input, index, outerContext!);
             if debug then
-                print("DFA after predictATN: \(dfa.toString(parser.getVocabulary()))");
+                print ("DFA after predictATN: \(dfa.toString (parser.getVocabulary ()))");
             end if;
             mergeCache := null -- wack cache after each prediction
             _dfa := null;
-            try! input.seek(index)
-            try! input.release(m)
+            try! input.seek (index);
+            try! input.release (m);
             return alt
         end if;
 
@@ -421,7 +421,7 @@ begin
     -- We also have some key operations to do:
     -- add an edge from previous DFA state to potentially new DFA state, D,
     -- upon current symbol but only if adding to work list, which means in all
-    -- cases except no viable alternative (and possibly non-greedy decisions?)
+    -- cases except no viable alternative (and possibly non-greedy decisions?);
     -- collecting predicates and adding semantic context to DFA accept states
     -- adding rule context to context-sensitive DFA accept states
     -- consuming an input symbol
@@ -443,24 +443,24 @@ begin
         outerContext : ParserRuleContext) return Integer is
 begin
             if debug or else trace_atn_sim then
-                print("execATN decision \(dfa.decision) exec LA(1)==\(getLookaheadName(input)) line \(input.LT(1)!.getLine()):\(input.LT(1)!.getCharPositionInLine())");
+                print ("execATN decision \(dfa.decision) exec LA (1)==\(getLookaheadName (input)) line \(input.LT (1)!.getLine ()):\(input.LT (1)!.getCharPositionInLine ())");
             end if;
 
-            var previousD := s0
+            previousD := s0
 
             if debug then
-                print("s0 := \(s0)");
+                print ("s0 := \(s0)");
             end if;
 
-            var t := input.LA(1);
+            t := input.LA (1);
 
             loop
                 -- while more work
                 D : DFAState;
-                if dState : constant := getExistingTargetState(previousD, t) then
+                if dState : constant := getExistingTargetState (previousD, t) then
                     D := dState
                 else
-                    D := computeTargetState(dfa, previousD, t);
+                    D := computeTargetState (dfa, previousD, t);
                 end if;
 
                 if D = ATNSimulator.ERROR then
@@ -473,9 +473,9 @@ begin
                     -- ATN states in SLL implies LL will also get nowhere.
                     -- If conflict in states that dip out, choose min since we
                     -- will get error no matter what.
-                    e : constant := noViableAlt(input, outerContext, previousD.configs, startIndex)
-                    input.seek(startIndex);
-                    alt : constant := getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(previousD.configs, outerContext);
+                    e : constant := noViableAlt (input, outerContext, previousD.configs, startIndex);
+                    input.seek (startIndex);
+                    alt : constant := getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule (previousD.configs, outerContext);
                     if alt /= ATN.INVALID_ALT_NUMBER then
                         return alt;
                     end if;
@@ -485,41 +485,41 @@ begin
                 end if;
 
                 if D.requiresFullContext and then (mode /= PredictionMode.SLL) then
-                    -- IF PREDS, MIGHT RESOLVE TO SINGLE ALT => SLL (or syntax error)
-                    var conflictingAlts := D.configs.conflictingAlts!
+                    -- IF PREDS, MIGHT RESOLVE TO SINGLE ALT => SLL (or syntax error);
+                    conflictingAlts := D.configs.conflictingAlts!
                     if preds : constant := D.predicates then
                         if debug then
-                            print("DFA state has preds in DFA sim LL failover");
+                            print ("DFA state has preds in DFA sim LL failover");
                         end if;
-                        conflictIndex : constant := input.index()
+                        conflictIndex : constant := input.index ();
                         if conflictIndex /= startIndex then
-                            input.seek(startIndex);
+                            input.seek (startIndex);
                         end if;
 
-                        conflictingAlts := evalSemanticContext(preds, outerContext, True);
-                        if conflictingAlts.cardinality() == 1 then
+                        conflictingAlts := evalSemanticContext (preds, outerContext, True);
+                        if conflictingAlts.cardinality () == 1 then
                             if debug then
-                                print("Full LL avoided");
+                                print ("Full LL avoided");
                             end if;
-                            return conflictingAlts.firstSetBit()
+                            return conflictingAlts.firstSetBit ();
                         end if;
 
                         if conflictIndex /= startIndex then
                             -- restore the index so reporting the fallback to full
                             -- context occurs with the index at the correct spot
-                            input.seek(conflictIndex);
+                            input.seek (conflictIndex);
                         end if;
                     end if;
 
                     if dfa_debug then
-                        print("ctx sensitive state \(outerContext) in \(D)");
+                        print ("ctx sensitive state \(outerContext) in \(D)");
                     end if;
                     fullCtx : constant := True;
-                    s0_closure : constant := computeStartState(dfa.atnStartState, outerContext, fullCtx);
-                    reportAttemptingFullContext(dfa, conflictingAlts, D.configs, startIndex, input.index())
-                    alt : constant := execATNWithFullContext(dfa, D, s0_closure,;
+                    s0_closure : constant := computeStartState (dfa.atnStartState, outerContext, fullCtx);
+                    reportAttemptingFullContext (dfa, conflictingAlts, D.configs, startIndex, input.index ());
+                    alt : constant := execATNWithFullContext (dfa, D, s0_closure,;
                         input, startIndex,
-                        outerContext)
+                        outerContext);
                     return alt
                 end if;
 
@@ -529,30 +529,30 @@ begin
                      return D.prediction
                   end if;
 
-                  stopIndex : constant := input.index()
-                  input.seek(startIndex);
-                  alts : constant := evalSemanticContext(preds, outerContext, True);
-                  case alts.cardinality() is
+                  stopIndex : constant := input.index ();
+                  input.seek (startIndex);
+                  alts : constant := evalSemanticContext (preds, outerContext, True);
+                  case alts.cardinality () is
                      when 0 =>
-                           raise ANTLRException.recognition with noViableAlt(input, outerContext, D.configs, startIndex);
+                           raise ANTLRException.recognition with noViableAlt (input, outerContext, D.configs, startIndex);
 
 
                      when 1 =>
-                           return alts.firstSetBit()
+                           return alts.firstSetBit ();
 
                      when others =>
                            -- report ambiguity after predicate evaluation to make sure the correct
                            -- set of ambig alts is reported.
-                           reportAmbiguity(dfa, D, startIndex, stopIndex, False, alts, D.configs)
-                           return alts.firstSetBit()
+                           reportAmbiguity (dfa, D, startIndex, stopIndex, False, alts, D.configs);
+                           return alts.firstSetBit ();
                   end case;
                end if;
 
                 previousD := D
 
                 if t /= BufferedTokenStream.EOF then
-                    input.consume();
-                    t := input.LA(1);
+                    input.consume ();
+                    t := input.LA (1);
                 end if;
             end loop;
     end if;
@@ -593,20 +593,20 @@ begin
    function computeTargetState (dfa : DFA; previousD : DFAState; t : Integer) return DFAState is
 begin
 
-        reach : constant := := computeReachSet(previousD.configs, t, False);
+        reach : constant := := computeReachSet (previousD.configs, t, False);
         if not Is_Valid (reach) then
-            addDFAEdge(dfa, previousD, t, ATNSimulator.ERROR)
+            addDFAEdge (dfa, previousD, t, ATNSimulator.ERROR);
             return ATNSimulator.ERROR
         end if;
 
         -- create new target state; we'll add to DFA after it's complete
-        D : constant := DFAState(reach)
+        D : constant := DFAState (reach);
 
-        predictedAlt : constant := ParserATNSimulator.getUniqueAlt(reach)
+        predictedAlt : constant := ParserATNSimulator.getUniqueAlt (reach);
 
         if debug then
-            altSubSets : constant := PredictionMode.getConflictingAltSubsets(reach)
-            print("SLL altSubSets=\(altSubSets), configs=\(reach), predict=\(predictedAlt), allSubsetsConflict=\(PredictionMode.allSubsetsConflict(altSubSets)), conflictingAlts=\(getConflictingAlts(reach))")
+            altSubSets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (reach);
+            print ("SLL altSubSets=\(altSubSets), configs=\(reach), predict=\(predictedAlt), allSubsetsConflict=\(PredictionMode.allSubsetsConflict (altSubSets)), conflictingAlts=\(getConflictingAlts (reach))");
         end if;
 
         if predictedAlt /= ATN.INVALID_ALT_NUMBER then
@@ -615,25 +615,25 @@ begin
             D.configs.uniqueAlt := predictedAlt
             D.prediction := predictedAlt
         else
-            if PredictionMode.hasSLLConflictTerminatingPrediction(mode, reach) then
+            if PredictionMode.hasSLLConflictTerminatingPrediction (mode, reach) then
                 -- MORE THAN ONE VIABLE ALTERNATIVE
-                D.configs.conflictingAlts := getConflictingAlts(reach)
+                D.configs.conflictingAlts := getConflictingAlts (reach);
                 D.requiresFullContext := True;
                 -- in SLL-only mode, we will stop at this state and return the minimum alt
                 D.isAcceptState := True;
-                D.prediction := D.configs.conflictingAlts!.firstSetBit()
+                D.prediction := D.configs.conflictingAlts!.firstSetBit ();
             end if;
         end if;
 
         if D.isAcceptState and then D.configs.hasSemanticContext then
-            predicateDFAState(D, atn.getDecisionState(dfa.decision)!)
+            predicateDFAState (D, atn.getDecisionState (dfa.decision)!);
             if D.predicates /= null then
                 D.prediction := ATN.INVALID_ALT_NUMBER;
             end if;
         end if;
 
         -- all adds to dfa are done after we've created full D state
-        return addDFAEdge(dfa, previousD, t, D)
+        return addDFAEdge (dfa, previousD, t, D);
     end if;
 
     -- final
@@ -641,18 +641,18 @@ begin
     begin
         -- We need to test all predicates, even in DFA states that
         -- uniquely predict alternative.
-        nalts : constant := decisionState.getNumberOfTransitions()
-        -- Update DFA so reach becomes accept state with (predicate,alt)
+        nalts : constant := decisionState.getNumberOfTransitions ();
+        -- Update DFA so reach becomes accept state with (predicate,alt);
         -- pairs if preds found for conflicting alts
-        altsToCollectPredsFrom : constant := getConflictingAltsOrUniqueAlt(dfaState.configs)
-        if altToPred : constant := getPredsForAmbigAlts(altsToCollectPredsFrom, dfaState.configs, nalts) then
-            dfaState.predicates := getPredicatePredictions(altsToCollectPredsFrom, altToPred)
+        altsToCollectPredsFrom : constant := getConflictingAltsOrUniqueAlt (dfaState.configs);
+        if altToPred : constant := getPredsForAmbigAlts (altsToCollectPredsFrom, dfaState.configs, nalts) then
+            dfaState.predicates := getPredicatePredictions (altsToCollectPredsFrom, altToPred);
             dfaState.prediction := ATN.INVALID_ALT_NUMBER -- make sure we use preds
         else
             -- There are preds in configs but they might go away
             -- when OR'd together like {p}? or else NONE = NONE. If neither
             -- alt has preds, resolve to min alt
-            dfaState.prediction := altsToCollectPredsFrom.firstSetBit()
+            dfaState.prediction := altsToCollectPredsFrom.firstSetBit ();
         end if;
     end if;
 
@@ -665,18 +665,18 @@ begin
         outerContext : ParserRuleContext) return Integer is
 begin
         if debug or else trace_atn_sim then
-            print("execATNWithFullContext \(s0)");
+            print ("execATNWithFullContext \(s0)");
         end if;
         fullCtx : constant := True;
-        var foundExactAmbig := False;
+        foundExactAmbig := False;
         reach : Optional_ATNConfigSet; := null;
-        var previous := s0
-        input.seek(startIndex);
-        var t := input.LA(1);
-        var predictedAlt := ATN.INVALID_ALT_NUMBER
+        previous := s0
+        input.seek (startIndex);
+        t := input.LA (1);
+        predictedAlt := ATN.INVALID_ALT_NUMBER
         loop
             -- while more work
-            if computeReach : constant := computeReachSet(previous, t, fullCtx) then;
+            if computeReach : constant := computeReachSet (previous, t, fullCtx) then;
                 reach := computeReach
             else
                 -- if any configs in previous dipped into outer context, that
@@ -688,9 +688,9 @@ begin
                 -- ATN states in SLL implies LL will also get nowhere.
                 -- If conflict in states that dip out, choose min since we
                 -- will get error no matter what.
-                e : constant := noViableAlt(input, outerContext, previous, startIndex)
-                input.seek(startIndex);
-                alt : constant := getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(previous, outerContext);
+                e : constant := noViableAlt (input, outerContext, previous, startIndex);
+                input.seek (startIndex);
+                alt : constant := getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule (previous, outerContext);
                 if alt /= ATN.INVALID_ALT_NUMBER then
                     return alt;
                 end if;
@@ -698,28 +698,28 @@ begin
 
             end if;
             if reach : constant := reach then
-                altSubSets : constant := PredictionMode.getConflictingAltSubsets(reach)
+                altSubSets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (reach);
                 if debug then
-                    print("LL altSubSets=\(altSubSets), predict=\(PredictionMode.getUniqueAlt(altSubSets)), resolvesToJustOneViableAlt=\(PredictionMode.resolvesToJustOneViableAlt(altSubSets))");
+                    print ("LL altSubSets=\(altSubSets), predict=\(PredictionMode.getUniqueAlt (altSubSets)), resolvesToJustOneViableAlt=\(PredictionMode.resolvesToJustOneViableAlt (altSubSets))");
                 end if;
 
 
-                reach.uniqueAlt := ParserATNSimulator.getUniqueAlt(reach)
+                reach.uniqueAlt := ParserATNSimulator.getUniqueAlt (reach);
                 -- unique prediction?
                 if reach.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
                     predictedAlt := reach.uniqueAlt
                     exit when True;
                 end if;
                 if mode /= PredictionMode.LL_EXACT_AMBIG_DETECTION then
-                    predictedAlt := PredictionMode.resolvesToJustOneViableAlt(altSubSets)
+                    predictedAlt : PredictionMode := PredictionMode.resolvesToJustOneViableAlt (altSubSets);
                     exit when predictedAlt /= ATN.INVALID_ALT_NUMBER;
                 else
                     -- In exact ambiguity mode, we never to terminate early.;
                     -- Just keeps scarfing until we know what the conflict is
-                    if PredictionMode.allSubsetsConflict(altSubSets) and
-                        PredictionMode.allSubsetsEqual(altSubSets) {
+                    if PredictionMode.allSubsetsConflict (altSubSets) and
+                        PredictionMode.allSubsetsEqual (altSubSets) {
                         foundExactAmbig := True;
-                        predictedAlt := PredictionMode.getSingleViableAlt(altSubSets)
+                        predictedAlt : PredictionMode := PredictionMode.getSingleViableAlt (altSubSets);
                         exit when True;
                     end if;
                     -- else there are multiple non-conflicting subsets or
@@ -729,8 +729,8 @@ begin
 
                 previous := reach
                 if t /= BufferedTokenStream.EOF then
-                    input.consume();
-                    t := input.LA(1);
+                    input.consume ();
+                    t := input.LA (1);
                 end if;
             end if;
         end loop;
@@ -739,7 +739,7 @@ begin
             -- without conflict, then we know that it's a full LL decision
             -- not SLL.
             if reach.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
-                reportContextSensitivity(dfa, predictedAlt, reach, startIndex, input.index())
+                reportContextSensitivity (dfa, predictedAlt, reach, startIndex, input.index ());
                 return predictedAlt
             end if;
 
@@ -770,8 +770,8 @@ begin
             -- the fact that we should predict alternative 1.  We just can't say for
             -- sure that there is an ambiguity without looking further.
             --
-            reportAmbiguity(dfa, D, startIndex, input.index(), foundExactAmbig,
-                            reach.getAlts(), reach)
+            reportAmbiguity (dfa, D, startIndex, input.index (), foundExactAmbig,
+                            reach.getAlts (), reach);
         end if;
         return predictedAlt
     end if;
@@ -781,14 +781,14 @@ begin
    begin
 
         if debug then
-            print("in computeReachSet, starting closure: \(closureConfigSet)");
+            print ("in computeReachSet, starting closure: \(closureConfigSet)");
         end if;
 
         if mergeCache = null then
             mergeCache := DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext> ();
         end if;
 
-        intermediate : constant := ATNConfigSet(fullCtx)
+        intermediate : constant := ATNConfigSet (fullCtx);
 
         --
         -- Configurations already in a rule stop state indicate reaching the end
@@ -807,27 +807,27 @@ begin
         configs : constant := closureConfigSet.configs
         for config in configs loop
             if debug then
-                print("testing \(getTokenName(t)) at \(config.description)");
+                print ("testing \(getTokenName (t)) at \(config.description)");
             end if;
 
             if config.state is RuleStopState then
-                assert(config.context!.isEmpty(), "Expected: c.context.isEmpty()")
+                assert (config.context!.isEmpty (), "Expected: c.context.isEmpty ()");
                 if fullCtx or else t = BufferedTokenStream.EOF then
                     if skippedStopStates = null then
                         skippedStopStates := [ATNConfig]();
                     end if;
-                    skippedStopStates!.append(config)
+                    skippedStopStates!.append (config);
                 end if;
 
                 goto CONTINUE;
             end if;
 
-            n : constant := config.state.getNumberOfTransitions()
+            n : constant := config.state.getNumberOfTransitions ();
             for ti in 0 .. n - 1 loop
                 -- for each transition
-                trans : constant := config.state.transition(ti)
-                if target : constant := getReachableTarget(trans, t) then
-                    try! intermediate.add(ATNConfig(config, target), &mergeCache);
+                trans : constant := config.state.transition (ti);
+                if target : constant := getReachableTarget (trans, t) then
+                    try! intermediate.add (ATNConfig (config, target), &mergeCache);
                 end if;
                 <<CONTINUE>>
             end loop;
@@ -848,14 +848,14 @@ begin
         -- withheld in skippedStopStates, or when the current symbol is EOF.
         --
         if skippedStopStates = null and then t /= CommonToken.EOF then
-            if intermediate.size() == 1 then
+            if intermediate.size () == 1 then
                 -- Don't pursue the closure if there is just one state.
                 -- It can only have one alternative; just add to result
                 -- Also don't pursue the closure if there is unique alternative
                 -- among the configurations.
                 reach := intermediate
             else
-                if ParserATNSimulator.getUniqueAlt(intermediate) /= ATN.INVALID_ALT_NUMBER then
+                if ParserATNSimulator.getUniqueAlt (intermediate) /= ATN.INVALID_ALT_NUMBER then
                     -- Also don't pursue the closure if there is unique alternative
                     -- among the configurations.
                     reach := intermediate
@@ -868,11 +868,11 @@ begin
         -- operation on the intermediate set to compute its initial value.
         --
         if reach = null then
-            reach := ATNConfigSet(fullCtx)
-            var closureBusy := Set<ATNConfig> ()
-            treatEofAsEpsilon : constant := (t = CommonToken.EOF)
+            reach := ATNConfigSet (fullCtx);
+            closureBusy := Set<ATNConfig> ();
+            treatEofAsEpsilon : constant := (t = CommonToken.EOF);
             for config in intermediate.configs loop
-                closure(config, reach!, &closureBusy, False, fullCtx, treatEofAsEpsilon);
+                closure (config, reach!, &closureBusy, False, fullCtx, treatEofAsEpsilon);
             end loop;
         end if;
 
@@ -895,7 +895,7 @@ begin
             -- already guaranteed to meet this condition whether or not it's
             -- required.
             --
-            reach := removeAllConfigsNotInRuleStopState(reach!, reach! === intermediate)
+            reach := removeAllConfigsNotInRuleStopState (reach!, reach! === intermediate);
         end if;
 
         --
@@ -908,14 +908,14 @@ begin
         -- multiple alternatives are viable.
         --
         if reach : constant := reach then
-            if skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionMode.hasConfigInRuleStopState(reach)) then
-                assert(not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty()")
+            if skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionMode.hasConfigInRuleStopState (reach)) then
+                assert (not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty ()");
                 for c in skippedStopStates loop
-                    try! reach.add(c, &mergeCache)
+                    try! reach.add (c, &mergeCache);
                 end loop;
             end if;
 
-            if reach.isEmpty() then
+            if reach.isEmpty () then
                 return null;
             end if;
         end if;
@@ -945,21 +945,21 @@ begin
     -- final
     function removeAllConfigsNotInRuleStopState (configs : ATNConfigSet; lookToEndOfRule  : Boolean) return ATNConfigSet is
 begin
-        return configs.removeAllConfigsNotInRuleStopState(&mergeCache,lookToEndOfRule,atn)
+        return configs.removeAllConfigsNotInRuleStopState (&mergeCache,lookToEndOfRule,atn);
     end if;
 
 
     -- final
     function computeStartState (p : ATNState; ctx : RuleContext; fullCtx  : Boolean) return ATNConfigSet is
 begin
-            initialContext : constant := PredictionContext.fromRuleContext(atn, ctx)
-            configs : constant := ATNConfigSet(fullCtx)
-            length : constant := p.getNumberOfTransitions()
+            initialContext : constant := PredictionContext.fromRuleContext (atn, ctx);
+            configs : constant := ATNConfigSet (fullCtx);
+            length : constant := p.getNumberOfTransitions ();
             for i in 0 .. length - 1 loop
-                target : constant := p.transition(i).target
-                c : constant := ATNConfig(target, i + 1, initialContext)
-                var closureBusy := Set<ATNConfig> ()
-                closure(c, configs, &closureBusy, True, fullCtx, False);
+                target : constant := p.transition (i).target
+                c : constant := ATNConfig (target, i + 1, initialContext);
+                closureBusy := Set<ATNConfig> ();
+                closure (c, configs, &closureBusy, True, fullCtx, False);
             end loop;
 
             return configs
@@ -1065,7 +1065,7 @@ begin
     -- to 0. Sam's fix: each config has flag indicating if it has
     -- returned from an expr[0] call. then just don't filter any
     -- config with that flag set. flag is carried along in
-    -- closure(). so to avoid adding field, set bit just under sign
+    -- closure (). so to avoid adding field, set bit just under sign
     -- bit of dipsIntoOuterContext (SUPPRESS_PRECEDENCE_FILTER).
     -- With the change you filter "unless (p, 2, pi) was reached
     -- after leaving the rule stop state of the LR rule containing
@@ -1126,14 +1126,14 @@ begin
     -- final internal
     function applyPrecedenceFilter (configs : ATNConfigSet) return ATNConfigSet is
 begin
-        return configs.applyPrecedenceFilter(&mergeCache,parser,_outerContext);
+        return configs.applyPrecedenceFilter (&mergeCache,parser,_outerContext);
     end if;
 
     -- final internal
     function getReachableTarget (trans : Transition; ttype : Integer) return Optional_ATNState is
    begin
 
-        if trans.matches(ttype, 0, atn.maxTokenType) then
+        if trans.matches (ttype, 0, atn.maxTokenType) then
             return trans.target;
         end if;
 
@@ -1156,24 +1156,24 @@ begin
             --
             -- From this, it is clear that NONE or anything = NONE.
             --
-            altToPred : constant := configs.getPredsForAmbigAlts(ambigAlts,nalts)
+            altToPred : constant := configs.getPredsForAmbigAlts (ambigAlts,nalts);
             if debug then
-                print("getPredsForAmbigAlts result \(String(describing: altToPred))");
+                print ("getPredsForAmbigAlts result \(String (describing: altToPred))");
             end if;
             return altToPred
     end if;
 
     final internal procedure getPredicatePredictions (ambigAlts : Optional_BitSet;
         altToPred : [SemanticContext?]) -> [DFAState.PredPrediction]? {
-            var pairs := [DFAState.PredPrediction]()
-            var containsPredicate := False;
-            for (i, pred) in altToPred.enumerated().dropFirst() loop
+            pairs := [DFAState.PredPrediction]();
+            containsPredicate := False;
+            for (i, pred) in altToPred.enumerated ().dropFirst () loop
 
                 -- unpredicated is indicated by SemanticContext.Empty.Instance
-                assert(pred /= null, "Expected: pred /= null")
+                assert (pred /= null, "Expected: pred /= null");
 
-                if ambigAlts : constant := ambigAlts, try! ambigAlts.get(i) then
-                    pairs.append(DFAState.PredPrediction(pred!, i));
+                if ambigAlts : constant := ambigAlts, try! ambigAlts.get (i) then
+                    pairs.append (DFAState.PredPrediction (pred!, i));
                 end if;
                 if pred /= SemanticContext.Empty.Instance then
                     containsPredicate := True;
@@ -1184,7 +1184,7 @@ begin
                 return null;
             end if;
 
-            return pairs    --pairs.toArray(new, DFAState.PredPrediction[pairs.size()]);
+            return pairs    --pairs.toArray (new, DFAState.PredPrediction[pairs.size ()]);
     end if;
 
     --
@@ -1230,15 +1230,15 @@ begin
     final internal procedure getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule (configs : ATNConfigSet;
         outerContext : ParserRuleContext) return Integer is
 begin
-            let (semValidConfigs, semInvalidConfigs) := splitAccordingToSemanticValidity(configs, outerContext);
-            var alt := getAltThatFinishedDecisionEntryRule(semValidConfigs)
+            let (semValidConfigs, semInvalidConfigs) := splitAccordingToSemanticValidity (configs, outerContext);
+            alt := getAltThatFinishedDecisionEntryRule (semValidConfigs);
             if alt /= ATN.INVALID_ALT_NUMBER then
                 -- semantically/syntactically viable path exists
                 return alt
             end if;
             -- Is there a syntactically valid path with a failed pred?
-            if semInvalidConfigs.size() > 0 then
-                alt := getAltThatFinishedDecisionEntryRule(semInvalidConfigs)
+            if semInvalidConfigs.size () > 0 then
+                alt := getAltThatFinishedDecisionEntryRule (semInvalidConfigs);
                 if alt /= ATN.INVALID_ALT_NUMBER then
                     -- syntactically viable path exists
                     return alt
@@ -1251,7 +1251,7 @@ begin
     function getAltThatFinishedDecisionEntryRule (configs : ATNConfigSet) return Integer is
 begin
 
-        return configs.getAltThatFinishedDecisionEntryRule()
+        return configs.getAltThatFinishedDecisionEntryRule ();
     end if;
 
     --
@@ -1268,7 +1268,7 @@ begin
         configs : ATNConfigSet;
         outerContext : ParserRuleContext) return (ATNConfigSet, ATNConfigSet) {
 
-            return configs.splitAccordingToSemanticValidity(outerContext, evalSemanticContext);
+            return configs.splitAccordingToSemanticValidity (outerContext, evalSemanticContext);
     end if;
 
     --
@@ -1282,25 +1282,25 @@ begin
         outerContext : ParserRuleContext;
         complete  : Boolean) return BitSet is
 begin
-            predictions : constant := BitSet()
+            predictions : constant := BitSet ();
             for pair in predPredictions loop
                 if pair.pred = SemanticContext.Empty.Instance then
-                    try! predictions.set(pair.alt)
+                    try! predictions.set (pair.alt);
                     exit when not complete;
                     goto CONTINUE;
                 end if;
 
                 fullCtx : constant := False -- in dfa
-                predicateEvaluationResult : constant := evalSemanticContext(pair.pred, outerContext, pair.alt, fullCtx);
+                predicateEvaluationResult : constant := evalSemanticContext (pair.pred, outerContext, pair.alt, fullCtx);
                 if debug or else dfa_debug then
-                    print("eval pred \(pair)= \(predicateEvaluationResult)");
+                    print ("eval pred \(pair)= \(predicateEvaluationResult)");
                 end if;
 
                 if predicateEvaluationResult then
                     if debug or else dfa_debug then
-                        print("PREDICT \(pair.alt)");
+                        print ("PREDICT \(pair.alt)");
                     end if;
-                    try! predictions.set(pair.alt)
+                    try! predictions.set (pair.alt);
                     exit when not complete;
                 end if;
                 <<CONTINUE>>
@@ -1339,7 +1339,7 @@ begin
     -- internal
     function evalSemanticContext (pred : SemanticContext; parserCallStack : ParserRuleContext; alt : Integer; fullCtx  : Boolean) return Boolean is
 begin
-        return pred.eval(parser, parserCallStack);
+        return pred.eval (parser, parserCallStack);
     end if;
 
     --
@@ -1356,8 +1356,8 @@ begin
         fullCtx : Boolean;
         treatEofAsEpsilon  : Boolean) {
             initialDepth : constant Integer := 0;
-            closureCheckingStopState(config, configs, &closureBusy, collectPredicates, fullCtx, initialDepth, treatEofAsEpsilon);
-            assert(not fullCtx or else not configs.dipsIntoOuterContext, "Expected: not fullCtx or not configs.dipsIntoOuterContext")
+            closureCheckingStopState (config, configs, &closureBusy, collectPredicates, fullCtx, initialDepth, treatEofAsEpsilon);
+            assert (not fullCtx or else not configs.dipsIntoOuterContext, "Expected: not fullCtx or not configs.dipsIntoOuterContext");
     end if;
 
 
@@ -1370,61 +1370,61 @@ begin
         treatEofAsEpsilon  : Boolean) {
 
             if debug then
-                print("closure(" + config.toString(parser, True) + ")");
+                print ("closure (" + config.toString (parser, True) + ")");
             end if;
 
             if config.state is RuleStopState then
                 configContext : constant := config.context!
                 -- We hit rule end. If we have context info, use it
                 -- run thru all possible stack tops in ctx
-                if not configContext.isEmpty() then
-                    length : constant := configContext.size()
+                if not configContext.isEmpty () then
+                    length : constant := configContext.size ();
                     for i in 0 .. length - 1 loop
-                        if configContext.getReturnState(i) == PredictionContext.EMPTY_RETURN_STATE then
+                        if configContext.getReturnState (i) == PredictionContext.EMPTY_RETURN_STATE then
                             if fullCtx then
-                                try! configs.add(ATNConfig(config, config.state, EmptyPredictionContext.Instance), &mergeCache)
+                                try! configs.add (ATNConfig (config, config.state, EmptyPredictionContext.Instance), &mergeCache);
                                 goto CONTINUE;
                             else
-                                -- we have no context info, just chase follow links (if greedy)
+                                -- we have no context info, just chase follow links (if greedy);
                                 if debug then
-                                    print("FALLING off rule\(getRuleName(config.state.ruleIndex!))");
+                                    print ("FALLING off rule\(getRuleName (config.state.ruleIndex!))");
                                 end if;
-                                closure_(config, configs, &closureBusy, collectPredicates,;
-                                    fullCtx, depth, treatEofAsEpsilon)
+                                closure_ (config, configs, &closureBusy, collectPredicates,;
+                                    fullCtx, depth, treatEofAsEpsilon);
                             end if;
                             goto CONTINUE;
                         end if;
-                        returnState : constant ATNState := atn.states[configContext.getReturnState(i)]!;
-                        newContext : constant Optional_PredictionContext; := configContext.getParent(i) -- "pop" return state;
-                        c : constant ATNConfig := ATNConfig(returnState, config.alt, newContext,;
-                            config.semanticContext)
+                        returnState : constant ATNState := atn.states[configContext.getReturnState (i)]!;
+                        newContext : constant Optional_PredictionContext; := configContext.getParent (i) -- "pop" return state;
+                        c : constant ATNConfig := ATNConfig (returnState, config.alt, newContext,;
+                            config.semanticContext);
                         -- While we have context to pop back from, we may have
                         -- gotten that context AFTER having falling off a rule.
                         -- Make sure we track that we are now out of context.
                         --
                         -- This assignment also propagates the
-                        -- isPrecedenceFilterSuppressed() value to the new
+                        -- isPrecedenceFilterSuppressed () value to the new
                         -- configuration.
                         c.reachesIntoOuterContext := config.reachesIntoOuterContext
-                        assert(depth > Int.min, "Expected: depth>Integer.MIN_VALUE")
-                        closureCheckingStopState(c, configs, &closureBusy, collectPredicates,;
-                            fullCtx, depth - 1, treatEofAsEpsilon)
+                        assert (depth > Int.min, "Expected: depth>Integer.MIN_VALUE");
+                        closureCheckingStopState (c, configs, &closureBusy, collectPredicates,;
+                            fullCtx, depth - 1, treatEofAsEpsilon);
                         <<CONTINUE>>
                     end loop;
                     return
                 end if; elsif fullCtx then
                     -- reached end of start rule
-                    try! configs.add(config, &mergeCache)
+                    try! configs.add (config, &mergeCache);
                     return
                 else
-                    -- else if we have no context info, just chase follow links (if greedy)
+                    -- else if we have no context info, just chase follow links (if greedy);
                     if debug then
-                        print("FALLING off rule \(getRuleName(config.state.ruleIndex!))");
+                        print ("FALLING off rule \(getRuleName (config.state.ruleIndex!))");
                     end if;
 
                 end if;
             end if;
-            closure_(config, configs, &closureBusy, collectPredicates, fullCtx, depth, treatEofAsEpsilon);
+            closure_ (config, configs, &closureBusy, collectPredicates, fullCtx, depth, treatEofAsEpsilon);
     end if;
 
     --
@@ -1437,64 +1437,64 @@ begin
         fullCtx : Boolean;
         depth : Integer;
         treatEofAsEpsilon  : Boolean) {
-            -- print(__FUNCTION__)
-            --long startTime := System.currentTimeMillis();
+            -- print (__FUNCTION__);
+            --long startTime := System.currentTimeMillis ();
             p : constant := config.state
             -- optimization
-            if not p.onlyHasEpsilonTransitions() then
-                try! configs.add(config, &mergeCache)
+            if not p.onlyHasEpsilonTransitions () then
+                try! configs.add (config, &mergeCache);
                 -- make sure to not return here, because EOF transitions can act as
                 -- both epsilon transitions and non-epsilon transitions.
-                --            if ( debug ) print("added config "+configs);
+                --            if ( debug ) print ("added config "+configs);
             end if;
-            length : constant := p.getNumberOfTransitions()
+            length : constant := p.getNumberOfTransitions ();
             for i in 0 .. length - 1 loop
                 if i = 0 and
-                    canDropLoopEntryEdgeInLeftRecursiveRule(config) then
+                    canDropLoopEntryEdgeInLeftRecursiveRule (config) then
                     goto CONTINUE;
                 end if;
-                t : constant := p.transition(i)
+                t : constant := p.transition (i);
                 continueCollecting : constant Boolean := not (t is ActionTransition) and then collectPredicates
-                c : constant := getEpsilonTarget(config, t, continueCollecting, depth = 0, fullCtx, treatEofAsEpsilon);
+                c : constant := getEpsilonTarget (config, t, continueCollecting, depth = 0, fullCtx, treatEofAsEpsilon);
                 if c : constant := c then
-                    var newDepth := depth
+                    newDepth := depth
                     if config.state is RuleStopState then
-                        assert(not fullCtx, "Expected: not fullCtx")
+                        assert (not fullCtx, "Expected: not fullCtx");
                         -- target fell off end of rule; mark resulting c as having dipped into outer context
                         -- We can't get here if incoming config was rule stop and we had context
                         -- track how far we dip into outer context.  Might
                         -- come in handy and we avoid evaluating context dependent
                         -- preds if this is > 0.
-                        if _dfa : constant := _dfa , _dfa.isPrecedenceDfa() then
-                            outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn();
+                        if _dfa : constant := _dfa , _dfa.isPrecedenceDfa () then
+                            outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn ();
                             if outermostPrecedenceReturn = _dfa.atnStartState.ruleIndex then
-                                c.setPrecedenceFilterSuppressed(True);
+                                c.setPrecedenceFilterSuppressed (True);
                             end if;
                         end if;
 
                         c.reachesIntoOuterContext := @ + 1;
-                        if closureBusy.contains(c) then
+                        if closureBusy.contains (c) then
                             -- avoid infinite recursion for right-recursive rules
                             goto CONTINUE;
                         else
-                            closureBusy.insert(c);
+                            closureBusy.insert (c);
                         end if;
 
                         configs.dipsIntoOuterContext := True -- TODO: can remove? only care when we add to set per middle of this method
-                        --print("newDepth=>\(newDepth)")
-                        assert(newDepth > Int.min, "Expected: newDepth>Integer.MIN_VALUE")
+                        --print ("newDepth=>\(newDepth)");
+                        assert (newDepth > Int.min, "Expected: newDepth>Integer.MIN_VALUE");
                         newDepth := @ - 1;
 
                         if debug then
-                            print("dips into outer ctx: \(c)");
+                            print ("dips into outer ctx: \(c)");
                         end if;
                     else
-                        if not t.isEpsilon() then
-                            if closureBusy.contains(c) then
+                        if not t.isEpsilon () then
+                            if closureBusy.contains (c) then
                                 -- avoid infinite recursion for EOF* and EOF+
                                 goto CONTINUE;
                             else
-                                closureBusy.insert(c);
+                                closureBusy.insert (c);
                             end if;
                         end if;
 
@@ -1506,14 +1506,14 @@ begin
                         end if;
                     end if;
 
-                    closureCheckingStopState(c, configs, &closureBusy, continueCollecting,;
-                        fullCtx, newDepth, treatEofAsEpsilon)
+                    closureCheckingStopState (c, configs, &closureBusy, continueCollecting,;
+                        fullCtx, newDepth, treatEofAsEpsilon);
                 end if;
                 <<CONTINUE>>
             end loop;
-            --long finishTime := System.currentTimeMillis();
-            --  if ((finishTime-startTime)>1)
-            --print("That took: "+(finishTime-startTime)+ " ms");
+            --long finishTime := System.currentTimeMillis ();
+            --  if ((finishTime-startTime)>1);
+            --print ("That took: "+(finishTime-startTime)+ " ms");
     end if;
 
     --
@@ -1620,38 +1620,38 @@ begin
         -- left-recursion elimination. For efficiency, also check if
         -- the context has an empty stack case. If so, it would mean
         -- global FOLLOW so we can't perform optimization
-        if p.getStateType() /= ATNState.STAR_LOOP_ENor else;
+        if p.getStateType () /= ATNState.STAR_LOOP_ENor else;
             not ( (StarLoopEntryState (p))).precedenceRuleDecision or else -- Are we the special loop entry/exit state?
-            configContext.isEmpty() or else -- If SLL wildcard
-            configContext.hasEmptyPath(){
+            configContext.isEmpty () or else -- If SLL wildcard
+            configContext.hasEmptyPath (){
             return False;
         end if;
 
         -- Require all return states to return back to the same rule
         -- that p is in.
-        numCtxs : constant := configContext.size()
+        numCtxs : constant := configContext.size ();
         for  i in 0 ..< numCtxs loop -- for each stack context
-            returnState : constant := atn.states[configContext.getReturnState(i)]!
+            returnState : constant := atn.states[configContext.getReturnState (i)]!
             if  returnState.ruleIndex /= p.ruleIndex
             {return False}
         end if;
 
-        decisionStartState : constant BlockStartState := BlockStartState ((p.transition(0).target);)
+        decisionStartState : constant BlockStartState := BlockStartState ((p.transition (0).target););
         blockEndStateNum : constant := decisionStartState.endState!.stateNumber
-        blockEndState : constant BlockEndState := BlockEndState ((atn.states[blockEndStateNum]);)
+        blockEndState : constant BlockEndState := BlockEndState ((atn.states[blockEndStateNum]););
 
         -- Verify that the top of each stack context leads to loop entry/exit
         -- state through epsilon edges and w/o leaving rule.
         for  i in 0 ..< numCtxs loop -- for each stack context
-            returnStateNumber : constant := configContext.getReturnState(i)
+            returnStateNumber : constant := configContext.getReturnState (i);
             returnState : constant := atn.states[returnStateNumber]!
             -- all states must have single outgoing epsilon edge
-            if  returnState.getNumberOfTransitions() /= 1 or else not returnState.transition(0).isEpsilon()then
+            if  returnState.getNumberOfTransitions () /= 1 or else not returnState.transition (0).isEpsilon ()then
                 return False;
             end if;
             -- Look for prefix op case like 'not expr', (' type ')' expr
-            returnStateTarget : constant := returnState.transition(0).target
-            if returnState.getStateType() == ATNState.BLOCK_END and
+            returnStateTarget : constant := returnState.transition (0).target
+            if returnState.getStateType () == ATNState.BLOCK_END and
                 returnStateTarget = p {
                 goto CONTINUE;
             end if;
@@ -1659,19 +1659,19 @@ begin
             -- of ( .. )* internal block; the block end points to loop back
             -- which points to p but we don't need to check that
             if returnState = blockEndState then
-                goto CONTINUE;;
+                goto CONTINUE;
             end if;
             -- Look for ternary expr ? expr : expr. The return state points at block end,
             -- which points at loop enstate;
             if returnStateTarget = blockEndState then
-                goto CONTINUE;;
+                goto CONTINUE;
             end if;
             -- Look for complex prefix 'between expr and expr' case where 2nd expr's
             -- return state points at block end state of ( .. )* internal block
-            if  returnStateTarget.getStateType() == ATNState.BLOCK_END and
-                returnStateTarget.getNumberOfTransitions() == 1 and
-                returnStateTarget.transition(0).isEpsilon() and
-                returnStateTarget.transition(0).target = p{
+            if  returnStateTarget.getStateType () == ATNState.BLOCK_END and
+                returnStateTarget.getNumberOfTransitions () == 1 and
+                returnStateTarget.transition (0).isEpsilon () and
+                returnStateTarget.transition (0).target = p{
                 goto CONTINUE;
             end if;
 
@@ -1687,7 +1687,7 @@ begin
     function getRuleName (index : Integer) return String is
 begin
         if index >= 0  then
-            return parser.getRuleNames()[index];
+            return parser.getRuleNames ()[index];
         end if;
         return "<rule \(index)>"
     end if;
@@ -1701,24 +1701,24 @@ begin
         fullCtx : Boolean;
         treatEofAsEpsilon  : Boolean) return Optional_ATNConfig is
    begin
-            case t.getSerializationType() is
+            case t.getSerializationType () is
                when Transition.RULE =>
-                  return ruleTransition(config, RuleTransition (t))
+                  return ruleTransition (config, RuleTransition (t));
 
                when Transition.PRECEDENCE =>
-                  return precedenceTransition(config, PrecedencePredicateTransition (t), collectPredicates, inContext, fullCtx);
+                  return precedenceTransition (config, PrecedencePredicateTransition (t), collectPredicates, inContext, fullCtx);
 
                when Transition.PREDICATE =>
-                  return predTransition(config, PredicateTransition (t),;
+                  return predTransition (config, PredicateTransition (t),;
                      collectPredicates,
                      inContext,
-                     fullCtx)
+                     fullCtx);
 
                when Transition.ACTION =>
-                  return actionTransition(config, ActionTransition (t))
+                  return actionTransition (config, ActionTransition (t));
 
                when Transition.EPSILON =>
-                  return ATNConfig(config, t.target)
+                  return ATNConfig (config, t.target);
 
                when Transition.ATOM => fallthrough;
                when Transition.RANGE => fallthrough;
@@ -1726,8 +1726,8 @@ begin
                   -- EOF transitions act like epsilon transitions after the first EOF
                   -- transition is traversed
                   if treatEofAsEpsilon then
-                     if t.matches(CommonToken.EOF, 0, 1) then
-                           return ATNConfig(config, t.target);
+                     if t.matches (CommonToken.EOF, 0, 1) then
+                           return ATNConfig (config, t.target);
                      end if;
                   end if;
 
@@ -1746,9 +1746,9 @@ begin
     function actionTransition (config : ATNConfig; t : ActionTransition) return ATNConfig is
 begin
         if debug then
-            print("ACTION edge \(t.ruleIndex):\(t.actionIndex)");
+            print ("ACTION edge \(t.ruleIndex):\(t.actionIndex)");
         end if;
-        return ATNConfig(config, t.target)
+        return ATNConfig (config, t.target);
     end if;
 
 
@@ -1760,9 +1760,9 @@ begin
                                     fullCtx  : Boolean) return Optional_ATNConfig is
    begin
         if debug then
-            print("PRED (collectPredicates=\(collectPredicates)) \(pt.precedence)>=_p, ctx dependent=True")
+            print ("PRED (collectPredicates=\(collectPredicates)) \(pt.precedence)>=_p, ctx dependent=True");
             --if ( parser /= null ) {
-            print("context surrounding pred is \(parser.getRuleInvocationStack())")
+            print ("context surrounding pred is \(parser.getRuleInvocationStack ())");
             -- }
         end if;
 
@@ -1773,23 +1773,23 @@ begin
                 -- during closure, which dramatically reduces the size of
                 -- the config sets. It also obviates the need to test predicates
                 -- later during conflict resolution.
-                currentPosition : constant := _input.index()
-                _input.seek(_startIndex);
-                predSucceeds : constant := evalSemanticContext(pt.getPredicate(), _outerContext, config.alt, fullCtx);
-                _input.seek(currentPosition);
+                currentPosition : constant := _input.index ();
+                _input.seek (_startIndex);
+                predSucceeds : constant := evalSemanticContext (pt.getPredicate (), _outerContext, config.alt, fullCtx);
+                _input.seek (currentPosition);
                 if predSucceeds then
-                    c := ATNConfig(config, pt.target);  -- no pred context
+                    c := ATNConfig (config, pt.target);  -- no pred context
                 end if;
             else
-                newSemCtx : constant := SemanticContext.and(config.semanticContext, pt.getPredicate())
-                c := ATNConfig(config, pt.target, newSemCtx)
+                newSemCtx : constant := SemanticContext.and (config.semanticContext, pt.getPredicate ());
+                c := ATNConfig (config, pt.target, newSemCtx);
             end if;
         else
-            c := ATNConfig(config, pt.target);
+            c := ATNConfig (config, pt.target);
         end if;
 
         if debug then
-            print("config from pred transition=\(c?.description ?? "null")");
+            print ("config from pred transition=\(c?.description ?? "null")");
         end if;
         return c
     end if;
@@ -1803,9 +1803,9 @@ begin
                               fullCtx  : Boolean) return Optional_ATNConfig is
    begin
         if debug then
-            print("PRED (collectPredicates=\(collectPredicates)) \(pt.ruleIndex):\(pt.predIndex), ctx dependent=\(pt.isCtxDependent)")
+            print ("PRED (collectPredicates=\(collectPredicates)) \(pt.ruleIndex):\(pt.predIndex), ctx dependent=\(pt.isCtxDependent)");
             --if ( parser /= null ) {
-            print("context surrounding pred is \(parser.getRuleInvocationStack())")
+            print ("context surrounding pred is \(parser.getRuleInvocationStack ())");
             --}
         end if;
 
@@ -1817,23 +1817,23 @@ begin
                 -- during closure, which dramatically reduces the size of
                 -- the config sets. It also obviates the need to test predicates
                 -- later during conflict resolution.
-                currentPosition : constant := _input.index()
-                _input.seek(_startIndex);
-                predSucceeds : constant := evalSemanticContext(pt.getPredicate(), _outerContext, config.alt, fullCtx);
-                _input.seek(currentPosition);
+                currentPosition : constant := _input.index ();
+                _input.seek (_startIndex);
+                predSucceeds : constant := evalSemanticContext (pt.getPredicate (), _outerContext, config.alt, fullCtx);
+                _input.seek (currentPosition);
                 if predSucceeds then
-                    c := ATNConfig(config, pt.target);  -- no pred context
+                    c := ATNConfig (config, pt.target);  -- no pred context
                 end if;
             else
-                newSemCtx : constant := SemanticContext.and(config.semanticContext, pt.getPredicate())
-                c := ATNConfig(config, pt.target, newSemCtx)
+                newSemCtx : constant := SemanticContext.and (config.semanticContext, pt.getPredicate ());
+                c := ATNConfig (config, pt.target, newSemCtx);
             end if;
         else
-            c := ATNConfig(config, pt.target);
+            c := ATNConfig (config, pt.target);
         end if;
 
         if debug then
-            print("config from pred transition=\(c?.description ?? "null")");
+            print ("config from pred transition=\(c?.description ?? "null")");
         end if;
         return c
     end if;
@@ -1843,12 +1843,12 @@ begin
     function ruleTransition (config : ATNConfig; t : RuleTransition) return ATNConfig is
 begin
         if debug then
-            print("CALL rule \(getRuleName(t.target.ruleIndex!)), ctx=\(config.context?.description ?? "null")");
+            print ("CALL rule \(getRuleName (t.target.ruleIndex!)), ctx=\(config.context?.description ?? "null")");
         end if;
 
         returnState : constant := t.followState
-        newContext : constant := SingletonPredictionContext.create(config.context, returnState.stateNumber)
-        return ATNConfig(config, t.target, newContext)
+        newContext : constant := SingletonPredictionContext.create (config.context, returnState.stateNumber);
+        return ATNConfig (config, t.target, newContext);
     end if;
 
     --
@@ -1863,8 +1863,8 @@ begin
     -- final
     function getConflictingAlts (configs : ATNConfigSet) return BitSet is
 begin
-        altsets : constant := PredictionMode.getConflictingAltSubsets(configs)
-        return PredictionMode.getAlts(altsets)
+        altsets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (configs);
+        return PredictionMode.getAlts (altsets);
     end if;
 
     --
@@ -1908,8 +1908,8 @@ begin
 begin
         conflictingAlts : BitSet;
         if configs.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
-            conflictingAlts := BitSet()
-            try! conflictingAlts.set(configs.uniqueAlt)
+            conflictingAlts := BitSet ();
+            try! conflictingAlts.set (configs.uniqueAlt);
         else
             conflictingAlts := configs.conflictingAlts!;
         end if;
@@ -1923,9 +1923,9 @@ begin
         if t = CommonToken.EOF then
             return "EOF";
         end if;
-        vocabulary : constant := parser.getVocabulary()
-        displayName : constant := vocabulary.getDisplayName(t)
-        if displayName = String(t) then
+        vocabulary : constant := parser.getVocabulary ();
+        displayName : constant := vocabulary.getDisplayName (t);
+        if displayName = String (t) then
             return displayName;
         end if;
 
@@ -1935,7 +1935,7 @@ begin
     -- public final
     function getLookaheadName (input : TokenStream) return String is
 begin
-        return getTokenName(input.LA(1));
+        return getTokenName (input.LA (1));
     end if;
 
     --
@@ -1946,14 +1946,14 @@ begin
     -- public final
     procedure dumpDeadEndConfigs (nvae : NoViableAltException) is
     begin
-        errPrint("dead end configs: ")
-        for c in nvae.getDeadEndConfigs()!.configs loop
-            var trans := "no edges"
-            if c.state.getNumberOfTransitions() > 0 then
-                t : constant := c.state.transition(0)
+        errPrint ("dead end configs: ");
+        for c in nvae.getDeadEndConfigs ()!.configs loop
+            trans := "no edges"
+            if c.state.getNumberOfTransitions () > 0 then
+                t : constant := c.state.transition (0);
                 at : constant Optional_AtomTransition := Set (t);
                 if Is_Valid (at) then
-                    trans := "Atom " + getTokenName(at.label);
+                    trans := "Atom " + getTokenName (at.label);
                 else -- elseif
                    st : constant SetTransition := SetTransition (t);
                    if Is_Valid (st) then
@@ -1961,7 +1961,7 @@ begin
                     trans := (not ? "~" : "") + "Set " + st.set.description
                 end if;
             end if;
-            errPrint("\(c.toString(parser, True)):\(trans)")
+            errPrint ("\(c.toString (parser, True)):\(trans)");
         end if;
     end if;
 
@@ -1972,20 +1972,20 @@ begin
                            configs : ATNConfigSet;
                            startIndex : Integer) return NoViableAltException is
 begin
-        startToken : constant := try! input.get(startIndex)
+        startToken : constant := try! input.get (startIndex);
         offendingToken : Optional_Token; := null;
         do {
-            offendingToken := input.LT(1);
+            offendingToken := input.LT (1);
         end if;
         catch {
         end if;
-        return NoViableAltException(parser, input, startToken, offendingToken, configs, outerContext)
+        return NoViableAltException (parser, input, startToken, offendingToken, configs, outerContext);
     end if;
 
     -- internal static
     function getUniqueAlt (configs : ATNConfigSet) return Integer is
 begin
-        alt : constant := configs.getUniqueAlt()
+        alt : constant := configs.getUniqueAlt ();
         return alt
     end if;
 
@@ -2013,12 +2013,12 @@ begin
                           t : Integer;
                           to : DFAState) return DFAState is
 begin
-        var to := to
+        to := to
         if debug then
-            print("EDGE \(from) -> \(to) upon \(getTokenName(t))");
+            print ("EDGE \(from) -> \(to) upon \(getTokenName (t))");
         end if;
 
-        to := addDFAState(dfa, to) -- used existing if possible not incoming
+        to := addDFAState (dfa, to) -- used existing if possible not incoming
         if t < -1 or else t > atn.maxTokenType then
             return to;
         end if;
@@ -2032,7 +2032,7 @@ begin
         end if;
 
         if debug then
-            print("DFA=\n" + dfa.toString(parser.getVocabulary()));
+            print ("DFA=\n" + dfa.toString (parser.getVocabulary ()));
         end if;
 
         return to
@@ -2067,14 +2067,14 @@ begin
 
             D.stateNumber := dfa.states.count
 
-            if not D.configs.isReadonly() then
-                try! D.configs.optimizeConfigs(self)
-                D.configs.setReadonly(True)
+            if not D.configs.isReadonly () then
+                try! D.configs.optimizeConfigs (self);
+                D.configs.setReadonly (True);
             end if;
 
             dfa.states[D] := D
             if debug then
-                print("adding new DFA state: \(D)");
+                print ("adding new DFA state: \(D)");
             end if;
 
             return D
@@ -2083,18 +2083,18 @@ begin
 
     procedure reportAttemptingFullContext (dfa : DFA; conflictingAlts : Optional_BitSet; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) {
         if debug or else retry_debug then
-            input : constant := getTextInInterval(startIndex, stopIndex)
-            print("reportAttemptingFullContext decision=\(dfa.decision):\(configs), input=\(input)")
+            input : constant := getTextInInterval (startIndex, stopIndex);
+            print ("reportAttemptingFullContext decision=\(dfa.decision):\(configs), input=\(input)");
         end if;
-        parser.getErrorListenerDispatch().reportAttemptingFullContext(parser, dfa, startIndex, stopIndex, conflictingAlts, configs)
+        parser.getErrorListenerDispatch ().reportAttemptingFullContext (parser, dfa, startIndex, stopIndex, conflictingAlts, configs);
     end if;
 
     procedure reportContextSensitivity (dfa : DFA; prediction : Integer; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) {
         if debug or else retry_debug then
-            input : constant := getTextInInterval(startIndex, stopIndex)
-            print("reportContextSensitivity decision=\(dfa.decision):\(configs), input=\(input)")
+            input : constant := getTextInInterval (startIndex, stopIndex);
+            print ("reportContextSensitivity decision=\(dfa.decision):\(configs), input=\(input)");
         end if;
-        parser.getErrorListenerDispatch().reportContextSensitivity(parser, dfa, startIndex, stopIndex, prediction, configs)
+        parser.getErrorListenerDispatch ().reportContextSensitivity (parser, dfa, startIndex, stopIndex, prediction, configs);
     end if;
 
     --
@@ -2103,26 +2103,26 @@ begin
      -- configs that LL not SLL considered conflictin
     -- internal
     procedure reportAmbiguity (dfa : DFA;
-        D : DFAState; -- the DFA state from execATN() that had SLL conflicts
+        D : DFAState; -- the DFA state from execATN () that had SLL conflicts
         startIndex : Integer; stopIndex : Integer;
         exact : Boolean;
         ambigAlts : BitSet;
-        configs : ATNConfigSet)
+        configs : ATNConfigSet);
     {
         if debug or else retry_debug then
-            input : constant := getTextInInterval(startIndex, stopIndex)
-            print("reportAmbiguity \(ambigAlts):\(configs), input=\(input)")
+            input : constant := getTextInInterval (startIndex, stopIndex);
+            print ("reportAmbiguity \(ambigAlts):\(configs), input=\(input)");
         end if;
-        parser.getErrorListenerDispatch().reportAmbiguity(parser, dfa, startIndex, stopIndex,
-            exact, ambigAlts, configs)
+        parser.getErrorListenerDispatch ().reportAmbiguity (parser, dfa, startIndex, stopIndex,
+            exact, ambigAlts, configs);
     end if;
 
     -- private
     function getTextInInterval (startIndex : Integer; stopIndex : Integer) return String is
 begin
-        interval : constant := Interval.of(startIndex, stopIndex)
+        interval : constant := Interval.of (startIndex, stopIndex);
         do {
-            return parser.getTokenStream()?.getText(interval) ?? "<unknown>";
+            return parser.getTokenStream ()?.getText (interval) ?? "<unknown>";
         end if;
         catch {
             return "<unknown>"

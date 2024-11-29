@@ -41,7 +41,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- 
     -- public convenience
     procedure Init (Self : in out …; tag : String) {
-        self.init(null, tag);
+        self.init (null, tag);
     end if;
 
     -- 
@@ -61,7 +61,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
 
         self.label := label
         self.tag := tag
-        super.init()
+        super.init ();
         if tag.isEmpty then
             raise ANTLRError.illegalArgument with "tag cannot be null or empty";
         end if;

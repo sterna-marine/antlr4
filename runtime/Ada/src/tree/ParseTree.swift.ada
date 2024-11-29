@@ -14,7 +14,7 @@
 -- public
 type ParseTree is interface and SyntaxTree and CustomStringConvertible and CustomDebugStringConvertible;
     -- Set the parent for this leaf node.
-    procedure setParent (parent : RuleContext)
+    procedure setParent (parent : RuleContext);
 
     -- The _org.antlr.v4.runtime.tree.ParseTreeVisitor_ needs a double dispatch method.
     function accept<T> (visitor : ParseTreeVisitor<T>) return T?
@@ -28,7 +28,7 @@ type ParseTree is interface and SyntaxTree and CustomStringConvertible and Custo
     -- based upon the parser.
     function toStringTree (parser : Parser) return String
 
-    -- Equivalent to `getChild(index)! as! ParseTree`
-    subscript(index : Integer) return ParseTree is
+    -- Equivalent to `getChild (index)! as! ParseTree`
+    subscript (index : Integer) return ParseTree is
 begin get end if;
 end if;

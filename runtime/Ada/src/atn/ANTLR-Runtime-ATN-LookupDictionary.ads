@@ -31,7 +31,7 @@ package LookupDictionary is
    type LookupDictionary is record
       -- private let 
       Type_of_LookupDictionary : LookupDictionaryType;
-      -- private var 
+      -- private 
       cache := Cache_Container.Vector; -- [Int: ATNConfig]();
    end record;
 
@@ -49,9 +49,9 @@ package LookupDictionary is
          -- migrating to XCode 12.3/Swift 5.3 introduced a very weird bug
          -- where reading hashValue from a SemanticContext.AND instance woul:
          -- call the AND empty constructor
-         -- NOT call AND.hash(into)
+         -- NOT call AND.hash (into);
          -- Could it be a Swift compiler bug ?
-         -- All tests pass when using Hasher.combine()
+         -- All tests pass when using Hasher.combine ();
          -- Keeping the old code for reference:
              
          hashCode := 31 * hashCode + config.state.stateNumber;
@@ -74,7 +74,7 @@ package LookupDictionary is
 -- private
    function equal (This : LookupDictionary; lhs : ATNConfig; rhs : ATNConfig) return Boolean is
    begin
-        if type_action = LookupDictionaryType.lookup then
+        if This = lookup then
             if lhs === rhs then
                 return True;
             end if;
@@ -104,7 +104,7 @@ package LookupDictionary is
         return config;
     end getOrAdd;
 
--- public var 
+-- public 
    isEmpty : Boolean;
    function isEmpty (This : LookupDictionary) return Boolean is 
       cache.isEmpty;
@@ -119,7 +119,7 @@ package LookupDictionary is
 -- public mutating 
    procedure removeAll (This : LookupDictionary; ) is
    begin
-        This.cache.removeAll();
+        This.cache.removeAll ();
    end removeAll;
 
 

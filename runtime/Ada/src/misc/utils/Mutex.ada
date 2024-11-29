@@ -9,7 +9,7 @@ class Mutex {
     --
     -- The mutex instance.
     --
-    private semaphore : constant := DispatchSemaphore(value: 1)
+    private semaphore : constant := DispatchSemaphore (value: 1);
 
     --
     -- Running the supplied closure synchronously.
@@ -21,11 +21,11 @@ class Mutex {
     @discardableResult
    function synchronized<R> (closure: () return R) return R is
    begin
-        semaphore.wait()
+        semaphore.wait ();
         defer {
-            semaphore.signal()
+            semaphore.signal ();
         end if;
-        return closure();
+        return closure ();
    exception
       when others => raise; -- rethrows
    end synchronized;

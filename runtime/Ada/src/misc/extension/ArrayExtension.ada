@@ -16,7 +16,7 @@ extension Array {
 
     mutating func removeObject<T:Equatable> (object : T) {
         index : Optional_Int;
-        for (idx, objectToCompare) in self.enumerated() loop
+        for (idx, objectToCompare) in self.enumerated () loop
 
             to : constant Optional_T := Set (objectToCompare);
             if Is_Valid (to) then
@@ -28,7 +28,7 @@ extension Array {
 
         if index /= null then
 
-            self.remove(at: index!)
+            self.remove (at: index!);
         end if;
 
     end if;
@@ -41,7 +41,7 @@ extension Array {
     -- mutating
     function pop (This : …) return Element is
 begin
-        return removeLast()
+        return removeLast ();
     end if;
     -- 
     -- Same as append.
@@ -51,13 +51,13 @@ begin
     -- mutating
     procedure push (newElement : Element) is
     begin
-        return append(newElement)
+        return append (newElement);
     end if;
 
     function all (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
-            if not test(item) then
+            if not test (item) then
                 return False;
             end if;
         end loop;
@@ -75,7 +75,7 @@ begin
     function every (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
-            if not test(item) then
+            if not test (item) then
                 return False;
             end if;
         end loop;
@@ -92,7 +92,7 @@ begin
     function any (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
-            if test(item) then
+            if test (item) then
                 return True;
             end if;
         end loop;
@@ -118,15 +118,15 @@ begin
     end if;
     -- procedure slice (index:Int,isClose : Boolean := False) ->(first:Slice<Element> ,second:Slice<Element>){
     function slice (index : Integer; isClose : Boolean := False) return (first:ArraySlice<Element>, second:ArraySlice<Element>) {
-        var first := self[0  ..  index]
-        var second := self[index ..< count]
+        first := self[0  ..  index]
+        second := self[index ..< count]
 
         if isClose then
             first := second + first
             second := []
         end if;
 
-        return (first, second)
+        return (first, second);
 
     end if;
 

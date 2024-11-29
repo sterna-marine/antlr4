@@ -115,10 +115,10 @@ begin
     -- 
     fileprivate procedure checkInvariants (This : …) is
 begin
-        assert((wordsInUse = 0 or else words[wordsInUse - 1] /= 0), "Expected: (wordsInUse = 0 or words[wordsInUse - 1] /=0 )")
-        assert((wordsInUse >= 0 and then wordsInUse <= words.count), "Expected: (wordsInUse >=0 and wordsInUse <= words.length)")
-        -- print("\(wordsInUse),\(words.count),\(words[wordsInUse])")
-        assert((wordsInUse = words.count or else words[wordsInUse] == 0), "Expected: (wordsInUse = words.count or words[wordsInUse ]= 0)")
+        assert ((wordsInUse = 0 or else words[wordsInUse - 1] /= 0), "Expected: (wordsInUse = 0 or words[wordsInUse - 1] /=0 )");
+        assert ((wordsInUse >= 0 and then wordsInUse <= words.count), "Expected: (wordsInUse >=0 and wordsInUse <= words.length)");
+        -- print ("\(wordsInUse),\(words.count),\(words[wordsInUse])");
+        assert ((wordsInUse = words.count or else words[wordsInUse] == 0), "Expected: (wordsInUse = words.count or words[wordsInUse ]= 0)");
     end if;
 
     -- 
@@ -146,8 +146,8 @@ begin
     procedure Init (Self : …) is
 begin
         sizeIsSticky := False;
-        words := [Int64](repeating: Int64(0), count: BitSet.wordIndex(BitSet.BITS_PER_WORD - 1) + 1)
-        --initWords(BitSet.BITS_PER_WORD);
+        words := [Int64](repeating: Int64 (0), count: BitSet.wordIndex (BitSet.BITS_PER_WORD - 1) + 1);
+        --initWords (BitSet.BITS_PER_WORD);
 
     end if;
 
@@ -164,21 +164,21 @@ begin
     procedure Init (Self : in out …; nbits : Integer) {
         -- nbits can't be negative; size 0 is OK
 
-        -- words := [BitSet.wordIndex(nbits-1) + 1];
-        words := [Int64](repeating: Int64(0), count: BitSet.wordIndex(BitSet.BITS_PER_WORD - 1) + 1)
+        -- words := [BitSet.wordIndex (nbits-1) + 1];
+        words := [Int64](repeating: Int64 (0), count: BitSet.wordIndex (BitSet.BITS_PER_WORD - 1) + 1);
         sizeIsSticky := True;
         if nbits < 0 then
             raise ANTLRError.negativeArraySize with "nbits < 0:\(nbits) ";
 
         end if;
-        -- initWords(nbits);
+        -- initWords (nbits);
     end if;
 
     -- private
     procedure initWords (nbits : Integer) is
     begin
-        -- words :=  [Int64](count: BitSet.wordIndex(BitSet.BITS_PER_WORD-1) + 1, repeatedValue: Int64(0));
-        --  words := [BitSet.wordIndex(nbits-1) + 1];
+        -- words :=  [Int64](count: BitSet.wordIndex (BitSet.BITS_PER_WORD-1) + 1, repeatedValue: Int64 (0));
+        --  words := [BitSet.wordIndex (nbits-1) + 1];
     end if;
 
     -- 
@@ -189,7 +189,7 @@ begin
     procedure Init (Self : in out …; words : [Int64]) {
         self.words := words
         self.wordsInUse := words.count
-        checkInvariants()
+        checkInvariants ();
     end if;
 
 
@@ -197,9 +197,9 @@ begin
     -- Returns a new long array containing all the bits in this bit set.
     -- 
     -- More precisely, if
-    -- `long[] longs := s.toLongArray();`
-    -- then `longs.length == (s.length()+63)/64` and
-    -- `s.get(n) == ((longs[n/64] & (1L<<(n%64))) /= 0)`
+    -- `long[] longs := s.toLongArray ();`
+    -- then `longs.length == (s.length ()+63)/64` and
+    -- `s.get (n) == ((longs[n/64] & (1L<<(n%64))) /= 0)`
     -- for all `n < 64 * longs.length`.
     -- 
     -- - returns: a long array containing a little-endian representation
@@ -207,13 +207,13 @@ begin
     -- 
     -- public
     function toLongArray () return [Int64] {
-        return copyOf(words, wordsInUse)
+        return copyOf (words, wordsInUse);
     end if;
 
     -- private
     function copyOf (words : [Int64], newLength : Integer) return [Int64] {
-        var newWords := [Int64](repeating: Int64(0), count: newLength)
-        length : constant := min(words.count, newLength)
+        newWords := [Int64](repeating: Int64 (0), count: newLength);
+        length : constant := min (words.count, newLength);
         newWords[0 ..< length] := words[0 ..< length]
         return newWords
     end if;
@@ -226,8 +226,8 @@ begin
     begin
         if words.count < wordsRequired then
             -- Allocate larger of doubled size or required size
-            request : constant Integer := max(2 * words.count, wordsRequired);
-            words := copyOf(words, request)
+            request : constant Integer := max (2 * words.count, wordsRequired);
+            words := copyOf (words, request);
             sizeIsSticky := False;
         end if;
     end if;
@@ -236,7 +236,7 @@ begin
     -- Ensures that the BitSet can accommodate a given wordIndex,
     -- temporarily violating the invariants.  The caller must
     -- restore the invariants before returning to the user,
-    -- possibly using recalculateWordsInUse().
+    -- possibly using recalculateWordsInUse ().
     -- - parameter wordIndex: the index to be accommodated.
     -- 
     -- private
@@ -244,7 +244,7 @@ begin
     begin
         wordsRequired : constant Integer := wordIndex + 1;
         if wordsInUse < wordsRequired then
-            ensureCapacity(wordsRequired)
+            ensureCapacity (wordsRequired);
             wordsInUse := wordsRequired
         end if;
     end if;
@@ -285,13 +285,13 @@ begin
 
 
         end if;
-        index : constant Integer := BitSet.wordIndex(bitIndex);
-        expandTo(index)
+        index : constant Integer := BitSet.wordIndex (bitIndex);
+        expandTo (index);
 
-        words[index] ^= (Int64(1) << Int64(bitIndex % 64))
+        words[index] ^= (Int64 (1) << Int64 (bitIndex % 64));
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -308,22 +308,22 @@ begin
     -- public
     procedure flip (fromIndex : Integer; toIndex : Integer) is
     begin
-        BitSet.checkRange(fromIndex, toIndex);
+        BitSet.checkRange (fromIndex, toIndex);
 
         if fromIndex = toIndex then
             return;
         end if;
 
-        startWordIndex : constant Integer := BitSet.wordIndex(fromIndex);
-        endWordIndex : constant Integer := BitSet.wordIndex(toIndex - 1);
-        expandTo(endWordIndex)
+        startWordIndex : constant Integer := BitSet.wordIndex (fromIndex);
+        endWordIndex : constant Integer := BitSet.wordIndex (toIndex - 1);
+        expandTo (endWordIndex);
 
-        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64);
-        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
-        --var lastWordMask : Int64  := WORD_MASK >>> Int64(-toIndex);
+        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64 (fromIndex % 64);
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64 (-toIndex);
+        --lastWordMask : Int64  := WORD_MASK >>> Int64 (-toIndex);
         if startWordIndex = endWordIndex then
             -- when 1 => One word;
-            words[startWordIndex] ^= (firstWordMask & lastWordMask)
+            words[startWordIndex] ^= (firstWordMask & lastWordMask);
         else
             -- when 2 => Multiple words;
             -- Handle first word
@@ -339,8 +339,8 @@ begin
             words[endWordIndex] ^= lastWordMask
         end if;
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -356,13 +356,13 @@ begin
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
         end if;
-        index : constant Integer := BitSet.wordIndex(bitIndex);
-        expandTo(index)
+        index : constant Integer := BitSet.wordIndex (bitIndex);
+        expandTo (index);
 
-        -- print(words.count)
-        words[index] := @ or (Int64(1) << Int64(bitIndex % 64))  -- Restores invariants
+        -- print (words.count);
+        words[index] := @ or (Int64 (1) << Int64 (bitIndex % 64))  -- Restores invariants
 
-        checkInvariants()
+        checkInvariants ();
     end if;
 
     -- 
@@ -376,9 +376,9 @@ begin
     procedure set (bitIndex : Integer; value  : Boolean) is
     begin
         if value then
-            set(bitIndex);
+            set (bitIndex);
         else
-            clear(bitIndex);
+            clear (bitIndex);
         end if;
     end if;
 
@@ -395,23 +395,23 @@ begin
     -- public
     procedure set (fromIndex : Integer; toIndex : Integer) is
     begin
-        BitSet.checkRange(fromIndex, toIndex);
+        BitSet.checkRange (fromIndex, toIndex);
 
         if fromIndex = toIndex then
             return;
         end if;
 
         -- Increase capacity if necessary
-        startWordIndex : constant Integer := BitSet.wordIndex(fromIndex);
-        endWordIndex : constant Integer := BitSet.wordIndex(toIndex - 1);
-        expandTo(endWordIndex)
+        startWordIndex : constant Integer := BitSet.wordIndex (fromIndex);
+        endWordIndex : constant Integer := BitSet.wordIndex (toIndex - 1);
+        expandTo (endWordIndex);
 
-        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64);
-        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
-        --var lastWordMask : Int64  := WORD_MASK >>>Int64( -toIndex);
+        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64 (fromIndex % 64);
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64 (-toIndex);
+        --lastWordMask : Int64  := WORD_MASK >>>Int64 ( -toIndex);
         if startWordIndex = endWordIndex then
             -- when 1 => One word;
-            words[startWordIndex] := @ or (firstWordMask & lastWordMask)
+            words[startWordIndex] := @ or (firstWordMask & lastWordMask);
         else
             -- when 2 => Multiple words;
             -- Handle first word
@@ -423,11 +423,11 @@ begin
                 words[i] := BitSet.WORD_MASK
             end loop;
 
-            -- Handle last word (restores invariants)
+            -- Handle last word (restores invariants);
             words[endWordIndex] := @ or lastWordMask
         end if;
 
-        checkInvariants()
+        checkInvariants ();
     end if;
 
     -- 
@@ -445,9 +445,9 @@ begin
     procedure set (fromIndex : Integer; toIndex : Integer; value  : Boolean) is
     begin
         if value then
-            set(fromIndex, toIndex);
+            set (fromIndex, toIndex);
         else
-            clear(fromIndex, toIndex);
+            clear (fromIndex, toIndex);
         end if;
     end if;
 
@@ -464,15 +464,15 @@ begin
         if bitIndex < 0 then
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
         end if;
-        index : constant Integer := BitSet.wordIndex(bitIndex);
+        index : constant Integer := BitSet.wordIndex (bitIndex);
         if index >= wordsInUse then
             return;
         end if;
-        option : constant := Int64(1) << Int64(bitIndex % 64)
+        option : constant := Int64 (1) << Int64 (bitIndex % 64);
         words[index] := @ and not option
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -488,30 +488,30 @@ begin
     -- public
     procedure clear (fromIndex : Integer;  toIndex : Integer) is
     begin
-        var toIndex := toIndex
-        BitSet.checkRange(fromIndex, toIndex);
+        toIndex := toIndex
+        BitSet.checkRange (fromIndex, toIndex);
 
         if fromIndex = toIndex then
             return;
         end if;
 
-        startWordIndex : constant Integer := BitSet.wordIndex(fromIndex);
+        startWordIndex : constant Integer := BitSet.wordIndex (fromIndex);
         if startWordIndex >= wordsInUse then
             return;
         end if;
 
-        endWordIndex : Integer := BitSet.wordIndex(toIndex - 1);
+        endWordIndex : Integer := BitSet.wordIndex (toIndex - 1);
         if endWordIndex >= wordsInUse then
-            toIndex := length()
+            toIndex := length ();
             endWordIndex := wordsInUse - 1
         end if;
 
-        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64(fromIndex % 64);
-        -- ar lastWordMask : Int64  := WORD_MASK >>> Int64((-toIndex);
-        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
+        firstWordMask : constant Int64 := BitSet.WORD_MASK << Int64 (fromIndex % 64);
+        -- ar lastWordMask : Int64  := WORD_MASK >>> Int64 ((-toIndex);
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64 (-toIndex);
         if startWordIndex = endWordIndex then
             -- when 1 => One word;
-            words[startWordIndex] := @ and not (firstWordMask & lastWordMask)
+            words[startWordIndex] := @ and not (firstWordMask & lastWordMask);
         else
             -- when 2 => Multiple words;
             -- Handle first word
@@ -527,8 +527,8 @@ begin
             words[endWordIndex] := @ and not lastWordMask
         end if;
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -560,12 +560,12 @@ begin
             raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
 
         end if;
-        checkInvariants()
+        checkInvariants ();
 
-        index : constant Integer := BitSet.wordIndex(bitIndex);
+        index : constant Integer := BitSet.wordIndex (bitIndex);
 
-        return (index < wordsInUse)
-                and then ((words[index] & ((Int64(1) << Int64(bitIndex % 64)))) /= 0)
+        return (index < wordsInUse);
+                and then ((words[index] & ((Int64 (1) << Int64 (bitIndex % 64)))) /= 0);
     end if;
 
     -- 
@@ -582,16 +582,16 @@ begin
     -- public
     function get (fromIndex : Integer; toIndex : Integer) return BitSet is
 begin
-        var toIndex := toIndex
-        BitSet.checkRange(fromIndex, toIndex)
+        toIndex := toIndex
+        BitSet.checkRange (fromIndex, toIndex);
 
-        checkInvariants()
+        checkInvariants ();
 
-        len : constant Integer := length();
+        len : constant Integer := length ();
 
         -- If no set bits in range return empty bitset
         if len <= fromIndex or else fromIndex = toIndex then
-            return BitSet(0);
+            return BitSet (0);
         end if;
 
         -- An optimization
@@ -599,16 +599,16 @@ begin
             toIndex := len;
         end if;
 
-        result : constant BitSet := BitSet(toIndex - fromIndex);
-        targetWords : constant Integer := BitSet.wordIndex(toIndex - fromIndex - 1) + 1;
-        sourceIndex : Integer := BitSet.wordIndex(fromIndex);
+        result : constant BitSet := BitSet (toIndex - fromIndex);
+        targetWords : constant Integer := BitSet.wordIndex (toIndex - fromIndex - 1) + 1;
+        sourceIndex : Integer := BitSet.wordIndex (fromIndex);
         wordAligned : constant : Boolean := (fromIndex & BitSet.BIT_INDEX_MASK) == 0
 
         -- Process all words but the last word
         i : Integer := 0;
         while i < targetWords - 1 loop
-            wordOption1 : constant Int64 := (words[sourceIndex] >>> Int64(fromIndex));
-            wordOption2 : constant Int64 := (words[sourceIndex + 1] << Int64(-fromIndex % 64));
+            wordOption1 : constant Int64 := (words[sourceIndex] >>> Int64 (fromIndex));
+            wordOption2 : constant Int64 := (words[sourceIndex + 1] << Int64 (-fromIndex % 64));
             wordOption : constant := wordOption1 | wordOption2
             result.words[i] := wordAligned ? words[sourceIndex] : wordOption
 
@@ -616,18 +616,18 @@ begin
             sourceIndex := @ + 1;
         end loop;
         -- Process the last word
-        -- var lastWordMask : Int64 := WORD_MASK >>> Int64(-toIndex);
-        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64(-toIndex);
-        toIndexTest : constant := ((toIndex - 1) & BitSet.BIT_INDEX_MASK)
-        fromIndexTest : constant := (fromIndex & BitSet.BIT_INDEX_MASK)
+        -- lastWordMask : Int64 := WORD_MASK >>> Int64 (-toIndex);
+        lastWordMask : constant Int64 := BitSet.WORD_MASK >>> Int64 (-toIndex);
+        toIndexTest : constant := ((toIndex - 1) & BitSet.BIT_INDEX_MASK);
+        fromIndexTest : constant := (fromIndex & BitSet.BIT_INDEX_MASK);
 
-        wordOption1 : constant Int64 := (words[sourceIndex] >>> Int64(fromIndex));
+        wordOption1 : constant Int64 := (words[sourceIndex] >>> Int64 (fromIndex));
         wordOption2 : constant Int64 := (words[sourceIndex + 1] & lastWordMask);
-        wordOption3 : constant Int64 := (64 + Int64(-fromIndex % 64));
+        wordOption3 : constant Int64 := (64 + Int64 (-fromIndex % 64));
         wordOption : constant := wordOption1 | wordOption2 << wordOption3
 
-        wordOption4 : constant := (words[sourceIndex] & lastWordMask)
-        wordOption5 : constant := wordOption4 >>> Int64(fromIndex)
+        wordOption4 : constant := (words[sourceIndex] & lastWordMask);
+        wordOption5 : constant := wordOption4 >>> Int64 (fromIndex);
         result.words[targetWords - 1] =
                 toIndexTest < fromIndexTest
                 ? wordOption : wordOption5
@@ -635,19 +635,19 @@ begin
         -- Set wordsInUse correctly
         result.wordsInUse := targetWords
 
-        result.recalculateWordsInUse()
-        result.checkInvariants()
+        result.recalculateWordsInUse ();
+        result.checkInvariants ();
 
         return result
     end if;
 
     --
-    -- Equivalent to nextSetBit(0), but guaranteed not to raise an exception.
+    -- Equivalent to nextSetBit (0), but guaranteed not to raise an exception.
     --
     -- public
     function firstSetBit (This : …) return Integer is
 begin
-        return try! nextSetBit(0)
+        return try! nextSetBit (0);
     end if;
 
     --
@@ -659,11 +659,11 @@ begin
     -- use the following loop:
     -- 
     -- `
-    -- for (int i := bs.firstSetBit(); i >= 0; i := bs.nextSetBit(i+1)) loop
+    -- for (int i := bs.firstSetBit (); i >= 0; i := bs.nextSetBit (i+1)) loop
     -- -- operate on index i here
     -- `end loop;
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive)
+    -- - parameter  fromIndex: the index to start checking from (inclusive);
     -- - returns: the index of the next set bit, or `-1` if there
     -- is no such bit
     -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
@@ -675,14 +675,14 @@ begin
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
 
         end if;
-        checkInvariants()
+        checkInvariants ();
 
-        u : Integer := BitSet.wordIndex(fromIndex);
+        u : Integer := BitSet.wordIndex (fromIndex);
         if u >= wordsInUse then
             return -1;
         end if;
 
-        word : Int64 := words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64));
+        word : Int64 := words[u] & (BitSet.WORD_MASK << Int64 (fromIndex % 64));
 
         loop
             if word /= 0 then
@@ -701,7 +701,7 @@ begin
     -- Returns the index of the first bit that is set to `False`
     -- that occurs on or after the specified starting index.
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive)
+    -- - parameter  fromIndex: the index to start checking from (inclusive);
     -- - returns: the index of the next clear bit
     -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is negative
     -- 
@@ -714,14 +714,14 @@ begin
             raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
 
         end if;
-        checkInvariants()
+        checkInvariants ();
 
-        u : Integer := BitSet.wordIndex(fromIndex);
+        u : Integer := BitSet.wordIndex (fromIndex);
         if u >= wordsInUse then
             return fromIndex;
         end if;
 
-        word : Int64 := not words[u] & (BitSet.WORD_MASK << Int64(fromIndex % 64));
+        word : Int64 := not words[u] & (BitSet.WORD_MASK << Int64 (fromIndex % 64));
 
         loop
             if word /= 0 then
@@ -746,11 +746,11 @@ begin
     -- use the following loop:
     -- 
     -- `
-    -- for (int i := bs.length(); (i := bs.previousSetBit(i-1)) >= 0; ) loop
+    -- for (int i := bs.length (); (i := bs.previousSetBit (i-1)) >= 0; ) loop
     -- -- operate on index i here
     -- `end loop;
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive)
+    -- - parameter  fromIndex: the index to start checking from (inclusive);
     -- - returns: the index of the previous set bit, or `-1` if there
     -- is no such bit
     -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is less
@@ -768,14 +768,14 @@ begin
 
         end if;
 
-        checkInvariants()
+        checkInvariants ();
 
-        u : Integer := BitSet.wordIndex(fromIndex);
+        u : Integer := BitSet.wordIndex (fromIndex);
         if u >= wordsInUse then
-            return length() - 1;
+            return length () - 1;
         end if;
 
-        word : Int64 := words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)));
+        word : Int64 := words[u] & (BitSet.WORD_MASK >>> Int64 (-(fromIndex + 1)));
         loop
             if word /= 0 then
                 return (u + 1) * BitSet.BITS_PER_WORD - 1 - word.leadingZeroBitCount;
@@ -794,7 +794,7 @@ begin
     -- If no such bit exists, or if `-1` is given as the
     -- starting index, then `-1` is returned.
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive)
+    -- - parameter  fromIndex: the index to start checking from (inclusive);
     -- - returns: the index of the previous clear bit, or `-1` if there
     -- is no such bit
     -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is less
@@ -812,15 +812,15 @@ begin
 
         end if;
 
-        checkInvariants()
+        checkInvariants ();
 
-        u : Integer := BitSet.wordIndex(fromIndex);
+        u : Integer := BitSet.wordIndex (fromIndex);
         if u >= wordsInUse then
             return fromIndex;
         end if;
 
-        word : Int64 := not words[u] & (BitSet.WORD_MASK >>> Int64(-(fromIndex + 1)));
-        -- var word : Int64 := not words[u] & (WORD_MASK >>> -(fromIndex+1));
+        word : Int64 := not words[u] & (BitSet.WORD_MASK >>> Int64 (-(fromIndex + 1)));
+        -- word : Int64 := not words[u] & (WORD_MASK >>> -(fromIndex+1));
 
         loop
             if word /= 0 then
@@ -848,7 +848,7 @@ begin
         end if;
 
         return BitSet.BITS_PER_WORD * (wordsInUse - 1) +
-                (BitSet.BITS_PER_WORD - words[wordsInUse - 1].leadingZeroBitCount)
+                (BitSet.BITS_PER_WORD - words[wordsInUse - 1].leadingZeroBitCount);
     end if;
 
     -- 
@@ -874,7 +874,7 @@ begin
     -- public
     function intersects (set : BitSet) return Boolean is
 begin
-        i : Integer := min(wordsInUse, set.wordsInUse) - 1;
+        i : Integer := min (wordsInUse, set.wordsInUse) - 1;
         while i >= 0 loop
             if (words[i] & set.words[i]) /= 0 then
                 return True;
@@ -925,8 +925,8 @@ begin
             words[i] := @ and set.words[i]
         end loop;
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -945,10 +945,10 @@ begin
             return;
         end if;
 
-        wordsInCommon : constant Integer := min(wordsInUse, set.wordsInUse);
+        wordsInCommon : constant Integer := min (wordsInUse, set.wordsInUse);
 
         if wordsInUse < set.wordsInUse then
-            ensureCapacity(set.wordsInUse)
+            ensureCapacity (set.wordsInUse);
             wordsInUse := set.wordsInUse
         end if;
 
@@ -963,8 +963,8 @@ begin
 
         end if;
 
-        -- recalculateWordsInUse() is unnecessary
-        checkInvariants()
+        -- recalculateWordsInUse () is unnecessary
+        checkInvariants ();
     end if;
 
     -- 
@@ -983,10 +983,10 @@ begin
     -- public
     procedure xor (set : BitSet) is
     begin
-        wordsInCommon : constant Integer := min(wordsInUse, set.wordsInUse);
+        wordsInCommon : constant Integer := min (wordsInUse, set.wordsInUse);
 
         if wordsInUse < set.wordsInUse then
-            ensureCapacity(set.wordsInUse)
+            ensureCapacity (set.wordsInUse);
             wordsInUse := set.wordsInUse
         end if;
 
@@ -1002,8 +1002,8 @@ begin
 
         end if;
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -1017,14 +1017,14 @@ begin
     procedure andNot (set : BitSet) is
     begin
         -- Perform logical (a & not b) on words in common
-        i : Integer := min(wordsInUse, set.wordsInUse) - 1;
+        i : Integer := min (wordsInUse, set.wordsInUse) - 1;
         while i >= 0 loop
             words[i] := @ and not set.words[i]
             i := @ - 1;
         end loop;
 
-        recalculateWordsInUse()
-        checkInvariants()
+        recalculateWordsInUse ();
+        checkInvariants ();
     end if;
 
     -- 
@@ -1034,10 +1034,10 @@ begin
     -- The hash code is defined to be the result of the following
     -- calculation:
     -- `
-    -- public Integer hashCode() {
+    -- public Integer hashCode () {
     -- long h := 1234;
-    -- long[] words := toLongArray();
-    -- for (int i := words.length; --i >= 0; )
+    -- long[] words := toLongArray ();
+    -- for (int i := words.length; --i >= 0; );
     -- h ^= words[i] * (i + 1);
     -- return (int)((h >> 32) ^ h);
     -- `}
@@ -1051,17 +1051,17 @@ begin
         i : Integer := wordsInUse;
         i := @ - 1;
         while i >= 0 loop
-             h ^= words[i] * Int64(i + 1)
+             h ^= words[i] * Int64 (i + 1);
              i := @ - 1;
         end loop;
 
-        return Integer (Int32((h >> 32) ^ h))
+        return Integer (Int32 ((h >> 32) ^ h));
     end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        hasher.combine(hashCode)
+        hasher.combine (hashCode);
     end if;
 
     -- 
@@ -1084,14 +1084,14 @@ begin
     -- 
     -- Attempts to reduce internal storage used for the bits in this bit set.
     -- Calling this method may, but is not required to, affect the value
-    -- returned by a subsequent call to the _#size()_ method.
+    -- returned by a subsequent call to the _#size ()_ method.
     -- 
     -- private
     procedure trimToSize (This : …) is
 begin
         if wordsInUse /= words.count then
-            words := copyOf(words, wordsInUse)
-            checkInvariants()
+            words := copyOf (words, wordsInUse);
+            checkInvariants ();
         end if;
     end if;
 
@@ -1107,14 +1107,14 @@ begin
     -- 
     -- Example:
     -- 
-    -- `BitSet drPepper := new BitSet();`
+    -- `BitSet drPepper := new BitSet ();`
     -- Now `drPepper.description` returns `"{}"`.
     -- 
-    -- `drPepper.set(2);`
+    -- `drPepper.set (2);`
     -- Now `drPepper.description` returns `"{2}"`.
     -- 
-    -- `drPepper.set(4);`
-    -- `drPepper.set(10);`
+    -- `drPepper.set (4);`
+    -- `drPepper.set (10);`
     -- Now `drPepper.description` returns `"{2, 4, 10}"`.
     -- 
     -- - returns: a string representation of this bit set
@@ -1122,23 +1122,23 @@ begin
     -- public
     description : String;
     function description return String is
-        checkInvariants()
+        checkInvariants ();
 
         --let numBits: Integer := (wordsInUse > 128) ?
-        -- cardinality() : wordsInUse * BitSet.BITS_PER_WORD
-        var b := "{"
-        var i := firstSetBit()
+        -- cardinality () : wordsInUse * BitSet.BITS_PER_WORD
+        b := "{"
+        i := firstSetBit ();
         if i /= -1 then
-            b := @ + String(i);
-            i := try! nextSetBit(i + 1)
+            b := @ + String (i);
+            i := try! nextSetBit (i + 1);
             while i >= 0 loop
-                endOfRun : constant := try! nextClearBit(i)
+                endOfRun : constant := try! nextClearBit (i);
                 loop
                     b := @ + ", \(i)";
                     i := @ + 1;
                     exit when i < endOfRun;
                 end loop;
-                i := try! nextSetBit(i + 1)
+                i := try! nextSetBit (i + 1);
             end loop;
         end if;
         b := @ + "end if;";
@@ -1156,8 +1156,8 @@ begin
     end if;
 
 
-    lhs.checkInvariants()
-    rhs.checkInvariants()
+    lhs.checkInvariants ();
+    rhs.checkInvariants ();
 
     if lhs.wordsInUse /= rhs.wordsInUse then
         return False;

@@ -16,7 +16,7 @@ with Foundation;
 extension IntStream {
 
     -- 
-    -- The value returned by _#LA LA()_ when the end of the stream is
+    -- The value returned by _#LA LA ()_ when the end of the stream is
     -- reached.
     -- 
     -- public static 

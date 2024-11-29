@@ -39,7 +39,7 @@ type TokenSourceAndStream is tagged record
     -- _#source_ for tokens that do not have a source.
     --
     -- public static 
-    EMPTY : constant := TokenSourceAndStream()
+    EMPTY : constant := TokenSourceAndStream ();
 
     -- public weak
     tokenSource : Optional_TokenSource;

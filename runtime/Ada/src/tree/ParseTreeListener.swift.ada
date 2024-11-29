@@ -8,8 +8,8 @@
 -- This interface describes the minimal core of methods triggered
 -- by _org.antlr.v4.runtime.tree.ParseTreeWalker_. E.g.,
 -- 
--- ParseTreeWalker walker := new ParseTreeWalker();
--- walker.walk(myParseTreeListener, myParseTree); <-- triggers events in your listener
+-- ParseTreeWalker walker := new ParseTreeWalker ();
+-- walker.walk (myParseTreeListener, myParseTree); <-- triggers events in your listener
 -- 
 -- If you want to trigger events in multiple listeners during a single
 -- tree walk, you can use the ParseTreeDispatcher object available at
@@ -19,9 +19,9 @@
 
 -- public
 type ParseTreeListener is interface;
-    procedure visitTerminal (node : TerminalNode)
+    procedure visitTerminal (node : TerminalNode);
 
-    procedure visitErrorNode (node : ErrorNode)
+    procedure visitErrorNode (node : ErrorNode);
 
     procedure enterEveryRule (ctx : ParserRuleContext);
 

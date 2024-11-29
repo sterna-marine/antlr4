@@ -13,12 +13,12 @@ type EmptyPredictionContext is new SingletonPredictionContext with null record;
     -- `+x := *`.
     --
     -- public static 
-    Instance : constant := EmptyPredictionContext()
+    Instance : constant := EmptyPredictionContext ();
 
     -- public
     procedure Init (Self : …) is
 begin
-        super.init(null, PredictionContext.EMPTY_RETURN_STATE)
+        super.init (null, PredictionContext.EMPTY_RETURN_STATE);
     end if;
 
     override

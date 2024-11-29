@@ -50,7 +50,7 @@ begin
     -- 
     -- public 
     procedure Init (Self : in out …; input : String) {
-        self.data := Array(input.unicodeScalars)
+        self.data := Array (input.unicodeScalars);
         self.n := data.count
     end if;
 
@@ -65,12 +65,12 @@ begin
 
     --
     -- This is only for backward compatibility that accepts array of `Character`.
-    -- Use `init(data : [UnicodeScalar], numberOfActualUnicodeScalarsInArray : Integer)` instead.
+    -- Use `init (data : [UnicodeScalar], numberOfActualUnicodeScalarsInArray : Integer)` instead.
     --
     -- public 
     procedure Init (Self : in out …; data : [Character], numberOfActualUnicodeScalarsInArray : Integer) {
-        string : constant String := To_String(data)
-        self.data := Array(string.unicodeScalars)
+        string : constant String := To_String (data);
+        self.data := Array (string.unicodeScalars);
         self.n := numberOfActualUnicodeScalarsInArray
     end if;
 
@@ -84,52 +84,52 @@ begin
     procedure consume (This : …) is
 begin
         if p >= n then
-            assert(LA(1) == ANTLRInputStream.EOF, "Expected: LA(1)==IntStream.EOF")
+            assert (LA (1) == ANTLRInputStream.EOF, "Expected: LA (1)==IntStream.EOF");
 
             raise ANTLRError.illegalState with "cannot consume EOF";
 
         end if;
 
-        -- print("prev p="+p+", c="+(char)data[p]);
+        -- print ("prev p="+p+", c="+(char)data[p]);
         if p < n then
             p := @ + 1;
-            --print("p moves to "+p+" (c='"+(char)data[p]+"')");
+            --print ("p moves to "+p+" (c='"+(char)data[p]+"')");
         end if;
     end if;
 
     -- public
     function LA (i : Integer) return Integer is
 begin
-        var i := i
+        i : Integer := i;
         if i = 0 then
             return 0;  -- undefined
         end if;
         if i < 0 then
-            i := @ + 1; -- e.g., translate LA(-1) to use offset i=0; then data[p+0-1]
+            i := @ + 1; -- e.g., translate LA (-1) to use offset i=0; then data[p+0-1]
             if (p + i - 1) < 0 then
                 return ANTLRInputStream.EOF;  -- invalid; no char before first char
             end if;
         end if;
 
         if (p + i - 1) >= n then
-            --print("char LA("+i+")=EOF; p="+p);
+            --print ("char LA ("+i+")=EOF; p="+p);
             return ANTLRInputStream.EOF
         end if;
-        --print("char LA("+i+")="+(char)data[p+i-1]+"; p="+p);
-        --print("LA("+i+"); p="+p+" n="+n+" data.length="+data.length);
-        return Integer (data[p + i - 1].value)
+        --print ("char LA ("+i+")="+(char)data[p+i-1]+"; p="+p);
+        --print ("LA ("+i+"); p="+p+" n="+n+" data.length="+data.length);
+        return Integer (data[p + i - 1].value);
     end if;
 
     -- public
     function LT (i : Integer) return Integer is
 begin
-        return LA(i)
+        return LA (i);
     end if;
 
     -- 
     -- Return the current input symbol index 0 .. n where n indicates the
     -- last symbol has been read.  The index is the index of char to
-    -- be returned from LA(1).
+    -- be returned from LA (1).
     -- 
     -- public
     function index (This : …) return Integer is
@@ -159,22 +159,22 @@ begin
     end if;
 
     -- 
-    -- consume() ahead until p = index; can't just set p=index as we must
+    -- consume () ahead until p = index; can't just set p=index as we must
     -- update line and charPositionInLine. If we seek backwards, just set p
     -- 
 
     -- public
     procedure seek (index : Integer) is
     begin
-        var index := index
+        index : Integer := index;
         if index <= p then
-            p := index -- just jump; don't update stream state (line,  .. )
+            p := index -- just jump; don't update stream state (line,  .. );
             return
         end if;
-        -- seek forward, consume until p hits index or n (whichever comes first)
-        index := min(index, n)
+        -- seek forward, consume until p hits index or n (whichever comes first);
+        index := min (index, n);
         while p < index loop
-            consume();
+            consume ();
         end loop;
     end if;
 
@@ -185,11 +185,11 @@ begin
         if start >= n then
             return "";
         end if;
-        stop : constant := min(n, interval.b + 1)
+        stop : constant := min (n, interval.b + 1);
 
-        var unicodeScalarView := String.UnicodeScalarView()
-        unicodeScalarView.append(contentsOf: data[start ..< stop])
-        return String(unicodeScalarView)
+        unicodeScalarView : String := String.UnicodeScalarView ();
+        unicodeScalarView.append (contentsOf: data[start ..< stop]);
+        return String (unicodeScalarView);
     end if;
 
     -- public
@@ -201,8 +201,8 @@ begin
     -- public
     function toString (This : …) return String is
 begin
-        var unicodeScalarView := String.UnicodeScalarView()
-        unicodeScalarView.append(contentsOf: data)
-        return String(unicodeScalarView)
+        unicodeScalarView : String := String.UnicodeScalarView ();
+        unicodeScalarView.append (contentsOf: data);
+        return String (unicodeScalarView);
     end if;
 end if;

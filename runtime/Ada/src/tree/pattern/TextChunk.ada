@@ -43,7 +43,7 @@ begin
 
     --
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.TextChunk_ returns the result of
-    -- _#getText()_ in single quotes.
+    -- _#getText ()_ in single quotes.
     --
     -- public
     description : String;

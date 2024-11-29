@@ -10,7 +10,7 @@ final public type WildcardTransition is new Transition and CustomStringConvertib
     -- public 
     override
     procedure Init (Self : in out …; target : ATNState) {
-        super.init(target)
+        super.init (target);
     end if;
 
     override

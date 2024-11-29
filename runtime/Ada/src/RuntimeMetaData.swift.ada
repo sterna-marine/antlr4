@@ -12,7 +12,7 @@
 -- 
 -- 
 -- The runtime version information is provided by _#VERSION_ and
--- _#getRuntimeVersion()_. Detailed information about these values is
+-- _#getRuntimeVersion ()_. Detailed information about these values is
 -- provided in the documentation for each member.
 -- 
 -- 
@@ -27,8 +27,8 @@
 -- are the same in each.
 -- 
 -- 
--- To trap any error messages issued by this code, use System.setErr()
--- in your main() startup code.
+-- To trap any error messages issued by this code, use System.setErr ();
+-- in your main () startup code.
 -- 
 -- 
 -- - Since: 4.3
@@ -137,24 +137,24 @@ begin
     -- public static 
     procedure checkVersion (generatingToolVersion : String; compileTimeVersion : String) {
         runtimeVersion : constant String := RuntimeMetaData.VERSION;
-        var runtimeConflictsWithGeneratingTool : Boolean := False;
-        var runtimeConflictsWithCompileTimeTool : Boolean := False;
+        runtimeConflictsWithGeneratingTool : Boolean := False;
+        runtimeConflictsWithCompileTimeTool : Boolean := False;
 
         --if ( generatingToolVersion /= null ) {
         runtimeConflictsWithGeneratingTool =
                 not (runtimeVersion == (generatingToolVersion)) and
-                not (getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(generatingToolVersion)))
+                not (getMajorMinorVersion (runtimeVersion) == (getMajorMinorVersion (generatingToolVersion)));
         --}
 
         runtimeConflictsWithCompileTimeTool =
                 not (runtimeVersion == (compileTimeVersion)) and
-                not (getMajorMinorVersion(runtimeVersion) == (getMajorMinorVersion(compileTimeVersion)))
+                not (getMajorMinorVersion (runtimeVersion) == (getMajorMinorVersion (compileTimeVersion)));
 
         if runtimeConflictsWithGeneratingTool then
-            print("ANTLR Tool version \(generatingToolVersion) used for code generation does not match the current runtime version \(runtimeVersion)");
+            print ("ANTLR Tool version \(generatingToolVersion) used for code generation does not match the current runtime version \(runtimeVersion)");
         end if;
         if runtimeConflictsWithCompileTimeTool then
-            print("ANTLR Runtime version \(compileTimeVersion)used for parser compilation does not match the current runtime version \(runtimeVersion)");
+            print ("ANTLR Runtime version \(compileTimeVersion)used for parser compilation does not match the current runtime version \(runtimeVersion)");
         end if;
     end if;
 
@@ -170,14 +170,14 @@ begin
     -- public static
     function getMajorMinorVersion (version : String) return String is
 begin
-        var result := version
+        result := version
 
-        dotBits : constant := version.split(separator: ".", maxSplits: 2, omittingEmptySubsequences: False)
+        dotBits : constant := version.split (separator: ".", maxSplits: 2, omittingEmptySubsequences: False);
         if dotBits.count >= 2 then
-            result := dotBits[0 .. 2 - 1].joined(separator: ".");
+            result := dotBits[0 .. 2 - 1].joined (separator: ".");
         end if;
 
-        dashBits : constant := result.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: False)
-        return String(dashBits[0])
+        dashBits : constant := result.split (separator: "-", maxSplits: 1, omittingEmptySubsequences: False);
+        return String (dashBits[0]);
     end if;
 end if;

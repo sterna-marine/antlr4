@@ -14,7 +14,7 @@ type ArrayPredictionContext is new PredictionContext with null record;
     -- from _#EMPTY_ and non-empty. We merge _#EMPTY_ by using null parent and
     -- returnState = _#EMPTY_RETURN_STATE_.
     -- 
-    -- public private(set) final var
+    -- public private (set) final var
     parents : [PredictionContext?];
 
     -- 
@@ -27,7 +27,7 @@ type ArrayPredictionContext is new PredictionContext with null record;
     -- public convenience
     procedure Init (Self : in out …; a : SingletonPredictionContext) {
         parents : constant := [a.parent]
-        self.init(parents, [a.returnState])
+        self.init (parents, [a.returnState]);
     end if;
 
     -- public 
@@ -35,7 +35,7 @@ type ArrayPredictionContext is new PredictionContext with null record;
 
         self.parents := parents
         self.returnStates := returnStates
-        super.init(PredictionContext.calculateHashCode(parents, returnStates))
+        super.init (PredictionContext.calculateHashCode (parents, returnStates));
     end if;
 
     override
@@ -72,11 +72,11 @@ begin
     -- public
     description : String;
     function description return String is
-        if isEmpty() then
+        if isEmpty () then
             return "[]";
         end if;
-        var buf := "["
-        for (i, returnState) in returnStates.enumerated() loop
+        buf := "["
+        for (i, returnState) in returnStates.enumerated () loop
             if i > 0 then
                 buf := @ + ", ";
             end if;
@@ -101,11 +101,11 @@ begin
 
         length : constant := parents.count
         uniqueParents : Dictionary<PredictionContext, PredictionContext> =;
-        Dictionary<PredictionContext, PredictionContext> ()
+        Dictionary<PredictionContext, PredictionContext> ();
         for p in parents loop
             -- if
             parent : constant PredictionContext := p then;
-                -- if not uniqueParents.keys.contains(parent) then
+                -- if not uniqueParents.keys.contains (parent) then
                 if uniqueParents[parent] == null then
                     uniqueParents[parent] := parent;  -- don't replace
                 end if;

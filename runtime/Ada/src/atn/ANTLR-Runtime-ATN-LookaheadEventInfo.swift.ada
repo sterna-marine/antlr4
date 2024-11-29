@@ -36,6 +36,6 @@ type LookaheadEventInfo is new DecisionEventInfo with null record;
                          configs : Optional_ATNConfigSet;
                          input : TokenStream; startIndex : Integer; stopIndex : Integer;
                          fullCtx  : Boolean) {
-        super.init(decision, configs, input, startIndex, stopIndex, fullCtx)
+        super.init (decision, configs, input, startIndex, stopIndex, fullCtx);
     end if;
 end if;

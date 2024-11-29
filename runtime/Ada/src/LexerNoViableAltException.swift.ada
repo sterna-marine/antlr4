@@ -15,7 +15,7 @@ type LexerNoViableAltException is new RecognitionException and CustomStringConve
     startIndex : constant Integer;
 
     -- 
-    -- Which configurations did we at input.index() that couldn't match input.LA(1)?;
+    -- Which configurations did we at input.index () that couldn't match input.LA (1)?;
     -- 
     -- private 
     deadEndConfigs : constant ATNConfigSet;
@@ -28,7 +28,7 @@ type LexerNoViableAltException is new RecognitionException and CustomStringConve
         ctx : constant Optional_ParserRuleContext; := null;
         self.startIndex := startIndex
         self.deadEndConfigs := deadEndConfigs
-        super.init(lexer, input as IntStream, ctx)
+        super.init (lexer, input as IntStream, ctx);
 
     end if;
 
@@ -47,11 +47,11 @@ begin
     -- public
     description : String;
     function description return String is
-        var symbol := ""
-        if charStream : constant := getInputStream() as? CharStream, startIndex >= 0 and then startIndex < charStream.size() then
-            interval : constant := Interval.of(startIndex, startIndex)
-            symbol := try! charStream.getText(interval)
-            symbol := Utils.escapeWhitespace(symbol, False)
+        symbol := ""
+        if charStream : constant := getInputStream () as? CharStream, startIndex >= 0 and then startIndex < charStream.size () then
+            interval : constant := Interval.of (startIndex, startIndex);
+            symbol := try! charStream.getText (interval);
+            symbol := Utils.escapeWhitespace (symbol, False);
         end if;
 
         return "\(LexerNoViableAltException.self)('\(symbol)')"

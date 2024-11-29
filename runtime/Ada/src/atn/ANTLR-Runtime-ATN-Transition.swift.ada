@@ -32,7 +32,7 @@ type Transition is tagged record
     RULE : constant Integer := 3;
     -- public static 
     PREDICATE : constant Integer := 4;
-    -- e.g., {isType(input.LT(1))}?
+    -- e.g., {isType (input.LT (1))}?
     -- public static 
     ATOM : constant Integer := 5;
     -- public static 
@@ -67,16 +67,16 @@ type Transition is tagged record
     -- public static 
     serializationTypes : constant Dictionary<String, Int> := [;
 
-            String(describing: EpsilonTransition.self): EPSILON,
-            String(describing: RangeTransition.self): RANGE,
-            String(describing: RuleTransition.self): RULE,
-            String(describing: PredicateTransition.self): PREDICATE,
-            String(describing: AtomTransition.self): ATOM,
-            String(describing: ActionTransition.self): ACTION,
-            String(describing: SetTransition.self): SET,
-            String(describing: NotSetTransition.self): NOT_SET,
-            String(describing: WildcardTransition.self): WILDCARD,
-            String(describing: PrecedencePredicateTransition.self): PRECEDENCE,
+            String (describing: EpsilonTransition.self): EPSILON,
+            String (describing: RangeTransition.self): RANGE,
+            String (describing: RuleTransition.self): RULE,
+            String (describing: PredicateTransition.self): PREDICATE,
+            String (describing: AtomTransition.self): ATOM,
+            String (describing: ActionTransition.self): ACTION,
+            String (describing: SetTransition.self): SET,
+            String (describing: NotSetTransition.self): NOT_SET,
+            String (describing: WildcardTransition.self): WILDCARD,
+            String (describing: PrecedencePredicateTransition.self): PRECEDENCE,
 
 
     ]
@@ -86,10 +86,10 @@ type Transition is tagged record
     -- The target of this transition.
     -- 
 
-    -- public internal(set) final var
+    -- public internal (set) final var
     target: ATNState;
 
-    init(target : ATNState) {
+    init (target : ATNState) {
 
 
         self.target := target
@@ -98,7 +98,7 @@ type Transition is tagged record
     -- public
     function getSerializationType (This : …) return Integer is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- 
@@ -126,6 +126,6 @@ begin
     -- public
     function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 end if;

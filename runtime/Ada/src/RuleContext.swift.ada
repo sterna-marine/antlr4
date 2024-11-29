@@ -19,11 +19,11 @@
 -- SContext) and makes it the root of a parse tree, recorded by field
 -- Parser._ctx.
 --
--- public final SContext s() RecognitionException {
--- SContext _localctx := new SContext(_ctx, getState()); <-- create new node
--- enterRule(_localctx, 0, RULE_s);                     <-- push it
+-- public final SContext s () RecognitionException {
+-- SContext _localctx := new SContext (_ctx, getState ()); <-- create new node
+-- enterRule (_localctx, 0, RULE_s);                     <-- push it
 -- …
--- exitRule();                                          <-- pop back to _localctx
+-- exitRule ();                                          <-- pop back to _localctx
 -- return _localctx;
 -- end;
 --
@@ -37,7 +37,7 @@
 -- symbol s then call r1, which calls r2, the  would look like
 -- this:
 --
--- SContext[-1]   <- root node (bottom of the stack)
+-- SContext[-1]   <- root node (bottom of the stack);
 -- R1Context[p]   <- p in rule s called r1
 -- R2Context[q]   <- q in rule r1 called r2
 --
@@ -79,7 +79,7 @@ begin
     procedure Init (Self : in out …; parent : Optional_RuleContext; invokingState : Integer) {
         self.parent := parent
         -- if parent /= null then 
-        --    print("invoke " & ATNStates.State'Image (stateNumber) & " from " & parent);
+        --    print ("invoke " & ATNStates.State'Image (stateNumber) & " from " & parent);
         -- }
         self.invokingState := invokingState;
     end if;
@@ -87,7 +87,7 @@ begin
     -- open
     function depth (This : …) return Integer is
 begin
-        var n := 0
+        n := 0
         p : Optional_RuleContext; := self;
         while pWrap : constant := p loop
             p := pWrap.parent
@@ -148,14 +148,14 @@ begin
     -- open
     function getText (This : …) return String is
 begin
-        length : constant := getChildCount()
+        length : constant := getChildCount ();
         if length = 0 then
             return "";
         end if;
 
-        var builder := ""
+        builder := ""
         for i in 0 .. length - 1 loop
-            builder := @ + self[i].getText();
+            builder := @ + self[i].getText ();
         end loop;
 
         return builder
@@ -190,16 +190,16 @@ begin
     end if;
 
 
-    open subscript(index : Integer) return ParseTree is
+    open subscript (index : Integer) return ParseTree is
 begin
-        preconditionFailure("Index out of range (RuleContext never has children, though its subclasses may).")
+        preconditionFailure ("Index out of range (RuleContext never has children, though its subclasses may).");
     end if;
 
 
     -- open
     function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
    begin
-        return visitor.visitChildren(self)
+        return visitor.visitChildren (self);
     end if;
 
     -- Print out a whole tree, not just a node, in LISP format
@@ -209,7 +209,7 @@ begin
     -- open
     function toStringTree (recog : Parser) return String is
 begin
-        return Trees.toStringTree(self, recog)
+        return Trees.toStringTree (self, recog);
     end if;
 
     -- Print out a whole tree, not just a node, in LISP format
@@ -218,18 +218,18 @@ begin
     -- public
     function toStringTree (ruleNames : [String]?) return String is
 begin
-        return Trees.toStringTree(self, ruleNames)
+        return Trees.toStringTree (self, ruleNames);
     end if;
 
     -- open
     function toStringTree (This : …) return String is
 begin
-        return toStringTree(null)
+        return toStringTree (null);
     end if;
 
     -- open
     description : String {
-        return toString(null, null)
+        return toString (null, null);
     end if;
 
      -- open
@@ -240,42 +240,42 @@ begin
     -- public final
     function toString<T> (recog : Recognizer<T>) return String is
 begin
-        return toString(recog, ParserRuleContext.EMPTY)
+        return toString (recog, ParserRuleContext.EMPTY);
     end if;
 
     -- public final
     function toString (ruleNames : [String]) return String is
 begin
-        return toString(ruleNames, null)
+        return toString (ruleNames, null);
     end if;
 
-    -- recog null unless ParserRuleContext, in which case we use subclass toString( .. )
+    -- recog null unless ParserRuleContext, in which case we use subclass toString ( .. );
     -- open
     function toString<T> (recog : Recognizer<T>?, stop : RuleContext) return String is
 begin
-        ruleNames : constant := recog?.getRuleNames()
-        return toString(ruleNames, stop)
+        ruleNames : constant := recog?.getRuleNames ();
+        return toString (ruleNames, stop);
     end if;
 
     -- open
     function toString (ruleNames : [String]?, stop : Optional_RuleContext;) return String is
 begin
-        var buf := ""
+        buf := ""
         p : Optional_RuleContext; := self;
         buf := @ + "[";
         while pWrap : constant := p, pWrap !== stop loop
             if ruleNames : constant := ruleNames then
-                ruleIndex : constant := pWrap.getRuleIndex()
-                ruleIndexInRange : constant := (ruleIndex >= 0 and then ruleIndex < ruleNames.count)
-                ruleName : constant := (ruleIndexInRange ? ruleNames[ruleIndex] : String(ruleIndex))
+                ruleIndex : constant := pWrap.getRuleIndex ();
+                ruleIndexInRange : constant := (ruleIndex >= 0 and then ruleIndex < ruleNames.count);
+                ruleName : constant := (ruleIndexInRange ? ruleNames[ruleIndex] : String (ruleIndex));
                 buf := @ + ruleName;
             else
-                if not pWrap.isEmpty() then
-                    buf := @ + String(pWrap.invokingState);
+                if not pWrap.isEmpty () then
+                    buf := @ + String (pWrap.invokingState);
                 end if;
             end if;
 
-            if pWp : constant := pWrap.parent, (ruleNames /= null or else not pWp.isEmpty()) then
+            if pWp : constant := pWrap.parent, (ruleNames /= null or else not pWp.isEmpty ()) then
                 buf := @ + " ";
             end if;
 
@@ -289,7 +289,7 @@ begin
     -- open
     function castdown<T> (subType : T.Type) return T is
 begin
-        return T (self)
+        return T (self);
     end if;
 
 end if;

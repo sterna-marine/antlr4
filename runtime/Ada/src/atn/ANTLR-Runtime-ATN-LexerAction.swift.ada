@@ -26,7 +26,7 @@ type LexerAction is new Hashable with null record;
     -- public
     function getActionType (This : …) return LexerActionType is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
 
@@ -47,7 +47,7 @@ begin
     -- public
     function isPositionDependent (This : …) return Boolean is
 begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- 
@@ -61,13 +61,13 @@ begin
     -- public
     procedure execute (lexer : Lexer) is
     begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        fatalError(#function + " must be overridden")
+        fatalError (#function + " must be overridden");
     end if;
 
 end if;

@@ -83,7 +83,7 @@ begin
     override
     function getActionType (This : …) return LexerActionType is
 begin
-        return action.getActionType()
+        return action.getActionType ();
     end if;
 
     -- 
@@ -109,15 +109,15 @@ begin
     override
     procedure execute (lexer : Lexer) {
         -- assume the input stream position was properly set by the calling code
-        action.execute(lexer);
+        action.execute (lexer);
     end if;
 
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(offset)
-        hasher.combine(action)
+        hasher.combine (offset);
+        hasher.combine (action);
     end if;
 end if;
 

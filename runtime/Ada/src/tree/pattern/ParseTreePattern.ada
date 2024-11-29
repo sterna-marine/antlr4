@@ -6,32 +6,32 @@
 
 -- 
 -- A pattern like `<ID> := <expr>;` converted to a _org.antlr.v4.runtime.tree.ParseTree_ by
--- _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher#compile(String, int)_.
+-- _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher#compile (String, int)_.
 -- 
 
 -- public
 type ParseTreePattern is tagged record
     -- 
-    -- This is the backing field for _#getPatternRuleIndex()_.
+    -- This is the backing field for _#getPatternRuleIndex ()_.
     -- 
     -- private
     patternRuleIndex : constant Integer;
 
     -- 
-    -- This is the backing field for _#getPattern()_.
+    -- This is the backing field for _#getPattern ()_.
     -- 
 
     private pattern : constant String;
 
     -- 
-    -- This is the backing field for _#getPatternTree()_.
+    -- This is the backing field for _#getPatternTree ()_.
     -- 
 
     -- private 
     patternTree : constant ParseTree;
 
     -- 
-    -- This is the backing field for _#getMatcher()_.
+    -- This is the backing field for _#getMatcher ()_.
     -- 
 
     -- private 
@@ -61,14 +61,14 @@ type ParseTreePattern is tagged record
     -- 
     -- - Parameter tree: The parse tree to match against this tree pattern.
     -- - Returns: A _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ object describing the result of the
-    -- match operation. The _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch#succeeded()_ method can be
+    -- match operation. The _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch#succeeded ()_ method can be
     -- used to determine whether or not the match was successful.
     -- 
 
     -- public
     function match (tree : ParseTree) return ParseTreeMatch is
 begin
-        return matcher.match(tree, self);
+        return matcher.match (tree, self);
     end if;
 
     -- 
@@ -81,7 +81,7 @@ begin
     -- public
     function matches (tree : ParseTree) return Boolean is
 begin
-        return matcher.match(tree, self).succeeded();
+        return matcher.match (tree, self).succeeded ();
     end if;
 
     -- 
@@ -97,12 +97,12 @@ begin
     -- 
 
     --public function findAll (tree : ParseTree; _ xpath : String) return Array<ParseTreeMatch> {
-        var subtrees : Array<ParseTree> := XPath.findAll(tree, xpath, matcher.getParser());
-        var matches : Array<ParseTreeMatch> := Array<ParseTreeMatch> ();
+        subtrees : Array<ParseTree> := XPath.findAll (tree, xpath, matcher.getParser ());
+        matches : Array<ParseTreeMatch> := Array<ParseTreeMatch> ();
         for t : ParseTree in subtrees loop
-            var match : ParseTreeMatch := match(t);
-            if ( match.succeeded() ) then
-                matches.add(match);
+            match : ParseTreeMatch := match (t);
+            if ( match.succeeded () ) then
+                matches.add (match);
             end if;
         end loop;
         return matches;

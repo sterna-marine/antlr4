@@ -8,7 +8,7 @@
 -- 
 -- A lexer is recognizer that draws input symbols from a character stream.
 -- lexer grammars result in a subclass of this object. A Lexer object
--- uses simplified match() and error recovery mechanisms in the interest
+-- uses simplified match () and error recovery mechanisms in the interest
 -- of speed.
 -- 
 
@@ -49,7 +49,7 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
     -- The goal of all lexer rules/methods is to create a token object.
     -- This is an instance variable as multiple rules may collaborate to
     -- create a single token.  nextToken will return this object after
-    -- matching lexer rule(s).  If you subclass to allow multiple token
+    -- matching lexer rule (s).  If you subclass to allow multiple token
     -- emissions, then set this to the last token to be matched or
     -- something nonnull so that the auto token emit mechanism will not
     -- emit another token.
@@ -103,7 +103,7 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
 
     -- 
     -- You can set the text for the current token to override what is in
-    -- the input char buffer.  Use setText() or can set this instance var.
+    -- the input char buffer.  Use setText () or can set this instance var.
     -- 
     -- public
     _text : Optional_String;
@@ -113,16 +113,16 @@ type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
     override
     procedure Init (Self : …) is
 begin
-        self._tokenFactorySourcePair := TokenSourceAndStream()
-        super.init()
+        self._tokenFactorySourcePair := TokenSourceAndStream ();
+        super.init ();
         self._tokenFactorySourcePair.tokenSource := self
     end if;
 
     -- public required 
-    init(input : CharStream) {
+    init (input : CharStream) {
         self._input := input
-        self._tokenFactorySourcePair := TokenSourceAndStream()
-        super.init()
+        self._tokenFactorySourcePair := TokenSourceAndStream ();
+        super.init ();
         self._tokenFactorySourcePair.tokenSource := self
         self._tokenFactorySourcePair.stream := input
     end if;
@@ -132,7 +132,7 @@ begin
 begin
         -- wack Lexer state variables
         if _input : constant := _input then
-            _input.seek(0);  -- rewind the input
+            _input.seek (0);  -- rewind the input
         end if;
         _token := null;
         _type := CommonToken.INVALID_TYPE
@@ -144,9 +144,9 @@ begin
 
         _hitEOF := False;
         _mode := Lexer.DEFAULT_MODE
-        _modeStack.clear()
+        _modeStack.clear ();
 
-        getInterpreter().reset()
+        getInterpreter ().reset ();
     end if;
 
     -- 
@@ -163,51 +163,51 @@ begin
 
         -- Mark start location in char stream so unbuffered streams are
         -- guaranteed at least have text of current token
-        tokenStartMarker : constant := _input.mark()
+        tokenStartMarker : constant := _input.mark ();
         defer {
             -- make sure we release marker after match or
             -- unbuffered char stream will keep buffering
-            try! _input.release(tokenStartMarker)
+            try! _input.release (tokenStartMarker);
         end if;
         declare
         begin
             OUTER:
             loop
                 if _hitEOF then
-                    emitEOF()
+                    emitEOF ();
                     return _token!
                 end if;
 
                 _token := null;
                 _channel := CommonToken.DEFAULT_CHANNEL
-                _tokenStartCharIndex := _input.index()
-                _tokenStartCharPositionInLine := getInterpreter().getCharPositionInLine()
-                _tokenStartLine := getInterpreter().getLine()
+                _tokenStartCharIndex := _input.index ();
+                _tokenStartCharPositionInLine := getInterpreter ().getCharPositionInLine ();
+                _tokenStartLine := getInterpreter ().getLine ();
                 _text := null;
                 loop
                     _type := CommonToken.INVALID_TYPE
-                    var ttype : Integer;
+                    ttype : Integer;
                     do {
-                        ttype := getInterpreter().match(_input, _mode);
+                        ttype := getInterpreter ().match (_input, _mode);
                     end if;
-                    catch  ANTLRException.recognition(let e) {
-                        notifyListeners(LexerNoViableAltException (e), recognizer: self)
-                        recover(LexerNoViableAltException (e));
+                    catch  ANTLRException.recognition (let e) {
+                        notifyListeners (LexerNoViableAltException (e), recognizer: self);
+                        recover (LexerNoViableAltException (e));
                         ttype := Lexer.SKIP
                     end if;
-                    if _input.LA(1) == BufferedTokenStream.EOF then;
+                    if _input.LA (1) == BufferedTokenStream.EOF then;
                         _hitEOF := True;
                     end if;
                     if _type = CommonToken.INVALID_TYPE then
                         _type := ttype;
                     end if;
                     if _type = Lexer.SKIP then
-                        goto CONTINUE_OUTER;;
+                        goto CONTINUE_OUTER;
                     end if;
                   exit when _type = Lexer.MORE;
                 end loop;
                 if _token = null then
-                    emit();
+                    emit ();
                 end if;
                 return _token!
                 <<CONTINUE_OUTER>>
@@ -218,7 +218,7 @@ begin
 
     -- 
     -- Instruct the lexer to skip creating a token for current lexer rule
-    -- and look for another token.  nextToken() knows to keep looking when
+    -- and look for another token.  nextToken () knows to keep looking when
     -- a lexer rule finishes with token set to SKIP_TOKEN.  Recall that
     -- if token = null at end of any token rule, it creates one for you
     -- and emits it.
@@ -245,10 +245,10 @@ begin
     procedure pushMode (m : Integer) is
     begin
         if LexerATNSimulator.debug then
-            print("pushMode \(m)");
+            print ("pushMode \(m)");
         end if;
-        _modeStack.push(_mode)
-        mode(m)
+        _modeStack.push (_mode);
+        mode (m);
     end if;
     @discardableResult
     -- open
@@ -259,9 +259,9 @@ begin
         end if;
 
         if LexerATNSimulator.debug then
-            print("popMode back to \(String(describing: _modeStack.peek()))");
+            print ("popMode back to \(String (describing: _modeStack.peek ()))");
         end if;
-        mode(_modeStack.pop())
+        mode (_modeStack.pop ());
         return _mode
     end if;
 
@@ -288,17 +288,17 @@ begin
     override
     procedure setInputStream (input : IntStream) {
         self._input := null;
-        self._tokenFactorySourcePair := makeTokenSourceAndStream()
-        reset();
+        self._tokenFactorySourcePair := makeTokenSourceAndStream ();
+        reset ();
         self._input := Is_Valid (input); -- as CharStream
-        self._tokenFactorySourcePair := makeTokenSourceAndStream()
+        self._tokenFactorySourcePair := makeTokenSourceAndStream ();
     end if;
 
 
     -- open
     function getSourceName (This : …) return String is
 begin
-        return _input!.getSourceName()
+        return _input!.getSourceName ();
     end if;
 
 
@@ -317,7 +317,7 @@ begin
     -- open
     procedure emit (token : Token) is
     begin
-        --System.err.println("emit "+token);
+        --System.err.println ("emit "+token);
         self._token := token
     end if;
 
@@ -332,8 +332,8 @@ begin
     -- open
     function emit (This : …) return Token is
 begin
-        t : constant := _factory.create(_tokenFactorySourcePair, _type, _text, _channel, _tokenStartCharIndex, getCharIndex() - 1, _tokenStartLine, _tokenStartCharPositionInLine)
-        emit(t)
+        t : constant := _factory.create (_tokenFactorySourcePair, _type, _text, _channel, _tokenStartCharIndex, getCharIndex () - 1, _tokenStartLine, _tokenStartCharPositionInLine);
+        emit (t);
         return t
     end if;
 
@@ -341,10 +341,10 @@ begin
     -- open
     function emitEOF (This : …) return Token is
 begin
-        cpos : constant := getCharPositionInLine()
-        line : constant := getLine()
-        idx : constant := _input!.index()
-        eof : constant := _factory.create(
+        cpos : constant := getCharPositionInLine ();
+        line : constant := getLine ();
+        idx : constant := _input!.index ();
+        eof : constant := _factory.create (
             _tokenFactorySourcePair,
             CommonToken.EOF,
             null,
@@ -352,8 +352,8 @@ begin
             idx,
             idx - 1,
             line,
-            cpos)
-        emit(eof)
+            cpos);
+        emit (eof);
         return eof
     end if;
 
@@ -361,26 +361,26 @@ begin
     -- open
     function getLine (This : …) return Integer is
 begin
-        return getInterpreter().getLine()
+        return getInterpreter ().getLine ();
     end if;
 
 
     -- open
     function getCharPositionInLine (This : …) return Integer is
 begin
-        return getInterpreter().getCharPositionInLine()
+        return getInterpreter ().getCharPositionInLine ();
     end if;
 
     -- open
     procedure setLine (line : Integer) is
     begin
-        getInterpreter().setLine(line)
+        getInterpreter ().setLine (line);
     end if;
 
     -- open
     procedure setCharPositionInLine (charPositionInLine : Integer) is
     begin
-        getInterpreter().setCharPositionInLine(charPositionInLine)
+        getInterpreter ().setCharPositionInLine (charPositionInLine);
     end if;
 
     -- 
@@ -389,7 +389,7 @@ begin
     -- open
     function getCharIndex (This : …) return Integer is
 begin
-        return _input!.index()
+        return _input!.index ();
     end if;
 
     -- 
@@ -402,7 +402,7 @@ begin
         if _text /= null then
             return _text!;
         end if;
-        return getInterpreter().getText(_input!)
+        return getInterpreter ().getText (_input!);
     end if;
 
     -- 
@@ -470,11 +470,11 @@ begin
     -- 
     -- open
     function getAllTokens (This : …) return [Token] {
-        var tokens := [Token]()
-        var t := nextToken();
-        while t.getType() /= CommonToken.EOF loop
-            tokens.append(t)
-            t := nextToken();
+        tokens := [Token]();
+        t := nextToken ();
+        while t.getType () /= CommonToken.EOF loop
+            tokens.append (t);
+            t := nextToken ();
         end loop;
         return tokens
     end if;
@@ -482,9 +482,9 @@ begin
     -- open
     procedure recover (e : LexerNoViableAltException) is
     begin
-        if _input!.LA(1) /= BufferedTokenStream.EOF then;
+        if _input!.LA (1) /= BufferedTokenStream.EOF then;
             -- skip a char and again;
-            getInterpreter().consume(_input!);
+            getInterpreter ().consume (_input!);
         end if;
     end if;
 
@@ -494,23 +494,23 @@ begin
 
         text : constant String;
         do {
-            text := _input!.getText(Interval.of(_tokenStartCharIndex, _input!.index()));
+            text := _input!.getText (Interval.of (_tokenStartCharIndex, _input!.index ()));
         end if;
         catch {
             text := "<unknown>"
         end if;
-        msg : constant := "token recognition error at: '\(getErrorDisplay(text))'"
+        msg : constant := "token recognition error at: '\(getErrorDisplay (text))'"
 
-        listener : constant := getErrorListenerDispatch()
-        listener.syntaxError(recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e)
+        listener : constant := getErrorListenerDispatch ();
+        listener.syntaxError (recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e);
     end if;
 
     -- open
     function getErrorDisplay (s : String) return String is
 begin
-        var buf := ""
+        buf := ""
         for c in s loop
-            buf := @ + getErrorDisplay(c);
+            buf := @ + getErrorDisplay (c);
         end loop;
         return buf
     end if;
@@ -529,14 +529,14 @@ begin
             when "\r" =>
                   return "\\r"
             when others =>
-                  return String(c)
+                  return String (c);
             end case;
     end getErrorDisplay;
 
     -- open
     function getCharErrorDisplay (c : Character) return String is
 begin
-        s : constant String := getErrorDisplay(c);
+        s : constant String := getErrorDisplay (c);
         return "'\(s)'"
     end if;
 
@@ -550,12 +550,12 @@ begin
     procedure recover (re : AnyObject) is
     begin
         -- TODO: Do we lose character or line position information?
-        _input!.consume();
+        _input!.consume ();
     end if;
 
     -- internal
     function makeTokenSourceAndStream (This : …) return TokenSourceAndStream is
 begin
-        return TokenSourceAndStream(self, _input)
+        return TokenSourceAndStream (self, _input);
     end if;
 end if;

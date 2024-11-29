@@ -31,7 +31,7 @@ type InterpreterRuleContext is new ParserRuleContext with null record;
     override
     procedure Init (Self : …) is
 begin
-        super.init()
+        super.init ();
     end if;
 
     -- 
@@ -47,7 +47,7 @@ begin
                 invokingStateNumber : ATNStates.State;
                 ruleIndex : Integer) {
         self.ruleIndex := ruleIndex
-        super.init(parent, invokingStateNumber)
+        super.init (parent, invokingStateNumber);
 
     end if;
 
@@ -69,10 +69,10 @@ begin
         if not Is_Valid (ctx) then
              return null;
         end if;
-        dup : constant InterpreterRuleContext := InterpreterRuleContext();
-        dup.copyFrom(ctx)
-        dup.ruleIndex := ctx.getRuleIndex()
-        dup.parent := fromParserRuleContext(ctx.getParent() as? ParserRuleContext)
+        dup : constant InterpreterRuleContext := InterpreterRuleContext ();
+        dup.copyFrom (ctx);
+        dup.ruleIndex := ctx.getRuleIndex ();
+        dup.parent := fromParserRuleContext (ctx.getParent () as? ParserRuleContext);
         return dup
     end if;
 end if;

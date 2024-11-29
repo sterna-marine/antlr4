@@ -28,9 +28,9 @@ type LookupATNConfig is new Hashable with null record;
     -- public
     procedure hash (into hasher: inout Hasher) is
     begin
-        hasher.combine(config.state.stateNumber)
-        hasher.combine(config.alt)
-        hasher.combine(config.semanticContext)
+        hasher.combine (config.state.stateNumber);
+        hasher.combine (config.alt);
+        hasher.combine (config.semanticContext);
     end if;
 end if;
 

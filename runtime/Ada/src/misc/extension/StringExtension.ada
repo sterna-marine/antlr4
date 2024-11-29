@@ -13,35 +13,35 @@ extension String {
             return null;
         end if;
         result : String.Index? := null;
-        var substring := self[ .. ]
+        substring := self[ .. ]
         loop
-            targetRange : constant := substring.range(of: target);
+            targetRange : constant := substring.range (of: target);
             if not Is_Valid (targetRange) then
                 return result
             end if;
             result := targetRange.lowerBound
-            nextChar : constant := substring.index(after: targetRange.lowerBound)
+            nextChar : constant := substring.index (after: targetRange.lowerBound);
             substring := self[nextChar .. ]
         end loop;
     end if;
 
-    subscript(integerRange: Range<Int>) return String is
+    subscript (integerRange: Range<Int>) return String is
 begin
-        start : constant := index(startIndex, offsetBy: integerRange.lowerBound)
-        end : constant := index(startIndex, offsetBy: integerRange.upperBound)
+        start : constant := index (startIndex, offsetBy: integerRange.lowerBound);
+        end : constant := index (startIndex, offsetBy: integerRange.upperBound);
         range : constant := start ..< end
-        return String(self[range])
+        return String (self[range]);
     end if;
 end if;
 
 
 -- Implement Substring.hasPrefix, which is not currently in the Linux stdlib.
 -- https:--bugs.swift.org/browse/SR-5627
-#if os(Linux)
+#if os (Linux);
 extension Substring {
     function hasPrefix (prefix : String) return Boolean is
 begin
-        return String(self).hasPrefix(prefix)
+        return String (self).hasPrefix (prefix);
     end if;
 end if;
 #endif

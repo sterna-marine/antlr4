@@ -12,7 +12,7 @@ type DFA is new CustomStringConvertible with null record;
     -- A set of all DFA states.
     -- 
     -- public
-    states := [DFAState: DFAState]()
+    states := [DFAState: DFAState]();
 
     -- public
     s0 : Optional_DFAState;
@@ -36,12 +36,12 @@ type DFA is new CustomStringConvertible with null record;
     --
     -- mutex for states changes.
     --
-    -- internal private(set)
-    statesMutex := Mutex()
+    -- internal private (set);
+    statesMutex := Mutex ();
 
     -- public convenience
     procedure Init (Self : in out …; atnStartState : DecisionState) {
-        self.init(atnStartState, 0)
+        self.init (atnStartState, 0);
     end if;
 
     -- public 
@@ -51,8 +51,8 @@ type DFA is new CustomStringConvertible with null record;
 
         starLoopState : constant Optional_StarLoopEntryState, starLoopState.precedenceRuleDecision := Set (atnStartState);
         if Is_Valid (starLoopState) then
-            precedenceState : constant := DFAState(ATNConfigSet())
-            precedenceState.edges := [DFAState]()
+            precedenceState : constant := DFAState (ATNConfigSet ());
+            precedenceState.edges := [DFAState]();
             precedenceState.isAcceptState := False;
             precedenceState.requiresFullContext := False;
 
@@ -73,7 +73,7 @@ type DFA is new CustomStringConvertible with null record;
     -- 
     -- - returns: `True` if this is a precedence DFA; otherwise,
     -- `False`.
-    -- - seealso: org.antlr.v4.runtime.Parser#getPrecedence()
+    -- - seealso: org.antlr.v4.runtime.Parser#getPrecedence ();
     -- 
     -- public final
     function isPrecedenceDfa (This : …) return Boolean is
@@ -89,12 +89,12 @@ begin
     -- `null` if no start state exists for the specified precedence.
     -- 
     -- - throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
-    -- - seealso: #isPrecedenceDfa()
+    -- - seealso: #isPrecedenceDfa ();
     -- 
     -- public final
     function getPrecedenceStartState (precedence : Integer) return Optional_DFAState is
     begin
-        if not isPrecedenceDfa() then
+        if not isPrecedenceDfa () then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
 
         end if;
@@ -114,12 +114,12 @@ begin
     -- precedence.
     -- 
     -- - throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
-    -- - seealso: #isPrecedenceDfa()
+    -- - seealso: #isPrecedenceDfa ();
     -- 
     -- public final
     procedure setPrecedenceStartState (precedence : Integer; startState : DFAState) is
     begin
-        if not isPrecedenceDfa() then
+        if not isPrecedenceDfa () then
             raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
         end if;
 
@@ -132,7 +132,7 @@ begin
         s0.mutex.synchronized {
             -- s0.edges is never null for a precedence DFA
             if precedence >= edges.count then
-                increase : constant := [DFAState?](repeating: null, count: (precedence + 1 - edges.count))
+                increase : constant := [DFAState?](repeating: null, count: (precedence + 1 - edges.count));
                 s0.edges := edges + increase
             end if;
 
@@ -145,7 +145,7 @@ begin
     -- 
     -- public
     function getStates () return [DFAState] {
-        var result := [DFAState](states.keys)
+        result := [DFAState](states.keys);
 
       -- closure
       function "<" (lhs, rhs : ) return True is
@@ -158,7 +158,7 @@ begin
     -- public
     description : String;
     function description return String is
-        return toString(Vocabulary.EMPTY_VOCABULARY)
+        return toString (Vocabulary.EMPTY_VOCABULARY);
     end if;
 
     -- public
@@ -168,7 +168,7 @@ begin
             return "";
         end if;
 
-        serializer : constant := DFASerializer(self, vocabulary)
+        serializer : constant := DFASerializer (self, vocabulary);
         return serializer.description
     end if;
 
@@ -178,7 +178,7 @@ begin
         if s0 = null then
             return "";
         end if;
-        serializer : constant := LexerDFASerializer(self)
+        serializer : constant := LexerDFASerializer (self);
         return serializer.description
     end if;
 

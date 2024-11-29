@@ -74,19 +74,19 @@ begin
     -- public
     procedure execute (lexer : Lexer) is
     begin
-        lexer.pushMode(mode)
+        lexer.pushMode (mode);
     end if;
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(mode)
+        hasher.combine (mode);
     end if;
 
     -- public
     description : String;
     function description return String is
-        return "pushMode(\(mode))"
+        return "pushMode (\(mode))"
     end if;
 end if;
 

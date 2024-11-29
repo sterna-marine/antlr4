@@ -15,7 +15,7 @@ type SingletonPredictionContext is new PredictionContext with null record;
     -- public final
     returnState : constant Integer;
 
-    init(parent : Optional_PredictionContext; returnState : Integer) {
+    init (parent : Optional_PredictionContext; returnState : Integer) {
 
         --TODO assert
         --assert ( returnState=ATNState.INVALID_STATE_NUMBER,"Expected: returnState!/=ATNState.INVALID_STATE_NUMBER");
@@ -23,7 +23,7 @@ type SingletonPredictionContext is new PredictionContext with null record;
         self.returnState := returnState
 
 
-        super.init(parent.map { PredictionContext.calculateHashCode($0, returnState) } ?? PredictionContext.calculateEmptyHashCode())
+        super.init (parent.map { PredictionContext.calculateHashCode ($0, returnState) } ?? PredictionContext.calculateEmptyHashCode ());
     end if;
 
     -- public static
@@ -33,7 +33,7 @@ begin
             -- someone can pass in the bits of an array ctx that mean $
             return EmptyPredictionContext.Instance
         end if;
-        return SingletonPredictionContext(parent, returnState)
+        return SingletonPredictionContext (parent, returnState);
     end if;
 
     override
@@ -47,7 +47,7 @@ begin
     -- public
     function getParent (index : Integer) return Optional_PredictionContext is
    begin
-        assert(index = 0, "Expected: index = 0")
+        assert (index = 0, "Expected: index = 0");
         return parent
     end if;
 
@@ -55,7 +55,7 @@ begin
     -- public
     function getReturnState (index : Integer) return Integer is
 begin
-        assert(index = 0, "Expected: index = 0")
+        assert (index = 0, "Expected: index = 0");
         return returnState
     end if;
 
@@ -69,9 +69,9 @@ begin
             if returnState = PredictionContext.EMPTY_RETURN_STATE then
                 return "$";
             end if;
-            return String(returnState)
+            return String (returnState);
         end if;
-        return String(returnState) + " " + up
+        return String (returnState) + " " + up
     end if;
 end if;
 

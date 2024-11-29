@@ -13,7 +13,7 @@ begin
         ("testShouldNotVisitTerminal", testShouldNotVisitTerminal),
         ("testShouldNotVisitEOF", testShouldNotVisitEOF),
         ("testVisitErrorNode", testVisitErrorNode),
-        ("testVisitTerminalNode", testVisitTerminalNode)
+        ("testVisitTerminalNode", testVisitTerminalNode);
     ]
     
     --
@@ -22,18 +22,18 @@ begin
     --
     procedure testVisitTerminalNode (This : …) is
 begin
-        lexer : constant := VisitorBasicLexer(ANTLRInputStream("A"))
-        parser : constant := VisitorBasicParser(CommonTokenStream(lexer));
+        lexer : constant := VisitorBasicLexer (ANTLRInputStream ("A"));
+        parser : constant := VisitorBasicParser (CommonTokenStream (lexer));
 
-        context : constant := parser.s();
-        XCTAssertEqual("(s A <EOF>)", context.toStringTree(parser))
+        context : constant := parser.s ();
+        XCTAssertEqual ("(s A <EOF>)", context.toStringTree (parser));
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
             function visitTerminal (node : TerminalNode) return Optional_String is
    begin
-                return "\(node.getSymbol()!)\n"
+                return "\(node.getSymbol ()!)\n"
             end if;
 
             override
@@ -49,12 +49,12 @@ begin
             end if;
         end if;
 
-        visitor : constant := Visitor()
-        result : constant := visitor.visit(context)
+        visitor : constant := Visitor ();
+        result : constant := visitor.visit (context);
         expected : constant =
         "[@0,0:0='A',<1>,1:0]\n" +
         "[@1,1:0='<EOF>',<-1>,1:1]\n"
-        XCTAssertEqual(expected, result)
+        XCTAssertEqual (expected, result);
     end if;
 
     --
@@ -63,44 +63,44 @@ begin
     --
     procedure testVisitErrorNode (This : …) is
 begin
-        lexer : constant := VisitorBasicLexer(ANTLRInputStream(""))
-        parser : constant := VisitorBasicParser(CommonTokenStream(lexer));
+        lexer : constant := VisitorBasicLexer (ANTLRInputStream (""));
+        parser : constant := VisitorBasicParser (CommonTokenStream (lexer));
 
         type ErrorListener is new BaseErrorListener with null record;
 {
             override
             procedure Init (Self : …) is
 begin
-                super.init()
+                super.init ();
             end if;
 
-            var errors := [String]()
+            errors := [String]();
 
             override
             procedure syntaxError<T> (recognizer : Recognizer<T>,
                                          offendingSymbol : Optional_AnyObject;
                                          line : Integer; charPositionInLine : Integer;
                                          msg : String; e : Optional_AnyObject;) {
-                errors.append("line \(line):\(charPositionInLine) \(msg)")
+                errors.append ("line \(line):\(charPositionInLine) \(msg)");
             end if;
         end if;
 
-        parser.removeErrorListeners()
-        errorListener : constant := ErrorListener()
-        parser.addErrorListener(errorListener)
+        parser.removeErrorListeners ();
+        errorListener : constant := ErrorListener ();
+        parser.addErrorListener (errorListener);
 
-        context : constant := parser.s();
+        context : constant := parser.s ();
         errors : constant := errorListener.errors
-        XCTAssertEqual("(s <missing 'A'> <EOF>)", context.toStringTree(parser))
-        XCTAssertEqual(1, errors.count)
-        XCTAssertEqual("line 1:0 missing 'A' at '<EOF>'", errors[0])
+        XCTAssertEqual ("(s <missing 'A'> <EOF>)", context.toStringTree (parser));
+        XCTAssertEqual (1, errors.count);
+        XCTAssertEqual ("line 1:0 missing 'A' at '<EOF>'", errors[0]);
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
             function visitErrorNode (node : ErrorNode) return Optional_String is
    begin
-                return "Error encountered: \(node.getSymbol()!)"
+                return "Error encountered: \(node.getSymbol ()!)"
             end if;
 
             override
@@ -116,10 +116,10 @@ begin
             end if;
         end if;
 
-        visitor : constant := Visitor()
-        result : constant := visitor.visit(context)
+        visitor : constant := Visitor ();
+        result : constant := visitor.visit (context);
         expected : constant := "Error encountered: [@-1,-1:-1='<missing 'A'>',<1>,1:0]"
-        XCTAssertEqual(expected, result)
+        XCTAssertEqual (expected, result);
     end if;
 
     --
@@ -130,18 +130,18 @@ begin
     procedure testShouldNotVisitEOF (This : …) is
 begin
         input : constant := "A"
-        lexer : constant := VisitorBasicLexer(ANTLRInputStream(input))
-        parser : constant := VisitorBasicParser(CommonTokenStream(lexer));
+        lexer : constant := VisitorBasicLexer (ANTLRInputStream (input));
+        parser : constant := VisitorBasicParser (CommonTokenStream (lexer));
 
-        context : constant := parser.s();
-        XCTAssertEqual("(s A <EOF>)", context.toStringTree(parser))
+        context : constant := parser.s ();
+        XCTAssertEqual ("(s A <EOF>)", context.toStringTree (parser));
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
             function visitTerminal (node : TerminalNode) return Optional_String is
    begin
-                return "\(node.getSymbol()!)\n"
+                return "\(node.getSymbol ()!)\n"
             end if;
 
             override
@@ -151,10 +151,10 @@ begin
             end if;
         end if;
 
-        visitor : constant := Visitor()
-        result : constant := visitor.visit(context)
+        visitor : constant := Visitor ();
+        result : constant := visitor.visit (context);
         expected : constant := "[@0,0:0='A',<1>,1:0]\n"
-        XCTAssertEqual(expected, result)
+        XCTAssertEqual (expected, result);
     end if;
 
     --
@@ -165,18 +165,18 @@ begin
     procedure testShouldNotVisitTerminal (This : …) is
 begin
         input : constant := "A"
-        lexer : constant := VisitorBasicLexer(ANTLRInputStream(input))
-        parser : constant := VisitorBasicParser(CommonTokenStream(lexer));
+        lexer : constant := VisitorBasicLexer (ANTLRInputStream (input));
+        parser : constant := VisitorBasicParser (CommonTokenStream (lexer));
 
-        context : constant := parser.s();
-        XCTAssertEqual("(s A <EOF>)", context.toStringTree(parser))
+        context : constant := parser.s ();
+        XCTAssertEqual ("(s A <EOF>)", context.toStringTree (parser));
 
         type Visitor is new VisitorBasicBaseVisitor<String> with null record;
 {
             override
             function visitTerminal (node : TerminalNode) return Optional_String is
    begin
-                XCTFail()
+                XCTFail ();
                 return null;
             end if;
 
@@ -193,10 +193,10 @@ begin
             end if;
         end if;
 
-        visitor : constant := Visitor()
-        result : constant := visitor.visit(context)
+        visitor : constant := Visitor ();
+        result : constant := visitor.visit (context);
         expected : constant := "default result"
-        XCTAssertEqual(expected, result)
+        XCTAssertEqual (expected, result);
     end if;
 
     --
@@ -205,32 +205,32 @@ begin
     procedure testCalculatorVisitor (This : …) is
 begin
         input : constant := "2 + 8 / 2"
-        lexer : constant := VisitorCalcLexer(ANTLRInputStream(input))
-        parser : constant := VisitorCalcParser(CommonTokenStream(lexer));
+        lexer : constant := VisitorCalcLexer (ANTLRInputStream (input));
+        parser : constant := VisitorCalcParser (CommonTokenStream (lexer));
 
-        context : constant := parser.s();
-        XCTAssertEqual("(s (expr (expr 2) + (expr (expr 8) / (expr 2))) <EOF>)", context.toStringTree(parser))
+        context : constant := parser.s ();
+        XCTAssertEqual ("(s (expr (expr 2) + (expr (expr 8) / (expr 2))) <EOF>)", context.toStringTree (parser));
 
         type Visitor is new VisitorCalcBaseVisitor<Int> with null record;
 {
             override
             function visitS (ctx : VisitorCalcParser.SContext) return Optional_Int is
    begin
-                return visit(ctx.expr()!)
+                return visit (ctx.expr ()!);
             end if;
 
             override
             function visitNumber (ctx : VisitorCalcParser.NumberContext) return Optional_Int is
    begin
-                return Integer ((ctx.INT()?.getText())!)
+                return Integer ((ctx.INT ()?.getText ())!);
             end if;
 
             override
             function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Optional_Int is
    begin
-                left : constant := visit(ctx.expr(0)!)!
-                right : constant := visit(ctx.expr(1)!)!
-                if ctx.MUL() /= null then
+                left : constant := visit (ctx.expr (0)!)!
+                right : constant := visit (ctx.expr (1)!)!
+                if ctx.MUL () /= null then
                     return left * right
                 else
                     return left / right;
@@ -240,9 +240,9 @@ begin
             override
             function visitAdd (ctx : VisitorCalcParser.AddContext) return Optional_Int is
    begin
-                left : constant := visit(ctx.expr(0)!)!
-                right : constant := visit(ctx.expr(1)!)!
-                if ctx.ADD() /= null then
+                left : constant := visit (ctx.expr (0)!)!
+                right : constant := visit (ctx.expr (1)!)!
+                if ctx.ADD () /= null then
                     return left + right
                 else
                     return left - right;
@@ -250,10 +250,10 @@ begin
             end if;
         end if;
 
-        visitor : constant := Visitor()
-        result : constant := visitor.visit(context)
+        visitor : constant := Visitor ();
+        result : constant := visitor.visit (context);
         expected : constant := 6
-        XCTAssertEqual(expected, result!)
+        XCTAssertEqual (expected, result!);
     end if;
 
 end VisitorTests;

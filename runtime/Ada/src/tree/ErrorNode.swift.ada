@@ -16,7 +16,7 @@ type ErrorNode is new TerminalNodeImpl with null record;
     -- public 
     override
     procedure Init (Self : in out …; token : Token) {
-        super.init(token)
+        super.init (token);
     end if;
 
 
@@ -24,7 +24,7 @@ type ErrorNode is new TerminalNodeImpl with null record;
     -- public
     function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
    begin
-        return visitor.visitErrorNode(self)
+        return visitor.visitErrorNode (self);
     end if;
 
 end if;

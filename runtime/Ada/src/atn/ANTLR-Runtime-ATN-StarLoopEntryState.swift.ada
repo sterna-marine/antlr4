@@ -19,7 +19,7 @@ type StarLoopEntryState is new DecisionState with null record;
     -- and stored for use in _org.antlr.v4.runtime.atn.ParserATNSimulator_ and
     -- _org.antlr.v4.runtime.ParserInterpreter_.
     -- 
-    -- - seealso: org.antlr.v4.runtime.dfa.DFA#isPrecedenceDfa()
+    -- - seealso: org.antlr.v4.runtime.dfa.DFA#isPrecedenceDfa ();
     -- 
     -- public
     precedenceRuleDecision : Boolean := False;

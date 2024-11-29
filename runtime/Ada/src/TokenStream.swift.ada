@@ -13,10 +13,10 @@
 type TokenStream is interface;
     -- 
     -- Get the _org.antlr.v4.runtime.Token_ instance associated with the value returned by
-    -- _#LA LA(k)_. This method has the same pre- and post-conditions as
+    -- _#LA LA (k)_. This method has the same pre- and post-conditions as
     -- _org.antlr.v4.runtime.IntStream#LA_. In addition, when the preconditions of this method
     -- are met, the return value is non-null and the value of
-    -- `LT(k).getType()==LA(k)`.
+    -- `LT (k).getType ()==LA (k)`.
     -- 
     -- - SeeAlso: org.antlr.v4.runtime.IntStream#LA
     -- 
@@ -27,13 +27,13 @@ type TokenStream is interface;
     -- the preconditions of this method are met, the return value is non-null.
     -- 
     -- The preconditions for this method are the same as the preconditions of
-    -- _org.antlr.v4.runtime.IntStream#seek_. If the behavior of `seek(index)` is
+    -- _org.antlr.v4.runtime.IntStream#seek_. If the behavior of `seek (index)` is
     -- unspecified for the current state and given `index`, then the
     -- behavior of this method is also unspecified.
     -- 
-    -- The symbol referred to by `index` differs from `seek()` only
+    -- The symbol referred to by `index` differs from `seek ()` only
     -- in the case of filtering streams where `index` lies before the end
-    -- of the stream. Unlike `seek()`, this method does not adjust
+    -- of the stream. Unlike `seek ()`, this method does not adjust
     -- `index` to point to a non-ignored symbol.
     -- 
     -- - Throws: ANTLRError.illegalArgumentif {code index} is less than 0
@@ -58,7 +58,7 @@ type TokenStream is interface;
     -- TokenStream stream :=  .. ;
     -- String text := "";
     -- for (int i := interval.a; i &lt;= interval.b; i++) loop
-    -- text := @ + stream.get(i).getText();
+    -- text := @ + stream.get (i).getText ();
     -- end loop;
     -- 
     -- 
@@ -73,12 +73,12 @@ type TokenStream is interface;
     -- 
     -- Return the text of all tokens in the stream. This method behaves like the
     -- following code, including potential exceptions from the calls to
-    -- _org.antlr.v4.runtime.IntStream#size_ and _#getText(org.antlr.v4.runtime.misc.Interval)_, but may be
+    -- _org.antlr.v4.runtime.IntStream#size_ and _#getText (org.antlr.v4.runtime.misc.Interval)_, but may be
     -- optimized by the specific implementation.
     -- 
     -- 
     -- TokenStream stream :=  .. ;
-    -- String text := stream.getText(new Interval(0, stream.size()));
+    -- String text := stream.getText (new Interval (0, stream.size ()));
     -- 
     -- 
     -- - Returns: The text of all tokens in the stream.
@@ -88,15 +88,15 @@ type TokenStream is interface;
     -- 
     -- Return the text of all tokens in the source interval of the specified
     -- context. This method behaves like the following code, including potential
-    -- exceptions from the call to _#getText(org.antlr.v4.runtime.misc.Interval)_, but may be
+    -- exceptions from the call to _#getText (org.antlr.v4.runtime.misc.Interval)_, but may be
     -- optimized by the specific implementation.
     -- 
-    -- If `ctx.getSourceInterval()` does not return a valid interval of
+    -- If `ctx.getSourceInterval ()` does not return a valid interval of
     -- tokens provided by this stream, the behavior is unspecified.
     -- 
     -- 
     -- TokenStream stream :=  .. ;
-    -- String text := stream.getText(ctx.getSourceInterval());
+    -- String text := stream.getText (ctx.getSourceInterval ());
     -- 
     -- 
     -- - Parameter ctx: The context providing the source interval of tokens to get
@@ -121,8 +121,8 @@ type TokenStream is interface;
     -- 
     -- TokenStream stream :=  .. ;
     -- String text := "";
-    -- for (int i := start.getTokenIndex(); i &lt;= stop.getTokenIndex(); i++) loop
-    -- text := @ + stream.get(i).getText();
+    -- for (int i := start.getTokenIndex (); i &lt;= stop.getTokenIndex (); i++) loop
+    -- text := @ + stream.get (i).getText ();
     -- end loop;
     -- 
     -- 

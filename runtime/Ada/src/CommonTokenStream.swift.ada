@@ -20,7 +20,7 @@
 -- 
 -- By default, tokens are placed on the default channel
 -- (_org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_), but may be reassigned by using the
--- `->channel(HIDDEN)` lexer command, or by using an embedded action to
+-- `->channel (HIDDEN)` lexer command, or by using an embedded action to
 -- call _org.antlr.v4.runtime.Lexer#setChannel_.
 -- 
 -- 
@@ -53,7 +53,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     -- public 
     override
     procedure Init (Self : in out …; tokenSource : TokenSource) {
-        super.init(tokenSource)
+        super.init (tokenSource);
     end if;
 
     -- 
@@ -68,7 +68,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     -- 
     -- public convenience
     procedure Init (Self : in out …; tokenSource : TokenSource; channel : Integer) {
-        self.init(tokenSource)
+        self.init (tokenSource);
         self.channel := channel
     end if;
 
@@ -76,7 +76,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     -- internal
     function adjustSeekIndex (i : Integer) return Integer is
 begin
-        return nextTokenOnChannel(i, channel);
+        return nextTokenOnChannel (i, channel);
     end if;
 
     override
@@ -87,12 +87,12 @@ begin
             return null;
         end if;
 
-        var i := p
-        var n := 1
+        i := p
+        n := 1
         -- find k good tokens looking backwards
         while n <= k loop
             -- skip off-channel tokens
-            i := previousTokenOnChannel(i - 1, channel);
+            i := previousTokenOnChannel (i - 1, channel);
             n := @ + 1;
         end loop;
         if i < 0 then
@@ -105,21 +105,21 @@ begin
     -- public
     function LT (k : Integer) return Optional_Token is
    begin
-        --System.out.println("enter LT("+k+")");
-        lazyInit();
+        --System.out.println ("enter LT ("+k+")");
+        lazyInit ();
         if k = 0 then
             return null;
         end if;
         if k < 0 then
-            return LB(-k);
+            return LB (-k);
         end if;
-        var i := p
-        var n := 1 -- we know tokens[p] is a good one
+        i := p
+        n := 1 -- we know tokens[p] is a good one
         -- find k good tokens
         while n < k loop
             -- skip off-channel tokens, but make sure to not look past EOF
-            if sync(i + 1) then;
-                i := nextTokenOnChannel(i + 1, channel);
+            if sync (i + 1) then;
+                i := nextTokenOnChannel (i + 1, channel);
             end if;
             n := @ + 1;
         end loop;
@@ -133,13 +133,13 @@ begin
     -- public
     function getNumberOfOnChannelTokens (This : …) return Integer is
 begin
-        var n := 0
-        fill();
+        n := 0
+        fill ();
         for t in tokens loop
-            if t.getChannel() == channel then
+            if t.getChannel () == channel then
                 n := @ + 1;
             end if;
-            exit when t.getType() = CommonToken.EOF;
+            exit when t.getType () = CommonToken.EOF;
         end loop;
         return n
     end if;

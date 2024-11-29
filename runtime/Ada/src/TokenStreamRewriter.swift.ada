@@ -11,24 +11,24 @@
 -- 
 -- You can insert stuff, replace, and delete chunks. Note that the operations
 -- are done lazily--only if you convert the buffer to a _String_ with
--- _org.antlr.v4.runtime.TokenStream#getText()_. This is very efficient because you are not
+-- _org.antlr.v4.runtime.TokenStream#getText ()_. This is very efficient because you are not
 -- moving data around all the time. As the buffer of tokens is converted to
--- strings, the _#getText()_ method(s) scan the input token stream and
+-- strings, the _#getText ()_ method (s) scan the input token stream and
 -- check to see if there is an operation at the current index. If so, the
 -- operation is done and then normal _String_ rendering continues on the
 -- buffer. This is like having multiple Turing machine instruction streams
--- (programs) operating on a single input tape. :)
+-- (programs) operating on a single input tape. :);
 -- 
 -- 
 -- This rewriter makes no modifications to the token stream. It does not ask the
 -- stream to fill itself up nor does it advance the input cursor. The token
--- stream _org.antlr.v4.runtime.TokenStream#index()_ will return the same value before and
--- after any _#getText()_ call.
+-- stream _org.antlr.v4.runtime.TokenStream#index ()_ will return the same value before and
+-- after any _#getText ()_ call.
 -- 
 -- 
 -- The rewriter only works on tokens that you have in the buffer and ignores the
 -- current input cursor. If you are buffering tokens on-demand, calling
--- _#getText()_ halfway through the input will only do rewrites for those
+-- _#getText ()_ halfway through the input will only do rewrites for those
 -- tokens in the first half of the file.
 -- 
 -- 
@@ -44,12 +44,12 @@
 -- if there is an error just by removing instructions. For example,
 -- 
 -- 
--- CharStream input := new ANTLRFileStream("input");
--- TLexer lex := new TLexer(input);
--- CommonTokenStream tokens := new CommonTokenStream(lex);
--- T parser := new T(tokens);
--- TokenStreamRewriter rewriter := new TokenStreamRewriter(tokens);
--- parser.startRule();
+-- CharStream input := new ANTLRFileStream ("input");
+-- TLexer lex := new TLexer (input);
+-- CommonTokenStream tokens := new CommonTokenStream (lex);
+-- T parser := new T (tokens);
+-- TokenStreamRewriter rewriter := new TokenStreamRewriter (tokens);
+-- parser.startRule ();
 -- 
 -- 
 -- 
@@ -58,9 +58,9 @@
 -- 
 -- Token t,u;
 -- … 
--- rewriter.insertAfter(t, "text to put after t");}
--- rewriter.insertAfter(u, "text after u");}
--- System.out.println(rewriter.getText());
+-- rewriter.insertAfter (t, "text to put after t");}
+-- rewriter.insertAfter (u, "text after u");}
+-- System.out.println (rewriter.getText ());
 -- 
 -- 
 -- 
@@ -70,10 +70,10 @@
 -- a C file and also its header file--all from the same buffer:
 -- 
 -- 
--- rewriter.insertAfter("pass1", t, "text to put after t");}
--- rewriter.insertAfter("pass2", u, "text after u");}
--- System.out.println(rewriter.getText("pass1"));
--- System.out.println(rewriter.getText("pass2"));
+-- rewriter.insertAfter ("pass1", t, "text to put after t");}
+-- rewriter.insertAfter ("pass2", u, "text after u");}
+-- System.out.println (rewriter.getText ("pass1"));
+-- System.out.println (rewriter.getText ("pass2"));
 -- 
 -- 
 -- 
@@ -108,12 +108,12 @@ type TokenStreamRewriter is tagged record
         -- internal weak
         tokens : TokenStream!;
 
-        init(index : Integer; tokens : TokenStream) {
+        init (index : Integer; tokens : TokenStream) {
             self.index := index
             self.tokens := tokens
         end if;
 
-        init(index : Integer; text : Optional_String; tokens : TokenStream) {
+        init (index : Integer; text : Optional_String; tokens : TokenStream) {
             self.index := index
             self.text := text
             self.tokens := tokens
@@ -131,8 +131,8 @@ begin
         -- public
         description : String;
         function description return String is
-            opName : constant String := To_String(describing: type(of: self))
-            return "<\(opName)@\(try! tokens.get(index)):""\(text!)"">"
+            opName : constant String := To_String (describing: type (of: self));
+            return "<\(opName)@\(try! tokens.get (index)):""\(text!)"">"
         end if;
     end if;
 
@@ -144,11 +144,11 @@ begin
 begin
             text : constant Optional_Text := Set (text);
              if Is_Valid (text) then
-                buf.append(text);
+                buf.append (text);
             end if;
-            token : constant := tokens.get(index);
-            if token.getType() /= CommonToken.EOF then
-                buf.append(token.getText()!);
+            token : constant := tokens.get (index);
+            if token.getType () /= CommonToken.EOF then
+                buf.append (token.getText ()!);
             end if;
             return index + 1
         end if;
@@ -160,7 +160,7 @@ begin
         -- public 
         override
         procedure Init (Self : in out …; index : Integer; text : Optional_String; tokens : TokenStream) {
-            super.init(index + 1, text, tokens)
+            super.init (index + 1, text, tokens);
         end if;
     end if;
 
@@ -174,7 +174,7 @@ begin
 
         -- public 
         procedure Init (Self : in out …; from : Integer; to : Integer; text : Optional_String; tokens : TokenStream) {
-            super.init(from, text, tokens)
+            super.init (from, text, tokens);
             lastIndex := to
         end if;
 
@@ -193,8 +193,8 @@ begin
         -- public
         description : String;
         function description return String is
-            token : constant := try! tokens.get(index)
-            lastToken : constant := try! tokens.get(lastIndex)
+            token : constant := try! tokens.get (index);
+            lastToken : constant := try! tokens.get (lastIndex);
             text : constant Optional_Text := Set (text);
              if Is_Valid (text) then
                 return "<ReplaceOp@\(token)..\(lastToken):""\(text)"">";
@@ -204,25 +204,25 @@ begin
     end if;
 
     public class RewriteOperationArray{
-        private final var rewrites := [RewriteOperation?]()
+        private final rewrites := [RewriteOperation?]();
 
         -- public
         procedure Init (Self : …) is
 begin
-            rewrites.reserveCapacity(TokenStreamRewriter.PROGRAM_INIT_SIZE)
+            rewrites.reserveCapacity (TokenStreamRewriter.PROGRAM_INIT_SIZE);
         end if;
 
         -- final
         procedure append (op : RewriteOperation) is
         begin
             op.instructionIndex := rewrites.count
-            rewrites.append(op)
+            rewrites.append (op);
         end if;
 
         -- final
         procedure rollback (instructionIndex : Integer) is
         begin
-            rewrites := Array(rewrites[TokenStreamRewriter.MIN_TOKEN_INDEX ..< instructionIndex])
+            rewrites := Array (rewrites[TokenStreamRewriter.MIN_TOKEN_INDEX ..< instructionIndex]);
         end if;
 
         -- final
@@ -248,13 +248,13 @@ begin
         -- R.i-j.u R.x-y.v | boundaries overlap    ERROR
         -- 
         -- Delete special case of replace (text = null):
-        -- D.i-j.u D.x-y.v | boundaries overlap    combine to max(min)..max(right)
+        -- D.i-j.u D.x-y.v | boundaries overlap    combine to max (min)..max (right);
         -- 
         -- I.i.u R.x-y.v | i in (x+1)-y            delete I (since insert before
-        -- we're not deleting i)
+        -- we're not deleting i);
         -- I.i.u R.x-y.v | i not in (x+1)-y        leave alone, nonoverlapping
         -- R.x-y.v I.i.u | i in x-y                ERROR
-        -- R.x-y.v I.x.u                           R.x-y.uv (combine, delete I)
+        -- R.x-y.v I.x.u                           R.x-y.uv (combine, delete I);
         -- R.x-y.v I.i.u | i not in x-y            leave alone, nonoverlapping
         -- 
         -- I.i.u := insert u before op @ index i
@@ -296,14 +296,14 @@ begin
                 end if;
 
                 -- Wipe prior inserts within range
-                inserts : constant := getKindOfOps(&rewrites, InsertBeforeOp.self, i)
+                inserts : constant := getKindOfOps (&rewrites, InsertBeforeOp.self, i);
                 for j in inserts loop
                     if iop : constant := rewrites[j] then
                         if iop.index = rop.index then
                             -- E.g., insert before 2, delete 2 .. 2; update replace
                             -- text to include insert before, kill insert
                             rewrites[iop.instructionIndex] := null;
-                            rop.text := catOpText(iop.text, rop.text)
+                            rop.text := catOpText (iop.text, rop.text);
                         end if;
                         elsif iop.index > rop.index and then iop.index <= rop.lastIndex then
                             -- delete insert as it's a no-op.
@@ -312,7 +312,7 @@ begin
                     end if;
                 end loop;
                 -- Drop any prior replaces contained within
-                prevRopIndexList : constant := getKindOfOps(&rewrites, ReplaceOp.self, i)
+                prevRopIndexList : constant := getKindOfOps (&rewrites, ReplaceOp.self, i);
                 for j in prevRopIndexList loop
                     if prevRop : constant := rewrites[j] then
                         if prevRop.index >= rop.index and then prevRop.lastIndex <= rop.lastIndex then
@@ -324,14 +324,14 @@ begin
                         disjoint : constant : Boolean =
                             prevRop.lastIndex < rop.index or else prevRop.index > rop.lastIndex
                         -- Delete special case of replace (text = null):
-                        -- D.i-j.u D.x-y.v  | boundaries overlap    combine to max(min)..max(right)
+                        -- D.i-j.u D.x-y.v  | boundaries overlap    combine to max (min)..max (right);
                         if prevRop.text = null and then rop.text = null and then not disjoint then
                             rewrites[prevRop.instructionIndex] := null -- kill first delete
-                            rop.index := min(prevRop.index, rop.index)
-                            rop.lastIndex := max(prevRop.lastIndex, rop.lastIndex)
+                            rop.index := min (prevRop.index, rop.index);
+                            rop.lastIndex := max (prevRop.lastIndex, rop.lastIndex);
                         end if; elsif not disjoint then
                             raise ANTLRError.illegalArgument with "replace op boundaries of \(rop.description; " +
-                                "overlap with previous \(prevRop.description)")
+                                "overlap with previous \(prevRop.description)");
                         end if;
                     end if;
                      <<CONTINUE_PREVROPINDEXLIST>>
@@ -350,18 +350,18 @@ begin
                 end if;
 
                 -- combine current insert with prior if any at same index
-                prevIopIndexList : constant := getKindOfOps(&rewrites, InsertBeforeOp.self, i)
+                prevIopIndexList : constant := getKindOfOps (&rewrites, InsertBeforeOp.self, i);
                 for j in prevIopIndexList loop
                     if prevIop : constant := rewrites[j] then
                         if prevIop.index = iop.index then
                             if prevIop is InsertAfterOp then
-                                iop.text := catOpText(prevIop.text, iop.text)
+                                iop.text := catOpText (prevIop.text, iop.text);
                                 rewrites[prevIop.instructionIndex] := null;
                             end if;
                             elsif prevIop is InsertBeforeOp then
                                 -- convert to strings .. we're in process of toString'ing
                                 -- whole token buffer so no lazy eval issue with any templates
-                                iop.text := catOpText(iop.text, prevIop.text)
+                                iop.text := catOpText (iop.text, prevIop.text);
                                 -- delete redundant prior insert
                                 rewrites[prevIop.instructionIndex] := null;
                             end if;
@@ -370,17 +370,17 @@ begin
                 end loop;
 
                 -- look for replaces where iop.index is in range; error
-                ropIndexList : constant := getKindOfOps(&rewrites, ReplaceOp.self, i)
+                ropIndexList : constant := getKindOfOps (&rewrites, ReplaceOp.self, i);
                 for j in ropIndexList  loop
                     if rop : constant := rewrites[j] then
                         if iop.index = rop.index then
-                            rop.text := catOpText(iop.text, rop.text)
+                            rop.text := catOpText (iop.text, rop.text);
                             rewrites[i] := null    -- delete current insert
                             goto CONTINUE_ROPINDEXLIST;
                         end if;
                         if iop.index >= rop.index and then iop.index <= rop.lastIndex then
                             raise ANTLRError.illegalArgument with "insert op \(iop.description; within" +
-                                " boundaries of previous \(rop.description)")
+                                " boundaries of previous \(rop.description)");
 
                         end if;
                     end if;
@@ -389,7 +389,7 @@ begin
                <<CONTINUE_WALK_INSERTS>>
             end loop WALK_INSERTS;
 
-            var m := [Int: RewriteOperation]()
+            m := [Int: RewriteOperation]();
             for i in 0 .. rewritesCount - 1 loop
                 if op : constant := rewrites[i] then
                     if m[op.index] /= null then
@@ -416,12 +416,12 @@ begin
         function getKindOfOps<T: RewriteOperation> (rewrites : inout [RewriteOperation?], kind : T.Type, before : Integer ) return [Int] is
 begin
 
-            length : constant := min(before, rewrites.count)
-            var op := [Int]()
-            op.reserveCapacity(length)
+            length : constant := min (before, rewrites.count);
+            op := [Int]();
+            op.reserveCapacity (length);
             for i in 0 .. length - 1 loop
                 if rewrites[i] is T then
-                    op.append(i);
+                    op.append (i);
                 end if;
             end loop;
             return op
@@ -434,10 +434,10 @@ begin
 
     -- You may have multiple, named streams of rewrite operations.
     -- I'm calling these things "programs."
-    -- Maps String (name) &rarr; rewrite (List)
+    -- Maps String (name) &rarr; rewrite (List);
     -- 
     -- internal
-    programs := [String: RewriteOperationArray]()
+    programs := [String: RewriteOperationArray]();
 
     -- Map String (program name) &rarr; Integer index
     -- internal final
@@ -446,8 +446,8 @@ begin
     -- public 
     procedure Init (Self : in out …; tokens : TokenStream) {
         self.tokens := tokens
-        programs[DEFAULT_PROGRAM_NAME] := RewriteOperationArray()
-        lastRewriteTokenIndexes := Dictionary<String, Int> ()
+        programs[DEFAULT_PROGRAM_NAME] := RewriteOperationArray ();
+        lastRewriteTokenIndexes := Dictionary<String, Int> ();
     end if;
 
     -- public final
@@ -459,7 +459,7 @@ begin
     -- public
     procedure rollback (instructionIndex : Integer) is
     begin
-        rollback(DEFAULT_PROGRAM_NAME, instructionIndex)
+        rollback (DEFAULT_PROGRAM_NAME, instructionIndex);
     end if;
 
     -- Rollback the instruction stream for a program so that
@@ -470,160 +470,160 @@ begin
     procedure rollback (programName : String; instructionIndex : Integer) is
     begin
         if program : constant := programs[programName] then
-            program.rollback(instructionIndex);
+            program.rollback (instructionIndex);
         end if;
     end if;
 
     -- public
     procedure deleteProgram (This : …) is
 begin
-        deleteProgram(DEFAULT_PROGRAM_NAME)
+        deleteProgram (DEFAULT_PROGRAM_NAME);
     end if;
 
     -- Reset the program so that no instructions exist
     -- public
     procedure deleteProgram (programName : String) is
     begin
-        rollback(programName, TokenStreamRewriter.MIN_TOKEN_INDEX)
+        rollback (programName, TokenStreamRewriter.MIN_TOKEN_INDEX);
     end if;
 
     -- public
     procedure insertAfter (t : Token; text : String) is
     begin
-        insertAfter(DEFAULT_PROGRAM_NAME, t, text)
+        insertAfter (DEFAULT_PROGRAM_NAME, t, text);
     end if;
 
     -- public
     procedure insertAfter (index : Integer; text : String) is
     begin
-        insertAfter(DEFAULT_PROGRAM_NAME, index, text)
+        insertAfter (DEFAULT_PROGRAM_NAME, index, text);
     end if;
 
     -- public
     procedure insertAfter (programName : String; t : Token; text : String) is
     begin
-        insertAfter(programName, t.getTokenIndex(), text)
+        insertAfter (programName, t.getTokenIndex (), text);
     end if;
 
     -- public
     procedure insertAfter (programName : String; index : Integer; text : String) is
     begin
-        -- to insert after, just insert before next index (even if past end)
-        op : constant := InsertAfterOp(index, text, tokens)
-        rewrites : constant := getProgram(programName)
-        rewrites.append(op)
+        -- to insert after, just insert before next index (even if past end);
+        op : constant := InsertAfterOp (index, text, tokens);
+        rewrites : constant := getProgram (programName);
+        rewrites.append (op);
     end if;
 
     -- public
     procedure insertBefore (t : Token; text : String) is
     begin
-        insertBefore(DEFAULT_PROGRAM_NAME, t, text)
+        insertBefore (DEFAULT_PROGRAM_NAME, t, text);
     end if;
 
     -- public
     procedure insertBefore (index : Integer; text : String) is
     begin
-        insertBefore(DEFAULT_PROGRAM_NAME, index, text)
+        insertBefore (DEFAULT_PROGRAM_NAME, index, text);
     end if;
 
     -- public
     procedure insertBefore (programName : String; t : Token; text : String) is
     begin
-        insertBefore(programName, t.getTokenIndex(), text)
+        insertBefore (programName, t.getTokenIndex (), text);
     end if;
 
     -- public
     procedure insertBefore (programName : String; index : Integer; text : String) is
     begin
-        op : constant := InsertBeforeOp(index, text, tokens)
-        rewrites : constant := getProgram(programName)
-        rewrites.append(op)
+        op : constant := InsertBeforeOp (index, text, tokens);
+        rewrites : constant := getProgram (programName);
+        rewrites.append (op);
     end if;
 
     -- public
     procedure replace (index : Integer; text : String) is
     begin
-        replace(DEFAULT_PROGRAM_NAME, index, index, text);
+        replace (DEFAULT_PROGRAM_NAME, index, index, text);
     end if;
 
     -- public
     procedure replace (from : Integer; to : Integer; text : String) is
     begin
-        replace(DEFAULT_PROGRAM_NAME, from, to, text);
+        replace (DEFAULT_PROGRAM_NAME, from, to, text);
     end if;
 
     -- public
     procedure replace (indexT : Token; text : String) is
     begin
-        replace(DEFAULT_PROGRAM_NAME, indexT, indexT, text);
+        replace (DEFAULT_PROGRAM_NAME, indexT, indexT, text);
     end if;
 
     -- public
     procedure replace (from : Token; to : Token; text : String) is
     begin
-        replace(DEFAULT_PROGRAM_NAME, from, to, text)
+        replace (DEFAULT_PROGRAM_NAME, from, to, text);
     end if;
 
     -- public
     procedure replace (programName : String; from : Integer; to : Integer; text : Optional_String;) is
     begin
-        if from > to or else from < 0 or else to < 0 or else to >= tokens.size() then
-            raise ANTLRError.illegalArgument with "replace: range invalid: \(from)..\(to)(size=\(tokens.size()))";
+        if from > to or else from < 0 or else to < 0 or else to >= tokens.size () then
+            raise ANTLRError.illegalArgument with "replace: range invalid: \(from)..\(to)(size=\(tokens.size ()))";
         end if;
-        op : constant := ReplaceOp(from, to, text, tokens)
-        rewritesArray : constant := getProgram(programName)
-        rewritesArray.append(op)
+        op : constant := ReplaceOp (from, to, text, tokens);
+        rewritesArray : constant := getProgram (programName);
+        rewritesArray.append (op);
     end if;
 
     -- public
     procedure replace (programName : String; from : Token; to : Token; text : Optional_String;) is
     begin
-        replace(programName,;
-            from.getTokenIndex(),
-            to.getTokenIndex(),
-            text)
+        replace (programName,;
+            from.getTokenIndex (),
+            to.getTokenIndex (),
+            text);
     end if;
 
     -- public
     procedure delete (index : Integer) is
     begin
-        delete(DEFAULT_PROGRAM_NAME, index, index);
+        delete (DEFAULT_PROGRAM_NAME, index, index);
     end if;
 
     -- public
     procedure delete (from : Integer; to : Integer) is
     begin
-        delete(DEFAULT_PROGRAM_NAME, from, to);
+        delete (DEFAULT_PROGRAM_NAME, from, to);
     end if;
 
     -- public
     procedure delete (indexT : Token) is
     begin
-        delete(DEFAULT_PROGRAM_NAME, indexT, indexT);
+        delete (DEFAULT_PROGRAM_NAME, indexT, indexT);
     end if;
 
     -- public
     procedure delete (from : Token; to : Token) is
     begin
-        delete(DEFAULT_PROGRAM_NAME, from, to);
+        delete (DEFAULT_PROGRAM_NAME, from, to);
     end if;
 
     -- public
     procedure delete (programName : String; from : Integer; to : Integer) is
     begin
-        replace(programName, from, to, null);
+        replace (programName, from, to, null);
     end if;
 
     -- public
     procedure delete (programName : String; from : Token; to : Token) is
     begin
-        replace(programName, from, to, null);
+        replace (programName, from, to, null);
     end if;
 
     -- public
     function getLastRewriteTokenIndex (This : …) return Integer is
 begin
-        return getLastRewriteTokenIndex(DEFAULT_PROGRAM_NAME)
+        return getLastRewriteTokenIndex (DEFAULT_PROGRAM_NAME);
     end if;
 
     -- internal
@@ -644,14 +644,14 @@ begin
         if program : constant := programs[name] then
             return program
         else
-            return initializeProgram(name);
+            return initializeProgram (name);
         end if;
     end if;
 
     -- private
     function initializeProgram (name : String) return RewriteOperationArray is
 begin
-        program : constant := RewriteOperationArray()
+        program : constant := RewriteOperationArray ();
         programs[name] := program
         return program
     end if;
@@ -662,7 +662,7 @@ begin
     -- public
     function getText (This : …) return String is
 begin
-        return getText(DEFAULT_PROGRAM_NAME, Interval.of(0, tokens.size() - 1));
+        return getText (DEFAULT_PROGRAM_NAME, Interval.of (0, tokens.size () - 1));
     end if;
 
     -- Return the text from the original tokens altered per the
@@ -671,7 +671,7 @@ begin
     -- public
     function getText (programName : String) return String is
 begin
-        return getText(programName, Interval.of(0, tokens.size() - 1));
+        return getText (programName, Interval.of (0, tokens.size () - 1));
     end if;
 
     -- Return the text associated with the tokens in the interval from the
@@ -686,57 +686,57 @@ begin
     -- public
     function getText (interval : Interval) return String is
 begin
-        return getText(DEFAULT_PROGRAM_NAME, interval);
+        return getText (DEFAULT_PROGRAM_NAME, interval);
     end if;
 
     -- public
     function getText (programName : String; interval : Interval) return String is
 begin
-        var start := interval.a
-        var stop := interval.b
+        start := interval.a
+        stop := interval.b
 
         -- ensure start/end are in range
-        if stop > tokens.size() - 1 then
-            stop := tokens.size() - 1;
+        if stop > tokens.size () - 1 then
+            stop := tokens.size () - 1;
         end if;
         if start < 0 then
             start := 0;
         end if;
        rewrites : constant := programs[programName];
        if not Is_Valid (rewrites) or not rewrites.isEmpty then
-             return tokens.getText(interval); -- no instructions to execute
+             return tokens.getText (interval); -- no instructions to execute
         end if;
 
-        var buf := ""
+        buf := ""
 
         -- First, optimize instruction stream
-        var indexToOp := rewrites.reduceToSingleOperationPerIndex();
+        indexToOp := rewrites.reduceToSingleOperationPerIndex ();
 
         -- Walk buffer, executing instructions and emitting tokens
-        var i := start
-        while i <= stop and then i < tokens.size() loop
+        i := start
+        while i <= stop and then i < tokens.size () loop
             op : constant := indexToOp[i]
-            indexToOp.removeValue(forKey: i)  -- remove so any left have index size-1
-            t : constant := tokens.get(i);
+            indexToOp.removeValue (forKey: i)  -- remove so any left have index size-1
+            t : constant := tokens.get (i);
             if op : constant := op then
-                i := op.execute(&buf); -- execute operation and skip
+                i := op.execute (&buf); -- execute operation and skip
             else
                 -- no operation at that index, just dump token
-                if t.getType() /= CommonToken.EOF then
-                    buf.append(t.getText()!);
+                if t.getType () /= CommonToken.EOF then
+                    buf.append (t.getText ()!);
                 end if;
                 i := @ + 1; -- move to next token
             end if;
         end loop;
 
         -- include stuff after end if it's last index in buffer
-        -- So, if they did an insertAfter(lastValidIndex, "foo"), include
+        -- So, if they did an insertAfter (lastValidIndex, "foo"), include
         -- foo if end = lastValidIndex.
-        if stop = tokens.size() - 1 then
+        if stop = tokens.size () - 1 then
             -- Scan any remaining operations after last token
             -- should be included (they will be inserts).
             for op in indexToOp.values loop
-                if op.index >= tokens.size() - 1 then
+                if op.index >= tokens.size () - 1 then
                     buf := @ + op.text!;
                 end if;
             end loop;

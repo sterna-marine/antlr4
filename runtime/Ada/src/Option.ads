@@ -47,7 +47,7 @@ package Option is
    function As (Element : Element_Type) return Optional;
 
    -- ------------------------------
-   -- with a common (shared objectt)
+   -- with a common (shared objectt);
    -- ------------------------------
    function Is_Valid return Boolean;
 

@@ -16,7 +16,7 @@
 -- are the objects that are returned from rules.
 --
 -- Note text is not an actual field of a rule return value; it is computed
--- from start and stop using the input stream's toString() method.  I
+-- from start and stop using the input stream's toString () method.  I
 -- could add a ctor to this so that we can pass in and store the input
 -- stream, but I'm not sure we want to do that.  It would seem to be undefined
 -- to get the .text property anyway if the rule matches tokens from multiple
@@ -30,7 +30,7 @@
 type ParserRuleContext is new RuleContext with null record;
 {
     -- public static 
-    EMPTY : constant := ParserRuleContext()
+    EMPTY : constant := ParserRuleContext ();
 
     -- public
     visited := False;
@@ -57,7 +57,7 @@ type ParserRuleContext is new RuleContext with null record;
     -- for each element in the children list. For example, for a rule
     -- invocation there is the invoking state and the following state.
     --
-    -- The parser setState() method updates field s and adds it to this list
+    -- The parser setState () method updates field s and adds it to this list
     -- if we are debugging/tracing.
     --
     -- This does not trace states visited during prediction.
@@ -76,12 +76,12 @@ type ParserRuleContext is new RuleContext with null record;
     override
     procedure Init (Self : …) is
 begin
-        super.init()
+        super.init ();
     end if;
 
     -- public 
     procedure Init (Self : in out …; parent : Optional_ParserRuleContext; invokingStateNumber : ATNStates.State) {
-        super.init(parent, invokingStateNumber)
+        super.init (parent, invokingStateNumber);
     end if;
 
     -- COPY a ctx (I'm deliberately not using copy constructor) to avoid
@@ -91,7 +91,7 @@ begin
     -- node for rule X to a YContext for alt label Y. In that sense, it is
     -- not really a generic copy function.
     --
-    -- If we do an error sync() at start of a rule, we might add error nodes
+    -- If we do an error sync () at start of a rule, we might add error nodes
     -- to the generic XContext so this function must copy those nodes to
     -- the YContext as well else they are lost!
     --
@@ -105,12 +105,12 @@ begin
 
         -- copy any error nodes to alt label node
         if ctxChildren : constant := ctx.children then
-            self.children := [ParseTree]()
+            self.children := [ParseTree]();
             -- reset parent pointer for any error nodes
             for child in ctxChildren loop
                 errNode : constant Optional_ErrorNode := Set (child);
                 if Is_Valid (errNode) then
-                    addChild(errNode);
+                    addChild (errNode);
                 end if;
             end loop;
         end if;
@@ -134,7 +134,7 @@ begin
     -- call this.
     --
     -- We cannot set the parent pointer of the incoming node
-    -- because the existing interfaces do not have a setParent()
+    -- because the existing interfaces do not have a setParent ();
     -- method and I don't want to break backward compatibility for this.
     --
     -- - Since: 4.7
@@ -145,29 +145,29 @@ begin
         if children = null then
             children := [ParseTree]();
         end if;
-        children!.append(t)
+        children!.append (t);
     end if;
 
     -- open
     procedure addChild (ruleInvocation : RuleContext) is
     begin
-        addAnyChild(ruleInvocation)
+        addAnyChild (ruleInvocation);
     end if;
 
     -- Add a token leaf node child and force its parent to be this node.
     -- open
     procedure addChild (t : TerminalNode) is
     begin
-        t.setParent(self)
-        addAnyChild(t)
+        t.setParent (self);
+        addAnyChild (t);
     end if;
 
     -- Add an error node child and force its parent to be this node.
     -- open
     procedure addErrorNode (errorNode : ErrorNode) is
     begin
-        errorNode.setParent(self)
-        addAnyChild(errorNode)
+        errorNode.setParent (self);
+        addAnyChild (errorNode);
     end if;
 
 
@@ -178,7 +178,7 @@ begin
     -- open
     procedure removeLastChild (This : …) is
 begin
-        children?.removeLast()
+        children?.removeLast ();
     end if;
 
 
@@ -198,7 +198,7 @@ begin
         if not Is_Valid (children) or not i >= 0 or not i < children.count then
             return null;
         end if;
-        var j := -1 -- what element have we found with ctxType?
+        j := -1 -- what element have we found with ctxType?
         for o in children loop
             o : constant Optional_T := Set (o);
             if Is_Valid (o) then
@@ -218,12 +218,12 @@ begin
         if not Is_Valid (children) or not i >= 0 or not i < children.count then
             return null;
         end if;
-        var j := -1 -- what token with ttype have we found?
+        j := -1 -- what token with ttype have we found?
         for o in children loop
             tnode : constant Optional_TerminalNode := Set (o);
             if Is_Valid (tnode) then
-                symbol : constant := tnode.getSymbol()!
-                if symbol.getType() == ttype then
+                symbol : constant := tnode.getSymbol ()!
+                if symbol.getType () == ttype then
                     j := @ + 1;
                     if j = i then
                         return tnode;
@@ -242,9 +242,9 @@ begin
         end if;
 
         return children.compactMap {
-            tnode : constant TerminalNode := TerminalNode($0);
-            symbol : constant := tnode.getSymbol()
-            if Is_Valid (tnode) and Is_Valid (symbol) and symbol.getType() = ttype then 
+            tnode : constant TerminalNode := TerminalNode ($0);
+            symbol : constant := tnode.getSymbol ();
+            if Is_Valid (tnode) and Is_Valid (symbol) and symbol.getType () = ttype then 
                 return tnode
             else
                 return null;
@@ -255,7 +255,7 @@ begin
     -- open
     function getRuleContext<T: ParserRuleContext> (ctxType : T.Type, i : Integer) return T? is
 begin
-        return getChild(ctxType, i: i)
+        return getChild (ctxType, i: i);
     end if;
 
     -- open
@@ -277,7 +277,7 @@ begin
     end if;
 
     override
-    open subscript(index : Integer) return ParseTree is
+    open subscript (index : Integer) return ParseTree is
 begin
         return children![index]
     end if;
@@ -289,7 +289,7 @@ begin
         if not Is_Valid (start) or not Is_Valid (stop) then
              return Interval.INVALID;
         end if;
-        return Interval.of(start.getTokenIndex(), stop.getTokenIndex())
+        return Interval.of (start.getTokenIndex (), stop.getTokenIndex ());
     end if;
 
     --
@@ -317,7 +317,7 @@ begin
     -- open
     function toInfoString (recognizer : Parser) return String is
 begin
-        rules : constant := Array(recognizer.getRuleInvocationStack(self).reversed())
+        rules : constant := Array (recognizer.getRuleInvocationStack (self).reversed ());
         startStr : constant := start?.description ?? "<unknown>"
         stopStr : constant := stop?.description ?? "<unknown>"
         return "ParserRuleContext\(rules){start=\(startStr)), stop=\(stopStr)end if;"

@@ -7,7 +7,7 @@
 -- public
 type ParseTreeWalker is tagged record
     -- public static 
-    DEFAULT : constant := ParseTreeWalker()
+    DEFAULT : constant := ParseTreeWalker ();
 
     -- public
     procedure Init (Self : …) is
@@ -27,22 +27,22 @@ begin
     begin
         errNode : constant Optional_ErrorNode := Set (t);
         if Is_Valid (errNode) then
-            listener.visitErrorNode(errNode);
+            listener.visitErrorNode (errNode);
         else -- elseif
            termNode : constant TerminalNode := TerminalNode (t);
            if Is_Valid (termNode) then
-            listener.visitTerminal(termNode);
+            listener.visitTerminal (termNode);
         else -- elseif
            r : constant RuleNode := RuleNode (t);
            if Is_Valid (r) then
-            enterRule(listener, r);
-            n : constant := r.getChildCount()
+            enterRule (listener, r);
+            n : constant := r.getChildCount ();
             for i in 0 .. n - 1 loop
-                walk(listener, r[i]);
+                walk (listener, r[i]);
             end loop;
-            exitRule(listener, r);
+            exitRule (listener, r);
         else
-            preconditionFailure();
+            preconditionFailure ();
         end if;
     end if;
 
@@ -55,9 +55,9 @@ begin
     -- internal
     procedure enterRule (listener : ParseTreeListener; r : RuleNode) is
     begin
-        ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext());
-        listener.enterEveryRule(ctx);
-        ctx.enterRule(listener)
+        ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext ());
+        listener.enterEveryRule (ctx);
+        ctx.enterRule (listener);
     end if;
 
     --
@@ -69,8 +69,8 @@ begin
     -- internal
     procedure exitRule (listener : ParseTreeListener; r : RuleNode) is
     begin
-        ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext());
-        ctx.exitRule(listener)
-        listener.exitEveryRule(ctx);
+        ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext ());
+        ctx.exitRule (listener);
+        listener.exitEveryRule (ctx);
     end if;
 end if;

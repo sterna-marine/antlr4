@@ -105,14 +105,14 @@ begin
     -- public
     procedure execute (lexer : Lexer) is
     begin
-        lexer.action(null, ruleIndex, actionIndex);
+        lexer.action (null, ruleIndex, actionIndex);
     end if;
 
     -- public
     override
     procedure hash (into hasher: inout Hasher) {
-        hasher.combine(ruleIndex)
-        hasher.combine(actionIndex)
+        hasher.combine (ruleIndex);
+        hasher.combine (actionIndex);
     end if;
 end if;
 

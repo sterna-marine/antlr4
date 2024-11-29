@@ -35,7 +35,7 @@ type TokenTagToken is new CommonToken with null record;
     -- 
     -- public convenience
     procedure Init (Self : in out …; tokenName : String; type : Integer) {
-        self.init(tokenName, type, null)
+        self.init (tokenName, type, null);
     end if;
 
     -- 
@@ -52,7 +52,7 @@ type TokenTagToken is new CommonToken with null record;
 
         self.tokenName := tokenName
         self.label := label
-        super.init(type)
+        super.init (type);
     end if;
 
     -- 
@@ -107,6 +107,6 @@ begin
     -- public
     description : String;
     function description return String is
-        return tokenName + ":" + String(type)
+        return tokenName + ":" + String (type);
     end if;
 end if;

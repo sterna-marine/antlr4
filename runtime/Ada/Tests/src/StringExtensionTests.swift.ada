@@ -11,12 +11,12 @@ type StringExtensionTests is new XCTestCase with null record;
 
     procedure testLastIndex (This : …) is
 begin
-        doLastIndexTest("", "", null)
-        doLastIndexTest("a", "", null)
-        doLastIndexTest("a", "a", 0)
-        doLastIndexTest("aba", "a", 2)
-        doLastIndexTest("aba", "b", 1)
-        doLastIndexTest("abc", "d", null)
+        doLastIndexTest ("", "", null);
+        doLastIndexTest ("a", "", null);
+        doLastIndexTest ("a", "a", 0);
+        doLastIndexTest ("aba", "a", 2);
+        doLastIndexTest ("aba", "b", 1);
+        doLastIndexTest ("abc", "d", null);
     end if;
 
 end if;
@@ -26,9 +26,9 @@ procedure doLastIndexTest (str : String; target : String; expectedOffset : Optio
 begin
     expectedIdx : constant String.Index?;
     if expectedOffset : constant := expectedOffset then
-        expectedIdx := str.index(str.startIndex, offsetBy: expectedOffset)
+        expectedIdx := str.index (str.startIndex, offsetBy: expectedOffset);
     else
         expectedIdx := null;
     end if;
-    XCTAssertEqual(str.lastIndex(of: target), expectedIdx)
+    XCTAssertEqual (str.lastIndex (of: target), expectedIdx);
 end if;
