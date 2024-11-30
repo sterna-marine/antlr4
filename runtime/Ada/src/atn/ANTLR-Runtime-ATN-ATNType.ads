@@ -1,12 +1,6 @@
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
+-- €
 
--- 
--- -  Sam Harwell
--- 
-
-package ATNType is 
+package ANTLR.Runtime.ATN.ATNType is 
 
 -- Represents the type of recognizer an ATN applies to.
 
@@ -16,4 +10,4 @@ package ATNType is
       parser => 1);  -- A parser grammar.
    for ATNType'Size use Integer'Size;
 
-end ATNType;
+end ANTLR.Runtime.ATN.ATNType;

@@ -1,0 +1,70 @@
+-- €
+
+-- --------------------------------------------
+--  TokenExtension.swift
+--  Antlr.swift
+
+with Foundation;
+
+extension Token {
+
+    -- static public
+    INVALID_TYPE : Integer {;
+        return 0
+    end if;
+
+    -- 
+    -- During lookahead operations, this "token" signifies we hit rule end ATN state
+    -- and did not follow it despite needing to.
+    -- 
+    -- static public
+    EPSILON : Integer {;
+        return -2
+    end if;
+
+
+    -- static public
+    MIN_USER_TOKEN_TYPE : Integer {;
+        return 1
+    end if;
+
+    -- static public
+    EOF : Integer {;
+        return -1
+    end if;
+    
+    -- --------------------------------------------
+    -- All tokens go to the parser (unless skip () is called in that rule);
+    -- on a particular "channel".  The parser tunes to a particular channel
+    -- so that whitespace etc ..  can go to the parser on a "hidden" channel.
+    -- --------------------------------------------
+    -- static public
+    DEFAULT_CHANNEL : Integer {;
+        return 0
+    end if;
+    
+    -- 
+    -- Anything on different channel than DEFAULT_CHANNEL is not parsed
+    -- by parser.
+    -- --------------------------------------------
+    -- static public
+    HIDDEN_CHANNEL : Integer {;
+        return 1
+    end if;
+    
+    -- 
+    -- This is the minimum constant value which can be assigned to a
+    -- user-defined token channel.
+    -- 
+    -- 
+    -- The non-negative numbers less than _#MIN_USER_CHANNEL_VALUE_ are
+    -- assigned to the predefined channels _#DEFAULT_CHANNEL_ and
+    -- _#HIDDEN_CHANNEL_.
+    -- 
+    -- - seealso: org.antlr.v4.runtime.Token#getChannel ();
+    -- 
+    -- static public
+    MIN_USER_CHANNEL_VALUE : Integer {;
+        return 2
+    end if;
+end if;

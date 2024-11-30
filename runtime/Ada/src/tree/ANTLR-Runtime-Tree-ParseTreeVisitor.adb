@@ -1,0 +1,69 @@
+-- €
+
+
+-- 
+-- This interface defines the basic notion of a parse tree visitor. Generated
+-- visitors implement this interface and the `XVisitor` interface for
+-- grammar `X`.
+-- 
+-- - Parameter <T>: The return type of the visit operation. Use _Void_ for
+-- operations with no return type.
+-- 
+
+
+open class ParseTreeVisitor<T> {
+    -- public
+    procedure Init (Self : …) is
+begin
+
+    end if;
+    -- typealias T
+    -- 
+    -- Visit a parse tree, and return a user-defined result of the operation.
+    -- 
+    -- - Parameter tree: The _org.antlr.v4.runtime.tree.ParseTree_ to visit.
+    -- - Returns: The result of visiting the parse tree.
+    -- 
+    -- open
+    function visit (tree : ParseTree) return Optional_T is
+   begin
+        fatalError (#function + " must be overridden");
+    end if;
+
+    -- 
+    -- Visit the children of a node, and return a user-defined result of the
+    -- operation.
+    -- 
+    -- - Parameter node: The _org.antlr.v4.runtime.tree.RuleNode_ whose children should be visited.
+    -- - Returns: The result of visiting the children of the node.
+    -- 
+    -- open
+    function visitChildren (node : RuleNode) return Optional_T is
+   begin
+        fatalError (#function + " must be overridden");
+    end if;
+
+    -- 
+    -- Visit a terminal node, and return a user-defined result of the operation.
+    -- 
+    -- - Parameter node: The _org.antlr.v4.runtime.tree.TerminalNode_ to visit.
+    -- - Returns: The result of visiting the node.
+    -- 
+    -- open
+    function visitTerminal (node : TerminalNode) return Optional_T is
+   begin
+        fatalError (#function + " must be overridden");
+    end if;
+
+    -- 
+    -- Visit an error node, and return a user-defined result of the operation.
+    -- 
+    -- - Parameter node: The _org.antlr.v4.runtime.tree.ErrorNode_ to visit.
+    -- - Returns: The result of visiting the node.
+    -- 
+    -- open
+    function visitErrorNode (node : ErrorNode) return Optional_T is
+   begin
+        fatalError (#function + " must be overridden");
+    end if;
+end if;

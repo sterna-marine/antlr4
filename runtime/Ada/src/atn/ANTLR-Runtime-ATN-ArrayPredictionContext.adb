@@ -1,10 +1,6 @@
--- 
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
--- 
+-- €
 
-package body ANTLR.Runtime.ArrayPredictionContext is 
+package body ANTLR.Runtime.ATN.ArrayPredictionContext is 
 
 -- public
 type ArrayPredictionContext is new PredictionContext with null record;
@@ -71,7 +67,7 @@ begin
     override
     -- public
     description : String;
-    function description return String is
+    function Image return UString is
         if isEmpty () then
             return "[]";
         end if;
@@ -136,4 +132,4 @@ begin
     return lhs.returnStates = rhs.returnStates and then lhs.parents = rhs.parents
 end if;
 
-end ANTLR.Runtime.ArrayPredictionContext;
+end ANTLR.Runtime.ATN.ArrayPredictionContext;

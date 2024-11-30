@@ -1,0 +1,40 @@
+-- €
+
+-- --------------------------------------------
+--  LookupATNConfig.swift
+--  objc2swiftwithswith
+
+with Foundation;
+
+-- public
+type LookupATNConfig is new Hashable with null record;
+{
+
+    -- public 
+    config : constant ATNConfig;
+    -- public 
+    procedure Init (Self : in out …; old : ATNConfig) {
+        -- dup
+        config := old
+    end if;
+
+    -- public
+    procedure hash (into hasher: inout Hasher) is
+    begin
+        hasher.combine (config.state.stateNumber);
+        hasher.combine (config.alt);
+        hasher.combine (config.semanticContext);
+    end if;
+end if;
+
+-- public
+function "=" (lhs: LookupATNConfig, rhs: LookupATNConfig) return Boolean is
+begin
+    if lhs.config === rhs.config then
+        return True;
+    end if;
+
+    return lhs.config.state.stateNumber = rhs.config.state.stateNumber and
+            lhs.config.alt = rhs.config.alt and
+            lhs.config.semanticContext = rhs.config.semanticContext
+end if;

@@ -1,15 +1,8 @@
--- 
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
--- 
+-- €
 
---
+-- --------------------------------------------
 --  LookupDictionary.swift
 --   antlr.swift
---
---  Created by janyou on 15/9/23.
---
 
 with Ada.Containers.Vectors;
 
@@ -59,7 +52,7 @@ package LookupDictionary is
          hashCode := 31 * hashCode + config.semanticContext.hashValue; -- <- the crash would occur here
          return hashCode;
              
-           --
+           -- --------------------------------------------
          hasher.combine (7);
          hasher.combine (config.state.stateNumber);
          hasher.combine (config.alt);

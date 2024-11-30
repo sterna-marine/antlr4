@@ -1,13 +1,9 @@
---
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
---
+-- €
 
 with ANTLR.Runtime.ATN.ATNState;
 use ANTLR.Runtime.ATN;
 
-package body ANTLR.Runtime.ATNDeserializer is
+package body ANTLR.Runtime.ATN.ATNDeserializer is
 
 -- public
 type ATNDeserializer is tagged record
@@ -40,9 +36,9 @@ begin
         p := @ + 1;
         atn : constant := ATN (grammarType, maxTokenType);
 
-        --
+        -- --------------------------------------------
         -- STATES
-        --
+        -- --------------------------------------------
         loopBackStateNumbers := [(LoopEndState, Int)]();
         endStateNumbers := [(BlockStartState, Int)]();
         nstates : constant := data[p]
@@ -101,9 +97,9 @@ begin
             (atn.states[stateNumber] as! RuleStartState).isPrecedenceRule := True;
         end loop;
 
-        --
+        -- --------------------------------------------
         -- RULES
-        --
+        -- --------------------------------------------
         nrules : constant := data[p]
         p := @ + 1;
         ruleToTokenType := [Int]();
@@ -127,9 +123,9 @@ begin
 
         fillRuleToStopState (atn);
 
-        --
+        -- --------------------------------------------
         -- MODES
-        --
+        -- --------------------------------------------
         nmodes : constant := data[p]
         p := @ + 1;
         for _ in 0 .. nmodes - 1 loop
@@ -138,16 +134,16 @@ begin
             atn.appendModeToStartState (atn.states[s] as! TokensStartState);
         end loop;
 
-        --
+        -- --------------------------------------------
         -- SETS
-        --
+        -- --------------------------------------------
         sets := [IntervalSet]();
 
         readSets (data, &p, &sets, readInt);
 
-        --
+        -- --------------------------------------------
         -- EDGES
-        --
+        -- --------------------------------------------
         nedges : constant := data[p]
         p := @ + 1;
         for _ in 0 .. nedges - 1 loop
@@ -167,9 +163,9 @@ begin
         deriveEdgesForRuleStopStates (atn);
         validateStates (atn);
 
-        --
+        -- --------------------------------------------
         -- DECISIONS
-        --
+        -- --------------------------------------------
         ndecisions : constant := data[p]
         p := @ + 1;
         if (ndecisions >= 1) then
@@ -182,9 +178,9 @@ begin
             end loop;
         end if;
 
-        --
+        -- --------------------------------------------
         -- LEXER ACTIONS
-        --
+        -- --------------------------------------------
         if atn.grammarType = ATNType.lexer then
             length : constant := data[p]
             p := @ + 1;
@@ -346,22 +342,22 @@ begin
     end if;
 
 
-    --
+    -- --------------------------------------------
     -- Analyze the _org.antlr.v4.runtime.atn.StarLoopEntryState_ states in the specified ATN to set
     -- the _org.antlr.v4.runtime.atn.StarLoopEntryState#precedenceRuleDecision_ field to the
     -- correct value.
-    --
+    -- --------------------------------------------
     -- - parameter atn: The ATN.
-    --
+    -- --------------------------------------------
     -- internal
     procedure markPrecedenceDecisions (atn : ATN) is
     begin
         for state in atn.states loop
-            --
+            -- --------------------------------------------
             -- We analyze the ATN to determine if this ATN decision state is the
             -- decision for the closure block that determines whether a
             -- precedence rule should continue or complete.
-            --
+            -- --------------------------------------------
             state : constant StarLoopEntryState := StarLoopEntryState (state);
             stateRuleIndex : constant := state.ruleIndex;
             if not (Is_Valid (state) and Is_Valid (stateRuleIndex) and atn.ruleToStartState[stateRuleIndex].isPrecedenceRule) then
@@ -641,4 +637,5 @@ begin
                   return LexerTypeAction (data1);
          end case;
     end if;
-end ANTLR.Runtime.ATNDeserializer;
+
+end ANTLR.Runtime.ATN.ATNDeserializer;

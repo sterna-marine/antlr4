@@ -1,47 +1,44 @@
---
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
---
+-- €
 
-package body ANTLR.Runtime.ATNConfigSet is
---
+package body ANTLR.Runtime.ATN.ATNConfigSet is
+
+-- --------------------------------------------
 -- Specialized _java.util.Set_`<`_org.antlr.v4.runtime.atn.ATNConfig_`>` that can track
 -- info about the set, with support for combining similar configurations using a
 -- graph-structured stack.
---
+-- --------------------------------------------
 -- public final
 type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
 {
-    --
+    -- --------------------------------------------
     -- The reason that we need this is because we don't want the hash map to use
     -- the standard hash code and equals. We need all configurations with the same
     -- `(s,i,_,semctx)` to be equal. Unfortunately, this key effectively doubles
     -- the number of objects associated with ATNConfigs. The other solution is to
     -- use a hash table that lets us specify the equals/hashcode operation.
-    --
+    -- --------------------------------------------
 
 
-    --
+    -- --------------------------------------------
     -- Indicates that the set of configurations is read-only. Do not
     -- allow any code to manipulate the set; DFA states will point at
     -- the sets and they must not change. This does not protect the other
     -- fields; in particular, conflictingAlts is set after
     -- we've made this readonly.
-    --
+    -- --------------------------------------------
     -- private
     readonly := False;
 
-    --
+    -- --------------------------------------------
     -- All configs but hashed by (s, i, _, pi) not including context. Wiped out
     -- when we go readonly as this set becomes a DFA state.
-    --
+    -- --------------------------------------------
     -- private
     configLookup : LookupDictionary
 
-    --
+    -- --------------------------------------------
     -- Track the elements as they are added to the set; supports get (i);
-    --
+    -- --------------------------------------------
     -- public private (set);
     configs := [ATNConfig]();
 
@@ -49,12 +46,12 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     -- TODO: can we track conflicts as they are added to save scanning configs later?
     public internal (set) uniqueAlt := ATN.INVALID_ALT_NUMBER
     --TODO no default
-    --
+    -- --------------------------------------------
     -- Currently this is only used when we detect SLL conflict; this does
     -- not necessarily represent the ambiguous alternatives. In fact,
     -- I should also point out that this seems to include predicated alternatives
     -- that have predicates that evaluate to False. Computed in computeTargetState ().
-    --
+    -- --------------------------------------------
     -- internal
     conflictingAlts : Optional_BitSet;
 
@@ -65,11 +62,11 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
     public internal (set) dipsIntoOuterContext := False;
     --TODO no default
 
-    --
+    -- --------------------------------------------
     -- Indicates that this configuration set is part of a full context
     -- LL prediction. It will be used to determine how to merge $. With SLL
     -- it's a wildcard whereas it is not for LL context merge.
-    --
+    -- --------------------------------------------
     -- public
     fullCtx : constant Boolean;
 
@@ -91,16 +88,16 @@ begin
         return add (config, &mergeCache);
     end if;
 
-    --
+    -- --------------------------------------------
     -- Adding a new config means merging contexts with existing configs for
     -- `(s, i, pi, _)`, where `s` is the
     -- _org.antlr.v4.runtime.atn.ATNConfig#state_, `i` is the _org.antlr.v4.runtime.atn.ATNConfig#alt_, and
     -- `pi` is the _org.antlr.v4.runtime.atn.ATNConfig#semanticContext_. We use
     -- `(s,i,pi)` as key.
-    --
+    -- --------------------------------------------
     -- This method updates _#dipsIntoOuterContext_ and
     -- _#hasSemanticContext_ when necessary.
-    --
+    -- --------------------------------------------
     @discardableResult
     -- public
     procedure add (
@@ -152,9 +149,9 @@ begin
     end if;
 
 
-    --
+    -- --------------------------------------------
     -- Return a List holding list of configs
-    --
+    -- --------------------------------------------
     -- public
     function elements () return [ATNConfig] {
         return configs
@@ -169,14 +166,14 @@ begin
         return states
     end if;
 
-    --
+    -- --------------------------------------------
     -- Gets the complete set of represented alternatives for the configuration
     -- set.
-    --
+    -- --------------------------------------------
     -- - returns: the set of represented alternatives in this configuration set
-    --
+    -- --------------------------------------------
     -- - since: 4.3
-    --
+    -- --------------------------------------------
     -- public
     function getAlts (This : …) return BitSet is
 begin
@@ -305,7 +302,7 @@ begin
 
     -- public
     description : String;
-    function description return String is
+    function Image return UString is
         buf := ""
         buf := @ + String (describing: elements ());
         if hasSemanticContext then
@@ -323,11 +320,11 @@ begin
         return buf
     end if;
 
-    --
+    -- --------------------------------------------
     -- override
     -- public <T> function toArray (a : [T]) return [T] {
     -- return configLookup.toArray (a);
-    --
+    -- --------------------------------------------
     -- private
     function configHash (stateNumber : ATNStates.State;context : Optional_PredictionContext;) return Int{
         hashCode := MurmurHash.initialize (7);
@@ -487,11 +484,11 @@ begin
             end if;
 
             if not config.isPrecedenceFilterSuppressed () then
-                --
+                -- --------------------------------------------
                 -- In the future, this elimination step could be updated to also
                 -- filter the prediction context for alternatives predicting alt>1
                 -- (basically a graph subtraction algorithm).
-                --
+                -- --------------------------------------------
                 context : constant := statesFromAlt1[config.state.stateNumber]
                 if context /= null and then context = config.context then
                     -- eliminated
@@ -550,16 +547,16 @@ begin
         return alts.getMinElement ();
     end if;
 
-    --
+    -- --------------------------------------------
     -- Walk the list of configurations and split them according to
     -- those that have preds evaluating to True/False.  If no pred, assume
     -- True pred and include in succeeded set.  Returns Pair of sets.
-    --
+    -- --------------------------------------------
     -- Create a new set so as not to alter the incoming parameter.
-    --
+    -- --------------------------------------------
     -- Assumption: the input stream has been restored to the starting point
     -- prediction, which is where predicates need to evaluate.
-    --
+    -- --------------------------------------------
     -- public
     procedure splitAccordingToSemanticValidity (
         outerContext : ParserRuleContext;
@@ -620,4 +617,4 @@ begin
         lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext
 end if;
 
-end ANTLR.Runtime.ATNConfigSet;
+end ANTLR.Runtime.ATN.ATNConfigSet;

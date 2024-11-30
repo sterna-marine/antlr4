@@ -1,0 +1,36 @@
+-- €
+
+-- The basic notion of a tree has a parent, a payload, and a list of children.
+-- It is the most abstract interface for all the trees used by ANTLR.
+-- 
+
+-- public
+type Tree is interface;
+    -- The parent of this node. If the return value is null, then this
+    -- node is the root of the tree.
+    -- 
+    function getParent () return Tree?
+
+    -- 
+    -- This method returns whatever object represents the data at this note. For
+    -- example, for parse trees, the payload can be a _org.antlr.v4.runtime.Token_ representing
+    -- a leaf node or a _org.antlr.v4.runtime.RuleContext_ object representing a rule
+    -- invocation. For abstract syntax trees (ASTs), this is a _org.antlr.v4.runtime.Token_
+    -- object.
+    -- 
+    function getPayload () return AnyObject
+
+    -- If there are children, get the `i`th value indexed from 0.
+    function getChild (i : Integer) return Tree?
+
+    -- How many children are there? If there is none, then this
+    -- node represents a leaf node.
+    -- 
+    function getChildCount () return Integer;
+
+    -- Print out a whole tree, not just a node, in LISP format
+    -- `(root child1 .. childN)`. Print just a node if this is a leaf.
+    -- 
+    function toStringTree () return String
+
+end if;

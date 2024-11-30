@@ -1,10 +1,9 @@
--- 
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
--- 
+-- €
 
 with Option;
+with ANTLR.Runtime.Misc.IntervalSet;
+
+use ANTLR.Runtime.Misc;
 
 package ANTLR.Runtime.ATN.ATNStates is
 
@@ -68,36 +67,7 @@ package ANTLR.Runtime.ATN.ATNStates is
 -- 
 -- 
 -- 
-
-    -- public static 
-    INVALID_STATE_NUMBER : constant Integer := -1;
-    -- public static 
-    INVALID_TYPE : constant Integer := 0;
-    -- public static 
-    BASIC : constant Integer := 1;
-    -- public static 
-    RULE_START : constant Integer := 2;
-    -- public static 
-    BLOCK_START : constant Integer := 3;
-    -- public static 
-    PLUS_BLOCK_START : constant Integer := 4;
-    -- public static 
-    STAR_BLOCK_START : constant Integer := 5;
-    -- public static 
-    TOKEN_START : constant Integer := 6;
-    -- public static 
-    RULE_STOP : constant Integer := 7;
-    -- public static 
-    BLOCK_END : constant Integer := 8;
-    -- public static 
-    STAR_LOOP_BACK : constant Integer := 9;
-    -- public static 
-    STAR_LOOP_EN : constant Integer := 10;
-    -- public static 
-    PLUS_LOOP_BACK : constant Integer := 11;
-    -- public static 
-    LOOP_END : constant Integer := 12;
-
+   
    type State is (
       INVALID_STATE_NUMBER,
       INVALID,
@@ -129,9 +99,16 @@ package ANTLR.Runtime.ATN.ATNStates is
       PLUS_LOOP_BACK => 11,
       LOOP_END => 12);
 
+   package Option_IntervalSet is new Option (IntervalSet);
+
    package State_Container is new Ada.Cantainer.Vector (
       Index_Type : Natural;
       Element_Type : State;
+      "=" : "=");
+
+   package Transition_Container is new Ada.Cantainer.Vector (
+      Index_Type : Natural;
+      Element_Type : Transition;
       "=" : "=");
 
 -- public
@@ -139,13 +116,13 @@ type ATNState is new Hashable with record
     -- Which ATN are we in?
     -- 
     -- public final 
-     atn: Optional_ATN;
+     atn : Optional_ATN;
 
     -- public internal (set) final var
-    stateNumber: Integer := INVALID_STATE_NUMBER;
+    stateNumber : State := INVALID_STATE_NUMBER;
 
     -- public internal (set) final var
-    ruleIndex: Optional_Int;
+    ruleIndex: Optional_Integer;
     -- at runtime, we don't have Rule objects
 
     -- public private (set) final var
@@ -155,13 +132,13 @@ type ATNState is new Hashable with record
     -- Track the transitions emanating from this ATN state.
     -- 
     -- internal private (set) final
-    transitions := [Transition]();
+    transitions : Transition_Container.Vector := Transition_Container.Empty_Vector;
 
     -- 
     -- Used to cache lookahead during parsing, not used during construction
     -- 
     -- public internal (set) final var
-    nextTokenWithinRule: Optional_IntervalSet;
+    nextTokenWithinRule: Option_IntervalSet.Optional;
    end record;
 
 
@@ -191,7 +168,7 @@ begin
 
     -- public
     description : String;
-    function description return String is
+    function Image return UString is
         --return "MyClass \(string)"
         return String (stateNumber);
     end if;

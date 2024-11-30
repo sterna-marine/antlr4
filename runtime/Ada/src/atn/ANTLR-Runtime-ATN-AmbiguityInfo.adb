@@ -1,11 +1,6 @@
--- 
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
--- 
+-- €
 
 package body ANTLR.Runtime.ATN.AmbiguityInfo is 
-
 
 -- 
 -- This class represents profiling event information for an ambiguity.
@@ -72,4 +67,5 @@ type AmbiguityInfo is new DecisionEventInfo with null record;
         super.init (decision, configs, input, startIndex, stopIndex, fullCtx);
 
     end if;
+
 end ANTLR.Runtime.ATN.AmbiguityInfo;

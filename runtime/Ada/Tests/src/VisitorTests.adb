@@ -1,6 +1,4 @@
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
+-- €
 
 with Aunit;
 with Antlr4;
@@ -16,10 +14,10 @@ begin
         ("testVisitTerminalNode", testVisitTerminalNode);
     ]
     
-    --
+    -- --------------------------------------------
     -- This test verifies the basic behavior of visitors, with an emphasis on
     -- {@link AbstractParseTreeVisitor#visitTerminal}.
-    --
+    -- --------------------------------------------
     procedure testVisitTerminalNode (This : …) is
 begin
         lexer : constant := VisitorBasicLexer (ANTLRInputStream ("A"));
@@ -57,10 +55,10 @@ begin
         XCTAssertEqual (expected, result);
     end if;
 
-    --
+    -- --------------------------------------------
     -- This test verifies the basic behavior of visitors, with an emphasis on
     -- {@link AbstractParseTreeVisitor#visitErrorNode}.
-    --
+    -- --------------------------------------------
     procedure testVisitErrorNode (This : …) is
 begin
         lexer : constant := VisitorBasicLexer (ANTLRInputStream (""));
@@ -122,11 +120,11 @@ begin
         XCTAssertEqual (expected, result);
     end if;
 
-    --
+    -- --------------------------------------------
     -- This test verifies that {@link AbstractParseTreeVisitor#visitChildren} does not call
     -- {@link ParseTreeVisitor#visit} after {@link AbstractParseTreeVisitor#shouldVisitNextChild} returns
     -- {@code False}.
-    --
+    -- --------------------------------------------
     procedure testShouldNotVisitEOF (This : …) is
 begin
         input : constant := "A"
@@ -157,11 +155,11 @@ begin
         XCTAssertEqual (expected, result);
     end if;
 
-    --
+    -- --------------------------------------------
     -- This test verifies that {@link AbstractParseTreeVisitor#shouldVisitNextChild} is called before visiting the first
     -- child. It also verifies that {@link AbstractParseTreeVisitor#defaultResult} provides the default return value for
     -- visiting a tree.
-    --
+    -- --------------------------------------------
     procedure testShouldNotVisitTerminal (This : …) is
 begin
         input : constant := "A"
@@ -199,9 +197,9 @@ begin
         XCTAssertEqual (expected, result);
     end if;
 
-    --
+    -- --------------------------------------------
     -- This test verifies that the visitor correctly dispatches calls for labeled outer alternatives.
-    --
+    -- --------------------------------------------
     procedure testCalculatorVisitor (This : …) is
 begin
         input : constant := "2 + 8 / 2"
@@ -214,19 +212,19 @@ begin
         type Visitor is new VisitorCalcBaseVisitor<Int> with null record;
 {
             override
-            function visitS (ctx : VisitorCalcParser.SContext) return Optional_Int is
+            function visitS (ctx : VisitorCalcParser.SContext) return Optional_Integer is
    begin
                 return visit (ctx.expr ()!);
             end if;
 
             override
-            function visitNumber (ctx : VisitorCalcParser.NumberContext) return Optional_Int is
+            function visitNumber (ctx : VisitorCalcParser.NumberContext) return Optional_Integer is
    begin
                 return Integer ((ctx.INT ()?.getText ())!);
             end if;
 
             override
-            function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Optional_Int is
+            function visitMultiply (ctx : VisitorCalcParser.MultiplyContext) return Optional_Integer is
    begin
                 left : constant := visit (ctx.expr (0)!)!
                 right : constant := visit (ctx.expr (1)!)!
@@ -238,7 +236,7 @@ begin
             end if;
 
             override
-            function visitAdd (ctx : VisitorCalcParser.AddContext) return Optional_Int is
+            function visitAdd (ctx : VisitorCalcParser.AddContext) return Optional_Integer is
    begin
                 left : constant := visit (ctx.expr (0)!)!
                 right : constant := visit (ctx.expr (1)!)!

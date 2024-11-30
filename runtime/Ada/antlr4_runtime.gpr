@@ -1,7 +1,7 @@
 with "config/antlr4_config.gpr";
 project antlr4_runtime is
 
-   for Source_Dirs use ("src/**", "config/");
+   for Source_Dirs use ("src/**", "lib/**", "config/");
    for Object_Dir use "build/" & Antlr4_Config.Build_Profile & "/obj";
    for Exec_Dir use "build/" & Antlr4_Config.Build_Profile & "/bin";
    for Create_Missing_Dirs use "True";

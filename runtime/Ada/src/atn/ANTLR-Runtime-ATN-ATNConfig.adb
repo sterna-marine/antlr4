@@ -1,23 +1,19 @@
---
--- Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
---
+-- €
 
 with ATNState;
 with Ada.Containers.Hashed_Maps;
 with AdaForge.MurMur3_Hash;
 with Ada.Strings.Unbounded;
 
-package body ANTLR.Runtime.ATNConfig is
---
+package body ANTLR.Runtime.ATN.ATNConfig is
+-- --------------------------------------------
 -- A tuple: (ATN state, predicted alt, syntactic, semantic context).
 -- The syntactic context is a graph-structured stack node whose
 -- path (s) to the root is the rule invocation (s);
 -- chain used to arrive at the state.  The semantic context is
 -- the tree of semantic predicates encountered before reaching
 -- an ATN state.
---
+-- --------------------------------------------
 
 -- private static let 
    SUPPRESS_PRECEDENCE_FILTER : constant Integer := 16#4000_0000#;
@@ -61,19 +57,19 @@ package body ANTLR.Runtime.ATNConfig is
       -- The stack of invoking states leading to the rule/states associated
       -- with this config.  We track only those contexts pushed during
       -- execution of the ATN simulator.
-      --
+      -- --------------------------------------------
       -- We cannot execute predicates dependent upon local context unless
       -- we know for sure we are in the correct context. Because there is
       -- no way to do this efficiently, we simply cannot evaluate
       -- dependent predicates unless we are in the rule that initially
       -- invokes the ATN simulator.
-      --
-      --
+      -- --------------------------------------------
+      -- --------------------------------------------
       -- closure () tracks the depth of how far we dip into the outer context:
       -- depth &gt; 0.  Note that it may not be totally accurate depth since I
       -- don't ever decrement. TODO: make it a boolean then
-      --
-      --
+      -- --------------------------------------------
+      -- --------------------------------------------
       -- For memory efficiency, the _#isPrecedenceFilterSuppressed_ method
       -- is also backed by this field. Since the field is publicly accessible, the
       -- highest bit which would not cause the value to become negative is used to
@@ -83,7 +79,7 @@ package body ANTLR.Runtime.ATNConfig is
       -- constructors as well as certain operations like
       -- _org.antlr.v4.runtime.atn.ATNConfigSet#add (org.antlr.v4.runtime.atn.ATNConfig, DoubleKeyMap)_ method are
       -- __completely__ unaffected by the change.
-      --
+      -- --------------------------------------------
       -- public internal (set) final var
       reachesIntoOuterContext : Integer := 0;
 
@@ -149,11 +145,11 @@ package body ANTLR.Runtime.ATNConfig is
         self.reachesIntoOuterContext := c.reachesIntoOuterContext;
    end Init;
 
-    --
+    -- --------------------------------------------
     -- This method gets the value of the _#reachesIntoOuterContext_ field
     -- as it existed prior to the introduction of the
     -- _#isPrecedenceFilterSuppressed_ method.
-    --
+    -- --------------------------------------------
 -- public final 
    function getOuterContextDepth (This : ATNConfig) return Integer
       is This.reachesIntoOuterContext and not SUPPRESS_PRECEDENCE_FILTER;
@@ -214,11 +210,11 @@ package body ANTLR.Runtime.ATNConfig is
       return VString.To_String (buf);
     end toString;
 
---
+-- --------------------------------------------
 -- An ATN configuration is equal to another if both have
 -- the same state, they predict the same alternative, and
 -- syntactic/semantic contexts are the same.
---
+-- --------------------------------------------
 -- public 
    function "=" (lhs: ATNConfig, rhs: ATNConfig) return Boolean is
    begin
@@ -252,4 +248,4 @@ package body ANTLR.Runtime.ATNConfig is
     return lhs.semanticContext = rhs.semanticContext;
    end "=";
 
-end ANTLR.Runtime.ATNConfig;
+end ANTLR.Runtime.ATN.ATNConfig;
