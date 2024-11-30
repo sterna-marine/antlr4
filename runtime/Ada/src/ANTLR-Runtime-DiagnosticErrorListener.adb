@@ -71,7 +71,7 @@ begin
             decision : constant := getDecisionDescription (recognizer, dfa);
             conflictingAlts : constant := getConflictingAlts (ambigAlts, configs);
             text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
-            message : constant := "reportAmbiguity d=\(decision): ambigAlts=\(conflictingAlts), input='\(text)'"
+            message : constant := "reportAmbiguity d=" & decision'Image & ": ambigAlts=" & conflictingAlts'Image & ", input='" & text'Image & "'"
             recognizer.notifyErrorListeners (message);
     end if;
 
@@ -85,7 +85,7 @@ begin
         configs : ATNConfigSet) {
             decision : constant := getDecisionDescription (recognizer, dfa);
             text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
-            message : constant := "reportAttemptingFullContext d=\(decision), input='\(text)'"
+            message : constant := "reportAttemptingFullContext d=" & decision'Image & ", input='" & text'Image & "'"
             recognizer.notifyErrorListeners (message);
     end if;
 
@@ -99,7 +99,7 @@ begin
         configs : ATNConfigSet) {
             decision : constant := getDecisionDescription (recognizer, dfa);
             text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
-            message : constant := "reportContextSensitivity d=\(decision), input='\(text)'"
+            message : constant := "reportContextSensitivity d=" & decision'Image & ", input='" & text'Image & "'"
             recognizer.notifyErrorListeners (message);
     end if;
 
@@ -119,7 +119,7 @@ begin
         if ruleName.isEmpty then
             return String (decision);
         end if;
-        return "\(decision) (\(ruleName))"
+        return "" & decision'Image & " (" & ruleName'Image & ")"
     end if;
 
     -- 

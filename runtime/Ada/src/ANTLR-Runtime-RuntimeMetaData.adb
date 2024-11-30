@@ -147,10 +147,10 @@ begin
                 not (getMajorMinorVersion (runtimeVersion) == (getMajorMinorVersion (compileTimeVersion)));
 
         if runtimeConflictsWithGeneratingTool then
-            print ("ANTLR Tool version \(generatingToolVersion) used for code generation does not match the current runtime version \(runtimeVersion)");
+            print ("ANTLR Tool version " & generatingToolVersion'Image & " used for code generation does not match the current runtime version " & runtimeVersion'Image);
         end if;
         if runtimeConflictsWithCompileTimeTool then
-            print ("ANTLR Runtime version \(compileTimeVersion)used for parser compilation does not match the current runtime version \(runtimeVersion)");
+            print ("ANTLR Runtime version " & compileTimeVersion'Image & "used for parser compilation does not match the current runtime version " & runtimeVersion'Image);
         end if;
     end if;
 

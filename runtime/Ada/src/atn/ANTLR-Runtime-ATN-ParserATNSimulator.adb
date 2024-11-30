@@ -323,7 +323,7 @@ begin
 begin
         outerContext := outerContext
         if debug or else trace_atn_sim then
-            debugInfo := "adaptivePredict decision \(decision) "
+            debugInfo := "adaptivePredict decision " & decision'Image & " "
             debugInfo := @ + "exec LA (1)==\(getLookaheadName (input)) ";
             debugInfo := @ + "line \(input.LT (1)!.getLine ()):";
             debugInfo := @ + "\(input.LT (1)!.getCharPositionInLine ())";
@@ -444,7 +444,7 @@ begin
             previousD := s0
 
             if debug then
-                print ("s0 := \(s0)");
+                print ("s0 := " & s0'Image);
             end if;
 
             t := input.LA (1);
@@ -507,7 +507,7 @@ begin
                     end if;
 
                     if dfa_debug then
-                        print ("ctx sensitive state \(outerContext) in \(D)");
+                        print ("ctx sensitive state " & outerContext'Image & " in " & D'Image);
                     end if;
                     fullCtx : constant := True;
                     s0_closure : constant := computeStartState (dfa.atnStartState, outerContext, fullCtx);
@@ -601,7 +601,7 @@ begin
 
         if debug then
             altSubSets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (reach);
-            print ("SLL altSubSets=\(altSubSets), configs=\(reach), predict=\(predictedAlt), allSubsetsConflict=\(PredictionMode.allSubsetsConflict (altSubSets)), conflictingAlts=\(getConflictingAlts (reach))");
+            print ("SLL altSubSets=" & altSubSets'Image & ", configs=" & reach'Image & ", predict=" & predictedAlt'Image & ", allSubsetsConflict=\(PredictionMode.allSubsetsConflict (altSubSets)), conflictingAlts=\(getConflictingAlts (reach))");
         end if;
 
         if predictedAlt /= ATN.INVALID_ALT_NUMBER then
@@ -660,7 +660,7 @@ begin
         outerContext : ParserRuleContext) return Integer is
 begin
         if debug or else trace_atn_sim then
-            print ("execATNWithFullContext \(s0)");
+            print ("execATNWithFullContext " & s0'Image);
         end if;
         fullCtx : constant := True;
         foundExactAmbig := False;
@@ -695,7 +695,7 @@ begin
             if reach : constant := reach then
                 altSubSets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (reach);
                 if debug then
-                    print ("LL altSubSets=\(altSubSets), predict=\(PredictionMode.getUniqueAlt (altSubSets)), resolvesToJustOneViableAlt=\(PredictionMode.resolvesToJustOneViableAlt (altSubSets))");
+                    print ("LL altSubSets=" & altSubSets'Image & ", predict=\(PredictionMode.getUniqueAlt (altSubSets)), resolvesToJustOneViableAlt=\(PredictionMode.resolvesToJustOneViableAlt (altSubSets))");
                 end if;
 
 
@@ -776,7 +776,7 @@ begin
    begin
 
         if debug then
-            print ("in computeReachSet, starting closure: \(closureConfigSet)");
+            print ("in computeReachSet, starting closure: " & closureConfigSet'Image);
         end if;
 
         if mergeCache = null then
@@ -1288,7 +1288,7 @@ begin
                 fullCtx : constant := False -- in dfa
                 predicateEvaluationResult : constant := evalSemanticContext (pair.pred, outerContext, pair.alt, fullCtx);
                 if debug or else dfa_debug then
-                    print ("eval pred \(pair)= \(predicateEvaluationResult)");
+                    print ("eval pred " & pair'Image & "= " & predicateEvaluationResult'Image);
                 end if;
 
                 if predicateEvaluationResult then
@@ -1476,12 +1476,12 @@ begin
                         end if;
 
                         configs.dipsIntoOuterContext := True -- TODO: can remove? only care when we add to set per middle of this method
-                        --print ("newDepth=>\(newDepth)");
+                        --print ("newDepth=>" & newDepth'Image);
                         assert (newDepth > Int.min, "Expected: newDepth>Integer.MIN_VALUE");
                         newDepth := @ - 1;
 
                         if debug then
-                            print ("dips into outer ctx: \(c)");
+                            print ("dips into outer ctx: " & c'Image);
                         end if;
                     else
                         if not t.isEpsilon () then
@@ -1684,7 +1684,7 @@ begin
         if index >= 0  then
             return parser.getRuleNames ()[index];
         end if;
-        return "<rule \(index)>"
+        return "<rule " & index'Image & ">"
     end if;
 
 
@@ -1755,7 +1755,7 @@ begin
                                     fullCtx  : Boolean) return Optional_ATNConfig is
    begin
         if debug then
-            print ("PRED (collectPredicates=\(collectPredicates)) \(pt.precedence)>=_p, ctx dependent=True");
+            print ("PRED (collectPredicates=" & collectPredicates'Image & ") \(pt.precedence)>=_p, ctx dependent=True");
             --if ( parser /= null ) {
             print ("context surrounding pred is \(parser.getRuleInvocationStack ())");
             -- }
@@ -1798,7 +1798,7 @@ begin
                               fullCtx  : Boolean) return Optional_ATNConfig is
    begin
         if debug then
-            print ("PRED (collectPredicates=\(collectPredicates)) \(pt.ruleIndex):\(pt.predIndex), ctx dependent=\(pt.isCtxDependent)");
+            print ("PRED (collectPredicates=" & collectPredicates'Image & ") \(pt.ruleIndex):\(pt.predIndex), ctx dependent=\(pt.isCtxDependent)");
             --if ( parser /= null ) {
             print ("context surrounding pred is \(parser.getRuleInvocationStack ())");
             --}
@@ -1924,7 +1924,7 @@ begin
             return displayName;
         end if;
 
-        return "\(displayName) <\(t)>"
+        return "" & displayName'Image & " <" & t'Image & ">"
     end if;
 
     -- public final
@@ -1956,7 +1956,7 @@ begin
                     trans := (not ? "~" : "") + "Set " + st.set.description
                 end if;
             end if;
-            errPrint ("\(c.toString (parser, True)):\(trans)");
+            errPrint ("\(c.toString (parser, True)):" & trans'Image);
         end if;
     end if;
 
@@ -2010,7 +2010,7 @@ begin
 begin
         to := to
         if debug then
-            print ("EDGE \(from) -> \(to) upon \(getTokenName (t))");
+            print ("EDGE " & from'Image & " -> " & to'Image & " upon \(getTokenName (t))");
         end if;
 
         to := addDFAState (dfa, to) -- used existing if possible not incoming
@@ -2069,7 +2069,7 @@ begin
 
             dfa.states[D] := D
             if debug then
-                print ("adding new DFA state: \(D)");
+                print ("adding new DFA state: " & D'Image);
             end if;
 
             return D
@@ -2079,7 +2079,7 @@ begin
     procedure reportAttemptingFullContext (dfa : DFA; conflictingAlts : Optional_BitSet; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) {
         if debug or else retry_debug then
             input : constant := getTextInInterval (startIndex, stopIndex);
-            print ("reportAttemptingFullContext decision=\(dfa.decision):\(configs), input=\(input)");
+            print ("reportAttemptingFullContext decision=\(dfa.decision):" & configs'Image & ", input=" & input'Image);
         end if;
         parser.getErrorListenerDispatch ().reportAttemptingFullContext (parser, dfa, startIndex, stopIndex, conflictingAlts, configs);
     end if;
@@ -2087,7 +2087,7 @@ begin
     procedure reportContextSensitivity (dfa : DFA; prediction : Integer; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) {
         if debug or else retry_debug then
             input : constant := getTextInInterval (startIndex, stopIndex);
-            print ("reportContextSensitivity decision=\(dfa.decision):\(configs), input=\(input)");
+            print ("reportContextSensitivity decision=\(dfa.decision):" & configs'Image & ", input=" & input'Image);
         end if;
         parser.getErrorListenerDispatch ().reportContextSensitivity (parser, dfa, startIndex, stopIndex, prediction, configs);
     end if;
@@ -2106,7 +2106,7 @@ begin
     {
         if debug or else retry_debug then
             input : constant := getTextInInterval (startIndex, stopIndex);
-            print ("reportAmbiguity \(ambigAlts):\(configs), input=\(input)");
+            print ("reportAmbiguity " & ambigAlts'Image & ":" & configs'Image & ", input=" & input'Image);
         end if;
         parser.getErrorListenerDispatch ().reportAmbiguity (parser, dfa, startIndex, stopIndex,
             exact, ambigAlts, configs);

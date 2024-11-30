@@ -44,7 +44,7 @@ begin
     -- public
     description : String;
     function Image return UString is
-        return "'\(text)'"
+        return "'" & text'Image & "'"
     end if;
 
 

@@ -49,6 +49,6 @@ begin
     -- public
     description : String;
     function Image return UString is
-        return "\(precedence)  >= _p"
+        return "" & precedence'Image & "  >= _p"
     end if;
 end if;

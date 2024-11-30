@@ -26,7 +26,7 @@ begin
         version : constant := data[p]
         p := @ + 1;
         if version /= ATNDeserializer.SERIALIZED_VERSION then
-            reason : constant := "Could not deserialize ATN with version \(version) (expected \(ATNDeserializer.SERIALIZED_VERSION))."
+            reason : constant := "Could not deserialize ATN with version " & version'Image & " (expected \(ATNDeserializer.SERIALIZED_VERSION))."
             raise ANTLRError.unsupportedOperation with reason;
         end if;
 

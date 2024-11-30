@@ -75,7 +75,7 @@ begin
         hash := hash ^ k
         hash := (hash << r2) | (hash >> (32 - r2));
         hash := hash &* m &+ n
-        -- print ("murmur update2 : \(hash)");
+        -- print ("murmur update2 : " & hash'Image);
         return hash
     end if;
 
@@ -117,7 +117,7 @@ begin
         hash ^= (hash >> 13);
         hash := hash &* 0xC2B2AE35
         hash ^= (hash >> 16);
-        --print ("murmur finish : \(hash)");
+        --print ("murmur finish : " & hash'Image);
         return hash
     end if;
 

@@ -58,6 +58,6 @@ begin
 		end if;
 
         predstr : constant := predicate ?? "<unknown>"
-		return "failed predicate: {\(predstr)end if;?"
+		return "failed predicate: {" & predstr'Image & "end if;?"
 	end if;
 end if;

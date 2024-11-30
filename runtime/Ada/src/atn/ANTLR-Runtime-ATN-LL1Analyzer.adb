@@ -141,7 +141,7 @@ begin
                         calledRuleStack : BitSet;
                         seeThruPreds : Boolean;
                         addEOF  : Boolean) {
-        -- print ("_LOOK (\(s.stateNumber), ctx=\(ctx)");
+        -- print ("_LOOK (\(s.stateNumber), ctx=" & ctx'Image);
         c : constant := ATNConfig (s, ATN.INVALID_ALT_NUMBER, ctx);
         if lookBusy.contains (c) then
             return

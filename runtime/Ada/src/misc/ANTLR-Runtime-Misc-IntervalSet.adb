@@ -587,15 +587,15 @@ begin
                 if a = CommonToken.EOF then
                     buf := @ + "<EOF>";
                 elsif elemAreChar then
-                    buf := @ + "'\(a)'";
+                    buf := @ + "'" & a'Image & "'";
                 else
-                    buf := @ + "\(a)";
+                    buf := @ + "" & a'Image & "";
                 end if;
             end if;
             elsif elemAreChar then
-                buf := @ + "'\(a)'..'\(b)'";
+                buf := @ + "'" & a'Image & "'..'" & b'Image & "'";
             else
-                buf := @ + "\(a)..\(b)";
+                buf := @ + "" & a'Image & ".." & b'Image & "";
             end if;
         end loop;
 

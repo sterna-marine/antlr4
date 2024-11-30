@@ -73,7 +73,7 @@ begin
         if t.getChildCount () == 0 then
             return s;
         end if;
-        buf := "(\(s) "
+        buf := "(" & s'Image & " "
         length : constant := t.getChildCount ();
         for i in 0 .. length - 1 loop
             if i > 0 then
@@ -101,7 +101,7 @@ begin
                 ruleName : constant String := ruleNames[ruleIndex];
                 altNumber : constant RuleContext := RuleContext ((t);).getAltNumber ();
                 if altNumber /= ATN.INVALID_ALT_NUMBER  then
-                    return "\(ruleName):\(altNumber)";
+                    return "" & ruleName'Image & ":" & altNumber'Image & "";
                 end if;
                 return ruleName
             else

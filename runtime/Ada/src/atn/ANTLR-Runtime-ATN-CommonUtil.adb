@@ -32,24 +32,20 @@ function >>> (Lhs : Int32; Rhs: Int32) return Int32
 function >>> (Lhs: Int64, Rhs: Int64) return Int64
    is (Lhs &>> Rhs);
 
-function >>> (Lhs : Integer; Rhs : Integer) return Integer is
-begin
-    return lhs &>> rhs
-end if;
+function >>> (Lhs : Integer; Rhs : Integer) return Integer
+   is lhs &>> rhs;
 
-function intChar2String (i : Integer) return String is
-begin
-    return String (Character (integerLiteral: i));
-end if;
+function intChar2String (i : Integer) return UString
+   is (Character (integerLiteral: i));
 
-procedure log (message : UString := "", file: UString := #file, function: UString := #function, lineNum: Integer := #line) {
+procedure log (message : UString := ""; file : UString := #file; function : UString := #function; lineNum : Integer := #line) is
 
     -- #if DEBUG
-    print ("FILE: \(URL (fileURLWithPath: file).pathComponents.last!),FUNC: \(function), LINE: \(lineNum) MESSAGE: \(message)");
+    print ("FILE: " & URL (fileURLWithPath: file).pathComponents.last!),FUNC: " & function'Image & ", LINE: " & lineNum'Image & " MESSAGE: " & message)");
     --   #else
     -- do nothing
     --   #endif
-end if;
+end log;
 
 function toInt (c : Character) return Integer is
 begin

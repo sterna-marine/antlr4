@@ -58,7 +58,7 @@ end if;
 procedure log (message : UString := "", file: UString := #file, function: UString := #function, lineNum: Integer := #line) {
 
     -- #if DEBUG
-    print ("FILE: \(URL (fileURLWithPath: file).pathComponents.last!),FUNC: \(function), LINE: \(lineNum) MESSAGE: \(message)");
+    print ("FILE: \(URL (fileURLWithPath: file).pathComponents.last!),FUNC: " & function'Image & ", LINE: " & lineNum'Image & " MESSAGE: " & message'Image);
     --   #else
     -- do nothing
     --   #endif

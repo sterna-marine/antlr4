@@ -330,7 +330,7 @@ begin
     begin
         tok : constant Token := getTokenErrorDisplay (e.getOffendingToken ());
         expected : constant := e.getExpectedTokens ()?.toString (recognizer.getVocabulary ()) ?? "<missing>"
-        msg : constant := "mismatched input \(tok) expecting \(expected)"
+        msg : constant := "mismatched input " & tok'Image & " expecting " & expected'Image & ""
         recognizer.notifyErrorListeners (e.getOffendingToken (), msg, e);
     end if;
 
@@ -347,7 +347,7 @@ begin
     procedure reportFailedPredicate (recognizer : Parser; e : FailedPredicateException) is
     begin
         ruleName : constant := recognizer.getRuleNames ()[recognizer._ctx!.getRuleIndex ()]
-        msg : constant := "rule \(ruleName) \(e.message!)"
+        msg : constant := "rule " & ruleName'Image & " \(e.message!)"
         recognizer.notifyErrorListeners (e.getOffendingToken (), msg, e);
     end if;
 
@@ -381,7 +381,7 @@ begin
         t : constant := try? recognizer.getCurrentToken ();
         tokenName : constant Token := getTokenErrorDisplay (t);
         expecting : constant := (try? getExpectedTokens (recognizer)) ?? IntervalSet.EMPTY_SET
-        msg : constant := "extraneous input \(tokenName) expecting \(expecting.toString (recognizer.getVocabulary ()))"
+        msg : constant := "extraneous input " & tokenName'Image & " expecting \(expecting.toString (recognizer.getVocabulary ()))"
         recognizer.notifyErrorListeners (t, msg, null);
     end if;
 

@@ -37,7 +37,7 @@ private bypassAltsAtnCacheMutex : constant := Mutex ();
         begin
             ruleName : constant := host.getRuleNames ()[ctx.getRuleIndex ()]
             lt1 : constant := host._input.LT (1)!.getText ()!;
-            print ("enter   \(ruleName), LT (1)=\(lt1)");
+            print ("enter   " & ruleName'Image & ", LT (1)=" & lt1'Image);
         end if;
 
         -- public
@@ -57,7 +57,7 @@ private bypassAltsAtnCacheMutex : constant := Mutex ();
         begin
             ruleName : constant := host.getRuleNames ()[ctx.getRuleIndex ()]
             lt1 : constant := host._input.LT (1)!.getText ()!;
-            print ("exit    \(ruleName), LT (1)=\(lt1)");
+            print ("exit    " & ruleName'Image & ", LT (1)=" & lt1'Image);
         end if;
     end if;
 

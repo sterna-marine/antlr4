@@ -54,7 +54,7 @@ begin
     -- public
     description : String;
     function Image return UString is
-        --return "MyClass \(string)"
+        --return "MyClass " & string'Image & ""
         return String (stateNumber);
     end if;
     -- public final
@@ -82,7 +82,7 @@ begin
         for t in transitions loop
             if t.target.stateNumber = e.target.stateNumber then
                 if tLabel : constant := t.labelIntervalSet (), eLabel : constant := e.labelIntervalSet (), tLabel = eLabel then
-                    -- print ("Repeated transition upon " & \(eLabel) & " from " & ATNStates.State'Image (stateNumber) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
+                    -- print ("Repeated transition upon " & " & eLabel'Image & " & " from " & ATNStates.State'Image (stateNumber) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
                     alreadyPresent := True;
                     exit when True;
                 end if;

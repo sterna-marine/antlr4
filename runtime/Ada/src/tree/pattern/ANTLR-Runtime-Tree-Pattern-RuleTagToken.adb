@@ -103,9 +103,9 @@ begin
     function getText () return Optional_String is
    begin
         if label : constant := label then
-            return "<\(label):\(ruleName)>";
+            return "<" & label'Image & ":" & ruleName'Image & ">";
         end if;
-        return "<\(ruleName)>"
+        return "<" & ruleName'Image & ">"
     end if;
 
     -- 

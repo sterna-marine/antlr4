@@ -488,7 +488,7 @@ begin
                     -- for just one merged element, return singleton top
                     a_ : constant := SingletonPredictionContext.create (mergedParents[0], mergedReturnStates[0]);
                     mergeCache?.put (a, b, a_);
-                    --print ("merge array 1 \(a_)");
+                    --print ("merge array 1 " & a_'Image);
                     return a_
                 end if;
                 mergedParents := Array (mergedParents[0 ..< k]);
@@ -513,7 +513,7 @@ begin
             M.combineCommonParents ();
 
             mergeCache?.put (a, b, M);
-            -- print ("merge array 4 \(M)");
+            -- print ("merge array 4 " & M'Image);
             return M
     end if;
 
@@ -540,7 +540,7 @@ begin
                 if current is EmptyPredictionContext then
                     returnState := "$";
                 end if;
-                buf := @ + " [label=""\(returnState)""];\n";
+                buf := @ + " [label=""" & returnState'Image & """];\n";
                 goto CONTINUE_NODES_A;
             end if;
             arr : constant ArrayPredictionContext := ArrayPredictionContext (current);
@@ -574,7 +574,7 @@ begin
                 end if;
                 buf := @ + "  s\(current.id) -> s\(currentParent.id)";
                 if current.size () > 1 then
-                    buf := @ + " [label=""parent[\(i)]""];\n";
+                    buf := @ + " [label=""parent[" & i'Image & "]""];\n";
                 else
                     buf := @ + ";\n";
                 end if;

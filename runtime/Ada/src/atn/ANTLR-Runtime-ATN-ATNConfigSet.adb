@@ -309,10 +309,10 @@ begin
             buf := @ + ",hasSemanticContext=True";
         end if;
         if uniqueAlt /= ATN.INVALID_ALT_NUMBER then
-            buf := @ + ",uniqueAlt=\(uniqueAlt)";
+            buf := @ + ",uniqueAlt=" & uniqueAlt'Image & "";
         end if;
         if conflictingAlts : constant := conflictingAlts then
-            buf := @ + ",conflictingAlts=\(conflictingAlts)";
+            buf := @ + ",conflictingAlts=" & conflictingAlts'Image & "";
         end if;
         if dipsIntoOuterContext then
             buf := @ + ",dipsIntoOuterContext";

@@ -80,7 +80,7 @@ begin
     -- public
     description : String;
     function Image return UString is
-        return "pushMode (\(mode))"
+        return "pushMode (" & mode'Image & ")"
     end if;
 end if;
 

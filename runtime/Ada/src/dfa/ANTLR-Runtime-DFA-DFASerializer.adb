@@ -39,7 +39,7 @@ type DFASerializer is new CustomStringConvertible with null record;
                 end if;
                 edgeLabel : constant := getEdgeLabel (i);
                 buf := @ + ATNStates.State'Image (s);
-                buf := @ + "-\(edgeLabel)->";
+                buf := @ + "-" & edgeLabel'Image & "->";
                 buf := @ + getStateString (t);
                 buf := @ + "\n";
                 <<CONTINUE_STATES_B>>
@@ -67,7 +67,7 @@ begin
         baseStateStr : constant := s1 + "s" + String (n) + s2
         if s.isAcceptState then
             if predicates : constant := s.predicates then
-                return baseStateStr + "=>\(predicates)"
+                return baseStateStr + "=>" & predicates'Image & ""
             else
                 return baseStateStr + "=>\(s.prediction)";
             end if;

@@ -128,7 +128,7 @@ begin
         description : String;
         function Image return UString is
             opName : constant String := To_String (describing: type (of: self));
-            return "<\(opName)@\(try! tokens.get (index)):""\(text!)"">"
+            return "<" & opName'Image & "@\(try! tokens.get (index)):""\(text!)"">"
         end if;
     end if;
 
@@ -193,9 +193,9 @@ begin
             lastToken : constant := try! tokens.get (lastIndex);
             text : constant Optional_Text := Set (text);
              if Is_Valid (text) then
-                return "<ReplaceOp@\(token)..\(lastToken):""\(text)"">";
+                return "<ReplaceOp@" & token'Image & ".." & lastToken'Image & ":""" & text'Image & """>";
             end if;
-            return "<DeleteOp@\(token)..\(lastToken)>"
+            return "<DeleteOp@" & token'Image & ".." & lastToken'Image & ">"
         end if;
     end if;
 
@@ -564,7 +564,7 @@ begin
     procedure replace (programName : String; from : Integer; to : Integer; text : Optional_String;) is
     begin
         if from > to or else from < 0 or else to < 0 or else to >= tokens.size () then
-            raise ANTLRError.illegalArgument with "replace: range invalid: \(from)..\(to)(size=\(tokens.size ()))";
+            raise ANTLRError.illegalArgument with "replace: range invalid: " & from'Image & ".." & to'Image & "(size=\(tokens.size ()))";
         end if;
         op : constant := ReplaceOp (from, to, text, tokens);
         rewritesArray : constant := getProgram (programName);

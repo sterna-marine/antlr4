@@ -79,7 +79,7 @@ begin
                                          offendingSymbol : Optional_AnyObject;
                                          line : Integer; charPositionInLine : Integer;
                                          msg : String; e : Optional_AnyObject;) {
-                errors.append ("line \(line):\(charPositionInLine) \(msg)");
+                errors.append ("line " & line'Image & ":" & charPositionInLine'Image & " " & msg'Image);
             end if;
         end if;
 

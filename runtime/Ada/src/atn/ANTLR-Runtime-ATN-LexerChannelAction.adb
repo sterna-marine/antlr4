@@ -81,7 +81,7 @@ begin
     -- public
     description : String;
     function Image return UString is
-        return "channel\(channel)"
+        return "channel" & channel'Image & ""
     end if;
 
 end if;

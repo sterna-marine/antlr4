@@ -163,7 +163,7 @@ begin
         startState : constant := atn.modeToStartState[mode]
 
         if LexerATNSimulator.debug then
-            print ("matchATN mode \(mode) start: \(startState)\n");
+            print ("matchATN mode " & mode'Image & " start: " & startState'Image & "\n");
         end if;
 
         old_mode : constant := mode
@@ -458,9 +458,9 @@ begin
         if config.state is RuleStopState then
             if LexerATNSimulator.debug then
                 if recog : constant := recog then
-                    print ("closure at \(recog.getRuleNames ()[config.state.ruleIndex!]) rule stop \(config)\n");
+                    print ("closure at \(recog.getRuleNames ()[config.state.ruleIndex!]) rule stop " & config'Image & "\n");
                 else
-                    print ("closure at rule stop \(config)\n");
+                    print ("closure at rule stop " & config'Image & "\n");
                 end if;
             end if;
 
@@ -698,7 +698,7 @@ begin
         end if;
 
         if LexerATNSimulator.debug then
-            print ("EDGE \(p) -> \(q) upon \(t)");
+            print ("EDGE " & p'Image & " -> " & q'Image & " upon " & t'Image);
         end if;
 
         p.mutex.synchronized {

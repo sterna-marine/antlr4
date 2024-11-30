@@ -78,7 +78,7 @@ begin
         -- get absolute index
         bufferStartIndex : constant := getBufferStartIndex ();
         if i < bufferStartIndex or else i >= bufferStartIndex + n then
-            raise ANTLRError.indexOutOfBounds with "get (\(i)) outside buffer: \(bufferStartIndex)..\(bufferStartIndex + n)";
+            raise ANTLRError.indexOutOfBounds with "get (" & i'Image & ") outside buffer: " & bufferStartIndex'Image & "..\(bufferStartIndex + n)";
         end if;
         return tokens[i - bufferStartIndex]
     end if;
@@ -94,7 +94,7 @@ begin
         sync (i);
         index : constant Integer := p + i - 1;
         if index < 0 then
-            raise ANTLRError.indexOutOfBounds with "LT (\(i) gives negative index";
+            raise ANTLRError.indexOutOfBounds with "LT (" & i'Image & " gives negative index";
         end if;
 
         if index >= n then
@@ -285,11 +285,11 @@ begin
         bufferStartIndex : constant := getBufferStartIndex ();
         i : constant := index - bufferStartIndex
         if i < 0 then
-            raise ANTLRError.illegalState with "cannot seek to negative index \(index)";
+            raise ANTLRError.illegalState with "cannot seek to negative index " & index'Image & "";
 
         end if;
         elsif i >= n then
-            raise ANTLRError.unsupportedOperation with "seek to index outside buffer: \(index) not in \(bufferStartIndex)..<\(bufferStartIndex + n)";
+            raise ANTLRError.unsupportedOperation with "seek to index outside buffer: " & index'Image & " not in " & bufferStartIndex'Image & "..<\(bufferStartIndex + n)";
         end if;
 
         p := i
@@ -325,7 +325,7 @@ begin
         start : constant := interval.a
         stop : constant := interval.b
         if start < bufferStartIndex or else stop > bufferStopIndex then
-            raise ANTLRError.unsupportedOperation with "interval \(interval) not in token buffer window: \(bufferStartIndex) .. \(bufferStopIndex)";
+            raise ANTLRError.unsupportedOperation with "interval " & interval'Image & " not in token buffer window: " & bufferStartIndex'Image & " .. " & bufferStopIndex'Image & "";
         end if;
 
         a : constant := start - bufferStartIndex

@@ -198,7 +198,7 @@ begin
     function get (i : Integer) return Token is
 begin
         if not tokens.indices.contains (i) then
-            raise ANTLRError.indexOutOfBounds with "token index \(i) out of range 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "token index " & i'Image & " out of range 0 ..< \(tokens.count)";
         end if;
         return tokens[i]
     end if;
@@ -326,7 +326,7 @@ begin
     function getTokens (start : Integer; stop : Integer; types : Set<Int>?) return [Token]? {
         lazyInit ();
         if not tokens.indices.contains (start) or not tokens.indices.contains (stop) then
-            raise ANTLRError.indexOutOfBounds with "start \(start) or stop \(stop) not in 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "start " & start'Image & " or stop " & stop'Image & " not in 0 ..< \(tokens.count)";
         end if;
         if start > stop then
             return null;
@@ -420,7 +420,7 @@ begin
     function getHiddenTokensToRight (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
-            raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< \(tokens.count)";
         end if;
 
         nextOnChannel : constant Token := nextTokenOnChannel (tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
@@ -445,7 +445,7 @@ begin
     function getHiddenTokensToLeft (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
-            raise ANTLRError.indexOutOfBounds with "\(tokenIndex) not in 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< \(tokens.count)";
         end if;
 
         if tokenIndex = 0 then

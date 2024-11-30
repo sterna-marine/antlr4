@@ -249,16 +249,16 @@ type DecisionInfo is new CustomStringConvertible with null record;
         desc := ""
 
         desc := @ + "{";
-        desc := @ + "decision=\(decision)";
+        desc := @ + "decision=" & decision'Image & "";
         desc := @ + ", contextSensitivities=\(contextSensitivities.count)";
         desc := @ + ", errors=\(errors.count)";
         desc := @ + ", ambiguities=\(ambiguities.count)";
-        desc := @ + ", SLL_lookahead=\(SLL_TotalLook)";
-        desc := @ + ", SLL_ATNTransitions=\(SLL_ATNTransitions)";
-        desc := @ + ", SLL_DFATransitions=\(SLL_DFATransitions)";
-        desc := @ + ", LL_Fallback=\(LL_Fallback)";
-        desc := @ + ", LL_lookahead=\(LL_TotalLook)";
-        desc := @ + ", LL_ATNTransitions=\(LL_ATNTransitions)";
+        desc := @ + ", SLL_lookahead=" & SLL_TotalLook'Image & "";
+        desc := @ + ", SLL_ATNTransitions=" & SLL_ATNTransitions'Image & "";
+        desc := @ + ", SLL_DFATransitions=" & SLL_DFATransitions'Image & "";
+        desc := @ + ", LL_Fallback=" & LL_Fallback'Image & "";
+        desc := @ + ", LL_lookahead=" & LL_TotalLook'Image & "";
+        desc := @ + ", LL_ATNTransitions=" & LL_ATNTransitions'Image & "";
         desc := @ + "end if;";
 
         return desc

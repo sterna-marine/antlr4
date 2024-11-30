@@ -50,6 +50,6 @@ begin
             symbol := Utils.escapeWhitespace (symbol, False);
         end if;
 
-        return "\(LexerNoViableAltException.self)('\(symbol)')"
+        return "\(LexerNoViableAltException.self)('" & symbol'Image & "')"
     end if;
 end if;

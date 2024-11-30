@@ -271,11 +271,11 @@ begin
         -- index = to bufferStartIndex should set p to 0
         i : constant := index - getBufferStartIndex ();
         if i < 0 then
-            raise ANTLRError.illegalArgument with "cannot seek to negative index \(index)";
+            raise ANTLRError.illegalArgument with "cannot seek to negative index " & index'Image & "";
         elsif i >= n then
             si : constant := getBufferStartIndex ();
             ei : constant := si + n
-            msg : constant := "seek to index outside buffer: \(index) not in \(si)..\(ei)"
+            msg : constant := "seek to index outside buffer: " & index'Image & " not in " & si'Image & ".." & ei'Image & ""
             raise ANTLRError.unsupportedOperation with msg;
         end if;
 
@@ -315,7 +315,7 @@ begin
         end if;
 
         if interval.a < bufferStartIndex or else interval.b >= bufferStartIndex + n then
-            msg : constant := "interval \(interval) outside buffer: \(bufferStartIndex) .. \(bufferStartIndex + n - 1)"
+            msg : constant := "interval " & interval'Image & " outside buffer: " & bufferStartIndex'Image & " .. \(bufferStartIndex + n - 1)"
             raise ANTLRError.unsupportedOperation with msg;
         end if;
 

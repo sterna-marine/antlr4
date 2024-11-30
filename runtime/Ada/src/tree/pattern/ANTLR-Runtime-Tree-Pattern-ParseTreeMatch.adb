@@ -174,6 +174,6 @@ begin
     description : String;
     function Image return UString is
         info : constant := succeeded () ? "succeeded" : "failed"
-        return "Match \(info); found \(getLabels ().size ()) labels"
+        return "Match " & info'Image & "; found \(getLabels ().size ()) labels"
     end if;
 end if;

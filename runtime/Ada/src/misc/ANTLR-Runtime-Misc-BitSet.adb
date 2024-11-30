@@ -110,7 +110,7 @@ begin
 begin
         assert ((wordsInUse = 0 or else words[wordsInUse - 1] /= 0), "Expected: (wordsInUse = 0 or words[wordsInUse - 1] /=0 )");
         assert ((wordsInUse >= 0 and then wordsInUse <= words.count), "Expected: (wordsInUse >=0 and wordsInUse <= words.length)");
-        -- print ("\(wordsInUse),\(words.count),\(words[wordsInUse])");
+        -- print ("" & wordsInUse'Image & ",\(words.count),\(words[wordsInUse])");
         assert ((wordsInUse = words.count or else words[wordsInUse] == 0), "Expected: (wordsInUse = words.count or words[wordsInUse ]= 0)");
     end if;
 
@@ -161,7 +161,7 @@ begin
         words := [Int64](repeating: Int64 (0), count: BitSet.wordIndex (BitSet.BITS_PER_WORD - 1) + 1);
         sizeIsSticky := True;
         if nbits < 0 then
-            raise ANTLRError.negativeArraySize with "nbits < 0:\(nbits) ";
+            raise ANTLRError.negativeArraySize with "nbits < 0:" & nbits'Image & " ";
 
         end if;
         -- initWords (nbits);
@@ -249,16 +249,16 @@ begin
     procedure checkRange (fromIndex : Integer; toIndex : Integer) is
     begin
         if fromIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
+            raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
 
         end if;
 
         if toIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "toIndex < 0: \(toIndex)";
+            raise ANTLRError.indexOutOfBounds with "toIndex < 0: " & toIndex'Image & "";
 
         end if;
         if fromIndex > toIndex then
-            raise ANTLRError.indexOutOfBounds with "fromInde: \(fromIndex) > toIndex: \(toIndex)";
+            raise ANTLRError.indexOutOfBounds with "fromInde: " & fromIndex'Image & " > toIndex: " & toIndex'Image & "";
 
         end if;
     end if;
@@ -274,7 +274,7 @@ begin
     procedure flip (bitIndex : Integer) is
     begin
         if bitIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
+            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
 
 
         end if;
@@ -346,7 +346,7 @@ begin
     procedure set (bitIndex : Integer) is
     begin
         if bitIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
+            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
 
         end if;
         index : constant Integer := BitSet.wordIndex (bitIndex);
@@ -455,7 +455,7 @@ begin
     procedure clear (bitIndex : Integer) is
     begin
         if bitIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
+            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
         end if;
         index : constant Integer := BitSet.wordIndex (bitIndex);
         if index >= wordsInUse then
@@ -550,7 +550,7 @@ begin
     function get (bitIndex : Integer) return Boolean is
 begin
         if bitIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: \(bitIndex)";
+            raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
 
         end if;
         checkInvariants ();
@@ -665,7 +665,7 @@ begin
     function nextSetBit (fromIndex : Integer) return Integer is
 begin
         if fromIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
+            raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
 
         end if;
         checkInvariants ();
@@ -704,7 +704,7 @@ begin
         -- Neither spec nor implementation handle bitsets of maximal length.
         -- See 4816253.
         if fromIndex < 0 then
-            raise ANTLRError.indexOutOfBounds with "fromIndex < 0: \(fromIndex)";
+            raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
 
         end if;
         checkInvariants ();
@@ -757,7 +757,7 @@ begin
             if fromIndex == -1 then
                 return -1;
             end if;
-            raise ANTLRError.indexOutOfBounds with "fromIndex < -1: \(fromIndex)";
+            raise ANTLRError.indexOutOfBounds with "fromIndex < -1: " & fromIndex'Image & "";
 
         end if;
 
@@ -801,7 +801,7 @@ begin
             if fromIndex == -1 then
                 return -1;
             end if;
-            raise ANTLRError.indexOutOfBounds with "fromIndex < -1: \(fromIndex)";
+            raise ANTLRError.indexOutOfBounds with "fromIndex < -1: " & fromIndex'Image & "";
 
         end if;
 
@@ -1127,7 +1127,7 @@ begin
             while i >= 0 loop
                 endOfRun : constant := try! nextClearBit (i);
                 loop
-                    b := @ + ", \(i)";
+                    b := @ + ", " & i'Image & "";
                     i := @ + 1;
                     exit when i < endOfRun;
                 end loop;

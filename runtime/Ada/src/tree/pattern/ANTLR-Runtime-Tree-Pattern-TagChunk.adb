@@ -95,7 +95,7 @@ begin
     description : String;
     function Image return UString is
         if label : constant := label then
-            return "\(label):\(tag)"
+            return "" & label'Image & ":" & tag'Image & ""
         else
             return tag;
         end if;

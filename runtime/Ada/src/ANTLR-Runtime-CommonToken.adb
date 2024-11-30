@@ -304,7 +304,7 @@ begin
     -- public
     function toString (r : Recognizer<ATNSimulator>?) return String is
 begin
-        channelStr : constant := (channel > 0 ? ",channel=\(channel)" : "");
+        channelStr : constant := (channel > 0 ? ",channel=" & channel'Image & "" : "");
 
         txt : String;
         if tokenText : constant := getText () then
@@ -318,9 +318,9 @@ begin
         if r : constant := r then
             typeString := r.getVocabulary ().getDisplayName (type);
         else
-            typeString := "\(type)";
+            typeString := "" & type'Image & "";
         end if;
-       return "[@\(getTokenIndex ()),\(start):\(stop)='\(txt)',<\(typeString)>\(channelStr),\(line):\(getCharPositionInLine ())]"
+       return "[@\(getTokenIndex ())," & start'Image & ":" & stop'Image & "='" & txt'Image & "',<" & typeString'Image & ">" & channelStr'Image & "," & line'Image & ":\(getCharPositionInLine ())]"
     end if;
 
     -- public

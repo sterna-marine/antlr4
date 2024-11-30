@@ -172,7 +172,7 @@ begin
         offending : constant := e.getOffendingToken ();
         line : constant := offending.getLine ();
         charPositionInLine : constant := offending.getCharPositionInLine ();
-        return "line \(line):\(charPositionInLine)"
+        return "line " & line'Image & ":" & charPositionInLine'Image & ""
     end if;
 
     -- open

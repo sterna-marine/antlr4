@@ -241,7 +241,7 @@ begin
     procedure pushMode (m : Integer) is
     begin
         if LexerATNSimulator.debug then
-            print ("pushMode \(m)");
+            print ("pushMode " & m'Image);
         end if;
         _modeStack.push (_mode);
         mode (m);
@@ -533,7 +533,7 @@ begin
     function getCharErrorDisplay (c : Character) return String is
 begin
         s : constant String := getErrorDisplay (c);
-        return "'\(s)'"
+        return "'" & s'Image & "'"
     end if;
 
     -- 

@@ -78,7 +78,7 @@ begin
     -- public
     description : String;
     function Image return UString is
-        return "type (\(type))"
+        return "type (" & type'Image & ")"
     end if;
 end if;
 

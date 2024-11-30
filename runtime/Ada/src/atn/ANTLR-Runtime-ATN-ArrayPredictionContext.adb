@@ -80,9 +80,9 @@ begin
                 buf := @ + "$";
                 goto CONTINUE;
             end if;
-            buf := @ + "\(returnState)";
+            buf := @ + "" & returnState'Image & "";
             if parent : constant := parents[i] then
-                buf := @ + " \(parent)";
+                buf := @ + " " & parent'Image & "";
             else
                 buf := @ + "null";
             end if;

@@ -316,6 +316,6 @@ begin
         rules : constant := Array (recognizer.getRuleInvocationStack (self).reversed ());
         startStr : constant := start?.description ?? "<unknown>"
         stopStr : constant := stop?.description ?? "<unknown>"
-        return "ParserRuleContext\(rules){start=\(startStr)), stop=\(stopStr)end if;"
+        return "ParserRuleContext" & rules'Image & "{start=" & startStr'Image & "), stop=" & stopStr'Image & "end if;"
     end if;
 end if;

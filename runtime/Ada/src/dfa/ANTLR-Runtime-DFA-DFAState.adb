@@ -103,7 +103,7 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
         -- public
         description : String;
         function Image return UString is
-            return "(\(pred),\(alt))"
+            return "(" & pred'Image & "," & alt'Image & ")"
         end if;
     end if;
 
@@ -131,7 +131,7 @@ type DFAState is new Hashable and CustomStringConvertible with null record;
     -- public
     description : String;
     function Image return UString is
-        buf := ATNState.State'Image (stateNumber) & ":" & \(configs);
+        buf := ATNState.State'Image (stateNumber) & ":" & " & configs'Image & ";
         if isAcceptState then
             buf := @ + "=>";
             if predicates : constant := predicates then

@@ -138,7 +138,7 @@ begin
         -- public
         description : String;
         function Image return UString is
-            return "{\(ruleIndex):\(predIndex)end if;?"
+            return "{" & ruleIndex'Image & ":" & predIndex'Image & "end if;?"
         end if;
 
     end if;

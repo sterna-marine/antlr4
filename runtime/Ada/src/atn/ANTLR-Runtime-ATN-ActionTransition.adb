@@ -51,7 +51,7 @@ begin
     -- public
     description : String;
     function Image return UString is
-        return "action_\(ruleIndex):\(actionIndex)"
+        return "action_" & ruleIndex'Image & ":" & actionIndex'Image & ""
     end if;
 
 end ANTLR.Runtime.ATN.ActionTransition;
