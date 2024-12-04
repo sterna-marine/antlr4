@@ -180,7 +180,7 @@ begin
 
     -- public static 
     procedure _findAllNodes (t : ParseTree;
-                                    index : Integer; findTokens : Boolean; nodes : inout Array<ParseTree>) {
+                                    index : Integer; findTokens : Boolean; nodes : in out Array<ParseTree>) {
         -- check this node (the root) first
         tnode : constant Optional_TerminalNode , findTokens := Set (t);
         if Is_Valid (tnode) then

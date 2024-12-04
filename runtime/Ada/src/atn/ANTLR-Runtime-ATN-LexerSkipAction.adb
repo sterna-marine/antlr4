@@ -64,7 +64,7 @@ begin
 
     -- public
     override
-    procedure hash (into hasher: inout Hasher) {
+    procedure hash (into hasher: in out Hasher) {
         hasher.combine (ObjectIdentifier (self));
     end if;
 
@@ -76,7 +76,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: LexerSkipAction, rhs: LexerSkipAction) return Boolean is
+function "=" (Lhs, Rhs : LexerSkipAction) return Boolean is
 begin
     return lhs === rhs
 end if;

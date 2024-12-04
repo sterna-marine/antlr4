@@ -1,64 +1,25 @@
 -- €
 
+package body ANTLR.Runtime.ATN.PredicateTransition is 
 
+   -- 
+   -- TODO: this is old comment:
+   -- A tree of semantic predicates from the grammar AST if label = SEMPRED.
+   -- In the ATN, labels will always be exactly one predicate, but the DFA
+   -- may have to combine a bunch of them as it collects predicates from
+   -- multiple ATN configurations into a single DFA state.
+   -- 
 
--- 
--- TODO: this is old comment:
--- A tree of semantic predicates from the grammar AST if label = SEMPRED.
--- In the ATN, labels will always be exactly one predicate, but the DFA
--- may have to combine a bunch of them as it collects predicates from
--- multiple ATN configurations into a single DFA state.
--- 
+   procedure Init (Self : in out PredicateTransition;
+                   target : ATNState;
+                   ruleIndex : Integer;
+                   predIndex : Integer;
+                   isCtxDependent : Boolean) is
+   begin
+      Self.ruleIndex := ruleIndex;
+      Self.predIndex := predIndex;
+      Self.isCtxDependent := isCtxDependent;
+      AbstractPredicateTransition.Init (target); -- Super
+   end Init;
 
--- public final
-type PredicateTransition is new AbstractPredicateTransition and CustomStringConvertible with null record;
-{
-    -- public
-    ruleIndex : constant Integer;
-    -- public
-    predIndex : constant Integer;
-    -- public
-    isCtxDependent : constant Boolean;
-    -- e.g., $i ref in pred
-
-    -- public 
-    procedure Init (Self : in out …; target : ATNState; ruleIndex : Integer; predIndex : Integer; isCtxDependent  : Boolean) {
-
-        self.ruleIndex := ruleIndex
-        self.predIndex := predIndex
-        self.isCtxDependent := isCtxDependent
-        super.init (target);
-    end if;
-
-    override
-    -- public
-    function getSerializationType (This : …) return Integer is
-begin
-        return PredicateTransition.PREDICATE
-    end if;
-
-    override
-    -- public
-    function isEpsilon (This : …) return Boolean is
-begin
-        return True;
-    end if;
-
-    override
-    -- public
-    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
-begin
-        return False;
-    end if;
-
-    -- public
-    function getPredicate () return SemanticContext.Predicate {
-        return SemanticContext.Predicate (ruleIndex, predIndex, isCtxDependent);
-    end if;
-
-    -- public
-    description : String;
-    function Image return UString is
-        return "pred_" & ruleIndex'Image & ":" & predIndex'Image & ""
-    end if;
-end if;
+end ANTLR.Runtime.ATN.PredicateTransition;

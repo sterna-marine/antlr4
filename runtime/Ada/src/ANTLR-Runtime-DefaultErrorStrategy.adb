@@ -48,7 +48,7 @@ type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     -- @see #nextTokensContext
     -- --------------------------------------------
     -- open
-    nextTokensState := ATNState.INVALID_STATE_NUMBER
+    nextTokensState : ATStates.State := ATNState.INVALID_STATE_NUMBER
 
 
     -- public
@@ -249,7 +249,7 @@ begin
         if nextToks.contains (la) then
             -- We are sure the token matches
             nextTokensContext := null;
-            nextTokensState := ATNState.INVALID_STATE_NUMBER
+            nextTokensState : ATStates.State := ATNState.INVALID_STATE_NUMBER
             return
         end if;
 
@@ -258,7 +258,7 @@ begin
                     -- It's possible the next token won't match; information tracked
                     -- by sync is restricted for performance.
                     nextTokensContext := recognizer.getContext ();
-                    nextTokensState := recognizer.getState ();
+                    nextTokensState : ATStates.State := recognizer.getState ();
             end if;
             return
         end if;

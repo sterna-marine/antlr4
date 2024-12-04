@@ -354,7 +354,8 @@ fileprivate struct UInt8StreamIterator: IteratorProtocol {
     hasErrorOccurred := False;
 
 
-    init (stream : InputStream) {
+    procedure Init (stream : InputStream) is
+    begin
         self.stream := stream
         self.buffGen := buffer[0 .. 0 - 1].makeIterator ();
     end if;
@@ -405,7 +406,8 @@ fileprivate struct UnicodeScalarStreamIterator: IteratorProtocol {
 
     hasErrorOccurred := False;
 
-    init (streamIterator : UInt8StreamIterator) {
+    procedure Init (streamIterator : UInt8StreamIterator) is
+    begin
         self.streamIterator := streamIterator
     end if;
 

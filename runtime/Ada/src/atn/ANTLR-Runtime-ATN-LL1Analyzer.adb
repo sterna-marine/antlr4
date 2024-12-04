@@ -137,7 +137,7 @@ begin
                         stopState : Optional_ATNState;
                         ctx : Optional_PredictionContext;
                         look : IntervalSet;
-                        lookBusy : inout Set<ATNConfig>,
+                        lookBusy : in out Set<ATNConfig>,
                         calledRuleStack : BitSet;
                         seeThruPreds : Boolean;
                         addEOF  : Boolean) {

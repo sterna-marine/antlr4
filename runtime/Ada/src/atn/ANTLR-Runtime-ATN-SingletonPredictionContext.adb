@@ -10,7 +10,8 @@ type SingletonPredictionContext is new PredictionContext with null record;
     -- public final
     returnState : constant Integer;
 
-    init (parent : Optional_PredictionContext; returnState : Integer) {
+    procedure Init (parent : Optional_PredictionContext; returnState : ATStates.State) is
+    begin
 
         --TODO assert
         --assert ( returnState=ATNState.INVALID_STATE_NUMBER,"Expected: returnState!/=ATNState.INVALID_STATE_NUMBER");
@@ -22,7 +23,7 @@ type SingletonPredictionContext is new PredictionContext with null record;
     end if;
 
     -- public static
-    function create (parent : Optional_PredictionContext; returnState : Integer) return SingletonPredictionContext is
+    function create (parent : Optional_PredictionContext; returnState : ATStates.State) return SingletonPredictionContext is
 begin
         if returnState = PredictionContext.EMPTY_RETURN_STATE and then parent = null then
             -- someone can pass in the bits of an array ctx that mean $
@@ -72,7 +73,7 @@ end if;
 
 
 -- public
-function "=" (lhs: SingletonPredictionContext, rhs: SingletonPredictionContext) return Boolean is
+function "=" (Lhs, Rhs : SingletonPredictionContext) return Boolean is
 begin
     if lhs === rhs then
         return True;

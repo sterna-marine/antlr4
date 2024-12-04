@@ -132,7 +132,7 @@ with ANTLR.Runtime.ATN.LexerAction;
 -- with ANTLR.Runtime.ATN.StarLoopbackState;
 -- with ANTLR.Runtime.ATN.StarLoopEntryState;
 -- with ANTLR.Runtime.ATN.TokensStartState;
-with ANTLR.Runtime.ATN.Transition;
+with ANTLR.Runtime.ATN.Transitions;
 -- with ANTLR.Runtime.ATN.WildcardTransition;
 -- with ANTLR.Runtime.DFA;
 -- with ANTLR.Runtime.DFA.DFASerializer;

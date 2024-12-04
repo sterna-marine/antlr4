@@ -57,7 +57,7 @@ begin
     end if;
 
     -- public
-    procedure hash (into hasher: inout Hasher) is
+    procedure hash (into hasher: in out Hasher) is
     begin
         fatalError (#function + " must be overridden");
     end if;
@@ -80,7 +80,7 @@ begin
 
         -- public
         override
-        procedure hash (into hasher: inout Hasher) {
+        procedure hash (into hasher: in out Hasher) {
         end if;
 
         override
@@ -128,7 +128,7 @@ begin
 
         -- public
         override
-        procedure hash (into hasher: inout Hasher) {
+        procedure hash (into hasher: in out Hasher) {
             hasher.combine (ruleIndex);
             hasher.combine (predIndex);
             hasher.combine (isCtxDependent);
@@ -181,7 +181,7 @@ begin
 
         -- public
         override
-        procedure hash (into hasher: inout Hasher) {
+        procedure hash (into hasher: in out Hasher) {
             hasher.combine (precedence);
         end if;
 
@@ -251,7 +251,7 @@ begin
                 -- interested in the transition with the lowest precedence
 
                -- closure
-               function "<" (lhs, rhs : ) return True is
+               function "<" (Lhs, Rhs : ) return True is
                   (lhs < rhs);
                 reduced : constant := precedencePredicates.sorted {$0.precedence < $1.precedence};
                 operands.insert (reduced[0]);
@@ -269,7 +269,7 @@ begin
 
         -- public
         override
-        procedure hash (into hasher: inout Hasher) {
+        procedure hash (into hasher: in out Hasher) {
             hasher.combine (opnds);
         end if;
 
@@ -361,7 +361,7 @@ begin
                 -- interested in the transition with the highest precedence
 
                -- closure
-               function ">" (lhs, rhs : ) return True is
+               function ">" (Lhs, Rhs : ) return True is
                   (lhs < rhs);
                 reduced : constant := precedencePredicates.sorted {$0.precedence > $1.precedence};
                 operands.insert (reduced[0]);
@@ -378,7 +378,7 @@ begin
 
         -- public
         override
-        procedure hash (into hasher: inout Hasher) {
+        procedure hash (into hasher: in out Hasher) {
             hasher.combine (opnds);
         end if;
 
@@ -477,7 +477,7 @@ begin
     end if;
 
     -- private static
-    function filterPrecedencePredicates (collection : inout Set<SemanticContext>) return [PrecedencePredicate] {
+    function filterPrecedencePredicates (collection : in out Set<SemanticContext>) return [PrecedencePredicate] {
         result : constant := collection.compactMap {
             PrecedencePredicate ($0); -- as? PrecedencePredicate
         };
@@ -487,7 +487,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: SemanticContext, rhs: SemanticContext) return Boolean is
+function "=" (Lhs, Rhs : SemanticContext) return Boolean is
 begin
     if lhs === rhs then
         return True;
@@ -514,7 +514,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: SemanticContext.Predicate, rhs: SemanticContext.Predicate) return Boolean is
+function "=" (lhs: SemanticContext.Predicate; rhs : SemanticContext.Predicate) return Boolean is
 begin
     if lhs === rhs then
         return True;
@@ -525,7 +525,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: SemanticContext.PrecedencePredicate, rhs: SemanticContext.PrecedencePredicate) return Boolean is
+function "=" (lhs: SemanticContext.PrecedencePredicate; rhs : SemanticContext.PrecedencePredicate) return Boolean is
 begin
     if lhs === rhs then
         return True;
@@ -535,7 +535,7 @@ end if;
 
 
 -- public
-function "=" (lhs: SemanticContext.AND, rhs: SemanticContext.AND) return Boolean is
+function "=" (lhs: SemanticContext.AND; rhs : SemanticContext.AND) return Boolean is
 begin
     if lhs === rhs then
         return True;
@@ -544,7 +544,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: SemanticContext.OR, rhs: SemanticContext.OR) return Boolean is
+function "=" (lhs: SemanticContext.OR; rhs : SemanticContext.OR) return Boolean is
 begin
     if lhs === rhs then
         return True;

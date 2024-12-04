@@ -1,65 +1,20 @@
 -- €
 
+package body ANTLR.Runtime.ATN.EpsilonTransition is
 
--- public final
-type EpsilonTransition is new Transition and CustomStringConvertible with null record;
-{
+   override
+   procedure Init (Self : in out EpsilonTransition;
+                   target : ATNState) is
+   begin
+      Self.init (target, -1);
+   end Init;
 
-    -- private
-    outermostPrecedenceReturnInside : constant Integer;
+   procedure Init (Self : in out EpsilonTransition;
+                   target : ATNState;
+                   outermostPrecedenceReturn : Integer) is
+   begin
+      Self.outermostPrecedenceReturnInside := outermostPrecedenceReturn;
+      Transition.init (target); -- Super
+   end Init;
 
-    -- public convenience 
-    override
-    init (target : ATNState) {
-        self.init (target, -1);
-    end if;
-
-    -- public 
-    procedure Init (Self : in out …; target : ATNState; outermostPrecedenceReturn : Integer) {
-
-        self.outermostPrecedenceReturnInside := outermostPrecedenceReturn
-        super.init (target);
-    end if;
-
-    -- 
-    -- - returns: the rule index of a precedence rule for which this transition is
-    -- returning from, where the precedence value is 0; otherwise, -1.
-    -- 
-    -- - seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed ();
-    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#applyPrecedenceFilter (org.antlr.v4.runtime.atn.ATNConfigSet);
-    -- -  4.4.1
-    -- 
-    -- public
-    function outermostPrecedenceReturn (This : …) return Integer is
-begin
-        return outermostPrecedenceReturnInside
-    end if;
-
-    override
-    -- public
-    function getSerializationType (This : …) return Integer is
-begin
-        return Transition.EPSILON
-    end if;
-
-    override
-    -- public
-    function isEpsilon (This : …) return Boolean is
-begin
-        return True;
-    end if;
-
-    override
-    -- public
-    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
-begin
-        return False;
-    end if;
-
-
-    -- public
-    description : String;
-    function Image return UString is
-        return "epsilon"
-    end if;
-end if;
+end ANTLR.Runtime.ATN.EpsilonTransition;

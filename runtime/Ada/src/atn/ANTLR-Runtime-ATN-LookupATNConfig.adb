@@ -19,7 +19,7 @@ type LookupATNConfig is new Hashable with null record;
     end if;
 
     -- public
-    procedure hash (into hasher: inout Hasher) is
+    procedure hash (into hasher: in out Hasher) is
     begin
         hasher.combine (config.state.stateNumber);
         hasher.combine (config.alt);
@@ -28,7 +28,7 @@ type LookupATNConfig is new Hashable with null record;
 end if;
 
 -- public
-function "=" (lhs: LookupATNConfig, rhs: LookupATNConfig) return Boolean is
+function "=" (Lhs, Rhs : LookupATNConfig) return Boolean is
 begin
     if lhs.config === rhs.config then
         return True;

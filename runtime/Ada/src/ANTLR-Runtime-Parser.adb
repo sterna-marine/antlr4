@@ -1,9 +1,10 @@
--- 
 -- €
--- 
+
+with ANTLR.Runtime.Misc.Utils.Mutex;
 
 with Foundation;
 
+package body ANTLR.Runtime.Parser is
 -- --------------------------------------------
 -- This field maps from the serialized ATN string to the deserialized _org.antlr.v4.runtime.atn.ATN_ with
 -- bypass alternatives.
@@ -11,12 +12,12 @@ with Foundation;
 -- - SeeAlso: `ATNDeserializationOptions.generateRuleBypassTransitions`
 -- --------------------------------------------
 -- private
-bypassAltsAtnCache : Optional_ATN; := null;
+bypassAltsAtnCache : Optional_ATN := null;
 
 -- --------------------------------------------
 -- mutex for bypassAltsAtnCache updates
 -- --------------------------------------------
-private bypassAltsAtnCacheMutex : constant := Mutex ();
+private bypassAltsAtnCacheMutex : constant := Mutex.Synchronized;;
 
 
 -- --------------------------------------------
@@ -480,22 +481,34 @@ begin
     -- lazily.
     -- --------------------------------------------
     -- public
-    function getATNWithBypassAlts (TThis : Parser; ) return ATN is
-begin
-        serializedAtn : constant := getSerializedATN ();
+   function getATNWithBypassAlts (This : Parser; ) return ATN is
 
-        return bypassAltsAtnCacheMutex.synchronized {
-            if cachedResult : constant := bypassAltsAtnCache then
-                return cachedResult;
-            end if;
+      serializedAtn : constant := getSerializedATN (This);
 
-            opts := ATNDeserializationOptions ();
-            opts.generateRuleBypassTransitions := True;
-            result : constant := try! ATNDeserializer (opts).deserialize (serializedAtn);
-            bypassAltsAtnCache := result
-            return bypassAltsAtnCache!
-        end if;
-    end if;
+      function Closure return Optional_ATN is
+         cachedResult : constant Optional_ATN := This.bypassAltsAtnCache;
+      begin
+         if Is_Valid (cachedResult) then
+               return cachedResult;
+         else
+            declare
+               opts := ATNDeserializationOptions ();
+               result : Optional_ATN;
+            begin
+               opts.generateRuleBypassTransitions := True;
+               result := try! ATNDeserializer (opts).deserialize (serializedAtn);
+               This.bypassAltsAtnCache := result;
+               return This.bypassAltsAtnCache!
+            end;
+         end if;
+      end Closure;
+      Closure_Return_Value : Optional_ATN;
+      function Synchronized_Closure is new Mutex.Gen_Closure (Closure => Closure, Result_Type => Optional_ATN);
+
+   begin
+        bypassAltsAtnCacheMutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
+        return Closure_Return_Value;
+    end getATNWithBypassAlts;
 
     -- 
     -- The preferred method of getting a tree pattern. For example, here's a
@@ -1197,4 +1210,5 @@ begin
 begin
         return _tracer /= null;
     end if;
-end if;
+
+end ANTLR.Runtime.Parser;

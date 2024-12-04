@@ -1,33 +1,45 @@
 -- €
 
+with ANTLR.Runtime.ATN.Transitions;
 
--- public final
-type NotSetTransition is new SetTransition with null record;
-{
---	public override init (_ target : ATNState; inout _ set : Optional_IntervalSet;) {
---		super.init (target, &set);
---	}
+use ANTLR.Runtime.ATN;
 
-    override
-    -- public
-    function getSerializationType (This : …) return Integer is
-begin
-        return Transition.NOT_SET
-    end if;
+package ANTLR.Runtime.ATN.NotSetTransition is
 
-    override
-    -- public
-    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
-begin
-        return symbol >= minVocabSymbol
-                and then symbol <= maxVocabSymbol
-                and then not super.matches (symbol, minVocabSymbol, maxVocabSymbol);
-    end if;
+   -- public final
+   type NotSetTransition is new SetTransition with null record;
 
-    override
-    -- public
-    description : String;
-    function Image return UString is
-        return "~" + super.description
-    end if;
-end if;
+--	public override 
+   procedure init (Self : in out NotSetTransition;
+                   Target : ATNState; 
+                   Set : in out Optional_IntervalSet) is
+   begin
+      SetTransition.init (Self, Target, Set); -- Super
+   end Init;
+
+   override
+   -- public
+   function getSerializationType (This : NotSetTransition) return Transitions.Transition is
+   begin
+      return Transitions.NOT_SET;
+   end getSerializationType;
+
+   override
+   -- public
+   function matches (This : NotSetTransition;
+                     symbol : Integer;
+                     minVocabSymbol : Integer;
+                     maxVocabSymbol : Integer)
+                     return Boolean is
+   begin
+      return symbol >= minVocabSymbol
+             and then symbol <= maxVocabSymbol
+             and then not super.matches (symbol, minVocabSymbol, maxVocabSymbol); -- TOFIX
+   end matches;
+
+   override
+   -- public
+   function Image return UString
+      is ("~" & super.description); -- TOFIX
+
+end ANTLR.Runtime.ATN.NotSetTransition;

@@ -1,0 +1,30 @@
+-- €
+
+with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.BlockStartState;
+with ANTLR.Runtime.ATN.PlusLoopbackState;
+
+use ANTLR.Runtime.ATN;
+
+package ANTLR.Runtime.ATN.PlusBlockStartState is 
+
+   -- 
+   -- Start of `(A|B| .. )+` loop. Technically a decision state, but
+   -- we don't use for code generation; somebody might need it, so I'm defining
+   -- it for completeness. In reality, the _org.antlr.v4.runtime.atn.PlusLoopbackState_ node is the
+   -- real decision-making note for `A+`.
+   -- 
+   
+   -- public final
+   type PlusBlockStartState is new BlockStartState with
+   record
+      -- public
+      loopBackState : PlusLoopbackState.Optional_PlusLoopbackState;
+   end record;
+
+   override
+   -- public
+   function getStateType (This : PlusBlockStartState) return ATNStates.State
+      is ATNStates.PLUS_BLOCK_START;
+
+end ANTLR.Runtime.ATN.PlusBlockStartState;

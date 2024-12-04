@@ -170,14 +170,14 @@ begin
     end if;
 
     -- public
-    procedure hash (into hasher: inout Hasher) is
+    procedure hash (into hasher: in out Hasher) is
     begin
         hasher.combine (ObjectIdentifier (self));
     end if;
 end if;
 
 -- public
-function "=" (lhs: Vocabulary, rhs: Vocabulary) return Boolean is
+function "=" (Lhs, Rhs : Vocabulary) return Boolean is
 begin
     return lhs === rhs
 end if;

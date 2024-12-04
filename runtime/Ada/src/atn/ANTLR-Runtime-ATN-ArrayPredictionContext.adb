@@ -120,7 +120,7 @@ end if;
 
 
 -- public
-function "=" (lhs: ArrayPredictionContext, rhs: ArrayPredictionContext) return Boolean is
+function "=" (Lhs, Rhs : ArrayPredictionContext) return Boolean is
 begin
     if lhs === rhs then
         return True;

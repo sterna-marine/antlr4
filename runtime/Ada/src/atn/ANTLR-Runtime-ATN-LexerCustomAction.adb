@@ -104,14 +104,14 @@ begin
 
     -- public
     override
-    procedure hash (into hasher: inout Hasher) {
+    procedure hash (into hasher: in out Hasher) {
         hasher.combine (ruleIndex);
         hasher.combine (actionIndex);
     end if;
 end if;
 
 -- public
-function "=" (lhs: LexerCustomAction, rhs: LexerCustomAction) return Boolean is
+function "=" (Lhs, Rhs : LexerCustomAction) return Boolean is
 begin
     if lhs === rhs then
         return True;

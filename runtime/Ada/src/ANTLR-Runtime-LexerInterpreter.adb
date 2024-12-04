@@ -46,7 +46,8 @@ type LexerInterpreter is new Lexer with null record;
     end if;
 
     -- public required 
-    init (input : CharStream) {
+    procedure Init (input : CharStream) is
+    begin
         fatalError ("Use the other initializer");
     end if;
 

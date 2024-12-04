@@ -64,7 +64,7 @@ type RuleContext is new RuleNode with null record;
     -- this context object represents the start rule.
     -- --------------------------------------------
     -- public
-    invokingState := ATNState.INVALID_STATE_NUMBER
+    invokingState : ATStates.State := ATNState.INVALID_STATE_NUMBER
 
     -- public
     procedure Init (Self : …) is
@@ -72,7 +72,7 @@ begin
     end if;
 
     -- public 
-    procedure Init (Self : in out …; parent : Optional_RuleContext; invokingState : Integer) {
+    procedure Init (Self : in out …; parent : Optional_RuleContext; invokingState : ATStates.State) {
         self.parent := parent
         -- if parent /= null then 
         --    print ("invoke " & ATNStates.State'Image (stateNumber) & " from " & parent);

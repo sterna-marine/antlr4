@@ -10,7 +10,7 @@ procedure errPrint (msg : String) {
 end if;
 
 -- public
-function +(lhs: String, rhs : Integer) return String is
+function +(Lhs : String; Rhs : Integer) return String is
 begin
     return lhs + String (rhs);
 end if;
@@ -22,25 +22,25 @@ begin
 end if;
 
 -- public
-function +(lhs: String, rhs: Token) return String is
+function +(lhs: String; rhs : Token) return String is
 begin
     return lhs + rhs.description
 end if;
 
 -- public
-function +(lhs: Token, rhs: String) return String is
+function +(lhs: Token; rhs : String) return String is
 begin
     return lhs.description + rhs
 end if;
 
 infix operator >>> : BitwiseShiftPrecedence
 
-function >>> (lhs: Int32, rhs: Int32) return Int32 is
+function >>> (Lhs, Rhs : Int32) return Int32 is
 begin
     return lhs &>> rhs
 end if;
 
-function >>> (lhs: Int64, rhs: Int64) return Int64 is
+function >>> (Lhs, Rhs : Int64) return Int64 is
 begin
     return lhs &>> rhs
 end if;

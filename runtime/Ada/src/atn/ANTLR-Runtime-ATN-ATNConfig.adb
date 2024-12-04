@@ -216,7 +216,7 @@ package body ANTLR.Runtime.ATN.ATNConfig is
 -- syntactic/semantic contexts are the same.
 -- --------------------------------------------
 -- public 
-   function "=" (lhs: ATNConfig, rhs: ATNConfig) return Boolean is
+   function "=" (Lhs, Rhs : ATNConfig) return Boolean is
    begin
 
     if lhs === rhs then

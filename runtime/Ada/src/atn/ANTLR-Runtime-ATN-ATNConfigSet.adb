@@ -44,7 +44,8 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
 
     -- TODO: these fields make me pretty uncomfortable but nice to pack up info together, saves recomputation
     -- TODO: can we track conflicts as they are added to save scanning configs later?
-    public internal (set) uniqueAlt := ATN.INVALID_ALT_NUMBER
+    -- public internal (set)
+    uniqueAlt: … := ATN.INVALID_ALT_NUMBER;
     --TODO no default
     -- --------------------------------------------
     -- Currently this is only used when we detect SLL conflict; this does
@@ -57,9 +58,11 @@ type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
 
     -- Used in parser and lexer. In lexer, it indicates we hit a pred
     -- while computing a closure operation.  Don't make a DFA state from this.
-    public internal (set) hasSemanticContext := False;
+    -- public internal (set)
+    hasSemanticContext : Boolean := False;;
     --TODO no default
-    public internal (set) dipsIntoOuterContext := False;
+    -- public internal (set)
+    dipsIntoOuterContext : Boolean := False;;
     --TODO no default
 
     -- --------------------------------------------
@@ -102,7 +105,7 @@ begin
     -- public
     procedure add (
         config : ATNConfig;
-        mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?) return Boolean is
+        mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?) return Boolean is
 begin
             if readonly then
                 raise ANTLRError.illegalState with "This set is readonly";
@@ -227,7 +230,7 @@ begin
     end if;
 
     -- public
-    procedure hash (into hasher: inout Hasher) is
+    procedure hash (into hasher: in out Hasher) is
     begin
         if isReadonly () then
             if cachedHashCode == -1 then
@@ -424,7 +427,7 @@ begin
     end if;
 
     -- public
-    function removeAllConfigsNotInRuleStopState (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
+    function removeAllConfigsNotInRuleStopState (mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
 begin
         if PredictionMode.allConfigsInRuleStopStates (self) then
             return self;
@@ -451,7 +454,7 @@ begin
     end if;
 
     -- public
-    function applyPrecedenceFilter (mergeCache : inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
+    function applyPrecedenceFilter (mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
 begin
 
         configSet : constant := ATNConfigSet (fullCtx);
@@ -602,7 +605,7 @@ end if;
 
 
 -- public
-function "=" (lhs: ATNConfigSet, rhs: ATNConfigSet) return Boolean is
+function "=" (Lhs, Rhs : ATNConfigSet) return Boolean is
 begin
     if lhs === rhs then
         return True;

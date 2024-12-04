@@ -1052,7 +1052,7 @@ begin
     end if;
 
     -- public
-    procedure hash (into hasher: inout Hasher) is
+    procedure hash (into hasher: in out Hasher) is
     begin
         hasher.combine (hashCode);
     end if;
@@ -1141,7 +1141,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: BitSet, rhs: BitSet) return Boolean is
+function "=" (Lhs, Rhs : BitSet) return Boolean is
 begin
 
     if lhs === rhs then

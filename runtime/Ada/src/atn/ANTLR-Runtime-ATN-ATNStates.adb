@@ -1,151 +1,90 @@
 -- €
 
-package body ANTLR.Runtime.ATN.ATNStates is 
+with Ada.Containers;
 
+use ANTLR.Runtime.Misc;
+use ANTLR.Runtime.ATN;
 
-    -- public static 
-    serializationNames : constant Array<String> =;
+package body ANTLR.Runtime.ATN.ATNStates is
 
-    -- public static 
-    INVALID_STATE_NUMBER : constant Integer := -1;
+   procedure hash (This : ATNState; Some_Hasher : in out Hasher) is
+   begin
+      Some_Hasher.combine (This.stateNumber);
+   end hash;
 
-    -- 
-    -- Which ATN are we in?
-    -- 
-    -- public final 
-     atn: Optional_ATN; := null;
+   procedure addTransition (This : ATNState; e : Transition'Class) is
+      alreadyPresent :Boolean := False;
+   begin
+      if Transitions.Container.isEmpty (This.Transitions) then
+         This.epsilonOnlyTransitions := e.isEpsilon;
+      elsif This.epsilonOnlyTransitions /= e.isEpsilon then
+         This.epsilonOnlyTransitions := False;
+         Text_IO.Put_Line ("ATN state " & This.stateNumber'Image & " has both epsilon and non-epsilon transitions.");
+      end if;
 
-    -- public internal (set) final
-    stateNumber: ATNStates.State := ATNStates.INVALID_STATE_NUMBER;
+      for t of This.Transitions loop
+         if t.target.stateNumber = e.target.stateNumber then
+            declare
+               tLabel : constant IntervalSet := t.labelIntervalSet;
+               eLabel : constant IntervalSet := e.labelIntervalSet;
+               if Is_Valid (tLabel) and Is_Valid (eLabel) and tLabel = eLabel then
+                  alreadyPresent := True;
+                  -- Text_IO.Put_Line ("Repeated transition upon " & eLabel'Image & " from " & stateNumber'Image & "->" & t.target.stateNumber'Image);
+                  exit when True;
+               elsif t.isEpsilon () and then e.isEpsilon () then
+                  alreadyPresent := True;
+                  -- Text_IO.Put_Line ("Repeated epsilon transition from " & stateNumber'Image & "->" & t.target.stateNumber'Image);
+                  exit when True;
+               end if;
+            end;
+         end if;
+      end loop;
 
-    -- public internal (set) final
-    ruleIndex: Optional_Integer;
-    -- at runtime, we don't have Rule objects
+      if not alreadyPresent then
+         Transitions.Container.Append (Container => This.transitions, New_Item => e);
+      end if;
+   end addTransition;
 
-    -- public private (set) final var
-    epsilonOnlyTransitions : Boolean := False;
+   procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : Transition) is
+   begin
+      Transitions.Container.Replace_Element (
+         Container => This.transitions,
+         Index => i,
+         New_Item => e);
+   end setTransition;
 
-    -- 
-    -- Track the transitions emanating from this ATN state.
-    -- 
-    -- internal private (set) final
-    transitions := [Transition]();
-
-    -- 
-    -- Used to cache lookahead during parsing, not used during construction
-    -- 
-    -- public internal (set) final
-    nextTokenWithinRule: Optional_IntervalSet;
-
-
-    -- public
-    procedure hash (into hasher: inout Hasher) is
-    begin
-        hasher.combine (stateNumber);
-    end if;
-
-    -- public
-    function isNonGreedyExitState (This : …) return Boolean is
-begin
-        return False;
-    end if;
-
-
-    -- public
-    description : String;
-    function Image return UString is
-        --return "MyClass " & string'Image & ""
-        return String (stateNumber);
-    end if;
-    -- public final
-    function getTransitions () return [Transition] {
-        return transitions
-    end if;
-
-    -- public final
-    function getNumberOfTransitions (This : …) return Integer is
-begin
-        return transitions.count
-    end if;
-
-    -- public final
-    procedure addTransition (e : Transition) is
-    begin
-        if transitions.isEmpty then
-            epsilonOnlyTransitions := e.isEpsilon ();
-        elsif epsilonOnlyTransitions /= e.isEpsilon () then
-            print ("ATN state %d has both epsilon and non-epsilon transitions.\n", String (stateNumber));
-            epsilonOnlyTransitions := False;
-        end if;
-
-        alreadyPresent := False;
-        for t in transitions loop
-            if t.target.stateNumber = e.target.stateNumber then
-                if tLabel : constant := t.labelIntervalSet (), eLabel : constant := e.labelIntervalSet (), tLabel = eLabel then
-                    -- print ("Repeated transition upon " & " & eLabel'Image & " & " from " & ATNStates.State'Image (stateNumber) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
-                    alreadyPresent := True;
-                    exit when True;
-                end if;
-                elsif t.isEpsilon () and then e.isEpsilon () then
-                    -- print ("Repeated epsilon transition from " & ATNStates.State'Image (stateNumber (stateNumber)) & "->" & ATNStates.State'Image (stateNumber (t.target.stateNumber)));
-                    alreadyPresent := True;
-                    exit when True;
-                end if;
-            end if;
-        end loop;
-
-        if not alreadyPresent then
-            transitions.append (e);
-        end if;
-    end if;
-
-    -- public final
-    function transition (i : Integer) return Transition is
-begin
-        return transitions[i]
-    end if;
-
-    -- public final
-    procedure setTransition (i : Integer; e : Transition) is
-    begin
-        transitions[i] := e
-    end if;
-
-    -- public final
-    function removeTransition (index : Integer) return Transition is
-begin
-
-        return transitions.remove (at: index);
-    end if;
+   -- public final
+   function removeTransition (This : ATNState; Index : Transitions.Container_Index) return Transition is
+      Element : Transition;
+   begin
+      Element := Transitions.Container.Element (Container => This.transitions, Index => Index);
+      Transitions.Container.Delete (
+         Container => This.transitions,
+         Index => Index)
+      return Element;
+   end removeTransition;
 
     -- public
-    function getStateType (This : …) return Integer is
-begin
-        fatalError (#function + " must be overridden");
-    end if;
+   function getStateType (This : ATNState) return Integer is
+   begin
+      fatalError (#function + " must be overridden");
+   end getStateType;
 
     -- public final
-    function onlyHasEpsilonTransitions (This : …) return Boolean is
-begin
-        return epsilonOnlyTransitions
-    end if;
-
-    -- public final
-    procedure setRuleIndex (ruleIndex : Integer) is
+    procedure setRuleIndex (This : ATNState; ruleIndex : Integer) is
     begin
-        self.ruleIndex := ruleIndex
+        This.ruleIndex := ruleIndex;
     end if;
-end if;
 
--- public
-function "=" (lhs: ATNState, rhs: ATNState) return Boolean is
-begin
-    if lhs === rhs then
-        return True;
-    end if;
-    -- are these states same object?
-    return lhs.stateNumber = rhs.stateNumber
-
-end if;
+   -- public
+   function "=" (Lhs : ATNState; Rhs : ATNState) return Boolean is
+   begin
+      --  if Lhs === Rhs then
+      --     return True;
+      --  else
+         -- are these states same object?
+      return Lhs.StateNumber = Rhs.StateNumber;
+      --  end if;
+   end "=";
 
 end ANTLR.Runtime.ATN.ATNStates;

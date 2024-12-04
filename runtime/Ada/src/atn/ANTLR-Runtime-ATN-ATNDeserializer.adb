@@ -203,7 +203,7 @@ begin
     end if;
 
     -- private
-    function readInt (data : [Int], p : inout Int) return Integer is
+    function readInt (data : [Int], p : in out Int) return Integer is
 begin
         result : constant := data[p]
         p := @ + 1;
@@ -211,7 +211,7 @@ begin
     end if;
 
     -- private
-    function readSets (data : [Int], p : inout Int, sets : inout [IntervalSet], readUnicode : ([Int], inout Int) return Int) {
+    function readSets (data : [Int], p : in out Int, sets : in out [IntervalSet], readUnicode : ([Int], in out Int) return Int) {
         nsets : constant := data[p]
         p := @ + 1;
         for _ in 0 .. nsets - 1 loop
@@ -580,10 +580,10 @@ begin
          end case;
     end if;
 
-    -- internal
-    function stateFactory (State : ATNState.State; ruleIndex : Integer) return Optional_ATNState is
+   -- internal
+   function stateFactory (State : ATNState.State; ruleIndex : Integer) return Optional_ATNState is
+        s : ATNStates.State;
    begin
-        s : ATNState;
          case state is
             when ATNState.INVALID_TYPE => return null;
             when ATNState.BASIC => s := BasicState ();

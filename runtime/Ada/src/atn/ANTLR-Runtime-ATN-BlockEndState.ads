@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.ATN.BasicEndState is
+package ANTLR.Runtime.ATN.BasicEndState is
 
 -- 
 -- Terminal node of a simple `(a|b|c)` block.

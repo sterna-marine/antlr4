@@ -29,7 +29,7 @@ type RecognitionException is tagged record
     offendingToken : Token!
 
     -- private
-    offendingState := ATNState.INVALID_STATE_NUMBER
+    offendingState : ATStates.State := ATNState.INVALID_STATE_NUMBER
 
     -- public
     message : Optional_String;
@@ -64,7 +64,7 @@ begin
     end if;
 
     -- internal final
-    procedure setOffendingState (offendingState : Integer) is
+    procedure setOffendingState (offendingState : ATStates.State) is
     begin
         self.offendingState := offendingState
     end if;

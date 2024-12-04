@@ -1,65 +1,21 @@
 -- €
 
--- public
-type EmptyPredictionContext is new SingletonPredictionContext with null record;
-{
-    -- --------------------------------------------
-    -- Represents `$` in local context prediction, which means wildcard.
-    -- `+x := *`.
-    -- --------------------------------------------
-    -- public static 
-    Instance : constant := EmptyPredictionContext ();
+package body ANTLR.Runtime.ATN.EmptyPredictionContext is
 
-    -- public
-    procedure Init (Self : …) is
-begin
-        super.init (null, PredictionContext.EMPTY_RETURN_STATE);
-    end if;
-
-    override
-    -- public
-    function isEmpty (This : …) return Boolean is
-begin
-        return True;
-    end if;
-
-    override
-    -- public
-    function size (This : …) return Integer is
-begin
-        return 1
-    end if;
-
-    override
-    -- public
-    function getParent (index : Integer) return Optional_PredictionContext is
+   -- public
+   procedure Init (Self : EmptyPredictionContext) is
    begin
-        return null;
-    end if;
+      SingletonPredictionContext.init (null, PredictionContext.EMPTY_RETURN_STATE); -- Super
+   end Init;
 
-    override
-    -- public
-    function getReturnState (index : Integer) return Integer is
-begin
-        return returnState
-    end if;
+   -- public
+   function "=" (Lhs : EmptyPredictionContext; Rhs : EmptyPredictionContext) return Boolean is
+   begin
+      if lhs === rhs then
+         return True;
+      else
+         return False;
+      end if;
+   end "=";
 
-
-    override
-    -- public
-    description : String;
-    function Image return UString is
-        return "$"
-    end if;
-end if;
-
-
--- public
-function "=" (lhs: EmptyPredictionContext, rhs: EmptyPredictionContext) return Boolean is
-begin
-    if lhs === rhs then
-        return True;
-    end if;
-
-    return False;
-end if;
+end ANTLR.Runtime.ATN.EmptyPredictionContext;

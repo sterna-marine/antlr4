@@ -1,73 +1,20 @@
 -- €
 
+package ANTLR.Runtime.ATN.PredicateTransition is 
 
+   procedure Init (Self : in out PredicateEvalInfo; decision : Integer;
+                   input : TokenStream;
+                   startIndex : Integer;
+                   stopIndex : Integer;
+                   semctx : SemanticContext;
+                   evalResult : Boolean;
+                   predictedAlt : Integer;
+                   fullCtx  : Boolean) is
+   begin
+      self.semctx := semctx;
+      self.evalResult := evalResult;
+      self.predictedAlt := predictedAlt;
+      DecisionEventInfo.init (decision, ATNConfigSet (), input, startIndex, stopIndex, fullCtx); -- Super
+   end Init;
 
--- 
--- This class represents profiling event information for semantic predicate
--- evaluations which occur during prediction.
--- 
--- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext
--- 
--- -  4.3
--- 
-
--- public
-type PredicateEvalInfo is new DecisionEventInfo with null record;
-{
-    -- 
-    -- The semantic context which was evaluated.
-    -- 
-    -- public private (set);
-    semctx: SemanticContext
-    -- 
-    -- The alternative number for the decision which is guarded by the semantic
-    -- context _#semctx_. Note that other ATN
-    -- configurations may predict the same alternative which are guarded by
-    -- other semantic contexts and/or _org.antlr.v4.runtime.atn.SemanticContext#NONE_.
-    -- 
-    -- public private (set);
-    predictedAlt : Integer;
-    -- 
-    -- The result of evaluating the semantic context _#semctx_.
-    -- 
-    -- public private (set);
-    evalResult : Boolean;
-
-    -- 
-    -- Constructs a new instance of the _org.antlr.v4.runtime.atn.PredicateEvalInfo_ class with the
-    -- specified detailed predicate evaluation information.
-    -- 
-    -- - parameter decision: The decision number
-    -- - parameter input: The input token stream
-    -- - parameter startIndex: The start index for the current prediction
-    -- - parameter stopIndex: The index at which the predicate evaluation was
-    -- triggered. Note that the input stream may be reset to other positions for
-    -- the actual evaluation of individual predicates.
-    -- - parameter semctx: The semantic context which was evaluated
-    -- - parameter evalResult: The results of evaluating the semantic context
-    -- - parameter predictedAlt: The alternative number for the decision which is
-    -- guarded by the semantic context `semctx`. See _#predictedAlt_
-    -- for more information.
-    -- - parameter fullCtx: `True` if the semantic context was
-    -- evaluated during LL prediction; otherwise, `False` if the semantic
-    -- context was evaluated during SLL prediction
-    -- 
-    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext (org.antlr.v4.runtime.atn.SemanticContext, org.antlr.v4.runtime.ParserRuleContext, int, boolean);
-    -- - seealso: org.antlr.v4.runtime.atn.SemanticContext#eval (org.antlr.v4.runtime.Recognizer, org.antlr.v4.runtime.RuleContext);
-    -- 
-    -- public 
-    procedure Init (Self : in out …; decision : Integer;
-                input : TokenStream;
-                startIndex : Integer;
-                stopIndex : Integer;
-                semctx : SemanticContext;
-                evalResult : Boolean;
-                predictedAlt : Integer;
-                fullCtx  : Boolean) {
-
-        self.semctx := semctx
-        self.evalResult := evalResult
-        self.predictedAlt := predictedAlt
-        super.init (decision, ATNConfigSet (), input, startIndex, stopIndex, fullCtx);
-    end if;
-end if;
+end package ANTLR.Runtime.ATN.PredicateTransition;

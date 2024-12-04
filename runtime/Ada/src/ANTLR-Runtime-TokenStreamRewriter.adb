@@ -104,12 +104,14 @@ type TokenStreamRewriter is tagged record
         -- internal weak
         tokens : TokenStream!;
 
-        init (index : Integer; tokens : TokenStream) {
+        procedure Init (index : Integer; tokens : TokenStream) is
+        begin
             self.index := index
             self.tokens := tokens
         end if;
 
-        init (index : Integer; text : Optional_String; tokens : TokenStream) {
+        procedure Init (index : Integer; text : Optional_String; tokens : TokenStream) is
+        begin
             self.index := index
             self.text := text
             self.tokens := tokens
@@ -119,7 +121,7 @@ type TokenStreamRewriter is tagged record
         -- Return the index of the next token to operate on.
         -- 
         -- public
-        function execute (buf : inout String) return Integer is
+        function execute (buf : in out String) return Integer is
 begin
             return index
         end if;
@@ -136,7 +138,7 @@ begin
     type InsertBeforeOp is new RewriteOperation with null record;
 {
         -- override public
-        function execute (buf : inout String) return Integer is
+        function execute (buf : in out String) return Integer is
 begin
             text : constant Optional_Text := Set (text);
              if Is_Valid (text) then
@@ -176,7 +178,7 @@ begin
 
         override
         -- public
-        function execute (buf : inout String) return Integer is
+        function execute (buf : in out String) return Integer is
 begin
             text : constant Optional_Text := Set (text);
              if Is_Valid (text) then
@@ -409,7 +411,7 @@ begin
         -- Get all operations before an index of a particular kind
 
         -- final
-        function getKindOfOps<T: RewriteOperation> (rewrites : inout [RewriteOperation?], kind : T.Type, before : Integer ) return [Int] is
+        function getKindOfOps<T: RewriteOperation> (rewrites : in out [RewriteOperation?], kind : T.Type, before : Integer ) return [Int] is
 begin
 
             length : constant := min (before, rewrites.count);

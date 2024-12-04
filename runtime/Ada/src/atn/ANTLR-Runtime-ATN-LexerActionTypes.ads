@@ -1,12 +1,10 @@
 -- €
 
+package ANTLR.Runtime.ATN.LexerActionTypes is
 
--- 
--- Represents the serialization type of a _org.antlr.v4.runtime.atn.LexerAction_.
--- 
-
-
-package LexerActionType is
+   -- 
+   -- Represents the serialization type of a _org.antlr.v4.runtime.atn.LexerAction_.
+   -- 
 
    type LexerActionType is (channel, custom, mode, more, popMode, pushMode, skip, type_action);
    for LexerActionType use ( 
@@ -20,4 +18,4 @@ package LexerActionType is
       type_action => 7);-- Ref _org.antlr.v4.runtime.atn.LexerTypeAction_ action.
    for LexerActionType'Size use Integer'Size;
 
-end LexerActionType;
+end ANTLR.Runtime.ATN.LexerActionTypes;

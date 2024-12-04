@@ -237,7 +237,7 @@ begin
     -- configuration information.
     -- 
     -- public final
-    procedure setState (atnState : Integer) is
+    procedure setState (atnState : ATStates.State) is
     begin
 --		System.err.println ("setState "+atnState);
         _stateNumber := atnState

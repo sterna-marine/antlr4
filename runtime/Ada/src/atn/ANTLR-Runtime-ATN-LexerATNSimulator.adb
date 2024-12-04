@@ -689,8 +689,19 @@ begin
             return to
     end if;
 
-    -- private final
-    procedure addDFAEdge (p : DFAState; t : Integer; q : DFAState) is
+   -- private final
+   procedure addDFAEdge (p : DFAState; t : Integer; q : DFAState) is
+
+      function Closure return … is
+         if p.edges = null then
+               --  make room for tokens 1 .. n and -1 masquerading as index 0
+               p.edges := [DFAState?](repeating: null, count: LexerATNSimulator.MAX_DFA_EDGE - LexerATNSimulator.MIN_DFA_EDGE + 1);
+         end if;
+         p.edges[t - LexerATNSimulator.MIN_DFA_EDGE] := q -- connect
+      end Closure;
+      Closure_Return_Value : …;
+      function Synchronized_Closure is new Mutex.Gen_Closure (Closure => Closure, Result_Type => …);
+
     begin
         if t < LexerATNSimulator.MIN_DFA_EDGE or else t > LexerATNSimulator.MAX_DFA_EDGE then
             -- Only track edges within the DFA bounds
@@ -701,14 +712,10 @@ begin
             print ("EDGE " & p'Image & " -> " & q'Image & " upon " & t'Image);
         end if;
 
-        p.mutex.synchronized {
-            if p.edges = null then
-                --  make room for tokens 1 .. n and -1 masquerading as index 0
-                p.edges := [DFAState?](repeating: null, count: LexerATNSimulator.MAX_DFA_EDGE - LexerATNSimulator.MIN_DFA_EDGE + 1);
-            end if;
-            p.edges[t - LexerATNSimulator.MIN_DFA_EDGE] := q -- connect
-        end if;
-    end if;
+        p.Mutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
+        --TOFIX return Closure_Return_Value;
+
+   end addDFAEdge;
 
     -- --------------------------------------------
     -- Add a new DFA state if there isn't one with this set of
@@ -718,8 +725,29 @@ begin
     -- --------------------------------------------
 
     -- final
-    function addDFAState (configs : ATNConfigSet) return DFAState is
-begin
+   function addDFAState (configs : ATNConfigSet) return DFAState is
+
+      function Closure return DFAState is
+         existing : constant := dfa.states[proposed];
+      begin
+         if Is_Valid (existing) then
+               return existing;
+         else
+            declare
+               newState : constant := proposed;
+               newState.stateNumber := dfa.states.count;
+            begin
+               configs.setReadonly (True);
+               newState.configs := configs;
+               dfa.states[newState] := newStateO
+               return newStateO
+            end;
+         end if;
+      end Closure;
+      Closure_Return_Value : DFAState;
+      function Synchronized_Closure is new Mutex.Gen_Closure (Closure => Closure, Result_Type => DFAState);
+
+   begin
         -- --------------------------------------------
         -- the lexer evaluates predicates on-the-fly; by this point configs
         -- should not contain any configurations with unevaluated predicates.
@@ -736,18 +764,9 @@ begin
 
         dfa : constant := decisionToDFA[mode]
 
-        return dfa.statesMutex.synchronized {
-            if existing : constant := dfa.states[proposed] then
-                return existing;
-            end if;
+        dfa.statesMutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
+        return Closure_Return_Value;
 
-            newState : constant := proposed
-            newState.stateNumber := dfa.states.count
-            configs.setReadonly (True);
-            newState.configs := configs
-            dfa.states[newState] := newState
-            return newState
-        end if;
     end if;
 
 

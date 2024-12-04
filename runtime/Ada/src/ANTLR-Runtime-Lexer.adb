@@ -115,7 +115,8 @@ begin
     end if;
 
     -- public required 
-    init (input : CharStream) {
+    procedure Init (input : CharStream) is
+    begin
         self._input := input
         self._tokenFactorySourcePair := TokenSourceAndStream ();
         super.init ();

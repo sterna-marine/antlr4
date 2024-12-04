@@ -73,7 +73,7 @@ begin
 
     -- public
     override
-    procedure hash (into hasher: inout Hasher) {
+    procedure hash (into hasher: in out Hasher) {
         hasher.combine (mode);
     end if;
 
@@ -86,7 +86,7 @@ end if;
 
 
 -- public
-function "=" (lhs: LexerPushModeAction, rhs: LexerPushModeAction) return Boolean is
+function "=" (Lhs, Rhs : LexerPushModeAction) return Boolean is
 begin
     if lhs === rhs then
         return True;

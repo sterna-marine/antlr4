@@ -2,6 +2,7 @@
 
 with Option;
 with ANTLR.Runtime.Misc.Interval;
+with Ada.Containers.Vectors;
 
 use ANTLR.Runtime.Misc;
 
@@ -21,7 +22,7 @@ package ANTLR.Runtime.Misc.IntervalSet is
 -- (inclusive).
 -- 
 
-   package Interval_Container is new Ada.Container.Vectors
+   package Container is new Ada.Containers.Vectors
       Index_Type : Natural;
       Element_Type : Interval;
       "=" : "=");
@@ -34,12 +35,14 @@ package ANTLR.Runtime.Misc.IntervalSet is
       -- The list of sorted, disjoint intervals.
       -- 
       -- internal
-      intervals : Interval_Container.Vector;
+      intervals : Interval.Container.Vector;
 
       -- internal
       readonly : Boolean := False;
 
    end record;
+
+   package Option_IntervalSet is new Option (IntervalSet);
 
    -- public static 
    COMPLETE_CHAR_SET : constant IntervalSet :=
@@ -529,7 +532,7 @@ begin
     end if;
 
     -- public
-    procedure hash (into hasher: inout Hasher) is
+    procedure hash (into hasher: in out Hasher) is
     begin
         for interval in intervals loop
             hasher.combine (interval.a);
@@ -778,7 +781,7 @@ begin
 end if;
 
 -- public
-function "=" (lhs: IntervalSet, rhs: IntervalSet) return Boolean is
+function "=" (Lhs, Rhs : IntervalSet) return Boolean is
 begin
     return lhs.intervals = rhs.intervals
 end if;
