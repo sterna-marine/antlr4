@@ -4,7 +4,7 @@
 -- 
 -- https:--en.wikipedia.org/wiki/MurmurHash
 -- 
--- - Author: Sam Harwell
+-- * Author: Sam Harwell
 -- 
 
 -- public final
@@ -23,7 +23,7 @@ type MurmurHash is tagged record
     -- 
     -- Initialize the hash using the default seed value.
     -- 
-    -- - Returns: the intermediate hash value
+    -- * Returns: the intermediate hash value
     -- 
     -- public static
     function initialize (This : …) return UInt32 is
@@ -34,8 +34,8 @@ begin
     -- 
     -- Initialize the hash using the specified `seed`.
     -- 
-    -- - Parameter seed: the seed
-    -- - Returns: the intermediate hash value
+    -- * Parameter seed: the seed
+    -- * Returns: the intermediate hash value
     -- 
     -- public static
     function initialize (seed : UInt32) return UInt32 is
@@ -56,9 +56,9 @@ begin
     -- 
     -- Update the intermediate hash value for the next input `value`.
     -- 
-    -- - Parameter hash: the intermediate hash value
-    -- - Parameter value: the value to add to the current hash
-    -- - Returns: the updated intermediate hash value
+    -- * Parameter hash: the intermediate hash value
+    -- * Parameter value: the value to add to the current hash
+    -- * Returns: the updated intermediate hash value
     -- 
     -- public static
     function update2 (hashIn : UInt32; value : Integer) return UInt32 is
@@ -82,9 +82,9 @@ begin
     -- 
     -- Update the intermediate hash value for the next input `value`.
     -- 
-    -- - Parameter hash: the intermediate hash value
-    -- - Parameter value: the value to add to the current hash
-    -- - Returns: the updated intermediate hash value
+    -- * Parameter hash: the intermediate hash value
+    -- * Parameter value: the value to add to the current hash
+    -- * Returns: the updated intermediate hash value
     -- 
     -- public static
     function update<T:Hashable> (hash : UInt32; value : Optional_T;) return UInt32 is
@@ -96,9 +96,9 @@ begin
     -- Apply the final computation steps to the intermediate value `hash`
     -- to form the final result of the MurmurHash 3 hash function.
     -- 
-    -- - Parameter hash: the intermediate hash value
-    -- - Parameter numberOfWords: the number of UInt32 values added to the hash
-    -- - Returns: the final hash result
+    -- * Parameter hash: the intermediate hash value
+    -- * Parameter numberOfWords: the number of UInt32 values added to the hash
+    -- * Returns: the final hash result
     -- 
     -- public static
     function finish (hashin : UInt32; numberOfWords : Integer) return Integer is
@@ -125,10 +125,10 @@ begin
     -- Utility function to compute the hash code of an array using the
     -- MurmurHash algorithm.
     -- 
-    -- - Parameter <T>: the array element type
-    -- - Parameter data: the array data
-    -- - Parameter seed: the seed for the MurmurHash algorithm
-    -- - Returns: the hash code of the data
+    -- * Parameter <T>: the array element type
+    -- * Parameter data: the array data
+    -- * Parameter seed: the seed for the MurmurHash algorithm
+    -- * Returns: the hash code of the data
     -- 
     -- public static
     function hashCode<T:Hashable> (data : [T], seed : Integer) return Integer is

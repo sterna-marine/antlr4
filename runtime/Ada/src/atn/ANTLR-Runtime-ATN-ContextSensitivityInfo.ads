@@ -15,8 +15,8 @@ package ANTLR.Runtime.ATN.ContextSensitivityInfo is
 -- the two-stage parsing strategy to improve parsing performance for that
 -- input.
 -- 
--- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#reportContextSensitivity
--- - seealso: org.antlr.v4.runtime.ANTLRErrorListener#reportContextSensitivity
+-- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#reportContextSensitivity
+-- * seealso: org.antlr.v4.runtime.ANTLRErrorListener#reportContextSensitivity
 -- 
 
    -- public
@@ -26,12 +26,12 @@ package ANTLR.Runtime.ATN.ContextSensitivityInfo is
    -- Constructs a new instance of the _org.antlr.v4.runtime.atn.ContextSensitivityInfo_ class
    -- with the specified detailed context sensitivity information.
    -- 
-   -- - parameter decision: The decision number
-   -- - parameter configs: The final configuration set containing the unique
+   -- * parameter decision: The decision number
+   -- * parameter configs: The final configuration set containing the unique
    -- alternative identified by full-context prediction
-   -- - parameter input: The input token stream
-   -- - parameter startIndex: The start index for the current prediction
-   -- - parameter stopIndex: The index at which the context sensitivity was
+   -- * parameter input: The input token stream
+   -- * parameter startIndex: The start index for the current prediction
+   -- * parameter stopIndex: The index at which the context sensitivity was
    -- identified during full-context prediction
    -- 
    -- public 

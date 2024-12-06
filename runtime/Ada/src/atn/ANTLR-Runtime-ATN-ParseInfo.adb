@@ -6,7 +6,7 @@
 -- This class provides access to specific and aggregate statistics gathered
 -- during profiling of a parser.
 -- 
--- -  4.3
+-- *  4.3
 -- 
 
 -- public
@@ -23,7 +23,7 @@ type ParseInfo is tagged record
     -- Gets an array of _org.antlr.v4.runtime.atn.DecisionInfo_ instances containing the profiling
     -- information gathered for each decision in the ATN.
     -- 
-    -- - returns: An array of _org.antlr.v4.runtime.atn.DecisionInfo_ instances, indexed by decision
+    -- * returns: An array of _org.antlr.v4.runtime.atn.DecisionInfo_ instances, indexed by decision
     -- number.
     -- 
     -- public
@@ -36,7 +36,7 @@ type ParseInfo is tagged record
     -- full-context predictions during parsing. These are decisions for which
     -- _org.antlr.v4.runtime.atn.DecisionInfo#LL_Fallback_ is non-zero.
     -- 
-    -- - returns: A list of decision numbers which required one or more
+    -- * returns: A list of decision numbers which required one or more
     -- full-context predictions during parsing.
     -- 
     -- public

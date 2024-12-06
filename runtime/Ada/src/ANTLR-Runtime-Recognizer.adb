@@ -1,270 +1,129 @@
 -- €
-with Foundation;
 
+package body ANTLR.Runtime.Recognizer is
 
--- public
-type RecognizerProtocol is interface;
-    function getATN () return ATN
-    function getGrammarFileName () return String
-    function getParseInfo () return ParseInfo?
-    function getRuleNames () return [String]
-    function getSerializedATN () return [Int]
-    function getState () return Integer;
-    function getTokenType (tokenName : String) return Integer;
-    function getVocabulary () return Vocabulary
-end if;
+   function getRuleNames (This : Recognizer) return UString.Container.Vector is
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getRuleNames() must be overridden";
+   end getRuleNames;
 
-
-open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
-    -- private
-    _listeners : [ANTLRErrorListener] := [ConsoleErrorListener.INSTANCE]
-
-    -- public
-    _interp : ATNInterpreter!
-
-    -- private
-    _stateNumber := ATNStates.State'Enum_Rep (INVALID_STATE_NUMBER);
-
-    -- open
-    function getRuleNames () return [String] {
-        fatalError (#function + " must be overridden");
-    end if;
-
-    -- --------------------------------------------
-    -- Get the vocabulary used by the recognizer.
-    -- 
-    -- - Returns: A _org.antlr.v4.runtime.Vocabulary_ instance providing information about the
-    -- vocabulary used by the grammar.
-    -- 
-    -- open
-    function getVocabulary (This : …) return Vocabulary is
-begin
-        fatalError (#function + " must be overridden");
-    end if;
-
-    -- 
-    -- Get a map from token names to token types.
-    -- 
-    -- Used for XPath and tree pattern compilation.
-    -- 
-    -- public
-    function getTokenTypeMap () return [String: Int] {
-        return tokenTypeMap
-    end if;
-
-    -- public lazy
-    tokenTypeMap : [String: Int] := {;
-        vocabulary : constant := getVocabulary ();
-
-        result := [String: Int]();
-        length : constant := getATN ().maxTokenType
-        for i in 0 .. length loop
-            if literalName : constant := vocabulary.getLiteralName (i) then
-                result[literalName] := i;
-            end if;
-
-            if symbolicName : constant := vocabulary.getSymbolicName (i) then
-                result[symbolicName] := i;
-            end if;
-        end loop;
-
-        result["EOF"] := CommonToken.EOF
-
-        return result
-    end if;();
-
-
-    -- 
-    -- Get a map from rule names to rule indexes.
-    -- 
-    -- Used for XPath and tree pattern compilation.
-    -- 
-    -- public
-    function getRuleIndexMap () return [String : Int] {
-        return ruleIndexMap
-    end if;
-
-    -- public lazy
-    ruleIndexMap : [String: Int] := {;
-        ruleNames : constant := getRuleNames ();
-        return Utils.toMap (ruleNames);
-    end if;();
-
-
-    -- public
-    function getTokenType (tokenName : String) return Integer is
-begin
-        return getTokenTypeMap ()[tokenName] ?? CommonToken.INVALID_TYPE
-    end if;
-
-    -- 
-    -- If this recognizer was generated, it will have a serialized ATN
-    -- representation of the grammar.
-    -- 
-    -- For interpreters, we don't know their serialized ATN despite having
-    -- created the interpreter from it.
-    -- 
-    -- open
-    function getSerializedATN () return [Int] {
-        fatalError ("there is no serialized ATN");
-    end if;
-
-    -- For debugging and other purposes, might want the grammar name.
-    -- Have ANTLR generate an implementation for this method.
-    -- 
-    -- open
-    function getGrammarFileName (This : …) return String is
-begin
-        fatalError (#function + " must be overridden");
-    end if;
-
-    -- 
-    -- Get the _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.
-    -- 
-    -- - Returns: The _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.
-    -- 
-    -- open
-    function getATN (This : …) return ATN is
-begin
-        fatalError (#function + " must be overridden");
-    end if;
-
-    -- 
-    -- Get the ATN interpreter used by the recognizer for prediction.
-    -- 
-    -- - Returns: The ATN interpreter used by the recognizer for prediction.
-    -- 
-    -- open
-    function getInterpreter (This : …) return ATNInterpreter is
-begin
-        return _interp
-    end if;
-
-    -- If profiling during the parse/lex, this will return DecisionInfo records
-    -- for each decision in recognizer in a ParseInfo object.
-    -- 
-    -- - Since: 4.3
-    -- 
-    -- open
-    function getParseInfo () return Optional_ParseInfo is
+   function getVocabulary (This : Recognizer) return Vocabulary is
    begin
-        return null;
-    end if;
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getVocabulary() must be overridden";
+   end getVocabulary;
 
-    -- 
-    -- Set the ATN interpreter used by the recognizer for prediction.
-    -- 
-    -- - Parameter interpreter: The ATN interpreter used by the recognizer for
-    -- prediction.
-    -- 
-    -- open
-    procedure setInterpreter (interpreter : ATNInterpreter) is
-    begin
-        _interp := interpreter
-    end if;
-
-    -- 
-    -- What is the error header, normally line/character position information?
-    -- 
-    -- open
-    function getErrorHeader (e : RecognitionException) return String is
-begin
-        offending : constant := e.getOffendingToken ();
-        line : constant := offending.getLine ();
-        charPositionInLine : constant := offending.getCharPositionInLine ();
-        return "line " & line'Image & ":" & charPositionInLine'Image & ""
-    end if;
-
-    -- open
-    procedure addErrorListener (listener : ANTLRErrorListener) is
-    begin
-        _listeners.append (listener);
-    end if;
-
-    -- open
-    procedure removeErrorListener (listener : ANTLRErrorListener) is
-    begin
-        _listeners := _listeners.filter () { $0 !== listener}
-    end if;
-
-    -- open
-    procedure removeErrorListeners (This : …) is
-begin
-        _listeners.removeAll ();
-    end if;
-
-    -- open
-    function getErrorListeners () return [ANTLRErrorListener] {
-        return _listeners
-    end if;
-
-    -- open
-    function getErrorListenerDispatch (This : …) return ANTLRErrorListener is
-begin
-        return ProxyErrorListener (getErrorListeners ());
-    end if;
-
-    -- subclass needs to override these if there are sempreds or actions
-    -- that the ATN interp needs to execute
-    -- open
-    function sempred (_localctx : Optional_RuleContext; ruleIndex : Integer; actionIndex : Integer) return Boolean is
-begin
-        return True;
-    end if;
-
-    -- open
-    function precpred (localctx : Optional_RuleContext; precedence : Integer) return Boolean is
-begin
-        return True;
-    end if;
-
-    -- open
-    procedure action (_localctx : Optional_RuleContext; ruleIndex : Integer; actionIndex : Integer) is
-    begin
-    end if;
-
-    -- public final
-    function getState (This : …) return ATNStates.State is
-begin
-        return This.stateNumber;
-    end if;
-
-    -- Indicate that the recognizer has changed internal state that is
-    -- consistent with the ATN state passed in.  This way we always know
-    -- where we are in the ATN as the parser goes along. The rule
-    -- context objects form a stack that lets us see the stack of
-    -- invoking rules. Combine this and we have complete ATN
-    -- configuration information.
-    -- 
-    -- public final
-    procedure setState (atnState : ATStates.State) is
-    begin
---		System.err.println ("setState "+atnState);
-        _stateNumber := atnState
---		if ( traceATNStates ) _ctx.trace (atnState);
-    end if;
-
-    -- open
-    function getInputStream () return Optional_IntStream is
+   function getTokenTypeMap (This : Recognizer) return TokenID_Container.Map is
    begin
-        fatalError (#function + " must be overridden");
-    end if;
+      return TokenTypeMap (This);
+   end getTokenTypeMap;
 
-    -- open
-    procedure setInputStream (input : IntStream) is
-    begin
-        fatalError (#function + " must be overridden");
-    end if;
+   function TokenTypeMap (This : Recognizer) return TokenID_Container.Map
+      vocabulary : constant Vocabulary := getVocabulary (This);
+      result : TokenID_Container.Map;
+      length : constant := getATN ().maxTokenType;
+   begin
+      for i in 0 .. length loop
 
-    -- open
-    function getTokenFactory (This : …) return TokenFactory is
-begin
-        fatalError (#function + " must be overridden");
-    end if;
+         literalName : constant := vocabulary.getLiteralName (i);
+         if Is_Valid (literalName) then
+               result.insert (Key => literalName, New_Item => i);
+         end if;
 
-    -- open
-    procedure setTokenFactory (input : TokenFactory) is
-    begin
-        fatalError (#function + " must be overridden");
-    end if;
-end if;
+         symbolicName : constant := vocabulary.getSymbolicName (i)
+         if Is_Valid (symbolicName) then
+               result.insert (Key => symbolicName, New_Item => i);
+         end if;
+      end loop;
+
+      result.Insert (Key => "EOF", New_Item => CommonToken.EOF);
+
+      return result;
+   end TokenTypeMap;
+
+   function ruleIndexMap (This : Recognizer) return TokenID_Container.Map is
+      ruleNames : constant UString.Container.Vector := getRuleNames (This);
+   begin
+      return Utils.toMap (ruleNames);
+   end ruleIndexMap;
+
+   function getSerializedATN (This : Recognizer) return Integer.Container.Vector is
+      raise PROGRAM_ERROR with "there is no serialized ATN";
+   end getSerializedATN;
+
+   function getGrammarFileName (This : Recognizer) return UString is
+   begin
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getGrammarFileName() must be overridden";
+   end getGrammarFileName;
+
+   function getATN (This : Recognizer) return ATN is
+   begin
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getATN() must be overridden";
+   end getATN;
+
+   procedure setInterpreter (This : Recognizer; interpreter : ATNInterpreter) is
+   begin
+      This._interp := interpreter;
+   end setInterpreter;
+
+   function getErrorHeader (This : Recognizer; e : RecognitionException) return UString is
+      offending : constant := e.getOffendingToken ();
+      line : constant := offending.getLine ();
+      charPositionInLine : constant := offending.getCharPositionInLine ();
+   begin
+      return "line " & line'Image & ":" & charPositionInLine'Image & ""
+   end getErrorHeader;
+
+   procedure addErrorListener (This : Recognizer; listener : ANTLRErrorListener) is
+   begin
+      This._listeners.append (listener);
+   end addErrorListener;
+
+   procedure removeErrorListener (This : Recognizer; listener : ANTLRErrorListener) is
+      procedure Closure (Param_0 : <>) is
+      begin
+         Param_0 !== listener;
+      end Closure;
+   begin
+      This._listeners := This._listeners.filter ()) {Closure'Access};
+   end removeErrorListener;
+
+   procedure removeErrorListeners (This : Recognizer) is
+   begin
+      This._listeners.removeAll ();
+   end removeErrorListeners;
+
+   procedure action (This : Recognizer;
+                     _localctx : Optional_RuleContext;
+                     ruleIndex : Integer;
+                     actionIndex : Integer) is
+   begin
+      null;
+   end action;
+
+   procedure setState (This : Recognizer; atnState : ATStates.State) is
+   begin
+      --	System.err.println ("setState "+atnState);
+      This._stateNumber := atnState;
+      -- if ( traceATNStates ) _ctx.trace (atnState);
+   end setState;
+
+   function getInputStream (This : Recognizer) return Optional_IntStream is
+   begin
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getInputStream() must be overridden";
+   end getInputStream;
+
+   procedure setInputStream (This : Recognizer; input : IntStream) is
+   begin
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.setInputStream() must be overridden";
+   end setInputStream;
+
+   function getTokenFactory (This : Recognizer; This : Recognizer) return TokenFactory is
+   begin
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getTokenFactory() must be overridden";
+   end getTokenFactory;
+
+   procedure setTokenFactory (This : Recognizer; input : TokenFactory) is
+   begin
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.setTokenFactory() must be overridden";
+   end setTokenFactory;
+
+end ANTLR.Runtime.Recognizer;

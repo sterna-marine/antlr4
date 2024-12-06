@@ -29,7 +29,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#SKIP_.
+    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#SKIP_.
     -- 
     override
     -- public
@@ -40,7 +40,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `False`.
+    -- * returns: This method returns `False`.
     -- 
     override
     -- public

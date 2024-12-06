@@ -39,11 +39,11 @@ package ANTLR.Runtime.ATN.PredictionContext is
       -- private Hash_Code referenceHashCode () {
       -- Hash_Code hash := _org.antlr.v4.runtime.misc.MurmurHash#initialize MurmurHash.initialize_ (_#INITIAL_HASH_);
       --
-      -- for (int i := 0; i &lt; _#size ()_; i++) loop
+      -- for (int i := 0; i < _#size ()_; i++) loop
       -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_ (hash, _#getParent getParent_ (i));
       -- }
       --
-      -- for (int i := 0; i &lt; _#size ()_; i++) loop
+      -- for (int i := 0; i < _#size ()_; i++) loop
       -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_ (hash, _#getReturnState getReturnState_ (i));
       -- }
       --
@@ -127,11 +127,11 @@ package ANTLR.Runtime.ATN.PredictionContext is
    -- parent.
    --
    --
-   -- - parameter a: the first _org.antlr.v4.runtime.atn.SingletonPredictionContext_
-   -- - parameter b: the second _org.antlr.v4.runtime.atn.SingletonPredictionContext_
-   -- - parameter rootIsWildcard: `True` if this is a local-context merge,
+   -- * parameter a: the first _org.antlr.v4.runtime.atn.SingletonPredictionContext_
+   -- * parameter b: the second _org.antlr.v4.runtime.atn.SingletonPredictionContext_
+   -- * parameter rootIsWildcard: `True` if this is a local-context merge,
    -- otherwise False to indicate a full-context merge
-   -- - parameter mergeCache:
+   -- * parameter mergeCache:
    --
    -- public static 
    function mergeSingletons (a : SingletonPredictionContext;
@@ -173,9 +173,9 @@ package ANTLR.Runtime.ATN.PredictionContext is
    --
    --
    --
-   -- - parameter a: the first _org.antlr.v4.runtime.atn.SingletonPredictionContext_
-   -- - parameter b: the second _org.antlr.v4.runtime.atn.SingletonPredictionContext_
-   -- - parameter rootIsWildcard: `True` if this is a local-context merge,
+   -- * parameter a: the first _org.antlr.v4.runtime.atn.SingletonPredictionContext_
+   -- * parameter b: the second _org.antlr.v4.runtime.atn.SingletonPredictionContext_
+   -- * parameter rootIsWildcard: `True` if this is a local-context merge,
    -- otherwise False to indicate a full-context merge
    --
    -- public static 

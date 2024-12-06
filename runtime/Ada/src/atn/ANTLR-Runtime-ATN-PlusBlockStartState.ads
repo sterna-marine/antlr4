@@ -5,6 +5,8 @@ with ANTLR.Runtime.ATN.BlockStartState;
 with ANTLR.Runtime.ATN.PlusLoopbackState;
 
 use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.BlockStartState;
+use ANTLR.Runtime.ATN.PlusLoopbackState;
 
 package ANTLR.Runtime.ATN.PlusBlockStartState is 
 
@@ -19,7 +21,7 @@ package ANTLR.Runtime.ATN.PlusBlockStartState is
    type PlusBlockStartState is new BlockStartState with
    record
       -- public
-      loopBackState : PlusLoopbackState.Optional_PlusLoopbackState;
+      loopBackState : Optionaal_PlusLoopbackState;
    end record;
 
    override

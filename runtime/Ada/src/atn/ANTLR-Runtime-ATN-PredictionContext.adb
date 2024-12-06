@@ -45,17 +45,17 @@ package body ANTLR.Runtime.ATN.PredictionContext is
 
    function size (This : PredictionContext) return Integer is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.size() must be overridden";
    end size;
 
    function getParent (This : PredictionContext; index : Integer) return Optional_PredictionContext is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.getParent() must be overridden";
    end getParent;
 
    function getReturnState (This : PredictionContext; index : Integer) return ATNStates.State is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.getReturnState() must be overridden";
    end getReturnState;
 
    function isEmpty (This : PredictionContext) return Boolean

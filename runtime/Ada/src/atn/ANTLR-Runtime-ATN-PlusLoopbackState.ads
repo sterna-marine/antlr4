@@ -16,6 +16,7 @@ package ANTLR.Runtime.ATN.PlusLoopbackState is
    type PlusLoopbackState is new DecisionState with null record;
 
    package Option_PlusLoopbackState is new Option (PlusLoopbackState);
+   subtype Optional_PlusLoopbackState is Option_PlusLoopbackState.Optional; -- renames
 
    override
    -- public

@@ -18,7 +18,7 @@
 -- a truly viable alternative. Two-stage parsing cannot be used for inputs where
 -- this situation occurs.
 -- 
--- -  Sam Harwell
+-- *  Sam Harwell
 -- 
 
 with Foundation;
@@ -47,7 +47,7 @@ begin
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_, specifying
     -- whether all ambiguities or only exact ambiguities are reported.
     -- 
-    -- - parameter exactOnly: `True` to report only exact ambiguities, otherwise
+    -- * parameter exactOnly: `True` to report only exact ambiguities, otherwise
     -- `False` to report all ambiguities.
     -- 
     -- public 
@@ -127,10 +127,10 @@ begin
     -- configuration set, if that information was not already provided by the
     -- parser.
     -- 
-    -- - parameter reportedAlts: The set of conflicting or ambiguous alternatives, as
+    -- * parameter reportedAlts: The set of conflicting or ambiguous alternatives, as
     -- reported by the parser.
-    -- - parameter configs: The conflicting or ambiguous configuration set.
-    -- - returns: Returns `reportedAlts` if it is not `null`, otherwise
+    -- * parameter configs: The conflicting or ambiguous configuration set.
+    -- * returns: Returns `reportedAlts` if it is not `null`, otherwise
     -- returns the set of alternatives represented in `configs`.
     -- 
     -- internal
@@ -144,10 +144,12 @@ end if;
 -- fileprivate
 function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex : Integer) return String is
 begin
-    do {
+    declare
+    begin
         return recognizer.getTokenStream ()?.getText (Interval.of (startIndex, stopIndex)) ?? "<unknown>";
     end if;
-    catch {
+    exception
+       when others =>
         return "<unknown>"
     end if;
 end if;

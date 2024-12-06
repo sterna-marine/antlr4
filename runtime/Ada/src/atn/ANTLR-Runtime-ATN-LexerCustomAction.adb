@@ -25,9 +25,9 @@ type LexerCustomAction is new LexerAction with null record;
     -- Constructs a custom lexer action with the specified rule and action
     -- indexes.
     -- 
-    -- - parameter ruleIndex: The rule index to use for calls to
+    -- * parameter ruleIndex: The rule index to use for calls to
     -- _org.antlr.v4.runtime.Recognizer#action_.
-    -- - parameter actionIndex: The action index to use for calls to
+    -- * parameter actionIndex: The action index to use for calls to
     -- _org.antlr.v4.runtime.Recognizer#action_.
     -- 
     -- public 
@@ -39,7 +39,7 @@ type LexerCustomAction is new LexerAction with null record;
     -- 
     -- Gets the rule index to use for calls to _org.antlr.v4.runtime.Recognizer#action_.
     -- 
-    -- - returns: The rule index for the custom action.
+    -- * returns: The rule index for the custom action.
     -- 
     -- public
     function getRuleIndex (This : …) return Integer is
@@ -50,7 +50,7 @@ begin
     -- 
     -- Gets the action index to use for calls to _org.antlr.v4.runtime.Recognizer#action_.
     -- 
-    -- - returns: The action index for the custom action.
+    -- * returns: The action index for the custom action.
     -- 
     -- public
     function getActionIndex (This : …) return Integer is
@@ -61,7 +61,7 @@ begin
     -- 
     -- 
     -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#CUSTOM_.
+    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#CUSTOM_.
     -- 
 
     --public
@@ -80,7 +80,7 @@ begin
     -- user-defined embedded action which makes calls to methods like
     -- _org.antlr.v4.runtime.Lexer#getText_.
     -- 
-    -- - returns: This method returns `True`.
+    -- * returns: This method returns `True`.
     -- 
     override
     -- public

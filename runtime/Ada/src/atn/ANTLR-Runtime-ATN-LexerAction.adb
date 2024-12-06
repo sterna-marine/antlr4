@@ -4,30 +4,30 @@ package body ANTLR.Runtime.ATN.LexerAction is
 
    function getActionType (This : LexerAction) return LexerActionType is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.getActionType() must be overridden";
    end getActionType;
 
    function isPositionDependent (This : LexerAction) return Boolean is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.isPositionDependent() must be overridden";
    end isPositionDependent;
 
    procedure execute (This : LexerAction; lexer : Lexer) is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.execute() must be overridden";
    end execute;
 
    procedure hash (This : LexerAction; into hasher: in out Hasher) is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.hash() must be overridden";
    end hash;
 
-   function "=" (Lhs : LexerAction; Rhs : LexerAction) return Boolean is
+   function "=" (Lhs, Rhs : LexerAction) return Boolean is
    begin
 
-      if Lhs === Rhs then
-         return True;
-      end if;
+      --  if Lhs === Rhs then
+      --     return True;
+      --  end if;
 
       if (Lhs is LexerChannelAction) and then (Rhs is LexerChannelAction) then
          return (LexerChannelAction (Lhs)) = (LexerChannelAction (Rhs));
@@ -47,9 +47,9 @@ package body ANTLR.Runtime.ATN.LexerAction is
          return (LexerSkipAction (Lhs)) = (LexerSkipAction (Rhs));
       elsif (Lhs is LexerTypeAction) and then (Rhs is LexerTypeAction) then
          return (LexerTypeAction (Lhs)) = (LexerTypeAction (Rhs));
+      else
+         return False;
       end if;
-
-      return False;
    end "=";
 
 end ANTLR.Runtime.ATN.LexerAction;

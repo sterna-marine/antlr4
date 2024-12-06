@@ -33,14 +33,14 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ with the specified rule
     -- name and bypass token type and no label.
     -- 
-    -- - Parameter ruleName: The name of the parser rule this rule tag matches.
-    -- - Parameter bypassTokenType: The bypass token type assigned to the parser rule.
+    -- * Parameter ruleName: The name of the parser rule this rule tag matches.
+    -- * Parameter bypassTokenType: The bypass token type assigned to the parser rule.
     -- 
-    -- - Throws: ANTLRError.illegalArgument if `ruleName` is `null`
+    -- * Throws: ANTLRError.illegalArgument if `ruleName` is `null`
     -- or empty.
     -- 
     -- public convenience
-    procedure Init (Self : in out …; ruleName : String; bypassTokenType : Integer) {
+    procedure Init (Self : in out …; ruleName : String; bypassTokenType : Token_Kind) {
         self.init (ruleName, bypassTokenType, null);
     end if;
 
@@ -48,16 +48,16 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ with the specified rule
     -- name, bypass token type, and label.
     -- 
-    -- - Parameter ruleName: The name of the parser rule this rule tag matches.
-    -- - Parameter bypassTokenType: The bypass token type assigned to the parser rule.
-    -- - Parameter label: The label associated with the rule tag, or `null` if
+    -- * Parameter ruleName: The name of the parser rule this rule tag matches.
+    -- * Parameter bypassTokenType: The bypass token type assigned to the parser rule.
+    -- * Parameter label: The label associated with the rule tag, or `null` if
     -- the rule tag is unlabeled.
     -- 
-    -- - Throws: ANTLRError.illegalArgument if `ruleName` is `null`
+    -- * Throws: ANTLRError.illegalArgument if `ruleName` is `null`
     -- or empty.
     -- 
     -- public 
-    procedure Init (Self : in out …; ruleName : String; bypassTokenType : Integer; label : Optional_String;) {
+    procedure Init (Self : in out …; ruleName : String; bypassTokenType : Token_Kind; label : Optional_String;) {
         self.ruleName := ruleName
         self.bypassTokenType := bypassTokenType
         self.label := label
@@ -66,7 +66,7 @@ type RuleTagToken is new Token and CustomStringConvertible with null record;
     -- 
     -- Gets the name of the rule associated with this rule tag.
     -- 
-    -- - Returns: The name of the parser rule associated with this rule tag.
+    -- * Returns: The name of the parser rule associated with this rule tag.
     -- 
     -- public final
     function getRuleName (This : …) return String is
@@ -77,7 +77,7 @@ begin
     -- 
     -- Gets the label associated with the rule tag.
     -- 
-    -- - Returns: The name of the label associated with the rule tag, or
+    -- * Returns: The name of the label associated with the rule tag, or
     -- `null` if this is an unlabeled rule tag.
     -- 
     -- public final

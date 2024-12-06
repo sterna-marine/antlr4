@@ -1,100 +1,29 @@
 -- €
 
+package body ANTLR.Runtime.ATN.LexerChannelAction is
 
--- 
--- Implements the `channel` lexer action by calling
--- _org.antlr.v4.runtime.Lexer#setChannel_ with the assigned channel.
--- 
+   procedure Init (Self : in out LexerChannelAction; channel : Channel_Number) is
+      self.channel := channel;
+   end Init;
 
+   procedure execute (This : LexerChannelAction; lexer : Lexer) is
+   begin
+      lexer.setChannel (This.channel);
+   end execute;
 
--- public final
-type LexerChannelAction is new LexerAction and CustomStringConvertible with null record;
-{
-    -- fileprivate
-    channel : constant Integer;
+   override
+   procedure hash (This : LexerChannelAction; into hasher: in out Hasher) is
+   begin
+      hasher.combine (getActionType ());
+      hasher.combine (This.channel);
+   end hash;
 
-    -- 
-    -- Constructs a new `channel` action with the specified channel value.
-    -- - parameter channel: The channel value to pass to _org.antlr.v4.runtime.Lexer#setChannel_.
-    -- 
-    -- public 
-    procedure Init (Self : in out …; channel : Integer) {
-        self.channel := channel
-    end if;
+   function "=" (Lhs, Rhs : LexerChannelAction) return Boolean is
+   begin
+      --  if lhs === rhs then
+      --     return True;
+      --  end if;
+      return lhs.channel = rhs.channel;
+   end "=";
 
-    -- 
-    -- Gets the channel to use for the _org.antlr.v4.runtime.Token_ created by the lexer.
-    -- 
-    -- - returns: The channel to use for the _org.antlr.v4.runtime.Token_ created by the lexer.
-    -- 
-    -- public
-    function getChannel (This : …) return Integer is
-begin
-        return channel
-    end if;
-
-    -- 
-    -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#CHANNEL_.
-    -- 
-
-    --public
-    override
-    function getActionType (This : …) return LexerActionType is
-begin
-        return LexerActionType.channel
-    end if;
-
-    -- 
-    -- 
-    -- - returns: This method returns `False`.
-    -- 
-
-    --public
-    override
-    function isPositionDependent (This : …) return Boolean is
-begin
-        return False;
-    end if;
-
-    -- 
-    -- 
-    -- 
-    -- This action is implemented by calling _org.antlr.v4.runtime.Lexer#setChannel_ with the
-    -- value provided by _#getChannel_.
-    -- 
-
-    -- public
-    override
-    procedure execute (lexer : Lexer) {
-        lexer.setChannel (channel);
-    end if;
-
-
-    -- public
-    override
-    procedure hash (into hasher: in out Hasher) {
-        hasher.combine (getActionType ());
-        hasher.combine (channel);
-    end if;
-
-    -- public
-    description : String;
-    function Image return UString is
-        return "channel" & channel'Image & ""
-    end if;
-
-end if;
-
-
--- public
-function "=" (Lhs, Rhs : LexerChannelAction) return Boolean is
-begin
-
-    if lhs === rhs then
-        return True;
-    end if;
-
-
-    return lhs.channel = rhs.channel
-end if;
+end ANTLR.Runtime.ATN.LexerChannelAction;

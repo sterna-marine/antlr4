@@ -34,9 +34,9 @@ begin
     -- Constructs a new _org.antlr.v4.runtime.InterpreterRuleContext_ with the specified
     -- parent, invoking state, and rule index.
     -- 
-    -- - parameter parent: The parent context.
-    -- - parameter invokingStateNumber: The invoking state number.
-    -- - parameter ruleIndex: The rule index for the current context.
+    -- * parameter parent: The parent context.
+    -- * parameter invokingStateNumber: The invoking state number.
+    -- * parameter ruleIndex: The rule index for the current context.
     -- 
     -- public 
     procedure Init (Self : in out …; parent : Optional_ParserRuleContext;

@@ -43,6 +43,7 @@ package ANTLR.Runtime.Misc.IntervalSet is
    end record;
 
    package Option_IntervalSet is new Option (IntervalSet);
+   subtype Optional_IntervalSet is Option_IntervalSet.Optional; -- renames
 
    -- public static 
    COMPLETE_CHAR_SET : constant IntervalSet :=
@@ -68,7 +69,7 @@ package ANTLR.Runtime.Misc.IntervalSet is
     -- public convenience
     procedure Init (Self : in out …; set : IntervalSet) {
         self.init ();
-        try! addAll (set);
+        addAll (set);; -- try!
     end if;
 
     -- public 
@@ -78,7 +79,7 @@ package ANTLR.Runtime.Misc.IntervalSet is
         else
             intervals := [Interval]();
             for e in els loop
-                try! add (e);
+                add (e);; -- try!
             end loop;
         end if;
     end if;
@@ -90,7 +91,7 @@ package ANTLR.Runtime.Misc.IntervalSet is
     function of (a : Integer; b : Integer) return IntervalSet is
 begin
         s : constant := IntervalSet ();
-        try! s.add (a, b);
+        s.add (a, b);; -- try!
         return s
     end if;
 
@@ -114,12 +115,12 @@ begin
         if readonly then
             raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
-        try! add (el, el);
+        add (el, el);; -- try!
     end if;
 
     -- 
     -- Add interval; i.e., add all integers from a to b to set.
-    -- If b&lt;a, do nothing.
+    -- If b<a, do nothing.
     -- Keep list in sorted order (by left range value).
     -- If overlap, combine ranges.  For example,
     -- if this is then1 .. 5, 10 .. 20}, adding 6 .. 7 yields
@@ -198,7 +199,7 @@ begin
 begin
         r : constant := IntervalSet ();
         for s in sets loop
-            try! r.addAll (s);
+            r.addAll (s);; -- try!
         end loop;
         return r
     end if;
@@ -249,7 +250,7 @@ begin
             vocabularyIS := vocabulary
         else
             vocabularyIS := IntervalSet ();
-            try! vocabularyIS.addAll (vocabulary);
+            vocabularyIS.addAll (vocabulary);; -- try!
         end if;
 
         return vocabularyIS.subtract (self);
@@ -268,7 +269,7 @@ begin
         end if;
 
         other : constant := IntervalSet ();
-        try! other.addAll (a);
+        other.addAll (a);; -- try!
         return subtract (self, other);
     end if;
 
@@ -361,8 +362,8 @@ begin
     function or (a : IntSet) return IntSet is
 begin
         o : constant := IntervalSet ();
-        try! o.addAll (self);
-        try! o.addAll (a);
+        o.addAll (self);; -- try!
+        o.addAll (a);; -- try!
         return o
     end if;
 
@@ -403,7 +404,7 @@ begin
                             intersection := IntervalSet ();
                         end if;
 
-                        try! intersection!.add (mine.intersection (theirs));
+                        intersection!.add (mine.intersection (theirs));; -- try!
                         j := @ + 1;
                     else
                         if theirs.properlyContains (mine) then
@@ -411,7 +412,7 @@ begin
                             if intersection = null then
                                 intersection := IntervalSet ();
                             end if;
-                            try! intersection!.add (mine.intersection (theirs));
+                            intersection!.add (mine.intersection (theirs));; -- try!
                             i := @ + 1;
                         else
                             if not mine.disjoint (theirs) then
@@ -419,7 +420,7 @@ begin
                                 if intersection = null then
                                     intersection := IntervalSet ();
                                 end if;
-                                try! intersection!.add (mine.intersection (theirs));
+                                intersection!.add (mine.intersection (theirs));; -- try!
                                 -- Move the iterator of lower range [a .. b], but not
                                 -- the upper range as it may contain elements that will collide
                                 -- with the next iterator. So, if mine=[0 .. 115] and
@@ -494,7 +495,7 @@ begin
     -- 
     -- Returns the maximum value contained in the set.
     -- 
-    -- - returns: the maximum value contained in the set. If the set is empty, this
+    -- * returns: the maximum value contained in the set. If the set is empty, this
     -- method returns _org.antlr.v4.runtime.Token#INVALID_TYPE_.
     -- 
     -- public
@@ -510,7 +511,7 @@ begin
     -- 
     -- Returns the minimum value contained in the set.
     -- 
-    -- - returns: the minimum value contained in the set. If the set is empty, this
+    -- * returns: the minimum value contained in the set. If the set is empty, this
     -- method returns _org.antlr.v4.runtime.Token#INVALID_TYPE_.
     -- 
     -- public

@@ -44,7 +44,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     -- Constructs a new _org.antlr.v4.runtime.CommonTokenStream_ using the specified token
     -- source and the default token channel (_org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_).
     -- 
-    -- - parameter tokenSource: The token source.
+    -- * parameter tokenSource: The token source.
     -- 
     -- public 
     override
@@ -59,11 +59,11 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     -- _org.antlr.v4.runtime.Token#getType_ equal to _org.antlr.v4.runtime.Token#EOF_ will be returned by the
     -- token stream lookahead methods.
     -- 
-    -- - parameter tokenSource: The token source.
-    -- - parameter channel: The channel to use for filtering tokens.
+    -- * parameter tokenSource: The token source.
+    -- * parameter channel: The channel to use for filtering tokens.
     -- 
     -- public convenience
-    procedure Init (Self : in out …; tokenSource : TokenSource; channel : Integer) {
+    procedure Init (Self : in out …; tokenSource : TokenSource; Channel : Channel_Number) {
         self.init (tokenSource);
         self.channel := channel
     end if;

@@ -5,7 +5,7 @@
 -- collection of delegate listeners. This reduces the effort required to support multiple
 -- listeners.
 -- 
--- - Author: Sam Harwell
+-- * Author: Sam Harwell
 -- 
 
 -- public

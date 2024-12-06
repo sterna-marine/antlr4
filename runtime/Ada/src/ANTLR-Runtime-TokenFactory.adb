@@ -12,12 +12,12 @@ type TokenFactory is interface;
     -- error handling strategy. If text /= null, than the start and stop positions
     -- are wiped to -1 in the text override is set in the CommonToken.
     -- 
-    function create (source : TokenSourceAndStream; type : Integer; text : Optional_String;
-                channel : Integer; start : Integer; stop : Integer;
+    function create (source : TokenSourceAndStream; Type : Token_Kind; text : Optional_String;
+                Channel : Channel_Number; start : Integer; stop : Integer;
                 line : Integer; charPositionInLine : Integer) return Token is
    begin
     -- Generically useful
-    function create (type : Integer; text : String) return Token
+    function create (Type : Token_Kind; text : String) return Token
 
 end if;
 

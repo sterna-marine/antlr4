@@ -265,10 +265,13 @@ begin
         tokens.replace (0, 2, "x");
         tokens.insertBefore (1, "0");
 
-        do {
+        declare
+        begin
             _ := tokens.getText ();
             XCTFail ("Expected exception not thrown.");
-        end if; catch ANTLRError.illegalArgument (let msg) {
+        exception
+           when ANTLRError.illegalArgument =>
+              (let msg)
             expecting : constant := "insert op <InsertBeforeOp@[@1,1:1='b',<2>,1:1]:""0""> within boundaries of previous <ReplaceOp@[@0,0:0='a',<1>,1:0]..[@2,2:2='c',<3>,1:2]:""x"">"
 
             XCTAssertEqual (expecting, msg);
@@ -384,10 +387,13 @@ begin
         tokens.replace (2, 4, "x");
         tokens.insertBefore (4, "y");
 
-        do {
+        declare
+        begin
             _ := tokens.getText ();
             XCTFail ("Expected exception not thrown.");
-        end if; catch ANTLRError.illegalArgument (let msg) {
+        exception
+           when ANTLRError.illegalArgument =>
+              (let msg)
             expecting : constant := "insert op <InsertBeforeOp@[@4,4:4='c',<3>,1:4]:""y""> within boundaries of previous <ReplaceOp@[@2,2:2='c',<3>,1:2]..[@4,4:4='c',<3>,1:4]:""x"">"
 
             XCTAssertEqual (expecting, msg);
@@ -444,10 +450,13 @@ begin
         tokens.replace (2, 4, "xyz");
         tokens.replace (3, 5, "foo");
 
-        do {
+        declare
+        begin
             _ := tokens.getText ();
             XCTFail ("Expected exception not thrown.");
-        end if; catch ANTLRError.illegalArgument (let msg) {
+        exception
+           when ANTLRError.illegalArgument =>
+              (let msg)
             expecting : constant := "replace op boundaries of <ReplaceOp@[@3,3:3='c',<3>,1:3]..[@5,5:5='b',<2>,1:5]:""foo""> overlap with previous <ReplaceOp@[@2,2:2='c',<3>,1:2]..[@4,4:4='c',<3>,1:4]:""xyz"">"
             XCTAssertEqual (expecting, msg);
         end if;
@@ -463,10 +472,13 @@ begin
         tokens.replace (2, 4, "xyz");
         tokens.replace (1, 3, "foo");
 
-        do {
+        declare
+        begin
             _ := tokens.getText ();
             XCTFail ("Expected exception not thrown.");
-        end if; catch ANTLRError.illegalArgument (let msg) {
+        exception
+           when ANTLRError.illegalArgument =>
+              (let msg)
             expecting : constant := "replace op boundaries of <ReplaceOp@[@1,1:1='b',<2>,1:1]..[@3,3:3='c',<3>,1:3]:""foo""> overlap with previous <ReplaceOp@[@2,2:2='c',<3>,1:2]..[@4,4:4='c',<3>,1:4]:""xyz"">"
             XCTAssertEqual (expecting, msg);
         end if;
@@ -593,10 +605,13 @@ begin
         stream.fill ();
         -- cannot split earlier replace
 
-        do {
+        declare
+        begin
             _ := tokens.getText ();
             XCTFail ("Expected exception not thrown.");
-        end if; catch ANTLRError.illegalArgument (let msg) {
+        exception
+           when ANTLRError.illegalArgument =>
+              (let msg)
             expecting : constant := "replace op boundaries of <ReplaceOp@[@1,1:1='b',<2>,1:1]..[@2,2:2='c',<3>,1:2]:""foo""> overlap with previous <ReplaceOp@[@0,0:0='a',<1>,1:0]..[@3,3:3='c',<3>,1:3]:""bar"">"
             XCTAssertEqual (expecting, msg);
         end if;

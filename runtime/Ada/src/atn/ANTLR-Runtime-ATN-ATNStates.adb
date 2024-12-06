@@ -67,7 +67,7 @@ package body ANTLR.Runtime.ATN.ATNStates is
     -- public
    function getStateType (This : ATNState) return Integer is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.ATNStates.getStateType() must be overridden";
    end getStateType;
 
     -- public final

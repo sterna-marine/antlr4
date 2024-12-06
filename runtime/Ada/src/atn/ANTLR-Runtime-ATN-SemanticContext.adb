@@ -1,45 +1,48 @@
 -- €
 
+package body ANTLR.Runtime.ATN.SemanticContext is 
 
--- --------------------------------------------
+--
 -- A tree structure used to record the semantic context in which
 -- an ATN configuration is valid.  It's either a single predicate,
 -- a conjunction `p1 and p2`, or a sum of products `p1 or p2`.
--- --------------------------------------------
+--
 -- I have scoped the _org.antlr.v4.runtime.atn.SemanticContext.AND_, _org.antlr.v4.runtime.atn.SemanticContext.OR_, and _org.antlr.v4.runtime.atn.SemanticContext.Predicate_ subclasses of
 -- _org.antlr.v4.runtime.atn.SemanticContext_ within the scope of this outer class.
--- --------------------------------------------
+--
 
-with Foundation;
 
 -- public
 type SemanticContext is new Hashable and CustomStringConvertible with null record;
 {
-    -- --------------------------------------------
+    --
     -- For context independent predicates, we evaluate them without a local
     -- context (i.e., null context). That way, we can evaluate them without
     -- having to create proper rule-specific context during prediction (as
     -- opposed to the parser, which creates them naturally). In a practical
     -- sense, this avoids a cast exception from RuleContext to myruleContext.
-    -- --------------------------------------------
+    --
     -- For context dependent predicates, we must pass in a local context so that
     -- references such as $arg evaluate properly as _localctx.arg. We only
     -- capture context dependent predicates in the context in which we begin
     -- prediction, so we passed in the outer context here in case of context
     -- dependent predicate evaluation.
-    -- --------------------------------------------
+    --
     -- public
-    function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
-begin
-        fatalError (#function + " must be overridden");
+    generic
+      type T is private;
+      package Recognizer_T is new Recognizer (T);
+    function eval (parser : Recognizer_T.Recognizer, parserCallStack : RuleContext) return Boolean is
+   begin
+        raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.eval() must be overridden";
     end if;
 
-    -- --------------------------------------------
+    --
     -- Evaluate the precedence predicates for the context and reduce the result.
-    -- --------------------------------------------
-    -- - parameter parser: The parser instance.
-    -- - parameter parserCallStack:
-    -- - returns: The simplified semantic context after precedence predicates are
+    --
+    -- * parameter parser: The parser instance.
+    -- * parameter parserCallStack:
+    -- * returns: The simplified semantic context after precedence predicates are
     -- evaluated, which will be one of the following values.
     -- * _#NONE_: if the predicate simplifies to `True` after
     -- precedence predicates are evaluated.
@@ -49,7 +52,7 @@ begin
     -- precedence predicate evaluation.
     -- * A non-`null` _org.antlr.v4.runtime.atn.SemanticContext_: the new simplified
     -- semantic context after precedence predicates are evaluated.
-    -- --------------------------------------------
+    --
     -- public
     function evalPrecedence<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Optional_SemanticContext is
    begin
@@ -59,22 +62,21 @@ begin
     -- public
     procedure hash (into hasher: in out Hasher) is
     begin
-        fatalError (#function + " must be overridden");
+        raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.hash() must be overridden";
     end if;
 
     -- public
-    description : String;
     function Image return UString is
-        fatalError (#function + " must be overridden");
+        raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.Image() must be overridden";
     end if;
 
     -- public
     type Empty is new SemanticContext with null record;
 {
-        -- --------------------------------------------
+        --
         -- The default _org.antlr.v4.runtime.atn.SemanticContext_, which is semantically equivalent to
         -- a predicate of the form `{True?}.
-        -- --------------------------------------------
+        --
         -- public static 
         Instance : constant Empty := Empty ();
 
@@ -194,35 +196,35 @@ begin
         end if;
     end if;
 
-    -- --------------------------------------------
+    --
     -- This is the base class for semantic context "operators", which operate on
     -- a collection of semantic context "operands".
-    -- --------------------------------------------
-    -- -  4.3
-    -- --------------------------------------------
+    --
+    -- *  4.3
+    --
 
     -- public
     type Operator is new SemanticContext with null record;
 {
-        -- --------------------------------------------
+        --
         -- Gets the operands for the semantic context operator.
-        -- --------------------------------------------
-        -- - returns: a collection of _org.antlr.v4.runtime.atn.SemanticContext_ operands for the
+        --
+        -- * returns: a collection of _org.antlr.v4.runtime.atn.SemanticContext_ operands for the
         -- operator.
-        -- --------------------------------------------
-        -- -  4.3
-        -- --------------------------------------------
+        --
+        -- *  4.3
+        --
 
         -- public
         function getOperands () return Array<SemanticContext> {
-            fatalError (#function + " must be overridden");
+            raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.getOperands() must be overridden";
         end if;
     end if;
 
-    -- --------------------------------------------
+    --
     -- A semantic context which is True whenever none of the contained contexts
     -- is False.
-    -- --------------------------------------------
+    --
 
     -- public
     type AND is new Operator with null record;
@@ -273,13 +275,13 @@ begin
             hasher.combine (opnds);
         end if;
 
-        -- --------------------------------------------
-        -- --------------------------------------------
-        -- --------------------------------------------
-        -- --------------------------------------------
+        --
+        --
+        --
+        --
         -- The evaluation of predicates by this context is short-circuiting, but
         -- unordered.
-        -- --------------------------------------------
+        --
         override
         -- public
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
@@ -329,10 +331,10 @@ begin
         end if;
     end if;
 
-    -- --------------------------------------------
+    --
     -- A semantic context which is True whenever at least one of the contained
     -- contexts is True.
-    -- --------------------------------------------
+    --
 
     -- public
     type OR is new Operator with null record;
@@ -382,13 +384,13 @@ begin
             hasher.combine (opnds);
         end if;
 
-        -- --------------------------------------------
-        -- --------------------------------------------
-        -- --------------------------------------------
-        -- --------------------------------------------
+        --
+        --
+        --
+        --
         -- The evaluation of predicates by this context is short-circuiting, but
         -- unordered.
-        -- --------------------------------------------
+        --
         override
         -- public
         function eval<T> (parser : Recognizer<T>, parserCallStack : RuleContext) return Boolean is
@@ -452,10 +454,10 @@ begin
         return result
     end if;
 
-    -- --------------------------------------------
-    -- --------------------------------------------
-    -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getPredsForAmbigAlts
-    -- --------------------------------------------
+    --
+    --
+    -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getPredsForAmbigAlts
+    --
     -- public static
     function or (a : Optional_SemanticContext; b : Optional_SemanticContext;) return SemanticContext is
 begin
@@ -484,7 +486,6 @@ begin
         collection := Set<SemanticContext> (collection.filter { not ($0 is PrecedencePredicate) });
         return result
     end if;
-end if;
 
 -- public
 function "=" (Lhs, Rhs : SemanticContext) return Boolean is
@@ -551,3 +552,5 @@ begin
     end if;
     return lhs.opnds = rhs.opnds
 end if;
+
+end ANTLR.Runtime.ATN.SemanticContext;

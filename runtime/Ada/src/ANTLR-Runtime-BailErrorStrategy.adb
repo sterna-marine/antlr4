@@ -25,7 +25,7 @@
 -- 
 -- `myparser.setErrorHandler (new BailErrorStrategy ());`
 -- 
--- - seealso: org.antlr.v4.runtime.Parser#setErrorHandler (org.antlr.v4.runtime.ANTLRErrorStrategy);
+-- * seealso: org.antlr.v4.runtime.Parser#setErrorHandler (org.antlr.v4.runtime.ANTLRErrorStrategy);
 -- 
 -- 
 -- open

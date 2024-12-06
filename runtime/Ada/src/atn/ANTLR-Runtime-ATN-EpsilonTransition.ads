@@ -20,11 +20,11 @@ package ANTLR.Runtime.ATN.EpsilonTransition is
                    outermostPrecedenceReturn : Integer);
                    
    -- 
-   -- - returns: the rule index of a precedence rule for which this transition is
+   -- * returns: the rule index of a precedence rule for which this transition is
    -- returning from, where the precedence value is 0; otherwise, -1.
    -- 
-   -- - seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed ();
-   -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#applyPrecedenceFilter (org.antlr.v4.runtime.atn.ATNConfigSet);
+   -- * seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed ();
+   -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#applyPrecedenceFilter (org.antlr.v4.runtime.atn.ATNConfigSet);
    -- 
 
    -- public

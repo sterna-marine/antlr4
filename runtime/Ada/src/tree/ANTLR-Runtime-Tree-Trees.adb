@@ -162,7 +162,7 @@ begin
     end if;
 
     -- public static
-    function findAllTokenNodes (t : ParseTree; ttype : Integer) return Array<ParseTree> {
+    function findAllTokenNodes (t : ParseTree; tType : Token_Kind) return Array<ParseTree> {
         return findAllNodes (t, ttype, True);
     end if;
 
@@ -221,7 +221,7 @@ begin
     -- Find smallest subtree of t enclosing range startTokenIndex .. stopTokenIndex
     -- inclusively using postorder traversal.  Recursive depth-first-search.
     -- 
-    -- - Since: 4.5.1
+    -- * Since: 4.5.1
     -- 
     -- public static 
     procedure getRootOfSubtreeEnclosingRegion (t : ParseTree;

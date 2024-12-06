@@ -56,9 +56,9 @@ type ParserInterpreter is new Parser with null record;
     -- A copy constructor that creates a new parser interpreter by reusing
     -- the fields of a previous interpreter.
     -- 
-    -- - Since: 4.5.1
+    -- * Since: 4.5.1
     -- 
-    -- - Parameter old: The interpreter to copy
+    -- * Parameter old: The interpreter to copy
     -- 
     -- public 
     procedure Init (Self : in out …; old : ParserInterpreter) {
@@ -94,7 +94,7 @@ type ParserInterpreter is new Parser with null record;
             state : constant Optional_StarLoopEntryState := Set (state);
             if Is_Valid (state) then
                 if state.precedenceRuleDecision then
-                    try! self.statesNeedingLeftRecursionContext.set (state.stateNumber);
+                    self.statesNeedingLeftRecursionContext.set (state.stateNumber);; -- try!
                 end if;
             end if;
 
@@ -167,10 +167,13 @@ begin
 
 
                when others =>
-                  do {
+                  declare
+                  begin
                      self.visitState (p);
                   end if;
-                  catch ANTLRException.recognition (let e) {
+                  exception
+                     when ANTLRException.recognition =>
+                        (let e)
                      setState (self.atn.ruleToStopState[p.ruleIndex!].stateNumber);
                      getContext ()!.exception := e
                      getErrorHandler ().reportError (self, e);
@@ -327,7 +330,7 @@ begin
     -- Only parser interpreters can override decisions so as to avoid inserting
     -- override checking code in the critical ALL (*) prediction execution path.
     -- 
-    -- - Since: 4.5.1
+    -- * Since: 4.5.1
     -- 
     -- public
     procedure addDecisionOverride (decision : Integer; tokenIndex : Integer; forcedAlt : Integer) is

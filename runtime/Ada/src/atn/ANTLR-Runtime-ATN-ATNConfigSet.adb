@@ -173,16 +173,16 @@ begin
     -- Gets the complete set of represented alternatives for the configuration
     -- set.
     -- --------------------------------------------
-    -- - returns: the set of represented alternatives in this configuration set
+    -- * returns: the set of represented alternatives in this configuration set
     -- --------------------------------------------
-    -- - since: 4.3
+    -- * since: 4.3
     -- --------------------------------------------
     -- public
     function getAlts (This : …) return BitSet is
 begin
         alts : constant := BitSet ();
         for config in configs loop
-            try! alts.set (config.alt);
+            alts.set (config.alt);; -- try!
         end loop;
         return alts
     end if;
@@ -350,7 +350,7 @@ begin
                 configToAlts[hash] := alts
             end if;
 
-            try! alts.set (cfg.alt);
+            alts.set (cfg.alt);; -- try!
         end loop;
 
         return Array (configToAlts.values);
@@ -369,7 +369,7 @@ begin
                 m[cfg.state.stateNumber] := alts
             end if;
 
-            try! alts.set (cfg.alt);
+            alts.set (cfg.alt);; -- try!
         end loop;
         return m
     end if;
@@ -392,7 +392,7 @@ begin
     function getAltBitSet () return BitSet  {
         result : constant := BitSet ();
         for config in configs loop
-            try! result.set (config.alt);
+            result.set (config.alt);; -- try!
         end loop;
         return result
     end if;
@@ -429,14 +429,14 @@ begin
     -- public
     function removeAllConfigsNotInRuleStopState (mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
 begin
-        if PredictionMode.allConfigsInRuleStopStates (self) then
+        if PredictionModes.allConfigsInRuleStopStates (self) then
             return self;
         end if;
 
         result : constant := ATNConfigSet (fullCtx);
         for config in configs loop
             if config.state is RuleStopState then
-                try! result.add (config, &mergeCache);
+                result.add (config, &mergeCache);; -- try!
                 goto CONTINUE_CONFIGS;
             end if;
 
@@ -444,7 +444,7 @@ begin
                 nextTokens : constant := atn.nextTokens (config.state);
                 if nextTokens.contains (CommonToken.EPSILON) then
                     endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
-                    try! result.add (ATNConfig (config, endOfRuleState), &mergeCache);
+                    result.add (ATNConfig (config, endOfRuleState), &mergeCache);; -- try!
                 end if;
             end if;
             <<CONTINUE_CONFIGS>>
@@ -473,9 +473,9 @@ begin
 
             statesFromAlt1[config.state.stateNumber] := config.context
             if updatedContext /= config.semanticContext then
-                try! configSet.add (ATNConfig (config, updatedContext!), &mergeCache);
+                configSet.add (ATNConfig (config, updatedContext!), &mergeCache);; -- try!
             else
-                try! configSet.add (config, &mergeCache);
+                configSet.add (config, &mergeCache);; -- try!
             end if;
             <<CONTINUE_CONFIGS>>
         end loop;
@@ -499,7 +499,7 @@ begin
                 end if;
             end if;
 
-            try! configSet.add (config, &mergeCache);
+            configSet.add (config, &mergeCache);; -- try!
             <<CONTINUE>>
         end loop;
 
@@ -541,7 +541,7 @@ begin
             if config.getOuterContextDepth () > 0 or else
                 (config.state is RuleStopState and
                     config.context!.hasEmptyPath ()) {
-                try! alts.add (config.alt);
+                alts.add (config.alt);; -- try!
             end if;
         end loop;
         if alts.size () == 0 then
@@ -570,12 +570,12 @@ begin
             if config.semanticContext /= SemanticContext.Empty.Instance then
                 predicateEvaluationResult : constant := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
                 if predicateEvaluationResult then
-                    try! succeeded.add (config);
+                    succeeded.add (config);; -- try!
                 else
-                    try! failed.add (config);
+                    failed.add (config);; -- try!
                 end if;
             else
-                try! succeeded.add (config);
+                succeeded.add (config);; -- try!
             end if;
         end loop;
         return (succeeded, failed);
@@ -587,7 +587,7 @@ begin
         dup : constant := ATNConfigSet ();
         for config in configs loop
             c : constant := ATNConfig (config, SemanticContext.Empty.Instance);
-            try! dup.add (c);
+            dup.add (c);; -- try!
         end loop;
         return dup
     end if;

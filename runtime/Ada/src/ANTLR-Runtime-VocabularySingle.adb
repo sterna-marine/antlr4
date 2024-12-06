@@ -4,7 +4,7 @@
 -- This class provides a default implementation of the _org.antlr.v4.runtime.Vocabulary_
 -- interface.
 -- 
--- - Author: Sam Harwell
+-- * Author: Sam Harwell
 -- 
 
 -- public
@@ -38,11 +38,11 @@ type Vocabulary is new Hashable with null record;
     -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
     -- literal and symbolic token names.
     -- 
-    -- - SeeAlso: #getLiteralName (int);
-    -- - SeeAlso: #getSymbolicName (int);
-    -- - Parameter literalNames: The literal names assigned to tokens, or `null`
+    -- * SeeAlso: #getLiteralName (int);
+    -- * SeeAlso: #getSymbolicName (int);
+    -- * Parameter literalNames: The literal names assigned to tokens, or `null`
     -- if no literal names are assigned.
-    -- - Parameter symbolicNames: The symbolic names assigned to tokens, or
+    -- * Parameter symbolicNames: The symbolic names assigned to tokens, or
     -- `null` if no symbolic names are assigned.
     -- 
     -- 
@@ -55,14 +55,14 @@ type Vocabulary is new Hashable with null record;
     -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
     -- literal, symbolic, and display token names.
     -- 
-    -- - SeeAlso: #getLiteralName (int);
-    -- - SeeAlso: #getSymbolicName (int);
-    -- - SeeAlso: #getDisplayName (int);
-    -- - Parameter literalNames: The literal names assigned to tokens, or `null`
+    -- * SeeAlso: #getLiteralName (int);
+    -- * SeeAlso: #getSymbolicName (int);
+    -- * SeeAlso: #getDisplayName (int);
+    -- * Parameter literalNames: The literal names assigned to tokens, or `null`
     -- if no literal names are assigned.
-    -- - Parameter symbolicNames: The symbolic names assigned to tokens, or
+    -- * Parameter symbolicNames: The symbolic names assigned to tokens, or
     -- `null` if no symbolic names are assigned.
-    -- - Parameter displayNames: The display names assigned to tokens, or `null`
+    -- * Parameter displayNames: The display names assigned to tokens, or `null`
     -- to use the values in `literalNames` and `symbolicNames` as
     -- the source of display names, as described in
     -- _#getDisplayName (int)_.
@@ -84,9 +84,9 @@ type Vocabulary is new Hashable with null record;
     -- _#getLiteralName (int)_ and _#getSymbolicName (int)_, and the
     -- value from `tokenNames` for the display names.
     -- 
-    -- - Parameter tokenNames: The token names, or `null` if no token names are
+    -- * Parameter tokenNames: The token names, or `null` if no token names are
     -- available.
-    -- - Returns: A _org.antlr.v4.runtime.Vocabulary_ instance which uses `tokenNames` for
+    -- * Returns: A _org.antlr.v4.runtime.Vocabulary_ instance which uses `tokenNames` for
     -- the display names of tokens.
     -- 
     -- public static
@@ -125,7 +125,7 @@ begin
 
 
     -- public
-    function getLiteralName (tokenType : Integer) return Optional_String is
+    function getLiteralName (tokenType : Token_Kind) return Optional_String is
    begin
         if tokenType >= 0 and then tokenType < literalNames.count then
             return literalNames[tokenType];
@@ -136,7 +136,7 @@ begin
 
 
     -- public
-    function getSymbolicName (tokenType : Integer) return Optional_String is
+    function getSymbolicName (tokenType : Token_Kind) return Optional_String is
    begin
         if tokenType >= 0 and then tokenType < symbolicNames.count then
             return symbolicNames[tokenType];
@@ -150,7 +150,7 @@ begin
 
 
     -- public
-    function getDisplayName (tokenType : Integer) return String is
+    function getDisplayName (tokenType : Token_Kind) return String is
 begin
         if tokenType >= 0 and then tokenType < displayNames.count then
             if displayName : constant := displayNames[tokenType] then

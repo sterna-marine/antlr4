@@ -23,7 +23,7 @@ package ANTLR.Runtime.Misc.Interval is
       Some_hasher.combine (This.B);
    end Hash;
 
-   function differenceNotProperlyContained (This, Other : Interval) return Option_Interval.Optional is
+   function differenceNotProperlyContained (This, Other : Interval) return Optional_Interval is
       Diff : Option_Interval.Optional;
    begin
       -- Other.A to left of This.A (or same);

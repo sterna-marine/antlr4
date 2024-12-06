@@ -17,8 +17,8 @@ type TextChunk is new Chunk and CustomStringConvertible with null record;
     -- 
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.TextChunk_ with the specified text.
     -- 
-    -- - Parameter text: The text of this chunk.
-    -- - Throws: ANTLRError.illegalArgument if `text` is `null`.
+    -- * Parameter text: The text of this chunk.
+    -- * Throws: ANTLRError.illegalArgument if `text` is `null`.
     -- 
     -- public 
     procedure Init (Self : in out …; text : String) {
@@ -28,7 +28,7 @@ type TextChunk is new Chunk and CustomStringConvertible with null record;
     -- 
     -- Gets the raw text of this chunk.
     -- 
-    -- - Returns: The text of the chunk.
+    -- * Returns: The text of the chunk.
     -- 
 
     -- public final

@@ -4,11 +4,13 @@ with Ada.Containers.Vector;
 with ANTLR.Runtime.ATN.DFAState;
 with ANTLR.Runtime.ATN.DecisionState;
 with ANTLR.Runtime.Misc.Utils.Mutex;
+with ANTLR.Runtime.VocabularySingle;
 
+use ANTLR.Runtime;
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.DFAState;
 use ANTLR.Runtime.ATN.DecisionState;
-use with ANTLR.Runtime.Misc;
+use ANTLR.Runtime.Misc;
 use ANTLR.Runtime.Misc.Utils;
 
 package body ANTLR.Runtime.ATN.DFA is 
@@ -88,9 +90,9 @@ package body ANTLR.Runtime.ATN.DFA is
    -- supplying individual start states corresponding to specific precedence
    -- values.
    -- 
-   -- - returns: `True` if this is a precedence DFA; otherwise,
+   -- * returns: `True` if this is a precedence DFA; otherwise,
    -- `False`.
-   -- - seealso: org.antlr.v4.runtime.Parser#getPrecedence ();
+   -- * seealso: org.antlr.v4.runtime.Parser#getPrecedence ();
    -- 
    -- public final
    function isPrecedenceDfa (This : DFA) return Boolean
@@ -99,12 +101,12 @@ package body ANTLR.Runtime.ATN.DFA is
    -- 
    -- Get the start state for a specific precedence value.
    -- 
-   -- - parameter precedence: The current precedence.
-   -- - returns: The start state corresponding to the specified precedence, or
+   -- * parameter precedence: The current precedence.
+   -- * returns: The start state corresponding to the specified precedence, or
    -- `null` if no start state exists for the specified precedence.
    -- 
-   -- - throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
-   -- - seealso: #isPrecedenceDfa ();
+   -- * throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
+   -- * seealso: #isPrecedenceDfa ();
    -- 
    -- public final
    function getPrecedenceStartState (This : DFA; precedence : Integer) return Optional_DFAState is
@@ -113,22 +115,25 @@ package body ANTLR.Runtime.ATN.DFA is
          raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state."; 
       end if;
 
-      if not Is_Valid (This.s0) or not Is_Valid (This.s0.edges) or not precedence >= 0 or not precedence < edges.count then
+      if not Is_Valid (This.s0)
+         or not Is_Valid (This.s0.edges)
+         or not precedence >= 0
+         or not precedence < edges.count then
          return Optional_DFAState (Valid => False);
+      else
+         return Element (edges, precedence);
       end if;
-
-      return Element (edges, precedence);
    end getPrecedenceStartState;
 
    -- 
    -- Set the start state for a specific precedence value.
    -- 
-   -- - parameter precedence: The current precedence.
-   -- - parameter startState: The start state corresponding to the specified
+   -- * parameter precedence: The current precedence.
+   -- * parameter startState: The start state corresponding to the specified
    -- precedence.
    -- 
-   -- - throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
-   -- - seealso: #isPrecedenceDfa ();
+   -- * throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
+   -- * seealso: #isPrecedenceDfa ();
    -- 
    -- public final
    procedure setPrecedenceStartState (This : DFA; precedence : Integer; startState : DFAState) is
@@ -138,9 +143,9 @@ package body ANTLR.Runtime.ATN.DFA is
          -- s0.edges is never null for a precedence DFA
          if precedence >= edges.count then
             increase : constant := [DFAState?](repeating: null, count: (precedence + 1 - edges.count));
-            s0.edges := edges + increase
+            s0.edges := edges + increase;
          else
-            DFAState.Container.Element (s0.edges, precedence) := startState
+            DFAState.Container.Element (s0.edges, precedence) := startState;
          end if;
       end Closure;
       Closure_Return_Value : …;
@@ -151,14 +156,16 @@ package body ANTLR.Runtime.ATN.DFA is
          raise ANTLRError.illegalState with "Only precedence DFAs may contain a precedence start state.";
       end if;
 
-      if not Is_Valid (s0) or not Is_Valid (s0.edges) or not precedence >= 0 then
-         return null;
+      if not Is_Valid (s0)
+         or not Is_Valid (s0.edges)
+         or not precedence >= 0 then
+         exit;
+      else
+         -- synchronization on s0 here is ok. when the DFA is turned into a
+         -- precedence DFA, s0 will be initialized once and not updated again
+         s0.Mutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
+         --TOFIX return Closure_Return_Value;
       end if;
-
-      -- synchronization on s0 here is ok. when the DFA is turned into a
-      -- precedence DFA, s0 will be initialized once and not updated again
-      s0.Mutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
-      --TOFIX return Closure_Return_Value;
 
    end setPrecedenceStartState;
 
@@ -166,40 +173,49 @@ package body ANTLR.Runtime.ATN.DFA is
    -- Return a list of all states in this DFA, ordered by state number.
    -- 
    -- public
-   function getStates (This : DFA) return [DFAState]
-      is [DFAState](states.keys);
+   function getStates (This : DFA) return DFAState.Container.Vector is
+      result : DFAState.Container.Vector := [DFAState](states.keys);
 
-   -- closure
-   function "<" (This : DFA; Lhs, Rhs : ) return True is
+      function "<" (Left, Right : DFAState) return Boolean
+         is (Left.stateNumber < Right.stateNumber);
+
+       package DFAState_Sorting is new DFAState.Container.Generic_Sorting ("<");
+
    begin
-      (lhs < rhs);
-      result := result.sorted {$0.stateNumber < $1.stateNumber};
-      return result
-   end "<";
+      DFAState_Sorting.Sort (result);
+      return result;
+   end getStates;
 
    -- public
    function Image (This : DFA) return UString
-      is toString (Vocabulary.EMPTY_VOCABULARY);
+      is toString (VocabularySingle.EMPTY_VOCABULARY);
 
    -- public
-   function toString (This : DFA, vocabulary : Vocabulary) return String is
+   function toString (This : DFA, vocabulary : Vocabulary) return UString is
    begin
-      if s0 = null then
+      if not Is_Valid (This.s0) then
          return "";
+      else
+         declare
+            serializer : constant := DFASerializer (This, vocabulary);
+         begin
+            return serializer'Image;
+         end;
+      end if;
    end toString;
-
-   serializer : constant := DFASerializer (self, vocabulary);
-      return serializer.description
-   end if;
 
    -- public
    function toLexerString (This : DFA) return UString is
    begin
-      if s0 = null then
+      if not Is_Valid (This.s0) then
          return "";
+      else
+         declare
+            serializer : constant := LexerDFASerializer (This);
+         begin
+            return serializer'Image;
+         end
       end if;
-      serializer : constant := LexerDFASerializer (self);
-      return serializer.description
    end toLexerString;
 
 end ANTLR.Runtime.ATN.DFA;

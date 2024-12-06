@@ -29,10 +29,10 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- Construct a new instance of _org.antlr.v4.runtime.tree.pattern.TagChunk_ using the specified tag and
     -- no label.
     -- 
-    -- - Parameter tag: The tag, which should be the name of a parser rule or token
+    -- * Parameter tag: The tag, which should be the name of a parser rule or token
     -- type.
     -- 
-    -- - Throws: ANTLRError.illegalArgument if `tag` is `null` or
+    -- * Throws: ANTLRError.illegalArgument if `tag` is `null` or
     -- empty.
     -- 
     -- public convenience
@@ -44,12 +44,12 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- Construct a new instance of _org.antlr.v4.runtime.tree.pattern.TagChunk_ using the specified label
     -- and tag.
     -- 
-    -- - Parameter label: The label for the tag. If this is `null`, the
+    -- * Parameter label: The label for the tag. If this is `null`, the
     -- _org.antlr.v4.runtime.tree.pattern.TagChunk_ represents an unlabeled tag.
-    -- - Parameter tag: The tag, which should be the name of a parser rule or token
+    -- * Parameter tag: The tag, which should be the name of a parser rule or token
     -- type.
     -- 
-    -- - Throws: ANTLRError.illegalArgument if `tag` is `null` or
+    -- * Throws: ANTLRError.illegalArgument if `tag` is `null` or
     -- empty.
     -- 
     -- public 
@@ -66,7 +66,7 @@ type TagChunk is new Chunk and CustomStringConvertible with null record;
     -- 
     -- Get the tag for this chunk.
     -- 
-    -- - Returns: The tag for the chunk.
+    -- * Returns: The tag for the chunk.
     -- 
     -- public final
     function getTag (This : …) return String is
@@ -77,7 +77,7 @@ begin
     -- 
     -- Get the label, if any, assigned to this chunk.
     -- 
-    -- - Returns: The label assigned to this chunk, or `null` if no label is
+    -- * Returns: The label assigned to this chunk, or `null` if no label is
     -- assigned to the chunk.
     -- 
     -- public final

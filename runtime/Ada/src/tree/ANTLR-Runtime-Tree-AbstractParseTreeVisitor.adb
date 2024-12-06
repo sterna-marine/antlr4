@@ -83,7 +83,7 @@ begin
     -- 
     -- The base implementation returns `null`.
     -- 
-    -- - Returns: The default value returned by visitor methods.
+    -- * Returns: The default value returned by visitor methods.
     -- 
     -- open
     function defaultResult () return Optional_T is
@@ -101,14 +101,14 @@ begin
     -- _#visitChildren_ will return the result of the last child visited
     -- (or return the initial value if the node has no children).
     -- 
-    -- - Parameter aggregate: The previous aggregate value. In the default
+    -- * Parameter aggregate: The previous aggregate value. In the default
     -- implementation, the aggregate value is initialized to
     -- _#defaultResult_, which is passed as the `aggregate` argument
     -- to this method after the first child node is visited.
-    -- - Parameter nextResult: The result of the immediately preceeding call to visit
+    -- * Parameter nextResult: The result of the immediately preceeding call to visit
     -- a child node.
     -- 
-    -- - Returns: The updated aggregate result.
+    -- * Returns: The updated aggregate result.
     -- 
     -- open
     function aggregateResult (aggregate : Optional_T; nextResult : Optional_T;) return Optional_T is
@@ -131,12 +131,12 @@ begin
     -- child has the potential to determine the result of the visit operation as
     -- a whole.
     -- 
-    -- - Parameter node: The _org.antlr.v4.runtime.tree.RuleNode_ whose children are currently being
+    -- * Parameter node: The _org.antlr.v4.runtime.tree.RuleNode_ whose children are currently being
     -- visited.
-    -- - Parameter currentResult: The current aggregate result of the children visited
+    -- * Parameter currentResult: The current aggregate result of the children visited
     -- to the current point.
     -- 
-    -- - Returns: `True` to continue visiting children. Otherwise return
+    -- * Returns: `True` to continue visiting children. Otherwise return
     -- `False` to stop visiting children and immediately return the
     -- current aggregate result from _#visitChildren_.
     -- 

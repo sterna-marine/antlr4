@@ -1,38 +1,43 @@
 -- €
 
-with Unicode;
-use Unicode;
+with Ada.Characters.Latin_1, Unicode;
 
--- public
-type Utils is tagged record
+use Ada.Characters, Unicode;
 
-    -- public static
-    function escapeWhitespace (s : String; escapeSpaces  : Boolean) return String is
-begin
-        buf := ""
-        for c in s loop
-            if c == " " and then escapeSpaces then
-                buf := @ + To_Unicode (16#00B7#);
-            elsif c == "\t" then
-                    buf := @ + "\\t";
-            elsif c == "\n" then
-                buf := @ + "\\n";
-            elsif c == "\r" then
-                buf := @ + "\\r";
-            else
-                buf.append (c);
-            end if;
-        end loop;
-        return buf
-    end if;
+package ANTLR.Runtime.Misc.Utils is
 
+   -- public static
+   function escapeWhitespace (s : UString; escapeSpaces : Boolean) return UString is
+      Buf : UString := "";
+   begin
+      for c in s loop
+         if c = Latin_1.Space and then escapeSpaces then
+               Buf := @ & To_Unicode (16#00B7#);
+         elsif c = Latin_1.HT then
+                  Buf := @ & "\\t"; -- Latin_1.HT
+         elsif c = Latin_1.LF then
+               Buf := @ & "\\n";    -- Latin_1.LF
+         elsif c = Latin_1.CR then
+               Buf := @ & "\\r";    -- Latin_1.CR
+         else
+               Buf.Append (c);
+         end if;
+      end loop;
+      return Buf;
+   end escapeWhitespace;
 
-    -- public static
-    function toMap (keys : [String]) return [String: Int] {
-        m := [String: Int]();
-        for (index, v) in keys.enumerated () loop
-            m[v] := index
-        end loop;
-        return m
-    end if;
-end if;
+   -- public static
+   function toMap (Keys : UString.Container.Vector) return TokenID_Container.Map is
+      M : TokenID_Container.Map;
+   begin
+      --  for V of Keys loop
+      --     M.Append (V, index);
+      --  end loop;
+      for K_Cursor in Keys loop
+         M.Insert (Key      => Keys.Element (K_Cursor),
+                   New_Item => Keys.To_Index (K_Cursor));
+      end loop;
+      return M;
+   end toMap;
+
+end ANTLR.Runtime.Misc.Utils;

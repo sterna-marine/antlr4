@@ -52,7 +52,7 @@ type ListTokenSource is new TokenSource with null record;
     -- Constructs a new _org.antlr.v4.runtime.ListTokenSource_ instance from the specified
     -- collection of _org.antlr.v4.runtime.Token_ objects.
     -- 
-    -- - parameter tokens: The collection of _org.antlr.v4.runtime.Token_ objects to provide as a
+    -- * parameter tokens: The collection of _org.antlr.v4.runtime.Token_ objects to provide as a
     -- _org.antlr.v4.runtime.TokenSource_.
     -- 
     -- public convenience
@@ -64,9 +64,9 @@ type ListTokenSource is new TokenSource with null record;
     -- Constructs a new _org.antlr.v4.runtime.ListTokenSource_ instance from the specified
     -- collection of _org.antlr.v4.runtime.Token_ objects and source name.
     -- 
-    -- - parameter tokens: The collection of _org.antlr.v4.runtime.Token_ objects to provide as a
+    -- * parameter tokens: The collection of _org.antlr.v4.runtime.Token_ objects to provide as a
     -- _org.antlr.v4.runtime.TokenSource_.
-    -- - parameter sourceName: The name of the _org.antlr.v4.runtime.TokenSource_. If this value is
+    -- * parameter sourceName: The name of the _org.antlr.v4.runtime.TokenSource_. If this value is
     -- `null`, _#getSourceName_ will attempt to infer the name from
     -- the next _org.antlr.v4.runtime.Token_ (or the previous token if the end of the input has
     -- been reached).

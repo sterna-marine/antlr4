@@ -29,10 +29,10 @@ type LexerIndexedCustomAction is new LexerAction with null record;
     -- Note: This class is only required for lexer actions for which
     -- _org.antlr.v4.runtime.atn.LexerAction#isPositionDependent_ returns `True`.
     -- 
-    -- - parameter offset: The offset into the input _org.antlr.v4.runtime.CharStream_, relative to
+    -- * parameter offset: The offset into the input _org.antlr.v4.runtime.CharStream_, relative to
     -- the token start index, at which the specified lexer action should be
     -- executed.
-    -- - parameter action: The lexer action to execute at a particular offset in the
+    -- * parameter action: The lexer action to execute at a particular offset in the
     -- input _org.antlr.v4.runtime.CharStream_.
     -- 
     -- public 
@@ -46,7 +46,7 @@ type LexerIndexedCustomAction is new LexerAction with null record;
     -- action should be executed. The value is interpreted as an offset relative
     -- to the token start index.
     -- 
-    -- - returns: The location in the input _org.antlr.v4.runtime.CharStream_ at which the lexer
+    -- * returns: The location in the input _org.antlr.v4.runtime.CharStream_ at which the lexer
     -- action should be executed.
     -- 
     -- public
@@ -58,7 +58,7 @@ begin
     -- 
     -- Gets the lexer action to execute.
     -- 
-    -- - returns: A _org.antlr.v4.runtime.atn.LexerAction_ object which executes the lexer action.
+    -- * returns: A _org.antlr.v4.runtime.atn.LexerAction_ object which executes the lexer action.
     -- 
     -- public
     function getAction (This : …) return LexerAction is
@@ -69,7 +69,7 @@ begin
     -- 
     -- 
     -- 
-    -- - returns: This method returns the result of calling _#getActionType_
+    -- * returns: This method returns the result of calling _#getActionType_
     -- on the _org.antlr.v4.runtime.atn.LexerAction_ returned by _#getAction_.
     -- 
 
@@ -82,7 +82,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `True`.
+    -- * returns: This method returns `True`.
     -- 
 
     --public

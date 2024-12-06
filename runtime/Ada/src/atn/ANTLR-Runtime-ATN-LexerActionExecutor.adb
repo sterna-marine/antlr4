@@ -1,6 +1,9 @@
 -- €
 
-package body ANTLR.Runtime.ATN.LexerAction is
+with Ada.Containers;
+with ANTLR.Runtime.ATN.LexerAction;
+
+package body ANTLR.Runtime.ATN.LexerActionExecutor is
 
    procedure Init (Self : in out LexerActionExecutor; lexerActions : LexerAction.Container.Vector) is
    begin
@@ -16,21 +19,22 @@ package body ANTLR.Runtime.ATN.LexerAction is
                     lexerActionExecutor : Optional_LexerActionExecutor;
                     lexerAction : LexerAction)
                     return LexerActionExecutor is
+      lexerActions : LexerActionContainer.Vector;
    begin
       if not Is_Valid (lexerActionExecutor) then
-            return LexerActionExecutor ([lexerAction]);
+            return LexerActionExecutor ([lexerAction]); --TOFIX
       end if;
 
       --lexerActions : [LexerAction] := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
-      lexerActions : [LexerAction] := lexerActionExecutor.lexerActions;
-      lexerActions.append (lexerAction);
+      lexerActions := lexerActionExecutor.lexerActions;
+      LexerActionContainer.Append (lexerActions, lexerAction);
       --lexerActions[lexerActions.length - 1] := lexerAction;
       return LexerActionExecutor (lexerActions);
    end append;
 
    function fixOffsetBeforeMatch (This : LexerActionExecutor; offset : Integer) return LexerActionExecutor is
-      updatedLexerActions : [LexerAction]? := null;
-      length : constant := lexerActions.count
+      updatedLexerActions : LexerAction.Container.Vector := LexerAction.Container.Empty_Vector;
+      length : constant Ada.Containers.Count_Type := LexerAction.Container.Legnth (This.lexerActions);
    begin
       for i in 0 .. length - 1 loop
          if lexerActions[i].isPositionDependent () and then not (lexerActions[i] is LexerIndexedCustomAction) then
@@ -43,10 +47,10 @@ package body ANTLR.Runtime.ATN.LexerAction is
       end loop;
 
       if updatedLexerActions = null then
-            return self;
+            return This;
+      else
+         return LexerActionExecutor (updatedLexerActions!);
       end if;
-
-      return LexerActionExecutor (updatedLexerActions!);
    end fixOffsetBeforeMatch;
 
    procedure execute (This : LexerActionExecutor;
@@ -77,7 +81,7 @@ package body ANTLR.Runtime.ATN.LexerAction is
       defer:
          begin
             if requiresSeek then
-               try! input.seek (stopIndex);
+               input.seek (stopIndex);; -- try!
             end if;
          end defer;
 
@@ -88,22 +92,21 @@ package body ANTLR.Runtime.ATN.LexerAction is
       hasher.combine (hashCode);
    end hash;
 
-   function "=" (lhs: LexerActionExecutor; rhs: LexerActionExecutor) return Boolean is
+   function "=" (lhs, rhs: LexerActionExecutor) return Boolean is
    begin
       --  if lhs === rhs then
       --     return True;
       --  end if;
       if LexerAction.Container.Length (Lhs.lexerActions) /= LexerAction.Container.Length (Rhs.lexerActions) then
          return False;
+      else
+         for i in 0 .. LexerAction.Container.Length (Lhs.lexerActions) - 1 loop
+            if not LexerAction.Container.Element (Lhs.lexerActions, i) = LexerAction.Container.Element (Rhs.lexerActions, i) then
+               return False;
+            end if;
+         end loop;
+         return (lhs.hashCode = rhs.hashCode);
       end if;
-
-      for i in 0 .. LexerAction.Container.Length (Lhs.lexerActions) - 1 loop
-         if not LexerAction.Container.Element (Lhs.lexerActions, i) = LexerAction.Container.Element (Rhs.lexerActions, i) then
-            return False;
-         end if;
-      end loop;
-
-      return lhs.hashCode = rhs.hashCode
    end "=";
 
-end ANTLR.Runtime.ATN.LexerAction;
+end ANTLR.Runtime.ATN.LexerActionExecutor;

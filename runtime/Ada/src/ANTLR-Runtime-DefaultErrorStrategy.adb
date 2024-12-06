@@ -15,7 +15,7 @@ type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
     -- error". This is used to suppress reporting multiple error messages while
     -- attempting to recover from a detected syntax error.
     -- 
-    -- - seealso: #inErrorRecoveryMode
+    -- * seealso: #inErrorRecoveryMode
     -- 
     -- open
     errorRecoveryMode := False;
@@ -70,7 +70,7 @@ begin
     -- This method is called to enter error recovery mode when a recognition
     -- exception is reported.
     -- 
-    -- - parameter recognizer: the parser instance
+    -- * parameter recognizer: the parser instance
     -- 
     -- open
     procedure beginErrorCondition (recognizer : Parser) is
@@ -88,7 +88,7 @@ begin
     -- This method is called to leave error recovery mode after recovering from
     -- a recognition exception.
     -- 
-    -- - parameter recognizer:
+    -- * parameter recognizer:
     -- 
     -- open
     procedure endErrorCondition (recognizer : Parser) is
@@ -292,10 +292,10 @@ begin
     -- This is called by _#reportError_ when the exception is a
     -- _org.antlr.v4.runtime.NoViableAltException_.
     -- 
-    -- - seealso: #reportError
+    -- * seealso: #reportError
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - parameter e: the recognition exception
+    -- * parameter recognizer: the parser instance
+    -- * parameter e: the recognition exception
     -- 
     -- open
     procedure reportNoViableAlternative (recognizer : Parser; e : NoViableAltException) is
@@ -305,10 +305,12 @@ begin
         if e.getStartToken ().getType () == CommonToken.EOF then
             input := "<EOF>"
         else
-            do {
+            declare
+            begin
                 input := tokens.getText (e.getStartToken (), e.getOffendingToken ());
             end if;
-            catch {
+            exception
+               when others =>
                 input := "<unknown>"
             end if;
         end if;
@@ -320,15 +322,15 @@ begin
     -- This is called by _#reportError_ when the exception is an
     -- _org.antlr.v4.runtime.InputMismatchException_.
     -- 
-    -- - seealso: #reportError
+    -- * seealso: #reportError
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - parameter e: the recognition exception
+    -- * parameter recognizer: the parser instance
+    -- * parameter e: the recognition exception
     -- 
     -- open
     procedure reportInputMismatch (recognizer : Parser; e : InputMismatchException) is
     begin
-        tok : constant Token := getTokenErrorDisplay (e.getOffendingToken ());
+        tok : constant UString := getTokenErrorDisplay (e.getOffendingToken ());
         expected : constant := e.getExpectedTokens ()?.toString (recognizer.getVocabulary ()) ?? "<missing>"
         msg : constant := "mismatched input " & tok'Image & " expecting " & expected'Image & ""
         recognizer.notifyErrorListeners (e.getOffendingToken (), msg, e);
@@ -338,10 +340,10 @@ begin
     -- This is called by _#reportError_ when the exception is a
     -- _org.antlr.v4.runtime.FailedPredicateException_.
     -- 
-    -- - seealso: #reportError
+    -- * seealso: #reportError
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - parameter e: the recognition exception
+    -- * parameter recognizer: the parser instance
+    -- * parameter e: the recognition exception
     -- 
     -- open
     procedure reportFailedPredicate (recognizer : Parser; e : FailedPredicateException) is
@@ -367,7 +369,7 @@ begin
     -- enter error recovery mode, followed by calling
     -- _org.antlr.v4.runtime.Parser#notifyErrorListeners_.
     -- 
-    -- - parameter recognizer: the parser instance
+    -- * parameter recognizer: the parser instance
     -- 
     -- open
     procedure reportUnwantedToken (recognizer : Parser) is
@@ -379,7 +381,7 @@ begin
         beginErrorCondition (recognizer);
 
         t : constant := try? recognizer.getCurrentToken ();
-        tokenName : constant Token := getTokenErrorDisplay (t);
+        tokenName : constant UString := getTokenErrorDisplay (t);
         expecting : constant := (try? getExpectedTokens (recognizer)) ?? IntervalSet.EMPTY_SET
         msg : constant := "extraneous input " & tokenName'Image & " expecting \(expecting.toString (recognizer.getVocabulary ()))"
         recognizer.notifyErrorListeners (t, msg, null);
@@ -400,7 +402,7 @@ begin
     -- enter error recovery mode, followed by calling
     -- _org.antlr.v4.runtime.Parser#notifyErrorListeners_.
     -- 
-    -- - parameter recognizer: the parser instance
+    -- * parameter recognizer: the parser instance
     -- 
     -- open
     procedure reportMissingToken (recognizer : Parser) is
@@ -459,7 +461,7 @@ begin
     -- derivation:
     -- 
     -- 
-    -- =&gt; ID '=' '(' Integer ')' ('+' atom)* ';'
+    -- => ID '=' '(' Integer ')' ('+' atom)* ';'
     -- ^
     -- 
     -- 
@@ -503,8 +505,8 @@ begin
     -- `True`, the caller is responsible for creating and inserting a
     -- token with the correct type to produce this behavior.
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - returns: `True` if single-token insertion is a viable recovery
+    -- * parameter recognizer: the parser instance
+    -- * returns: `True` if single-token insertion is a viable recovery
     -- strategy for the current mismatched input, otherwise `False`
     -- 
     -- open
@@ -540,8 +542,8 @@ begin
     -- before returning _#reportMatch_ is called to signal a successful
     -- match.
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - returns: the successfully matched _org.antlr.v4.runtime.Token_ instance if single-token
+    -- * parameter recognizer: the parser instance
+    -- * returns: the successfully matched _org.antlr.v4.runtime.Token_ instance if single-token
     -- deletion successfully recovers from the mismatched input, otherwise
     -- `null`
     -- 
@@ -638,7 +640,7 @@ begin
     -- so that it creates a new Java type.
     -- 
     -- open
-    function getTokenErrorDisplay (t : Optional_Token;) return String is
+    function getTokenErrorDisplay (t : Optional_Token;) return UString is
 begin
         if not Is_Valid (t) then
             return "<no token>"
@@ -781,10 +783,10 @@ begin
             invokingState : constant := atn.states[ctxWrap.invokingState]!
             rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
             follow : constant := atn.nextTokens (rt.followState);
-            try! recoverSet.addAll (follow);
+            recoverSet.addAll (follow);; -- try!
             ctx := ctxWrap.parent
         end loop;
-        try! recoverSet.remove (CommonToken.EPSILON);
+        recoverSet.remove (CommonToken.EPSILON);; -- try!
 --		print ("recover set "+recoverSet.toString (recognizer.getTokenNames ()));
         return recoverSet
     end if;

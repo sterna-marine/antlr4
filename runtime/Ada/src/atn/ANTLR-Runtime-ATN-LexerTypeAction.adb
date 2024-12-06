@@ -15,16 +15,16 @@ type LexerTypeAction is new LexerAction and CustomStringConvertible with null re
 
     -- 
     -- Constructs a new `type` action with the specified token type value.
-    -- - parameter type: The type to assign to the token using _org.antlr.v4.runtime.Lexer#setType_.
+    -- * parameter type: The type to assign to the token using _org.antlr.v4.runtime.Lexer#setType_.
     -- 
     -- public 
-    procedure Init (Self : in out …; type : Integer) {
+    procedure Init (Self : in out …; Type : Token_Kind) {
         self.type := type
     end if;
 
     -- 
     -- Gets the type to assign to a token created by the lexer.
-    -- - returns: The type to assign to a token created by the lexer.
+    -- * returns: The type to assign to a token created by the lexer.
     -- 
     -- public
     function getType (This : …) return Integer is
@@ -34,7 +34,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#TYPE_.
+    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#TYPE_.
     -- 
 
     --public
@@ -46,7 +46,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `False`.
+    -- * returns: This method returns `False`.
     -- 
     override
     -- public

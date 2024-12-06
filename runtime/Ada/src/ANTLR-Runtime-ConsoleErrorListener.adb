@@ -3,7 +3,7 @@
 
 -- 
 -- 
--- -  Sam Harwell
+-- *  Sam Harwell
 -- 
 
 -- public

@@ -119,7 +119,7 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- A collection of _org.antlr.v4.runtime.atn.ContextSensitivityInfo_ instances describing the
       -- context sensitivities encountered during LL prediction for this decision.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.ContextSensitivityInfo
+      -- * seealso: org.antlr.v4.runtime.atn.ContextSensitivityInfo
       -- 
       -- public final 
       contextSensitivities: Array<ContextSensitivityInfo> := Array<ContextSensitivityInfo> ();
@@ -129,7 +129,7 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- identified during calls to _org.antlr.v4.runtime.atn.ParserATNSimulator#adaptivePredict_ for
       -- this decision.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.ErrorInfo
+      -- * seealso: org.antlr.v4.runtime.atn.ErrorInfo
       -- 
       -- public final 
       errors: Array<ErrorInfo> := Array<ErrorInfo> ();
@@ -138,7 +138,7 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- A collection of _org.antlr.v4.runtime.atn.AmbiguityInfo_ instances describing the
       -- ambiguities encountered during LL prediction for this decision.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.AmbiguityInfo
+      -- * seealso: org.antlr.v4.runtime.atn.AmbiguityInfo
       -- 
       -- public final 
       ambiguities: Array<AmbiguityInfo> := Array<AmbiguityInfo> ();
@@ -148,7 +148,7 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- results of evaluating individual predicates during prediction for this
       -- decision.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.PredicateEvalInfo
+      -- * seealso: org.antlr.v4.runtime.atn.PredicateEvalInfo
       -- 
       -- public final 
       predicateEvals: Array<PredicateEvalInfo> := Array<PredicateEvalInfo> ();
@@ -165,9 +165,9 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- future parsing of this decision. Otherwise, the SLL parsing algorithm
       -- will use ATN transitions exclusively.
       -- 
-      -- - seealso: #SLL_ATNTransitions
-      -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#computeTargetState
-      -- - seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#computeTargetState
+      -- * seealso: #SLL_ATNTransitions
+      -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#computeTargetState
+      -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#computeTargetState
       -- 
       -- public
       SLL_ATNTransitions : Int64 := 0
@@ -179,8 +179,8 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- If the ATN simulator implementation does not use DFA caching for SLL
       -- transitions, this value will be 0.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getExistingTargetState
-      -- - seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#getExistingTargetState
+      -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getExistingTargetState
+      -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#getExistingTargetState
       -- 
       -- public
       SLL_DFATransitions : Int64 := 0
@@ -211,9 +211,9 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- future parsing of this decision. Otherwise, the LL parsing algorithm will
       -- use ATN transitions exclusively.
       -- 
-      -- - seealso: #LL_DFATransitions
-      -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#computeTargetState
-      -- - seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#computeTargetState
+      -- * seealso: #LL_DFATransitions
+      -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#computeTargetState
+      -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#computeTargetState
       -- 
       -- public
       LL_ATNTransitions : Int64 := 0
@@ -225,8 +225,8 @@ package ANTLR.Runtime.ATN.DecisionInfo is
       -- If the ATN simulator implementation does not use DFA caching for LL
       -- transitions, this value will be 0.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getExistingTargetState
-      -- - seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#getExistingTargetState
+      -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getExistingTargetState
+      -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#getExistingTargetState
       -- 
       -- public
       LL_DFATransitions : Int64 := 0
@@ -237,7 +237,7 @@ package ANTLR.Runtime.ATN.DecisionInfo is
    -- Constructs a new instance of the _org.antlr.v4.runtime.atn.DecisionInfo_ class to contain
    -- statistics for a particular decision.
    -- 
-   -- - parameter decision: The decision number
+   -- * parameter decision: The decision number
    -- 
    -- public 
    procedure Init (Self : in out DecisionInfo; decision : Integer);

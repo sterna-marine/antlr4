@@ -107,12 +107,14 @@ package ANTLR.Runtime.ATN.ATNStates is
       EMPTY_RETURN_STATE => Integer'Last);
    for State'size use Integer'Size;
 
-   package Option_IntervalSet is new Option (IntervalSet);
-
    package Container is new Ada.Cantainers.Vector (
       Index_Type : Natural;
       Element_Type : State;
       "=" : "=");
+
+   -- Optionals
+   package Option_State is new Option (State);
+   subtype Optional_State is Option_State.Optional; -- renames
 
    -- public
    type ATNState is new Hashable with record
@@ -144,17 +146,20 @@ package ANTLR.Runtime.ATN.ATNStates is
       nextTokenWithinRule: Option_IntervalSet.Optional;
    end record;
 
+   package Container_ATNState is new Ada.Cantainers.Vector (
+      Index_Type : Natural;
+      Element_Type : ATNState;
+      "=" : "=");
+   package Container renames package Container_ATNState;
 
-   package Optional_State is new Option (State);
+   -- Optionals
+   package Option_ATNState is new Option (ATNState);
+   subtype Optional_ATNState is Option_ATNState.Optional; -- renames
 
-
-   type Optional_ATNState (Is_Valid : Boolean := False) is record
-      if Is_Valid then
-         Value : ATNState;
-      else
-         null;
-      end if;
-   end record;
+   package Container_Optional_ATNState is new Ada.Cantainers.Vector (
+      Index_Type : Natural;
+      Element_Type : Optional_ATNState;
+      "=" : "=");
 
    -- public
    procedure hash (This : ATNState; Some_Hasher : in out Hasher);

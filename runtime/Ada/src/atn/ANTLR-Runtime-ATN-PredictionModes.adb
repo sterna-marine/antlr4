@@ -179,7 +179,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
       end if;
 
       -- pure SLL mode parsing
-      if mode = PredictionMode.SLL then
+      if mode = PredictionModes.SLL then
          -- Don't bother with combining configs from different semantic
          -- contexts if we can fail over to full LL; costs more time
          -- since we'll often fail over anyway.
@@ -204,8 +204,8 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- the end of the decision rule (local context) or end of start rule (full
    -- context).
    -- 
-   -- - parameter configs: the configuration set to test
-   -- - returns: `True` if any configuration in `configs` is in a
+   -- * parameter configs: the configuration set to test
+   -- * returns: `True` if any configuration in `configs` is in a
    -- _org.antlr.v4.runtime.atn.RuleStopState_, otherwise `False`
    -- 
    -- public static
@@ -221,8 +221,8 @@ begin
    -- the end of the decision rule (local context) or end of start rule (full
    -- context).
    -- 
-   -- - parameter configs: the configuration set to test
-   -- - returns: `True` if all configurations in `configs` are in a
+   -- * parameter configs: the configuration set to test
+   -- * returns: `True` if all configurations in `configs` are in a
    -- _org.antlr.v4.runtime.atn.RuleStopState_, otherwise `False`
    -- 
    -- public static
@@ -326,30 +326,30 @@ begin
    -- 
    -- __CASES__
    -- 
-   -- * no conflicts and more than 1 alternative in set =&gt; continue
+   -- * no conflicts and more than 1 alternative in set => continue
    -- 
    -- * `(s, 1, x)`, `(s, 2, x)`, `(s, 3, z)`,
    -- `(s', 1, y)`, `(s', 2, y)` yields non-conflicting set
    -- `{3`end if; U conflicting sets `min ({1,2`)} U `min ({1,2`)} =
-   -- `{1,3`} =&gt; continue
+   -- `{1,3`} => continue
    -- 
    -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
    -- `(s', 2, y)`, `(s'', 1, z)` yields non-conflicting set
    -- `{1`end if; U conflicting sets `min ({1,2`)} U `min ({1,2`)} =
-   -- `{1`} =&gt; stop and predict 1
+   -- `{1`} => stop and predict 1
    -- 
    -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 1, y)`,
    -- `(s', 2, y)` yields conflicting, reduced sets `{1`} U
-   -- `{1`} := `{1`} =&gt; stop and predict 1, can announce
+   -- `{1`} := `{1`} => stop and predict 1, can announce
    -- ambiguity `{1,2`}
    -- 
    -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 2, y)`,
    -- `(s', 3, y)` yields conflicting, reduced sets `{1`} U
-   -- `{2`} := `{1,2`} =&gt; continue
+   -- `{2`} := `{1,2`} => continue
    -- 
    -- * `(s, 1, x)`, `(s, 2, x)`, `(s', 3, y)`,
    -- `(s', 4, y)` yields conflicting, reduced sets `{1`} U
-   -- `{3`} := `{1,3`} =&gt; continue
+   -- `{3`} := `{1,3`} => continue
    -- 
    -- 
    -- __EXACT AMBIGUITY DETECTION__
@@ -357,7 +357,7 @@ begin
    -- If all states report the same conflicting set of alternatives, then we
    -- know we have the exact ambiguity set.
    -- 
-   -- `|A_i__|&gt;1` and
+   -- `|A_i__|>1` and
    -- `A_i := A_j` for all i, j.
    -- 
    -- In other words, we continue examining lookahead until all `A_i`
@@ -379,9 +379,9 @@ begin
    -- Determines if every alternative subset in `altsets` contains more
    -- than one alternative.
    -- 
-   -- - parameter altsets: a collection of alternative subsets
-   -- - returns: `True` if every _java.util.BitSet_ in `altsets` has
-   -- _java.util.BitSet#cardinality cardinality_ &gt; 1, otherwise `False`
+   -- * parameter altsets: a collection of alternative subsets
+   -- * returns: `True` if every _java.util.BitSet_ in `altsets` has
+   -- _java.util.BitSet#cardinality cardinality_ > 1, otherwise `False`
    -- 
    -- public static
    function allSubsetsConflict (altsets : [BitSet]) return Boolean is
@@ -393,8 +393,8 @@ begin
    -- Determines if any single alternative subset in `altsets` contains
    -- exactly one alternative.
    -- 
-   -- - parameter altsets: a collection of alternative subsets
-   -- - returns: `True` if `altsets` contains a _java.util.BitSet_ with
+   -- * parameter altsets: a collection of alternative subsets
+   -- * returns: `True` if `altsets` contains a _java.util.BitSet_ with
    -- _java.util.BitSet#cardinality cardinality_ 1, otherwise `False`
    -- 
    -- public static
@@ -412,9 +412,9 @@ begin
    -- Determines if any single alternative subset in `altsets` contains
    -- more than one alternative.
    -- 
-   -- - parameter altsets: a collection of alternative subsets
-   -- - returns: `True` if `altsets` contains a _java.util.BitSet_ with
-   -- _java.util.BitSet#cardinality cardinality_ &gt; 1, otherwise `False`
+   -- * parameter altsets: a collection of alternative subsets
+   -- * returns: `True` if `altsets` contains a _java.util.BitSet_ with
+   -- _java.util.BitSet#cardinality cardinality_ > 1, otherwise `False`
    -- 
    -- public static
    function hasConflictingAltSet (altsets : [BitSet]) return Boolean is
@@ -430,8 +430,8 @@ begin
    -- 
    -- Determines if every alternative subset in `altsets` is equivalent.
    -- 
-   -- - parameter altsets: a collection of alternative subsets
-   -- - returns: `True` if every member of `altsets` is equal to the
+   -- * parameter altsets: a collection of alternative subsets
+   -- * returns: `True` if every member of `altsets` is equal to the
    -- others, otherwise `False`
    -- 
    -- public static
@@ -453,7 +453,7 @@ begin
    -- `altsets`. If no such alternative exists, this method returns
    -- _org.antlr.v4.runtime.atn.ATN#INVALID_ALT_NUMBER_.
    -- 
-   -- - parameter altsets: a collection of alternative subsets
+   -- * parameter altsets: a collection of alternative subsets
    -- 
    -- public static
    function getUniqueAlt (altsets : [BitSet]) return Integer is
@@ -470,8 +470,8 @@ begin
    -- alternative subsets. This method returns the union of each _java.util.BitSet_
    -- in `altsets`.
    -- 
-   -- - parameter altsets: a collection of alternative subsets
-   -- - returns: the set of represented alternatives in `altsets`
+   -- * parameter altsets: a collection of alternative subsets
+   -- * returns: the set of represented alternatives in `altsets`
    -- 
    -- public static
    function getAlts (altsets : Array<BitSet>) return BitSet is
@@ -526,7 +526,7 @@ begin
       viableAlts : constant := BitSet ();
       for alts in altsets loop
          minAlt : constant := alts.firstSetBit ();
-         try! viableAlts.set (minAlt);
+         viableAlts.set (minAlt);; -- try!
          if viableAlts.cardinality () > 1 then
                -- more than 1 viable alt
                return ATN.INVALID_ALT_NUMBER

@@ -223,11 +223,11 @@ begin
             containsEof : constant := (data[p] /= 0);
             p := @ + 1;
             if containsEof then
-                try! set.add (-1);
+                set.add (-1);; -- try!
             end if;
 
             for _ in 0 .. nintervals - 1 loop
-                try! set.add (readUnicode (data, &p), readUnicode (data, &p));
+                set.add (readUnicode (data, &p), readUnicode (data, &p));; -- try!
             end loop;
         end loop;
     end if;
@@ -347,7 +347,7 @@ begin
     -- the _org.antlr.v4.runtime.atn.StarLoopEntryState#precedenceRuleDecision_ field to the
     -- correct value.
     -- --------------------------------------------
-    -- - parameter atn: The ATN.
+    -- * parameter atn: The ATN.
     -- --------------------------------------------
     -- internal
     procedure markPrecedenceDecisions (atn : ATN) is
@@ -542,7 +542,7 @@ begin
 
     -- internal
     procedure edgeFactory (atn : ATN;
-                              type : Integer; src : Integer; trg : Integer;
+                              Type : Token_Kind; src : Integer; trg : Integer;
                               arg1 : Integer; arg2 : Integer; arg3 : Integer;
                               sets : [IntervalSet]) return Transition is
 begin

@@ -76,7 +76,7 @@ begin
     -- If the set of expected tokens is not known and could not be computed,
     -- this method returns `null`.
     -- 
-    -- - Returns: The set of token types that could potentially follow the current
+    -- * Returns: The set of token types that could potentially follow the current
     -- state in the ATN, or `null` if the information is not available.
     -- 
     -- public
@@ -93,7 +93,7 @@ begin
     -- 
     -- If the context is not available, this method returns `null`.
     -- 
-    -- - Returns: The _org.antlr.v4.runtime.RuleContext_ at the time this exception was thrown.
+    -- * Returns: The _org.antlr.v4.runtime.RuleContext_ at the time this exception was thrown.
     -- If the context is not available, this method returns `null`.
     -- 
     -- public
@@ -108,7 +108,7 @@ begin
     -- 
     -- If the input stream is not available, this method returns `null`.
     -- 
-    -- - Returns: The input stream which is the symbol source for the recognizer
+    -- * Returns: The input stream which is the symbol source for the recognizer
     -- where this exception was thrown, or `null` if the stream is not
     -- available.
     -- 
@@ -141,7 +141,7 @@ begin
     -- 
     -- If the recognizer is not available, this method returns `null`.
     -- 
-    -- - Returns: The recognizer where this exception occurred, or `null` if
+    -- * Returns: The recognizer where this exception occurred, or `null` if
     -- the recognizer is not available.
     -- 
     -- public

@@ -21,7 +21,7 @@ package ANTLR.Runtime.ATN.DecisionEventInfo is
       -- 
       -- The invoked decision number which this event is related to.
       -- 
-      -- - seealso: org.antlr.v4.runtime.atn.ATN#decisionToState
+      -- * seealso: org.antlr.v4.runtime.atn.ATN#decisionToState
       -- 
       -- public
       decision : Integer; -- constant

@@ -1,9 +1,11 @@
 -- €
 
 with ANTLR.Runtime.ATN.LexerAction;
+with ANTLR.Runtime.ATN.Lexer;
+
 use ANTLR.Runtime.ATN;
 
-package ANTLR.Runtime.ATN.LexerAction is
+package ANTLR.Runtime.ATN.LexerActionExecutor is
 
    -- 
    -- Represents an executor for a sequence of lexer actions which traversed during
@@ -28,10 +30,11 @@ package ANTLR.Runtime.ATN.LexerAction is
    end record;
 
    package Option_LexerActionExecutor is new Option (LexerActionExecutor);
+   subtype Optional_LexerActionExecutor is Option_ILexerActionExecutor.Optional; -- renames
    
    -- 
    -- Constructs an executor for a sequence of _org.antlr.v4.runtime.atn.LexerAction_ actions.
-   -- - parameter lexerActions: The lexer actions to execute.
+   -- * parameter lexerActions: The lexer actions to execute.
    -- 
    -- public 
    procedure Init (Self : in out LexerActionExecutor; lexerActions : LexerAction.Container.Vector);
@@ -91,7 +94,7 @@ package ANTLR.Runtime.ATN.LexerAction is
 
    -- 
    -- Gets the lexer actions to be executed by this executor.
-   -- - returns: The lexer actions to be executed by this executor.
+   -- * returns: The lexer actions to be executed by this executor.
    -- 
    -- public
    function getLexerActions (This : LexerActionExecutor) return [LexerAction]
@@ -127,6 +130,6 @@ package ANTLR.Runtime.ATN.LexerAction is
    procedure hash (This : LexerActionExecutor; hasher: in out Hasher);
 
    -- public
-   function "=" (lhs: LexerActionExecutor; rhs: LexerActionExecutor) return Boolean;
+   function "=" (lhs, rhs: LexerActionExecutor) return Boolean;
 
-end ANTLR.Runtime.ATN.LexerAction;
+end ANTLR.Runtime.ATN.LexerActionExecutor;

@@ -6,7 +6,7 @@
 -- default implementation of each method does nothing, but can be overridden as
 -- necessary.
 -- 
--- -  Sam Harwell
+-- *  Sam Harwell
 -- 
 
 -- open

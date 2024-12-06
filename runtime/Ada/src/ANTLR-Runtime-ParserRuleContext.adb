@@ -133,7 +133,7 @@ begin
     -- because the existing interfaces do not have a setParent ();
     -- method and I don't want to break backward compatibility for this.
     -- --------------------------------------------
-    -- - Since: 4.7
+    -- * Since: 4.7
     -- --------------------------------------------
     -- open
     procedure addAnyChild (t : ParseTree) is
@@ -209,7 +209,7 @@ begin
     end if;
 
     -- open
-    function getToken (ttype : Integer; i : Integer) return Optional_TerminalNode is
+    function getToken (tType : Token_Kind; i : Integer) return Optional_TerminalNode is
    begin
         if not Is_Valid (children) or not i >= 0 or not i < children.count then
             return null;
@@ -232,7 +232,7 @@ begin
     end if;
 
     -- open
-    function getTokens (ttype : Integer) return [TerminalNode] {
+    function getTokens (tType : Token_Kind) return [TerminalNode] {
         if not Is_Valid (children) then
             return [TerminalNode]();
         end if;

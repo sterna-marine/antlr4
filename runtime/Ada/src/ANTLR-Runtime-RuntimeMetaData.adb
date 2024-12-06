@@ -27,7 +27,7 @@
 -- in your main () startup code.
 -- 
 -- 
--- - Since: 4.3
+-- * Since: 4.3
 -- 
 
 -- public
@@ -70,7 +70,7 @@ type RuntimeMetaData is tagged record
     -- This method provides runtime access to the _#VERSION_ field, as
     -- opposed to directly referencing the field as a compile-time constant.
     -- 
-    -- - Returns: The currently executing version of the ANTLR 4 library
+    -- * Returns: The currently executing version of the ANTLR 4 library
     -- 
 
     -- public static
@@ -123,10 +123,10 @@ begin
     -- of that target's known execution environment, which may or may not
     -- resemble the design provided for the Java target.
     -- 
-    -- - Parameter generatingToolVersion: The version of the tool used to generate a parser.
+    -- * Parameter generatingToolVersion: The version of the tool used to generate a parser.
     -- This value may be null when called from user code that was not generated
     -- by, and does not reference, the ANTLR 4 Tool itself.
-    -- - Parameter compileTimeVersion: The version of the runtime the parser was
+    -- * Parameter compileTimeVersion: The version of the runtime the parser was
     -- compiled against. This should always be passed using a direct reference
     -- to _#VERSION_.
     -- 
@@ -159,8 +159,8 @@ begin
     -- details about the syntax of the input `version`.
     -- E.g., from x.y.z return x.y.
     -- 
-    -- - Parameter version: The complete version string.
-    -- - Returns: A string of the form __major__.__minor__ containing
+    -- * Parameter version: The complete version string.
+    -- * Returns: A string of the form __major__.__minor__ containing
     -- only the major and minor components of the version string.
     -- 
     -- public static

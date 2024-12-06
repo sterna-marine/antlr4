@@ -16,17 +16,17 @@ type LexerModeAction is new LexerAction and CustomStringConvertible with null re
 
     -- 
     -- Constructs a new `mode` action with the specified mode value.
-    -- - parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#mode_.
+    -- * parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#mode_.
     -- 
     -- public 
-    procedure Init (Self : in out …; mode : Integer) {
+    procedure Init (Self : in out …; mode : Lexer_Mode) {
         self.mode := mode
     end if;
 
     -- 
     -- Get the lexer mode this action should transition the lexer to.
     -- 
-    -- - returns: The lexer mode for this `mode` command.
+    -- * returns: The lexer mode for this `mode` command.
     -- 
     -- public
     function getMode (This : …) return Integer is
@@ -36,7 +36,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#MODE_.
+    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#MODE_.
     -- 
 
     --public
@@ -48,7 +48,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `False`.
+    -- * returns: This method returns `False`.
     -- 
 
     --public

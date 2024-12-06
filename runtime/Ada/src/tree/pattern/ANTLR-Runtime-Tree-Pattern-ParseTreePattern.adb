@@ -36,12 +36,12 @@ type ParseTreePattern is tagged record
     -- 
     -- Construct a new instance of the _org.antlr.v4.runtime.tree.pattern.ParseTreePattern_ class.
     -- 
-    -- - Parameter matcher: The _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ which created this
+    -- * Parameter matcher: The _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ which created this
     -- tree pattern.
-    -- - Parameter pattern: The tree pattern in concrete syntax form.
-    -- - Parameter patternRuleIndex: The parser rule which serves as the root of the
+    -- * Parameter pattern: The tree pattern in concrete syntax form.
+    -- * Parameter patternRuleIndex: The parser rule which serves as the root of the
     -- tree pattern.
-    -- - Parameter patternTree: The tree pattern in _org.antlr.v4.runtime.tree.ParseTree_ form.
+    -- * Parameter patternTree: The tree pattern in _org.antlr.v4.runtime.tree.ParseTree_ form.
     -- 
     -- public 
     procedure Init (Self : in out …; matcher : ParseTreePatternMatcher;
@@ -55,8 +55,8 @@ type ParseTreePattern is tagged record
     -- 
     -- Match a specific parse tree against this tree pattern.
     -- 
-    -- - Parameter tree: The parse tree to match against this tree pattern.
-    -- - Returns: A _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ object describing the result of the
+    -- * Parameter tree: The parse tree to match against this tree pattern.
+    -- * Returns: A _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ object describing the result of the
     -- match operation. The _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch#succeeded ()_ method can be
     -- used to determine whether or not the match was successful.
     -- 
@@ -70,8 +70,8 @@ begin
     -- 
     -- Determine whether or not a parse tree matches this tree pattern.
     -- 
-    -- - Parameter tree: The parse tree to match against this tree pattern.
-    -- - Returns: `True` if `tree` is a match for the current tree
+    -- * Parameter tree: The parse tree to match against this tree pattern.
+    -- * Returns: `True` if `tree` is a match for the current tree
     -- pattern; otherwise, `False`.
     -- 
     -- public
@@ -84,10 +84,10 @@ begin
     -- Find all nodes using XPath and then to match those subtrees against;
     -- this tree pattern.
     -- 
-    -- - Parameter tree: The _org.antlr.v4.runtime.tree.ParseTree_ to match against this pattern.
-    -- - Parameter xpath: An expression matching the nodes
+    -- * Parameter tree: The _org.antlr.v4.runtime.tree.ParseTree_ to match against this pattern.
+    -- * Parameter xpath: An expression matching the nodes
     -- 
-    -- - Returns: A collection of _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ objects describing the
+    -- * Returns: A collection of _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ objects describing the
     -- successful matches. Unsuccessful matches are omitted from the result,
     -- regardless of the reason for the failure.
     -- 
@@ -107,7 +107,7 @@ begin
     -- 
     -- Get the _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ which created this tree pattern.
     -- 
-    -- - Returns: The _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ which created this tree
+    -- * Returns: The _org.antlr.v4.runtime.tree.pattern.ParseTreePatternMatcher_ which created this tree
     -- pattern.
     -- 
 
@@ -120,7 +120,7 @@ begin
     -- 
     -- Get the tree pattern in concrete syntax form.
     -- 
-    -- - Returns: The tree pattern in concrete syntax form.
+    -- * Returns: The tree pattern in concrete syntax form.
     -- 
 
     -- public
@@ -133,7 +133,7 @@ begin
     -- Get the parser rule which serves as the outermost rule for the tree
     -- pattern.
     -- 
-    -- - Returns: The parser rule which serves as the outermost rule for the tree
+    -- * Returns: The parser rule which serves as the outermost rule for the tree
     -- pattern.
     -- 
     -- public
@@ -147,7 +147,7 @@ begin
     -- the pattern are present in the parse tree as terminal nodes with a symbol
     -- of type _org.antlr.v4.runtime.tree.pattern.RuleTagToken_ or _org.antlr.v4.runtime.tree.pattern.TokenTagToken_.
     -- 
-    -- - Returns: The tree pattern as a _org.antlr.v4.runtime.tree.ParseTree_.
+    -- * Returns: The tree pattern as a _org.antlr.v4.runtime.tree.ParseTree_.
     -- 
 
     -- public

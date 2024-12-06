@@ -439,7 +439,7 @@ begin
 
     -- Map String (program name) &rarr; Integer index
     -- internal final
-    lastRewriteTokenIndexes : [String: Int];
+    lastRewriteTokenIndexes : TokenID_Container.Map;
 
     -- public 
     procedure Init (Self : in out …; tokens : TokenStream) {

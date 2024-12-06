@@ -1,5 +1,6 @@
 package ANTLR is
 
-   package Optional_Integer is new Option (Integer);
+   package Option_Integer is new Option (Integer);
+   subtype Optional_Integer is Option_Integer.Optional; -- renames
 
 end ANTLR;

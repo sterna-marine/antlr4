@@ -23,7 +23,7 @@
 type ANTLRErrorStrategy is interface;
     -- 
     -- Reset the error handler state for the specified `recognizer`.
-    -- - parameter recognizer: the parser instance
+    -- * parameter recognizer: the parser instance
     -- 
     procedure reset (recognizer : Parser);
 
@@ -41,8 +41,8 @@ type ANTLRErrorStrategy is interface;
     -- returns successfully. The error strategy implementation is responsible
     -- for calling _org.antlr.v4.runtime.Parser#notifyErrorListeners_ as appropriate.
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - throws: _RecognitionException_ if the error strategy was not able to
+    -- * parameter recognizer: the parser instance
+    -- * throws: _RecognitionException_ if the error strategy was not able to
     -- recover from the unexpected input symbol
     -- 
     @discardableResult
@@ -53,11 +53,11 @@ type ANTLRErrorStrategy is interface;
     -- called after _#reportError_ by the default exception handler
     -- generated for a rule method.
     -- 
-    -- - seealso: #reportError
+    -- * seealso: #reportError
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - parameter e: the recognition exception to recover from
-    -- - throws: _RecognitionException_ if the error strategy could not recover from
+    -- * parameter recognizer: the parser instance
+    -- * parameter e: the recognition exception to recover from
+    -- * throws: _RecognitionException_ if the error strategy could not recover from
     -- the recognition exception
     -- 
     procedure recover (recognizer : Parser; e : RecognitionException);
@@ -74,10 +74,10 @@ type ANTLRErrorStrategy is interface;
     -- For an implementation based on Jim Idle's "magic sync" mechanism, see
     -- _org.antlr.v4.runtime.DefaultErrorStrategy#sync_.
     -- 
-    -- - seealso: org.antlr.v4.runtime.DefaultErrorStrategy#sync
+    -- * seealso: org.antlr.v4.runtime.DefaultErrorStrategy#sync
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - throws: _RecognitionException_ if an error is detected by the error
+    -- * parameter recognizer: the parser instance
+    -- * throws: _RecognitionException_ if an error is detected by the error
     -- strategy but cannot be automatically recovered at the current state in
     -- the parsing process
     -- 
@@ -91,8 +91,8 @@ type ANTLRErrorStrategy is interface;
     -- _ParserRuleContext#addErrorNode (ErrorNode)_ instead of
     -- _Parser#createTerminalNode (ParserRuleContext, Token)_.
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - returns: `True` if the parser is currently recovering from a parse
+    -- * parameter recognizer: the parser instance
+    -- * returns: `True` if the parser is currently recovering from a parse
     -- error, otherwise `False`
     -- 
     function inErrorRecoveryMode (recognizer : Parser) return Boolean;
@@ -101,7 +101,7 @@ type ANTLRErrorStrategy is interface;
     -- This method is called by when the parser successfully matches an input
     -- symbol.
     -- 
-    -- - parameter recognizer: the parser instance
+    -- * parameter recognizer: the parser instance
     -- 
     procedure reportMatch (recognizer : Parser);
 
@@ -109,8 +109,8 @@ type ANTLRErrorStrategy is interface;
     -- Report any kind of _org.antlr.v4.runtime.RecognitionException_. This method is called by
     -- the default exception handler generated for a rule method.
     -- 
-    -- - parameter recognizer: the parser instance
-    -- - parameter e: the recognition exception to report
+    -- * parameter recognizer: the parser instance
+    -- * parameter e: the recognition exception to report
     -- 
     procedure reportError (recognizer : Parser; e : RecognitionException);
 end if;

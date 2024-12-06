@@ -6,9 +6,6 @@ package ANTLR.Runtime.Misc.Interval is
    -- An immutable inclusive interval a .. b
    -- 
 
-   -- public static 
-   Invalid : constant Interval := (-1, -2);
-
    -- public 
    type Interval is record -- and Hashable
       -- public
@@ -18,6 +15,10 @@ package ANTLR.Runtime.Misc.Interval is
    end record;
 
    package Option_Interval is new Option (Interval);
+   subtype Optional_Interval is Option_Interval.Optional; -- renames
+
+   -- public static 
+   Invalid : constant Interval := (-1, -2);
 
    -- public 
    procedure Init (Self : in out Interval; A : Integer; B : Integer);
@@ -34,7 +35,7 @@ package ANTLR.Runtime.Misc.Interval is
 
    -- 
    -- return number of elements between a and b inclusively. x .. x is length 1.
-   -- if b &lt; a, then length is 0.  9 .. 10 has length 2.
+   -- if b < a, then length is 0.  9 .. 10 has length 2.
    -- 
    -- public
    function Length (This : Interval) return Natural;
@@ -116,7 +117,7 @@ package ANTLR.Runtime.Misc.Interval is
    -- instead of the single one returned by this method.
    -- 
    -- public
-   function differenceNotProperlyContained (This, Other : Interval) return Option_Interval.Optional;
+   function differenceNotProperlyContained (This, Other : Interval) return Optional_Interval;
 
    -- public
    function Image (This : Interval) return UString

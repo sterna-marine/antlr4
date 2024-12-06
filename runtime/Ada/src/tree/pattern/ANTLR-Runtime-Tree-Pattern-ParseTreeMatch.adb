@@ -35,16 +35,16 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ from the specified
     -- parse tree and pattern.
     -- 
-    -- - Parameter tree: The parse tree to match against the pattern.
-    -- - Parameter pattern: The parse tree pattern.
-    -- - Parameter labels: A mapping from label names to collections of
+    -- * Parameter tree: The parse tree to match against the pattern.
+    -- * Parameter pattern: The parse tree pattern.
+    -- * Parameter labels: A mapping from label names to collections of
     -- _org.antlr.v4.runtime.tree.ParseTree_ objects located by the tree pattern matching process.
-    -- - Parameter mismatchedNode: The first node which failed to match the tree
+    -- * Parameter mismatchedNode: The first node which failed to match the tree
     -- pattern during the matching process.
     -- 
-    -- - Throws: ANTLRError.ilegalArgument if `tree` is `null`
-    -- - Throws: ANTLRError.ilegalArgument if `pattern` is `null`
-    -- - Throws: ANTLRError.ilegalArgument if `labels` is `null`
+    -- * Throws: ANTLRError.ilegalArgument if `tree` is `null`
+    -- * Throws: ANTLRError.ilegalArgument if `pattern` is `null`
+    -- * Throws: ANTLRError.ilegalArgument if `labels` is `null`
     -- 
     -- public 
     procedure Init (Self : in out …; tree : ParseTree; pattern : ParseTreePattern; labels : MultiMap<String, ParseTree>, mismatchedNode : Optional_ParseTree;) {
@@ -66,9 +66,9 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- Pattern tags like `<ID>` and `<expr>` without labels are
     -- considered to be labeled with `ID` and `expr`, respectively.
     -- 
-    -- - Parameter label: The label to check.
+    -- * Parameter label: The label to check.
     -- 
-    -- - Returns: The last _org.antlr.v4.runtime.tree.ParseTree_ to match a tag with the specified
+    -- * Returns: The last _org.antlr.v4.runtime.tree.ParseTree_ to match a tag with the specified
     -- label, or `null` if no parse tree matched a tag with the label.
     -- 
 
@@ -98,9 +98,9 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- * Parse tree nodes matching tags of the form `<anyLabel:foo>`.
     -- * Parse tree nodes matching tags of the form `<foo>`.
     -- 
-    -- - Parameter label: The label.
+    -- * Parameter label: The label.
     -- 
-    -- - Returns: A collection of all _org.antlr.v4.runtime.tree.ParseTree_ nodes matching tags with
+    -- * Returns: A collection of all _org.antlr.v4.runtime.tree.ParseTree_ nodes matching tags with
     -- the specified `label`. If no nodes matched the label, an empty list
     -- is returned.
     -- 
@@ -116,7 +116,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- tokens referenced in tags in the original pattern. For additional
     -- information, see the description of _#getAll (String)_.
     -- 
-    -- - Returns: A mapping from labels to parse tree nodes. If the parse tree
+    -- * Returns: A mapping from labels to parse tree nodes. If the parse tree
     -- pattern did not contain any rule or token tags, this map will be empty.
     -- 
     -- public
@@ -127,7 +127,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
     -- Get the node at which we first detected a mismatch.
     -- 
-    -- - Returns: the node at which we first detected a mismatch, or `null`
+    -- * Returns: the node at which we first detected a mismatch, or `null`
     -- if the match was successful.
     -- 
     -- public
@@ -139,7 +139,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- 
     -- Gets a value indicating whether the match operation succeeded.
     -- 
-    -- - Returns: `True` if the match operation succeeded; otherwise,
+    -- * Returns: `True` if the match operation succeeded; otherwise,
     -- `False`.
     -- 
     -- public
@@ -151,7 +151,7 @@ begin
     -- 
     -- Get the tree pattern we are matching against.
     -- 
-    -- - Returns: The tree pattern we are matching against.
+    -- * Returns: The tree pattern we are matching against.
     -- 
     -- public
     function getPattern (This : …) return ParseTreePattern is
@@ -162,7 +162,7 @@ begin
     -- 
     -- Get the parse tree we are trying to match to a pattern.
     -- 
-    -- - Returns: The _org.antlr.v4.runtime.tree.ParseTree_ we are trying to match to a pattern.
+    -- * Returns: The _org.antlr.v4.runtime.tree.ParseTree_ we are trying to match to a pattern.
     -- 
     -- public
     function getTree (This : …) return ParseTree is

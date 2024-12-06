@@ -216,7 +216,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
    -- the full LL analysis must yield a set of viable alternatives which is a
    -- subset of the alternatives reported by SLL. If the LL set is a singleton,
    -- then the grammar is LL but not SLL. If the LL set is the same size as the SLL
-   -- set, the decision is SLL. If the LL set has size &gt; 1, then that decision
+   -- set, the decision is SLL. If the LL set has size > 1, then that decision
    -- is truly ambiguous on the current input. If the LL set is smaller, then the
    -- SLL conflict resolution might choose an alternative that the full LL would
    -- rule out as a possibility based upon better context information. If that's
@@ -290,7 +290,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       --
 
       -- private
-      mode : PredictionMode := PredictionMode.LL;
+      mode : PredictionMode := PredictionModes.LL;
 
       --
       -- Each prediction operation uses a cache for merge of prediction contexts.
@@ -401,7 +401,8 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
          -- Now we are certain to have a specific decision's DFA
          -- But, do we still need an initial state?
          --TODO: exception handler
-         do {
+         declare
+         begin
                s0 : Optional_DFAState;
                if dfa.isPrecedenceDfa () then
                   -- the start state for a precedence DFA depends on the current
@@ -452,8 +453,8 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                end if;
                mergeCache := DoubleKeyMap.Empty_Vector; -- wack cache after each prediction
                _dfa := null;
-               try! input.seek (index);
-               try! input.release (m);
+               input.seek (index);; -- try!
+               input.release (m);; -- try!
                return alt
          end if;
 
@@ -541,7 +542,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
 
                   end if;
 
-                  if D.requiresFullContext and then (mode /= PredictionMode.SLL) then
+                  if D.requiresFullContext and then (mode /= PredictionModes.SLL) then
                      -- IF PREDS, MIGHT RESOLVE TO SINGLE ALT => SLL (or syntax error);
                      conflictingAlts := D.configs.conflictingAlts!
                      if preds : constant := D.predicates then
@@ -619,9 +620,9 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- for the edge has not yet been computed or is otherwise not available,
       -- this method returns `null`.
       --
-      -- - parameter previousD: The current DFA state
-      -- - parameter t: The next input symbol
-      -- - returns: The existing target DFA state for the given input symbol
+      -- * parameter previousD: The current DFA state
+      -- * parameter t: The next input symbol
+      -- * returns: The existing target DFA state for the given input symbol
       -- `t`, or `null` if the target state for this edge is not
       -- already cached
       --
@@ -639,11 +640,11 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- Compute a target state for an edge in the DFA, and attempt to add the
       -- computed state and corresponding edge to the DFA.
       --
-      -- - parameter dfa: The DFA
-      -- - parameter previousD: The current DFA state
-      -- - parameter t: The next input symbol
+      -- * parameter dfa: The DFA
+      -- * parameter previousD: The current DFA state
+      -- * parameter t: The next input symbol
       --
-      -- - returns: The computed target DFA state for the given input symbol
+      -- * returns: The computed target DFA state for the given input symbol
       -- `t`. If `t` does not lead to a valid DFA state, this method
       -- returns _#ERROR_.
       --
@@ -662,8 +663,8 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
          predictedAlt : constant := ParserATNSimulator.getUniqueAlt (reach);
 
          if debug then
-               altSubSets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (reach);
-               print ("SLL altSubSets=" & altSubSets'Image & ", configs=" & reach'Image & ", predict=" & predictedAlt'Image & ", allSubsetsConflict=\(PredictionMode.allSubsetsConflict (altSubSets)), conflictingAlts=\(getConflictingAlts (reach))");
+               altSubSets : constant PredictionMode := PredictionModes.getConflictingAltSubsets (reach);
+               print ("SLL altSubSets=" & altSubSets'Image & ", configs=" & reach'Image & ", predict=" & predictedAlt'Image & ", allSubsetsConflict=\(PredictionModes.allSubsetsConflict (altSubSets)), conflictingAlts=\(getConflictingAlts (reach))");
          end if;
 
          if predictedAlt /= ATN.INVALID_ALT_NUMBER then
@@ -672,7 +673,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                D.configs.uniqueAlt := predictedAlt
                D.prediction := predictedAlt
          else
-               if PredictionMode.hasSLLConflictTerminatingPrediction (mode, reach) then
+               if PredictionModes.hasSLLConflictTerminatingPrediction (mode, reach) then
                   -- MORE THAN ONE VIABLE ALTERNATIVE
                   D.configs.conflictingAlts := getConflictingAlts (reach);
                   D.requiresFullContext := True;
@@ -755,9 +756,9 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
 
                end if;
                if reach : constant := reach then
-                  altSubSets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (reach);
+                  altSubSets : constant PredictionMode := PredictionModes.getConflictingAltSubsets (reach);
                   if debug then
-                     print ("LL altSubSets=" & altSubSets'Image & ", predict=\(PredictionMode.getUniqueAlt (altSubSets)), resolvesToJustOneViableAlt=\(PredictionMode.resolvesToJustOneViableAlt (altSubSets))");
+                     print ("LL altSubSets=" & altSubSets'Image & ", predict=\(PredictionModes.getUniqueAlt (altSubSets)), resolvesToJustOneViableAlt=\(PredictionModes.resolvesToJustOneViableAlt (altSubSets))");
                   end if;
 
 
@@ -767,16 +768,16 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                      predictedAlt := reach.uniqueAlt
                      exit when True;
                   end if;
-                  if mode /= PredictionMode.LL_EXACT_AMBIG_DETECTION then
-                     predictedAlt : PredictionMode := PredictionMode.resolvesToJustOneViableAlt (altSubSets);
+                  if mode /= PredictionModes.LL_EXACT_AMBIG_DETECTION then
+                     predictedAlt : PredictionMode := PredictionModes.resolvesToJustOneViableAlt (altSubSets);
                      exit when predictedAlt /= ATN.INVALID_ALT_NUMBER;
                   else
                      -- In exact ambiguity mode, we never to terminate early.;
                      -- Just keeps scarfing until we know what the conflict is
-                     if PredictionMode.allSubsetsConflict (altSubSets) and
-                           PredictionMode.allSubsetsEqual (altSubSets) then
+                     if PredictionModes.allSubsetsConflict (altSubSets) and
+                           PredictionModes.allSubsetsEqual (altSubSets) then
                            foundExactAmbig := True;
-                           predictedAlt : PredictionMode := PredictionMode.getSingleViableAlt (altSubSets);
+                           predictedAlt : PredictionMode := PredictionModes.getSingleViableAlt (altSubSets);
                            exit when True;
                      end if;
                      -- else there are multiple non-conflicting subsets or
@@ -886,7 +887,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                   -- for each transition
                   trans : constant := config.state.transition (ti);
                   if target : constant := getReachableTarget (trans, t) then
-                     try! intermediate.add (ATNConfig (config, target), This.mergeCache);
+                     intermediate.add (ATNConfig (config, target), This.mergeCache);; -- try!
                   end if;
                   <<CONTINUE>>
                end loop;
@@ -967,10 +968,10 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
          -- multiple alternatives are viable.
          --
          if reach : constant := reach then
-               if skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionMode.hasConfigInRuleStopState (reach)) then
+               if skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionModes.hasConfigInRuleStopState (reach)) then
                   assert (not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty ()");
                   for c in skippedStopStates loop
-                     try! reach.add (c, This.mergeCache);
+                     reach.add (c, This.mergeCache);; -- try!
                   end loop;
                end if;
 
@@ -992,12 +993,12 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- not already in a rule stop state to see if a rule stop state is reachable
       -- from the configuration via epsilon-only transitions.
       --
-      -- - parameter configs: the configuration set to update
-      -- - parameter lookToEndOfRule: when True, this method checks for rule stop states
+      -- * parameter configs: the configuration set to update
+      -- * parameter lookToEndOfRule: when True, this method checks for rule stop states
       -- reachable by epsilon-only transitions from each configuration in
       -- `configs`.
       --
-      -- - returns: `configs` if all configurations in `configs` are in a
+      -- * returns: `configs` if all configurations in `configs` are in a
       -- rule stop state, otherwise return a new configuration set containing only
       -- the configurations from `configs` which are in a rule stop state
       --
@@ -1176,9 +1177,9 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- which stepped out to `prog` (and then back in to `statement`
       -- from being eliminated by the filter.
       --
-      -- - parameter configs: The configuration set computed by
+      -- * parameter configs: The configuration set computed by
       -- _#computeStartState_ as the start state for the DFA.
-      -- - returns: The transformed configuration set representing the start state
+      -- * returns: The transformed configuration set representing the start state
       -- for a precedence DFA at a particular precedence level (determined by
       -- calling _org.antlr.v4.runtime.Parser#getPrecedence_).
       --
@@ -1189,7 +1190,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       end if;
 
       -- final internal
-      function getReachableTarget (This : ParserATNSimulator;trans : Transition; ttype : Integer) return Optional_ATNState is
+      function getReachableTarget (This : ParserATNSimulator;trans : Transition; tType : Token_Kind) return Optional_ATNState is
       begin
 
          if trans.matches (ttype, 0, atn.maxTokenType) then
@@ -1279,12 +1280,12 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- decision rule, which helps developers identify and correct logic errors
       -- in semantic predicates.
       --
-      -- - parameter configs: The ATN configurations which were valid immediately before
+      -- * parameter configs: The ATN configurations which were valid immediately before
       -- the _#ERROR_ state was reached
-      -- - parameter outerContext: The is the \gamma_0 initial parser context from the paper
+      -- * parameter outerContext: The is the \gamma_0 initial parser context from the paper
       -- or the parser stack at the instant before prediction commences.
       --
-      -- - returns: The value to return from _#adaptivePredict_, or
+      -- * returns: The value to return from _#adaptivePredict_, or
       -- _org.antlr.v4.runtime.atn.ATN#INVALID_ALT_NUMBER_ if a suitable alternative was not
       -- identified and _#adaptivePredict_ should report an error instead.
       --
@@ -1348,7 +1349,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                predictions : constant := BitSet ();
                for pair in predPredictions loop
                   if pair.pred = SemanticContext.Empty.Instance then
-                     try! predictions.set (pair.alt);
+                     predictions.set (pair.alt);; -- try!
                      exit when not complete;
                      goto CONTINUE;
                   end if;
@@ -1363,7 +1364,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                      if debug or else dfa_debug then
                            print ("PREDICT \(pair.alt)");
                      end if;
-                     try! predictions.set (pair.alt);
+                     predictions.set (pair.alt);; -- try!
                      exit when not complete;
                   end if;
                   <<CONTINUE>>
@@ -1389,15 +1390,15 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- predicates should override this method to explicitly handle evaluation of
       -- the operands within operator predicates.
       --
-      -- - parameter pred: The semantic context to evaluate
-      -- - parameter parserCallStack: The parser context in which to evaluate the
+      -- * parameter pred: The semantic context to evaluate
+      -- * parameter parserCallStack: The parser context in which to evaluate the
       -- semantic context
-      -- - parameter alt: The alternative which is guarded by `pred`
-      -- - parameter fullCtx: `True` if the evaluation is occurring during LL
+      -- * parameter alt: The alternative which is guarded by `pred`
+      -- * parameter fullCtx: `True` if the evaluation is occurring during LL
       -- prediction; otherwise, `False` if the evaluation is occurring
       -- during SLL prediction
       --
-      -- - since: 4.3
+      -- * since: 4.3
       --
       -- internal
       function evalSemanticContext (This : ParserATNSimulator;pred : SemanticContext; parserCallStack : ParserRuleContext; alt : Integer; fullCtx  : Boolean) return Boolean is
@@ -1447,7 +1448,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                      for i in 0 .. length - 1 loop
                            if configContext.getReturnState (i) == PredictionContext.EMPTY_RETURN_STATE then
                               if fullCtx then
-                                 try! configs.add (ATNConfig (config, config.state, EmptyPredictionContext.Instance), This.mergeCache);
+                                 configs.add (ATNConfig (config, config.state, EmptyPredictionContext.Instance), This.mergeCache);; -- try!
                                  goto CONTINUE;
                               else
                                  -- we have no context info, just chase follow links (if greedy);
@@ -1479,7 +1480,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                      return
                   end if; elsif fullCtx then
                      -- reached end of start rule
-                     try! configs.add (config, This.mergeCache);
+                     configs.add (config, This.mergeCache);; -- try!
                      return
                   else
                      -- else if we have no context info, just chase follow links (if greedy);
@@ -1509,7 +1510,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                p : constant := config.state
                -- optimization
                if not p.onlyHasEpsilonTransitions () then
-                  try! configs.add (config, This.mergeCache);
+                  configs.add (config, This.mergeCache);; -- try!
                   -- make sure to not return here, because EOF transitions can act as
                   -- both epsilon transitions and non-epsilon transitions.
                   --            if ( debug ) print ("added config "+configs);
@@ -1670,7 +1671,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- parsing rule expr that we must use the precedence to get the
       -- right interpretation and, hence, parse tree.
       --
-      -- -  4.6
+      -- *  4.6
       --
       -- internal
       function canDropLoopEntryEdgeInLeftRecursiveRule (This : ParserATNSimulator;config : ATNConfig) return Boolean is
@@ -1924,16 +1925,16 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- Gets a _java.util.BitSet_ containing the alternatives in `configs`
       -- which are part of one or more conflicting alternative subsets.
       --
-      -- - parameter configs: The _org.antlr.v4.runtime.atn.ATNConfigSet_ to analyze.
-      -- - returns: The alternatives in `configs` which are part of one or more
+      -- * parameter configs: The _org.antlr.v4.runtime.atn.ATNConfigSet_ to analyze.
+      -- * returns: The alternatives in `configs` which are part of one or more
       -- conflicting alternative subsets. If `configs` does not contain any
       -- conflicting subsets, this method returns an empty _java.util.BitSet_.
       --
       -- final
       function getConflictingAlts (This : ParserATNSimulator;configs : ATNConfigSet) return BitSet is
    begin
-         altsets : constant PredictionMode := PredictionMode.getConflictingAltSubsets (configs);
-         return PredictionMode.getAlts (altsets);
+         altsets : constant PredictionMode := PredictionModes.getConflictingAltSubsets (configs);
+         return PredictionModes.getAlts (altsets);
       end if;
 
       --
@@ -1978,7 +1979,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
          conflictingAlts : BitSet;
          if configs.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
                conflictingAlts := BitSet ();
-               try! conflictingAlts.set (configs.uniqueAlt);
+               conflictingAlts.set (configs.uniqueAlt);; -- try!
          else
                conflictingAlts := configs.conflictingAlts!;
          end if;
@@ -2043,10 +2044,12 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
    begin
          startToken : constant := try! input.get (startIndex);
          offendingToken : Optional_Token; := null;
-         do {
+         declare
+         begin
                offendingToken := input.LT (1);
          end if;
-         catch {
+         exception
+            when others =>
          end if;
          return NoViableAltException (parser, input, startToken, offendingToken, configs, outerContext);
       end if;
@@ -2069,12 +2072,12 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- Otherwise, this method returns the _org.antlr.v4.runtime.dfa.DFAState_ returned by calling
       -- _#addDFAState_ for the `to` state.
       --
-      -- - parameter dfa: The DFA
-      -- - parameter from: The source state for the edge
-      -- - parameter t: The input symbol
-      -- - parameter to: The target state for the edge
+      -- * parameter dfa: The DFA
+      -- * parameter from: The source state for the edge
+      -- * parameter t: The input symbol
+      -- * parameter to: The target state for the edge
       --
-      -- - returns: the result of calling _#addDFAState_ on `to`
+      -- * returns: the result of calling _#addDFAState_ on `to`
       --
       @discardableResult
       -- private final
@@ -2125,9 +2128,9 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       -- If `D` is _#ERROR_, this method returns _#ERROR_ and
       -- does not change the DFA.
       --
-      -- - parameter dfa: The dfa
-      -- - parameter D: The DFA state to add
-      -- - returns: The state stored in the DFA. This will be either the existing
+      -- * parameter dfa: The dfa
+      -- * parameter D: The DFA state to add
+      -- * returns: The state stored in the DFA. This will be either the existing
       -- state if `D` is already in the DFA, or `D` itself if the
       -- state was not already present.
       --
@@ -2143,7 +2146,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                D.stateNumber := dfa.states.count
 
                if not D.configs.isReadonly () then
-                  try! D.configs.optimizeConfigs (This);
+                  D.configs.optimizeConfigs (This);; -- try!
                   D.configs.setReadonly (True);
                end if;
 
@@ -2207,10 +2210,12 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       function getTextInInterval (This : ParserATNSimulator;startIndex : Integer; stopIndex : Integer) return String is
    begin
          interval : constant := Interval.of (startIndex, stopIndex);
-         do {
+         declare
+         begin
                return parser.getTokenStream ()?.getText (interval) ?? "<unknown>";
          end if;
-         catch {
+         exception
+            when others =>
                return "<unknown>"
          end if;
       end if;

@@ -75,7 +75,7 @@ package ANTLR.Runtime.ATN.Transitions is
    -- 
    -- The default implementation returns `False`.
    -- 
-   -- - returns: `True` if traversing this transition in the ATN does not
+   -- * returns: `True` if traversing this transition in the ATN does not
    -- consume an input symbol; otherwise, `False` if traversing this
    -- transition consumes (matches) an input symbol.
    -- 

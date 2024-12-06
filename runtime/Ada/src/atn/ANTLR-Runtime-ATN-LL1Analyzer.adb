@@ -24,8 +24,8 @@ type LL1Analyzer is tagged record
     -- __i__ leads to a semantic predicate before matching a symbol, the
     -- element at index __i__ of the result will be `null`.
     -- --------------------------------------------
-    -- - parameter s: the ATN state
-    -- - returns: the expected symbols for each outgoing transition of `s`.
+    -- * parameter s: the ATN state
+    -- * returns: the expected symbols for each outgoing transition of `s`.
     -- --------------------------------------------
     -- public
     function getDecisionLookahead (s : Optional_ATNState;) return [IntervalSet?]? {
@@ -59,11 +59,11 @@ type LL1Analyzer is tagged record
     -- If `ctx` is not `null` and the end of the outermost rule is
     -- reached, _org.antlr.v4.runtime.Token#EOF_ is added to the result set.
     -- --------------------------------------------
-    -- - parameter s: the ATN state
-    -- - parameter ctx: the complete parser context, or `null` if the context
+    -- * parameter s: the ATN state
+    -- * parameter ctx: the complete parser context, or `null` if the context
     -- should be ignored
     -- --------------------------------------------
-    -- - returns: The set of tokens that can follow `s` in the ATN in the
+    -- * returns: The set of tokens that can follow `s` in the ATN in the
     -- specified `ctx`.
     -- --------------------------------------------
     -- public
@@ -81,13 +81,13 @@ begin
     -- If `ctx` is not `null` and the end of the outermost rule is
     -- reached, _org.antlr.v4.runtime.Token#EOF_ is added to the result set.
     -- --------------------------------------------
-    -- - parameter s: the ATN state
-    -- - parameter stopState: the ATN state to stop at. This can be a
+    -- * parameter s: the ATN state
+    -- * parameter stopState: the ATN state to stop at. This can be a
     -- _org.antlr.v4.runtime.atn.BlockEndState_ to detect epsilon paths through a closure.
-    -- - parameter ctx: the complete parser context, or `null` if the context
+    -- * parameter ctx: the complete parser context, or `null` if the context
     -- should be ignored
     -- --------------------------------------------
-    -- - returns: The set of tokens that can follow `s` in the ATN in the
+    -- * returns: The set of tokens that can follow `s` in the ATN in the
     -- specified `ctx`.
     -- --------------------------------------------
 
@@ -112,23 +112,23 @@ begin
     -- `True` and `stopState` or the end of the outermost rule is
     -- reached, _org.antlr.v4.runtime.Token#EOF_ is added to the result set.
     -- --------------------------------------------
-    -- - parameter s: the ATN state.
-    -- - parameter stopState: the ATN state to stop at. This can be a
+    -- * parameter s: the ATN state.
+    -- * parameter stopState: the ATN state to stop at. This can be a
     -- _org.antlr.v4.runtime.atn.BlockEndState_ to detect epsilon paths through a closure.
-    -- - parameter ctx: The outer context, or `null` if the outer context should
+    -- * parameter ctx: The outer context, or `null` if the outer context should
     -- not be used.
-    -- - parameter look: The result lookahead set.
-    -- - parameter lookBusy: A set used for preventing epsilon closures in the ATN
+    -- * parameter look: The result lookahead set.
+    -- * parameter lookBusy: A set used for preventing epsilon closures in the ATN
     -- from causing a stack overflow. Outside code should pass
     -- `new HashSet<ATNConfig>` for this argument.
-    -- - parameter calledRuleStack: A set used for preventing left recursion in the
+    -- * parameter calledRuleStack: A set used for preventing left recursion in the
     -- ATN from causing a stack overflow. Outside code should pass
     -- `new BitSet ()` for this argument.
-    -- - parameter seeThruPreds: `True` to True semantic predicates as
+    -- * parameter seeThruPreds: `True` to True semantic predicates as
     -- implicitly `True` and "see through them", otherwise `False`
     -- to treat semantic predicates as opaque and add _#HIT_PRED_ to the
     -- result if one is encountered.
-    -- - parameter addEOF: Add _org.antlr.v4.runtime.Token#EOF_ to the result if the end of the
+    -- * parameter addEOF: Add _org.antlr.v4.runtime.Token#EOF_ to the result if the end of the
     -- outermost context is reached. This parameter has no effect if `ctx`
     -- is `null`.
     -- --------------------------------------------
@@ -151,12 +151,12 @@ begin
 
         if s = stopState then
             if not Is_Valid (ctx) then
-                try! look.add (CommonToken.EPSILON);
+                look.add (CommonToken.EPSILON);; -- try!
                 return
             end if;
 
             if ctx.isEmpty () and then addEOF then
-                try! look.add (CommonToken.EOF);
+                look.add (CommonToken.EOF);; -- try!
                 return
             end if;
 
@@ -164,21 +164,21 @@ begin
 
         if s is RuleStopState then
             if not Is_Valid (ctx) then
-                try! look.add (CommonToken.EPSILON);
+                look.add (CommonToken.EPSILON);; -- try!
                 return
             end if;
 
             if ctx.isEmpty () and then addEOF then
-                try! look.add (CommonToken.EOF);
+                look.add (CommonToken.EOF);; -- try!
                 return
             end if;
 
             if ctx /= EmptyPredictionContext.Instance then
                 removed : constant := try! calledRuleStack.get (s.ruleIndex!);
-                try! calledRuleStack.clear (s.ruleIndex!);
+                calledRuleStack.clear (s.ruleIndex!);; -- try!
                 defer {
                     if removed then
-                         try! calledRuleStack.set (s.ruleIndex!);
+                         calledRuleStack.set (s.ruleIndex!);; -- try!
                      end if;
                 end if;
                 -- run thru all possible stack tops in ctx
@@ -201,28 +201,28 @@ begin
                 end if;
 
                 newContext : constant := SingletonPredictionContext.create (ctx, rt.followState.stateNumber);
-                try! calledRuleStack.set (rt.target.ruleIndex!);
+                calledRuleStack.set (rt.target.ruleIndex!);; -- try!
                 _LOOK (t.target, stopState, newContext, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
-                try! calledRuleStack.clear (rt.target.ruleIndex!);
+                calledRuleStack.clear (rt.target.ruleIndex!);; -- try!
             end if;
             elsif t is AbstractPredicateTransition then
                 if seeThruPreds then
                     _LOOK (t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
                 else
-                    try! look.add (HIT_PRED);
+                    look.add (HIT_PRED);; -- try!
                 end if;
             end if;
             elsif t.isEpsilon () then
                 _LOOK (t.target, stopState, ctx, look, &lookBusy, calledRuleStack, seeThruPreds, addEOF);
             elsif t is WildcardTransition then
-                try! look.addAll (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType));
+                look.addAll (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType));; -- try!
             else
                 set := t.labelIntervalSet ();
                 if set /= null then
                     if t is NotSetTransition then
                         set := set!.complement (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, atn.maxTokenType)) as? IntervalSet;
                     end if;
-                    try! look.addAll (set);
+                    look.addAll (set);; -- try!
                 end if;
             end if;
         end loop;

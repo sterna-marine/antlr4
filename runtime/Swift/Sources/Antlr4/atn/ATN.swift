@@ -8,7 +8,7 @@
 public class ATN {
     public static let INVALID_ALT_NUMBER = 0
 
-    public private(set) final var states = [ATNState?]()
+    public private(set) final var states: [ATNState?] = [ATNState?]()
 
     /// 
     /// Each subrule/rule is a decision point and we must track them so we

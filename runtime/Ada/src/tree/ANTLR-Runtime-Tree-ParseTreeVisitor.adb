@@ -1,69 +1,25 @@
 -- €
 
+package body ANTLR.Runtime.Tree.ParseTreeVisitor is
 
--- 
--- This interface defines the basic notion of a parse tree visitor. Generated
--- visitors implement this interface and the `XVisitor` interface for
--- grammar `X`.
--- 
--- - Parameter <T>: The return type of the visit operation. Use _Void_ for
--- operations with no return type.
--- 
-
-
-open class ParseTreeVisitor<T> {
-    -- public
-    procedure Init (Self : …) is
-begin
-
-    end if;
-    -- typealias T
-    -- 
-    -- Visit a parse tree, and return a user-defined result of the operation.
-    -- 
-    -- - Parameter tree: The _org.antlr.v4.runtime.tree.ParseTree_ to visit.
-    -- - Returns: The result of visiting the parse tree.
-    -- 
-    -- open
-    function visit (tree : ParseTree) return Optional_T is
+   function visit (ParseTreeVisitor; tree : ParseTree) return Optional_ParseTreeVisitor_T is
    begin
-        fatalError (#function + " must be overridden");
-    end if;
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Tree.ParseTreeVisitor.visit() must be overridden";
+   end visit;
 
-    -- 
-    -- Visit the children of a node, and return a user-defined result of the
-    -- operation.
-    -- 
-    -- - Parameter node: The _org.antlr.v4.runtime.tree.RuleNode_ whose children should be visited.
-    -- - Returns: The result of visiting the children of the node.
-    -- 
-    -- open
-    function visitChildren (node : RuleNode) return Optional_T is
+   function visitChildren (ParseTreeVisitor; node : RuleNode) return Optional_ParseTreeVisitor_T is
    begin
-        fatalError (#function + " must be overridden");
-    end if;
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Tree.ParseTreeVisitor.visitChildren() must be overridden";
+   end visitChildren;
 
-    -- 
-    -- Visit a terminal node, and return a user-defined result of the operation.
-    -- 
-    -- - Parameter node: The _org.antlr.v4.runtime.tree.TerminalNode_ to visit.
-    -- - Returns: The result of visiting the node.
-    -- 
-    -- open
-    function visitTerminal (node : TerminalNode) return Optional_T is
+   function visitTerminal (ParseTreeVisitor; node : TerminalNode) return Optional_ParseTreeVisitor_T is
    begin
-        fatalError (#function + " must be overridden");
-    end if;
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Tree.ParseTreeVisitor.visitTerminal() must be overridden";
+   end visitTerminal;
 
-    -- 
-    -- Visit an error node, and return a user-defined result of the operation.
-    -- 
-    -- - Parameter node: The _org.antlr.v4.runtime.tree.ErrorNode_ to visit.
-    -- - Returns: The result of visiting the node.
-    -- 
-    -- open
-    function visitErrorNode (node : ErrorNode) return Optional_T is
+   function visitErrorNode (ParseTreeVisitor; node : ErrorNode) return Optional_ParseTreeVisitor_T is
    begin
-        fatalError (#function + " must be overridden");
-    end if;
-end if;
+      raise PROGRAM_ERROR with "ANTLR.Runtime.Tree.ParseTreeVisitor.visitErrorNode() must be overridden";
+   end visitErrorNode;
+
+end ANTLR.Runtime.Tree.ParseTreeVisitor;

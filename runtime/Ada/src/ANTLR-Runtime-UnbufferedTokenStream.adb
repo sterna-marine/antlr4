@@ -305,7 +305,7 @@ begin
     -- public
     function size (This : …) return Integer is
 begin
-        fatalError ("Unbuffered stream cannot know its size");
+        raise PROGRAM_ERROR with "Unbuffered stream cannot know its size";
     end if;
 
 

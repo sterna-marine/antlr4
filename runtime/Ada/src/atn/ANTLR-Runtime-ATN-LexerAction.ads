@@ -10,7 +10,6 @@ package ANTLR.Runtime.ATN.LexerAction is
    -- and ANTLR 4's new lexer command syntax.
    -- 
 
-
    -- public
    type LexerAction is new Hashable with null record;
 
@@ -22,11 +21,10 @@ package ANTLR.Runtime.ATN.LexerAction is
    -- 
    -- Gets the serialization type of the lexer action.
    -- 
-   -- - returns: The serialization type of the lexer action.
+   -- * returns: The serialization type of the lexer action.
    -- 
    -- public
    function getActionType (This : LexerAction) return LexerActionType;
-
 
    -- 
    -- Gets whether the lexer action is position-dependent. Position-dependent
@@ -38,7 +36,7 @@ package ANTLR.Runtime.ATN.LexerAction is
    -- Actions like this are position-independent, and may be stored more
    -- efficiently as part of the _org.antlr.v4.runtime.atn.LexerATNConfig#lexerActionExecutor_.
    -- 
-   -- - returns: `True` if the lexer action semantics can be affected by the
+   -- * returns: `True` if the lexer action semantics can be affected by the
    -- position of the input _org.antlr.v4.runtime.CharStream_ at the time it is executed;
    -- otherwise, `False`.
    -- 
@@ -51,7 +49,7 @@ package ANTLR.Runtime.ATN.LexerAction is
    -- For position-dependent actions, the input stream must already be
    -- positioned correctly prior to calling this method.
    -- 
-   -- - parameter lexer: The lexer instance.
+   -- * parameter lexer: The lexer instance.
    -- 
    -- public
    procedure execute (This : LexerAction; lexer : Lexer);
@@ -60,6 +58,6 @@ package ANTLR.Runtime.ATN.LexerAction is
    procedure hash (This : LexerAction; into hasher: in out Hasher);
 
    -- public
-   function "=" (Lhs : LexerAction; Rhs : LexerAction) return Boolean;
+   function "=" (Lhs, Rhs : LexerAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerAction;

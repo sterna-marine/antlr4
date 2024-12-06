@@ -14,7 +14,7 @@ type TokenStream is interface;
     -- are met, the return value is non-null and the value of
     -- `LT (k).getType ()==LA (k)`.
     -- 
-    -- - SeeAlso: org.antlr.v4.runtime.IntStream#LA
+    -- * SeeAlso: org.antlr.v4.runtime.IntStream#LA
     -- 
     function LT (k : Integer) return Token?
 
@@ -32,8 +32,8 @@ type TokenStream is interface;
     -- of the stream. Unlike `seek ()`, this method does not adjust
     -- `index` to point to a non-ignored symbol.
     -- 
-    -- - Throws: ANTLRError.illegalArgumentif {code index} is less than 0
-    -- - Throws: ANTLRError.unsupportedOperation if the stream does not support
+    -- * Throws: ANTLRError.illegalArgumentif {code index} is less than 0
+    -- * Throws: ANTLRError.unsupportedOperation if the stream does not support
     -- retrieving the token at the specified index
     -- 
     function get (index : Integer) return Token
@@ -53,14 +53,14 @@ type TokenStream is interface;
     -- 
     -- TokenStream stream :=  .. ;
     -- String text := "";
-    -- for (int i := interval.a; i &lt;= interval.b; i++) loop
+    -- for (int i := interval.a; i <= interval.b; i++) loop
     -- text := @ + stream.get (i).getText ();
     -- end loop;
     -- 
     -- 
-    -- - Parameter interval: The interval of tokens within this stream to get text
+    -- * Parameter interval: The interval of tokens within this stream to get text
     -- for.
-    -- - Returns: The text of all tokens within the specified interval in this
+    -- * Returns: The text of all tokens within the specified interval in this
     -- stream.
     -- 
     -- 
@@ -77,7 +77,7 @@ type TokenStream is interface;
     -- String text := stream.getText (new Interval (0, stream.size ()));
     -- 
     -- 
-    -- - Returns: The text of all tokens in the stream.
+    -- * Returns: The text of all tokens in the stream.
     -- 
     function getText (This : …) return String
 
@@ -95,9 +95,9 @@ type TokenStream is interface;
     -- String text := stream.getText (ctx.getSourceInterval ());
     -- 
     -- 
-    -- - Parameter ctx: The context providing the source interval of tokens to get
+    -- * Parameter ctx: The context providing the source interval of tokens to get
     -- text for.
-    -- - Returns: The text of all tokens within the source interval of `ctx`.
+    -- * Returns: The text of all tokens within the source interval of `ctx`.
     -- 
     function getText (ctx : RuleContext) return String
 
@@ -117,16 +117,16 @@ type TokenStream is interface;
     -- 
     -- TokenStream stream :=  .. ;
     -- String text := "";
-    -- for (int i := start.getTokenIndex (); i &lt;= stop.getTokenIndex (); i++) loop
+    -- for (int i := start.getTokenIndex (); i <= stop.getTokenIndex (); i++) loop
     -- text := @ + stream.get (i).getText ();
     -- end loop;
     -- 
     -- 
-    -- - Parameter start: The first token in the interval to get text for.
-    -- - Parameter stop: The last token in the interval to get text for (inclusive).
-    -- - Throws: ANTLRError.unsupportedOperation if this stream does not support
+    -- * Parameter start: The first token in the interval to get text for.
+    -- * Parameter stop: The last token in the interval to get text for (inclusive).
+    -- * Throws: ANTLRError.unsupportedOperation if this stream does not support
     -- this method for the specified tokens
-    -- - Returns: The text of all tokens lying between the specified `start`
+    -- * Returns: The text of all tokens lying between the specified `start`
     -- and `stop` tokens.
     -- 
     -- 

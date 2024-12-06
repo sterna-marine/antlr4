@@ -28,10 +28,10 @@ with Foundation;
 -- A `BitSet` is not safe for multithreaded use without
 -- external synchronization.
 -- 
--- - note: Arthur van Hoff
--- - note: Michael McCloskey
--- - note: Martin Buchholz
--- - note: JDK1.0
+-- * note: Arthur van Hoff
+-- * note: Michael McCloskey
+-- * note: Martin Buchholz
+-- * note: JDK1.0
 -- 
 
 -- public
@@ -58,7 +58,7 @@ type BitSet is new Hashable and CustomStringConvertible with null record;
     -- 0xffffffffffffffffL;
 
     -- 
-    -- -  bits long[]
+    -- *  bits long[]
     -- 
     -- The bits in this BitSet.  The ith bit is stored in bits[i/64] at
     -- bit position i % 64 (where bit position 0 refers to the least
@@ -149,8 +149,8 @@ begin
     -- represent bits with indices in the range `0` through
     -- `nbits-1`. All bits are initially `False`.
     -- 
-    -- - parameter  nbits: the initial size of the bit set
-    -- - throws: _ANTLRError.negativeArraySize_ if the specified initial size
+    -- * parameter  nbits: the initial size of the bit set
+    -- * throws: _ANTLRError.negativeArraySize_ if the specified initial size
     -- is negative
     -- 
     -- public 
@@ -195,7 +195,7 @@ begin
     -- `s.get (n) == ((longs[n/64] & (1L<<(n%64))) /= 0)`
     -- for all `n < 64 * longs.length`.
     -- 
-    -- - returns: a long array containing a little-endian representation
+    -- * returns: a long array containing a little-endian representation
     -- of all the bits in this bit set
     -- 
     -- public
@@ -212,7 +212,7 @@ begin
     end if;
     -- 
     -- Ensures that the BitSet can hold enough words.
-    -- - parameter wordsRequired: the minimum acceptable number of words.
+    -- * parameter wordsRequired: the minimum acceptable number of words.
     -- 
     -- private
     procedure ensureCapacity (wordsRequired : Integer) is
@@ -230,7 +230,7 @@ begin
     -- temporarily violating the invariants.  The caller must
     -- restore the invariants before returning to the user,
     -- possibly using recalculateWordsInUse ().
-    -- - parameter wordIndex: the index to be accommodated.
+    -- * parameter wordIndex: the index to be accommodated.
     -- 
     -- private
     procedure expandTo (wordIndex : Integer) is
@@ -267,8 +267,8 @@ begin
     -- Sets the bit at the specified index to the complement of its
     -- current value.
     -- 
-    -- - parameter  bitIndex: the index of the bit to flip
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
+    -- * parameter  bitIndex: the index of the bit to flip
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
     -- public
     procedure flip (bitIndex : Integer) is
@@ -292,9 +292,9 @@ begin
     -- specified `toIndex` (exclusive) to the complement of its current
     -- value.
     -- 
-    -- - parameter  fromIndex: index of the first bit to flip
-    -- - parameter  toIndex: index after the last bit to flip
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
+    -- * parameter  fromIndex: index of the first bit to flip
+    -- * parameter  toIndex: index after the last bit to flip
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
@@ -339,8 +339,8 @@ begin
     -- 
     -- Sets the bit at the specified index to `True`.
     -- 
-    -- - parameter  bitIndex: a bit index
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
+    -- * parameter  bitIndex: a bit index
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
     -- public
     procedure set (bitIndex : Integer) is
@@ -361,9 +361,9 @@ begin
     -- 
     -- Sets the bit at the specified index to the specified value.
     -- 
-    -- - parameter  bitIndex: a bit index
-    -- - parameter  value: a boolean value to set
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
+    -- * parameter  bitIndex: a bit index
+    -- * parameter  value: a boolean value to set
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
     -- public
     procedure set (bitIndex : Integer; value  : Boolean) is
@@ -379,9 +379,9 @@ begin
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
     -- specified `toIndex` (exclusive) to `True`.
     -- 
-    -- - parameter  fromIndex: index of the first bit to be set
-    -- - parameter  toIndex: index after the last bit to be set
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
+    -- * parameter  fromIndex: index of the first bit to be set
+    -- * parameter  toIndex: index after the last bit to be set
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
@@ -427,10 +427,10 @@ begin
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
     -- specified `toIndex` (exclusive) to the specified value.
     -- 
-    -- - parameter  fromIndex: index of the first bit to be set
-    -- - parameter  toIndex: index after the last bit to be set
-    -- - parameter  value: value to set the selected bits to
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
+    -- * parameter  fromIndex: index of the first bit to be set
+    -- * parameter  toIndex: index after the last bit to be set
+    -- * parameter  value: value to set the selected bits to
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
@@ -447,9 +447,9 @@ begin
     -- 
     -- Sets the bit specified by the index to `False`.
     -- 
-    -- - parameter  bitIndex: the index of the bit to be cleared
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
-    -- -   JDK1.0
+    -- * parameter  bitIndex: the index of the bit to be cleared
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
+    -- *   JDK1.0
     -- 
     -- public
     procedure clear (bitIndex : Integer) is
@@ -472,9 +472,9 @@ begin
     -- Sets the bits from the specified `fromIndex` (inclusive) to the
     -- specified `toIndex` (exclusive) to `False`.
     -- 
-    -- - parameter  fromIndex: index of the first bit to be cleared
-    -- - parameter  toIndex: index after the last bit to be cleared
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
+    -- * parameter  fromIndex: index of the first bit to be cleared
+    -- * parameter  toIndex: index after the last bit to be cleared
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
@@ -542,9 +542,9 @@ begin
     -- is currently set in this `BitSet`; otherwise, the result
     -- is `False`.
     -- 
-    -- - parameter  bitIndex:   the bit index
-    -- - returns: the value of the bit with the specified index
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
+    -- * parameter  bitIndex:   the bit index
+    -- * returns: the value of the bit with the specified index
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
     -- public
     function get (bitIndex : Integer) return Boolean is
@@ -565,10 +565,10 @@ begin
     -- Returns a new `BitSet` composed of bits from this `BitSet`
     -- from `fromIndex` (inclusive) to `toIndex` (exclusive).
     -- 
-    -- - parameter  fromIndex: index of the first bit to include
-    -- - parameter  toIndex: index after the last bit to include
-    -- - returns: a new `BitSet` from a range of this `BitSet`
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
+    -- * parameter  fromIndex: index of the first bit to include
+    -- * parameter  toIndex: index after the last bit to include
+    -- * returns: a new `BitSet` from a range of this `BitSet`
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if `fromIndex` is negative,
     -- or `toIndex` is negative, or `fromIndex` is
     -- larger than `toIndex`
     -- 
@@ -656,10 +656,10 @@ begin
     -- -- operate on index i here
     -- `end loop;
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive);
-    -- - returns: the index of the next set bit, or `-1` if there
+    -- * parameter  fromIndex: the index to start checking from (inclusive);
+    -- * returns: the index of the next set bit, or `-1` if there
     -- is no such bit
-    -- - throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
+    -- * throws: _ANTLRError.IndexOutOfBounds_ if the specified index is negative
     -- 
     -- public
     function nextSetBit (fromIndex : Integer) return Integer is
@@ -694,9 +694,9 @@ begin
     -- Returns the index of the first bit that is set to `False`
     -- that occurs on or after the specified starting index.
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive);
-    -- - returns: the index of the next clear bit
-    -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is negative
+    -- * parameter  fromIndex: the index to start checking from (inclusive);
+    -- * returns: the index of the next clear bit
+    -- * throws: _ANTLRError.IndexOutOfBounds if the specified index is negative
     -- 
     -- public
     function nextClearBit (fromIndex : Integer) return Integer is
@@ -743,12 +743,12 @@ begin
     -- -- operate on index i here
     -- `end loop;
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive);
-    -- - returns: the index of the previous set bit, or `-1` if there
+    -- * parameter  fromIndex: the index to start checking from (inclusive);
+    -- * returns: the index of the previous set bit, or `-1` if there
     -- is no such bit
-    -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is less
+    -- * throws: _ANTLRError.IndexOutOfBounds if the specified index is less
     -- than `-1`
-    -- - note: 1.7
+    -- * note: 1.7
     -- 
     -- public
     function previousSetBit (fromIndex : Integer) return Integer is
@@ -787,12 +787,12 @@ begin
     -- If no such bit exists, or if `-1` is given as the
     -- starting index, then `-1` is returned.
     -- 
-    -- - parameter  fromIndex: the index to start checking from (inclusive);
-    -- - returns: the index of the previous clear bit, or `-1` if there
+    -- * parameter  fromIndex: the index to start checking from (inclusive);
+    -- * returns: the index of the previous clear bit, or `-1` if there
     -- is no such bit
-    -- - throws: _ANTLRError.IndexOutOfBounds if the specified index is less
+    -- * throws: _ANTLRError.IndexOutOfBounds if the specified index is less
     -- than `-1`
-    -- - note: 1.7
+    -- * note: 1.7
     -- 
     -- public
     function previousClearBit (fromIndex : Integer) return Integer is
@@ -831,7 +831,7 @@ begin
     -- the highest set bit in the `BitSet` plus one. Returns zero
     -- if the `BitSet` contains no set bits.
     -- 
-    -- - returns: the logical size of this `BitSet`
+    -- * returns: the logical size of this `BitSet`
     -- 
     -- public
     function length (This : …) return Integer is
@@ -848,7 +848,7 @@ begin
     -- Returns True if this `BitSet` contains no bits that are set
     -- to `True`.
     -- 
-    -- - returns: boolean indicating whether this `BitSet` is empty
+    -- * returns: boolean indicating whether this `BitSet` is empty
     -- 
     -- public
     function isEmpty (This : …) return Boolean is
@@ -860,8 +860,8 @@ begin
     -- Returns True if the specified `BitSet` has any bits set to
     -- `True` that are also set to `True` in this `BitSet`.
     -- 
-    -- - parameter  set: `BitSet` to intersect with
-    -- - returns: boolean indicating whether this `BitSet` intersects
+    -- * parameter  set: `BitSet` to intersect with
+    -- * returns: boolean indicating whether this `BitSet` intersects
     -- the specified `BitSet`
     -- 
     -- public
@@ -880,7 +880,7 @@ begin
     -- 
     -- Returns the number of bits set to `True` in this `BitSet`.
     -- 
-    -- - returns: the number of bits set to `True` in this `BitSet`
+    -- * returns: the number of bits set to `True` in this `BitSet`
     -- 
     -- public
     function cardinality (This : …) return Integer is
@@ -899,7 +899,7 @@ begin
     -- had the value `True` and the corresponding bit in the
     -- bit set argument also had the value `True`.
     -- 
-    -- - parameter set: a bit set
+    -- * parameter set: a bit set
     -- 
     -- public
     procedure and (set : BitSet) is
@@ -929,7 +929,7 @@ begin
     -- value `True` or the corresponding bit in the bit set
     -- argument has the value `True`.
     -- 
-    -- - parameter set: a bit set
+    -- * parameter set: a bit set
     -- 
     -- public
     procedure or (set : BitSet) is
@@ -971,7 +971,7 @@ begin
     -- * The bit initially has the value `False`, and the
     -- corresponding bit in the argument has the value `True`.
     -- 
-    -- - parameter  set: a bit set
+    -- * parameter  set: a bit set
     -- 
     -- public
     procedure xor (set : BitSet) is
@@ -1003,7 +1003,7 @@ begin
     -- Clears all of the bits in this `BitSet` whose corresponding
     -- bit is set in the specified `BitSet`.
     -- 
-    -- - parameter  set: the `BitSet` with which to mask this
+    -- * parameter  set: the `BitSet` with which to mask this
     -- `BitSet`
     -- 
     -- public
@@ -1036,7 +1036,7 @@ begin
     -- `}
     -- Note that the hash code changes if the set of bits is altered.
     -- 
-    -- - returns: the hash code value for this bit set
+    -- * returns: the hash code value for this bit set
     -- 
     -- private
     hashCode : Integer {
@@ -1062,7 +1062,7 @@ begin
     -- `BitSet` to represent bit values.
     -- The maximum element in the set is the size - 1st element.
     -- 
-    -- - returns: the number of bits currently in this bit set
+    -- * returns: the number of bits currently in this bit set
     -- 
     -- public
     function size (This : …) return Integer is
@@ -1110,7 +1110,7 @@ begin
     -- `drPepper.set (10);`
     -- Now `drPepper.description` returns `"{2, 4, 10}"`.
     -- 
-    -- - returns: a string representation of this bit set
+    -- * returns: a string representation of this bit set
     -- 
     -- public
     description : String;

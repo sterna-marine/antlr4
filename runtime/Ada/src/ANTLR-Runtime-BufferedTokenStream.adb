@@ -146,9 +146,9 @@ begin
     -- 
     -- Make sure index `i` in tokens has a token.
     -- 
-    -- - returns: `True` if a token is located at index `i`, otherwise
+    -- * returns: `True` if a token is located at index `i`, otherwise
     -- `False`.
-    -- - seealso: #get (int i);
+    -- * seealso: #get (int i);
     -- 
     @discardableResult
     -- internal
@@ -168,7 +168,7 @@ begin
     -- 
     -- Add `n` elements to buffer.
     -- 
-    -- - returns: The actual number of elements added to the buffer.
+    -- * returns: The actual number of elements added to the buffer.
     -- 
     -- internal
     function fetch (n : Integer) return Integer is
@@ -272,8 +272,8 @@ begin
     -- For example, _org.antlr.v4.runtime.CommonTokenStream_ overrides this method to ensure that
     -- the seek target is always an on-channel token.
     -- 
-    -- - parameter i: The target token index.
-    -- - returns: The adjusted target token index.
+    -- * parameter i: The target token index.
+    -- * returns: The adjusted target token index.
     -- 
     -- internal
     function adjustSeekIndex (i : Integer) return Integer is
@@ -346,7 +346,7 @@ begin
     end if;
 
     -- public
-    function getTokens (start : Integer; stop : Integer; ttype : Integer) return [Token]? {
+    function getTokens (start : Integer; stop : Integer; tType : Token_Kind) return [Token]? {
         return getTokens (start, stop, [ttype]);
     end if;
 
@@ -357,7 +357,7 @@ begin
     -- EOF.
     -- 
     -- internal
-    function nextTokenOnChannel (i : Integer; channel : Integer) return Integer is
+    function nextTokenOnChannel (i : Integer; Channel : Channel_Number) return Integer is
 begin
         i := i
         sync (i);
@@ -390,7 +390,7 @@ begin
     -- as though it were on every channel.
     -- 
     -- internal
-    function previousTokenOnChannel (i : Integer; channel : Integer) return Integer is
+    function previousTokenOnChannel (i : Integer; Channel : Channel_Number) return Integer is
 begin
         i := i
         sync (i);
@@ -417,7 +417,7 @@ begin
     -- EOF. If channel is -1, find any non default channel token.
     -- 
     -- public
-    function getHiddenTokensToRight (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
+    function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return [Token]? {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< \(tokens.count)";
@@ -442,7 +442,7 @@ begin
     -- If channel is -1, find any non default channel token.
     -- 
     -- public
-    function getHiddenTokensToLeft (tokenIndex : Integer; channel : Integer := -1) return [Token]? {
+    function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return [Token]? {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< \(tokens.count)";
@@ -464,7 +464,7 @@ begin
     end if;
 
     -- internal
-    function filterForChannel (from : Integer; to : Integer; channel : Integer) return [Token]? {
+    function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return [Token]? {
         hidden := [Token]();
         for t in tokens[from .. to] loop
             if channel == -1 then

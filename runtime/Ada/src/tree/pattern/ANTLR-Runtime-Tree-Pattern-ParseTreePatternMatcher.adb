@@ -95,12 +95,12 @@ type ParseTreePatternMatcher is tagged record
     -- Set the delimiters used for marking rule and token tags within concrete
     -- syntax used by the tree pattern parser.
     -- 
-    -- - Parameter start: The start delimiter.
-    -- - Parameter stop: The stop delimiter.
-    -- - Parameter escapeLeft: The escape sequence to use for escaping a start or stop delimiter.
+    -- * Parameter start: The start delimiter.
+    -- * Parameter stop: The stop delimiter.
+    -- * Parameter escapeLeft: The escape sequence to use for escaping a start or stop delimiter.
     -- 
-    -- - Throws: ANTLRError.ilegalArgument if `start` is `null` or empty.
-    -- - Throws: ANTLRError.ilegalArgument if `stop` is `null` or empty.
+    -- * Throws: ANTLRError.ilegalArgument if `start` is `null` or empty.
+    -- * Throws: ANTLRError.ilegalArgument if `stop` is `null` or empty.
     -- 
     -- public
     procedure setDelimiters (start : String; stop : String; escapeLeft : String) is
@@ -219,7 +219,7 @@ begin
     -- Recursively walk `tree` against `patternTree`, filling
     -- `match.`_org.antlr.v4.runtime.tree.pattern.ParseTreeMatch#labels labels_.
     -- 
-    -- - Returns: the first node encountered in `tree` which does not match
+    -- * Returns: the first node encountered in `tree` which does not match
     -- a corresponding node in `patternTree`, or `null` if the match
     -- was successful. The specific node returned depends on the matching
     -- algorithm used by the implementation, and may be overridden.

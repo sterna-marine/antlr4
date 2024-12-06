@@ -13,13 +13,13 @@ type CharStream is interface and IntStream;
     -- specified `interval` lies entirely within a marked range. For more
     -- information about marked ranges, see _org.antlr.v4.runtime.IntStream#mark_.
     -- 
-    -- - parameter interval: an interval within the stream
-    -- - returns: the text of the specified interval
+    -- * parameter interval: an interval within the stream
+    -- * returns: the text of the specified interval
     -- 
-    -- - throws: _ANTLRError.illegalArgument_ if `interval.a < 0`, or if
+    -- * throws: _ANTLRError.illegalArgument_ if `interval.a < 0`, or if
     -- `interval.b < interval.a - 1`, or if `interval.b` lies at or
     -- past the end of the stream
-    -- - throws: _ANTLRError.unsupportedOperation_ if the stream does not support
+    -- * throws: _ANTLRError.unsupportedOperation_ if the stream does not support
     -- getting the text of the specified interval
     -- 
     function getText (interval : Interval) return String

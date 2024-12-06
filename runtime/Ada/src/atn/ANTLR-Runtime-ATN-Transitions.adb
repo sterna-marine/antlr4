@@ -27,12 +27,12 @@ package body ANTLR.Runtime.ATN.Transitions is
    -- public
    function getSerializationType (This : ATNTransition'Class) return Integer is
    begin
-      fatalError (#function + " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.Transitions.getSerializationType() must be overridden";
    end getSerializationType;
 
    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean is
    begin
-      fatalError (#function & " must be overridden");
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.Transitions.matches() must be overridden";
    end if;
 
 end ANTLR.Runtime.ATN.Transitions;

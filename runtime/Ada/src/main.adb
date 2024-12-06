@@ -119,7 +119,7 @@ with ANTLR.Runtime.ATN.LexerAction;
 -- with ANTLR.Runtime.ATN.PredicateTransition;
 -- with ANTLR.Runtime.ATN.PredictionContext;
 -- with ANTLR.Runtime.ATN.PredictionContextCache;
--- with ANTLR.Runtime.ATN.PredictionMode;
+-- with ANTLR.Runtime.ATN.PredictionModer;
 -- with ANTLR.Runtime.ATN.ProfilingATNSimulator;
 -- with ANTLR.Runtime.ATN.RangeTransition;
 -- with ANTLR.Runtime.ATN.RuleStartState;
@@ -169,10 +169,12 @@ procedure Main is
       Red  => Character'Pos ('R'));
    for Color'Size use 8;
 
-   package Optional_Color is new Option (Color);
-   use Optional_Color;
+   package Option_Color is new Option (Color);
+   subtype Optional_Color is Option_Color.Optional; -- renames
 
-   My_Color : Optional_Color.Optional;
+   use Option_Color;
+
+   My_Color : Optional_Color;
 
 begin
    Put_Line (My_Color'Image);

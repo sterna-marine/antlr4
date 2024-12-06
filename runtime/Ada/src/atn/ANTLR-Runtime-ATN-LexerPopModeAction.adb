@@ -30,7 +30,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#popMode_.
+    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#popMode_.
     -- 
     override
     -- public
@@ -41,7 +41,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `False`.
+    -- * returns: This method returns `False`.
     -- 
 
     --public

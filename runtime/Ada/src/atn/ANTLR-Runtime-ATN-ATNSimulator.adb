@@ -56,7 +56,7 @@ package body ANTLR.Runtime.ATN.ATNSimulator is
       -- open
       procedure reset (This : ATNSimulator) is
       begin
-         fatalError (#function + " must be overridden");
+         raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.ATNSimulator.reset() must be overridden";
       end reset;
 
       -- 
@@ -65,7 +65,7 @@ package body ANTLR.Runtime.ATN.ATNSimulator is
       -- performance (but not accuracy) of other parsers which are being used
       -- concurrently.
       -- 
-      -- - throws: ANTLRError.unsupportedOperation if the current instance does not
+      -- * throws: ANTLRError.unsupportedOperation if the current instance does not
       -- support clearing the DFA.
       -- 
       -- open
@@ -91,7 +91,7 @@ package body ANTLR.Runtime.ATN.ATNSimulator is
 
       -- public static 
       procedure edgeFactory (atn : ATN;
-                                    type : Integer; src : Integer; trg : Integer;
+                                    Type : Token_Kind; src : Integer; trg : Integer;
                                     arg1 : Integer; arg2 : Integer; arg3 : Integer;
                                     sets : Array<IntervalSet>) return Transition is
    begin

@@ -35,7 +35,7 @@ type IntStream is interface;
     -- filtering streams (e.g. _org.antlr.v4.runtime.CommonTokenStream_ which distinguishes
     -- between "on-channel" and "off-channel" tokens).
     -- 
-    -- - throws: _ANTLRError.illegalState_ if an attempt is made to consume the the
+    -- * throws: _ANTLRError.illegalState_ if an attempt is made to consume the the
     -- end of the stream (i.e. if `LA (1)==`_#EOF EOF_ before calling
     -- `consume`).
     -- 
@@ -70,7 +70,7 @@ type IntStream is interface;
     -- calls to _#consume consume ()_ have occurred from the beginning of
     -- the stream before calling this method.
     -- 
-    -- - throws: _ANTLRError.unsupportedOperation_ if the stream does not support
+    -- * throws: _ANTLRError.unsupportedOperation_ if the stream does not support
     -- retrieving the value of the specified symbol
     -- 
     function LA (i : Integer) return Integer;
@@ -118,7 +118,7 @@ type IntStream is interface;
     -- stream.release (mark);
     -- 
     -- 
-    -- - returns: An opaque marker which should be passed to
+    -- * returns: An opaque marker which should be passed to
     -- _#release release ()_ when the marked range is no longer required.
     -- 
     function mark () return Integer;
@@ -132,8 +132,8 @@ type IntStream is interface;
     -- 
     -- For more information and an example, see _#mark_.
     -- 
-    -- - parameter marker: A marker returned by a call to `mark ()`.
-    -- - seealso: #mark
+    -- * parameter marker: A marker returned by a call to `mark ()`.
+    -- * seealso: #mark
     -- 
     procedure release (marker : Integer);
 
@@ -167,10 +167,10 @@ type IntStream is interface;
     -- an _org.antlr.v4.runtime.IntStream initializing method_ has occurred after this stream
     -- was constructed.
     -- 
-    -- - parameter index: The absolute index to seek to.
+    -- * parameter index: The absolute index to seek to.
     -- 
-    -- - throws: _ANTLRError.illegalArgument_ if `index` is less than 0
-    -- - throws: _ANTLRError.unsupportedOperation_ if the stream does not support
+    -- * throws: _ANTLRError.illegalArgument_ if `index` is less than 0
+    -- * throws: _ANTLRError.unsupportedOperation_ if the stream does not support
     -- seeking to the specified index
     -- 
     procedure seek (index : Integer);
@@ -179,7 +179,7 @@ type IntStream is interface;
     -- Returns the total number of symbols in the stream, including a single EOF
     -- symbol.
     -- 
-    -- - throws: _ANTLRError.unsupportedOperation_ if the size of the stream is
+    -- * throws: _ANTLRError.unsupportedOperation_ if the size of the stream is
     -- unknown.
     -- 
     function size () return Integer;

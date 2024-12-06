@@ -1,92 +1,39 @@
 -- €
 
+package body ANTLR.Runtime.LexerInterpreter is
 
--- public
-type LexerInterpreter is new Lexer with null record;
-{
-    internal grammarFileName : constant String;
-    -- internal
-    atn : constant ATN;
+   procedure Init (Self : in out LexerInterpreter;
+                   grammarFileName : String;
+                   vocabulary : Vocabulary;
+                   ruleNames : array (<>) of UString;
+                   channelNames : array (<>) of UString;
+                   modeNames : array (<>) of UString;
+                   atn : ATN;
+                   input : CharStream) is
+   begin
+      self.grammarFileName := grammarFileName;
+      self.atn := atn;
+      self.ruleNames := ruleNames;
+      self.channelNames := channelNames;
+      self.modeNames := modeNames;
+      self.vocabulary := vocabulary;
+      self._decisionToDFA := [DFA]();
 
-    -- internal
-    ruleNames : constant [String];
-    -- internal
-    channelNames : constant [String];
-    -- internal
-    modeNames : constant [String];
+      for i in 0 ..< atn.getNumberOfDecisions () loop
+         _decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
+      end loop;
 
-    -- private 
-    vocabulary : constant Vocabulary?;
+      Lexer.init (input); -- super
+      self._interp := LexerATNSimulator (self, atn, _decisionToDFA, _sharedContextCache);
 
-    -- internal final
-    _decisionToDFA : [DFA];
-    internal _sharedContextCache : constant := PredictionContextCache ();
+      if atn.grammarType /= ATNType.lexer then
+         raise ANTLRError.illegalArgument with "The ATN must be a lexer ATN.";
+      end if;
+    end Init;
 
-    -- public 
-    procedure Init (Self : in out …; grammarFileName : String; vocabulary : Vocabulary; ruleNames : Array<String>, channelNames : Array<String>, modeNames : Array<String>, atn : ATN; input : CharStream) {
+   procedure Init (input : CharStream) is
+   begin
+      raise PROGRAM_ERROR with "Use the other initializer";
+   end Init;
 
-        self.grammarFileName := grammarFileName
-        self.atn := atn
-        self.ruleNames := ruleNames
-        self.channelNames := channelNames
-        self.modeNames := modeNames
-        self.vocabulary := vocabulary
-
-        self._decisionToDFA := [DFA]();
-        for i in 0 ..< atn.getNumberOfDecisions () loop
-            _decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
-        end loop;
-        super.init (input);
-        self._interp := LexerATNSimulator (self, atn, _decisionToDFA, _sharedContextCache);
-
-        if atn.grammarType /= ATNType.lexer then
-            raise ANTLRError.illegalArgument with "The ATN must be a lexer ATN.";
-
-        end if;
-    end if;
-
-    -- public required 
-    procedure Init (input : CharStream) is
-    begin
-        fatalError ("Use the other initializer");
-    end if;
-
-    override
-    -- public
-    function getATN (This : …) return ATN is
-begin
-        return atn
-    end if;
-
-    override
-    -- public
-    function getGrammarFileName (This : …) return String is
-begin
-        return grammarFileName
-    end if;
-
-    override
-    -- public
-    function getRuleNames () return [String] {
-        return ruleNames
-    end if;
-
-    override
-    -- public
-    function getChannelNames () return [String] {
-        return channelNames
-    end if;
-
-    override
-    -- public
-    function getModeNames () return [String] {
-        return modeNames
-    end if;
-
-    override
-    -- public
-    function getVocabulary (This : …) return Vocabulary is
-begin
-        return vocabulary ?? super.getVocabulary ();
-    end if;
-end if;
+end ANTLR.Runtime.LexerInterpreter;

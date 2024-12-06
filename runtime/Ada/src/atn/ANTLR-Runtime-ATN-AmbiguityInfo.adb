@@ -26,10 +26,10 @@ package body ANTLR.Runtime.ATN.AmbiguityInfo is
 -- they cannot use the two-stage parsing strategy to improve parsing performance
 -- for that input.
 -- 
--- - seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#reportAmbiguity
--- - seealso: org.antlr.v4.runtime.ANTLRErrorListener#reportAmbiguity
+-- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#reportAmbiguity
+-- * seealso: org.antlr.v4.runtime.ANTLRErrorListener#reportAmbiguity
 -- 
--- -  4.3
+-- *  4.3
 -- 
 
 -- public
@@ -45,15 +45,15 @@ type AmbiguityInfo is new DecisionEventInfo with null record;
     -- Constructs a new instance of the _org.antlr.v4.runtime.atn.AmbiguityInfo_ class with the
     -- specified detailed ambiguity information.
     -- 
-    -- - parameter decision: The decision number
-    -- - parameter configs: The final configuration set identifying the ambiguous
+    -- * parameter decision: The decision number
+    -- * parameter configs: The final configuration set identifying the ambiguous
     -- alternatives for the current input
-    -- - parameter ambigAlts: The set of alternatives in the decision that lead to a valid parse.
-    -- - parameter input: The input token stream
-    -- - parameter startIndex: The start index for the current prediction
-    -- - parameter stopIndex: The index at which the ambiguity was identified during
+    -- * parameter ambigAlts: The set of alternatives in the decision that lead to a valid parse.
+    -- * parameter input: The input token stream
+    -- * parameter startIndex: The start index for the current prediction
+    -- * parameter stopIndex: The index at which the ambiguity was identified during
     -- prediction
-    -- - parameter fullCtx: `True` if the ambiguity was identified during LL
+    -- * parameter fullCtx: `True` if the ambiguity was identified during LL
     -- prediction; otherwise, `False` if the ambiguity was identified
     -- during SLL prediction
     -- 

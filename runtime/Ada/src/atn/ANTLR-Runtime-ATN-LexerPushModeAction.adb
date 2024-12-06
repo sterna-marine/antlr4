@@ -12,21 +12,21 @@
 type LexerPushModeAction is new LexerAction and CustomStringConvertible with null record;
 {
     -- fileprivate
-    mode : constant Integer;
+    mode : constant Lexer_Mode;
 
     -- 
     -- Constructs a new `pushMode` action with the specified mode value.
-    -- - parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#pushMode_.
+    -- * parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#pushMode_.
     -- 
     -- public 
-    procedure Init (Self : in out …; mode : Integer) {
+    procedure Init (Self : in out …; mode : Lexer_Mode) {
         self.mode := mode
     end if;
 
     -- 
     -- Get the lexer mode this action should transition the lexer to.
     -- 
-    -- - returns: The lexer mode for this `pushMode` command.
+    -- * returns: The lexer mode for this `pushMode` command.
     -- 
     -- public
     function getMode (This : …) return Integer is
@@ -36,7 +36,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#pushMode_.
+    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#pushMode_.
     -- 
 
     --public
@@ -48,7 +48,7 @@ begin
 
     -- 
     -- 
-    -- - returns: This method returns `False`.
+    -- * returns: This method returns `False`.
     -- 
 
     --public
