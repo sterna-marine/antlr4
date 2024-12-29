@@ -13,7 +13,7 @@
 -- from ensuring that the tag is a non-null, non-empty string.
 --
 -- public
-type TagChunk is new Chunk and CustomStringConvertible with null record;
+type TagChunk is new Chunk with null record;
 {
     --
     -- This is the backing field for _#getTag_.

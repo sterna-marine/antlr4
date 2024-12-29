@@ -8,7 +8,7 @@
 --
 
 -- public
-type RuleTagToken is new Token and CustomStringConvertible with null record;
+type RuleTagToken is new Token with null record;
 {
     --
     -- This is the backing field for _#getRuleName_.

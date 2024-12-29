@@ -8,7 +8,8 @@
 --
 
 -- public
-type Vocabulary is new Hashable with null record;
+type Vocabulary is new Ada.Finalization.Controlled -- and Hashable
+   with null record;
 {
     -- private static
     EMPTY_NAMES : constant [String?] := [String?](repeating: "", count => 1);

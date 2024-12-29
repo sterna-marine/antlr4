@@ -11,6 +11,10 @@ package ANTLR.Runtime.ATN is
    -- public
    type ATN is new Ada.Finalization.Controlled record with private;
 
+   subtype Object is ATN;
+   type Class is access all Object;
+   type Class_Wide is access all Object'Class;
+
    -- public static
    INVALID_ALT_NUMBER : constant Integer := 0;
 

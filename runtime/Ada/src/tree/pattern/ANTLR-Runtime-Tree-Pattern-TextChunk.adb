@@ -6,7 +6,7 @@
 --
 
 -- public
-type TextChunk is new Chunk and CustomStringConvertible with null record;
+type TextChunk is new Chunk with null record;
 {
     --
     -- This is the backing field for _#getText_.

@@ -52,6 +52,10 @@ package body ANTLR.Runtime.ATN.DFA is
 
    end record;
 
+   subtype Object is DFA;
+   type Class is access all Object;
+   type Class_Wide is access all Object'Class;
+
    package body Container is new Ada.Containers.Vectors;
 
    -- public convenience
