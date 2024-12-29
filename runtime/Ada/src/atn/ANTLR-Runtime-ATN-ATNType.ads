@@ -1,6 +1,6 @@
 -- €
 
-package ANTLR.Runtime.ATN.ATNType is 
+package ANTLR.Runtime.ATN.ATNType is
 
 -- Represents the type of recognizer an ATN applies to.
 

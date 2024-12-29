@@ -2,27 +2,27 @@
 
 package body ANTLR.Runtime.ATN.LexerAction is
 
-   function getActionType (This : LexerAction) return LexerActionType is
+   function getActionType (This : LexerAction) return LexerActionType with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.getActionType() must be overridden";
    end getActionType;
 
-   function isPositionDependent (This : LexerAction) return Boolean is
+   function isPositionDependent (This : LexerAction) return Boolean with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.isPositionDependent() must be overridden";
    end isPositionDependent;
 
-   procedure execute (This : LexerAction; lexer : Lexer) is
+   procedure execute (This : LexerAction; lexer : Lexer) with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.execute() must be overridden";
    end execute;
 
-   procedure hash (This : LexerAction; into hasher: in out Hasher) is
+   procedure hash (This : LexerAction; hasher : in out Hasher) with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.LexerAction.hash() must be overridden";
    end hash;
 
-   function "=" (Lhs, Rhs : LexerAction) return Boolean is
+   function "=" (Lhs, Rhs : LexerAction) return Boolean with No_Return is
    begin
 
       --  if Lhs === Rhs then

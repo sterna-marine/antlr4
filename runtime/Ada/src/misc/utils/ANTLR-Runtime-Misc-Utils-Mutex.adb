@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.Misc.Utils.Mutex is 
+package body ANTLR.Runtime.Misc.Utils.Mutex is
 
    protected body Synchronized is
       procedure Run (Run_This : Gen_Closure'Access; Result : in out R) is

@@ -2,85 +2,85 @@
 
 
 
--- 
+--
 -- This class extends _org.antlr.v4.runtime.BufferedTokenStream_ with functionality to filter
 -- token streams to tokens on a particular channel (tokens where
 -- _org.antlr.v4.runtime.Token#getChannel_ returns a particular value).
--- 
--- 
+--
+--
 -- This token stream provides access to all tokens by index or when calling
 -- methods like _#getText_. The channel filtering is only used for code
 -- accessing tokens via the lookahead methods _#LA_, _#LT_, and
 -- _#LB_.
--- 
--- 
+--
+--
 -- By default, tokens are placed on the default channel
 -- (_org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_), but may be reassigned by using the
 -- `->channel (HIDDEN)` lexer command, or by using an embedded action to
 -- call _org.antlr.v4.runtime.Lexer#setChannel_.
--- 
--- 
--- 
+--
+--
+--
 -- Note: lexer rules which use the `->skip` lexer command or call
 -- _org.antlr.v4.runtime.Lexer#skip_ do not produce tokens at all, so input text matched by
 -- such a rule will not be available as part of the token stream, regardless of
 -- channel.
--- 
+--
 
 -- public
 type CommonTokenStream is new BufferedTokenStream with null record;
 {
-    -- 
+    --
     -- Specifies the channel to use for filtering tokens.
-    -- 
-    -- 
+    --
+    --
     -- The default value is _org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_, which matches the
     -- default channel assigned to tokens created by the lexer.
-    -- 
+    --
     -- internal
     channel := CommonToken.DEFAULT_CHANNEL
 
-    -- 
+    --
     -- Constructs a new _org.antlr.v4.runtime.CommonTokenStream_ using the specified token
     -- source and the default token channel (_org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_).
-    -- 
+    --
     -- * parameter tokenSource: The token source.
-    -- 
-    -- public 
-    override
-    procedure Init (Self : in out …; tokenSource : TokenSource) {
-        super.init (tokenSource);
+    --
+    -- public
+    overriding
+    procedure Initialize (Self : in out …; tokenSource : TokenSource) {
+        super.Initialize (Self, tokenSource);
     end if;
 
-    -- 
+    --
     -- Constructs a new _org.antlr.v4.runtime.CommonTokenStream_ using the specified token
     -- source and filtering tokens to the specified channel. Only tokens whose
     -- _org.antlr.v4.runtime.Token#getChannel_ matches `channel` or have the
     -- _org.antlr.v4.runtime.Token#getType_ equal to _org.antlr.v4.runtime.Token#EOF_ will be returned by the
     -- token stream lookahead methods.
-    -- 
+    --
     -- * parameter tokenSource: The token source.
     -- * parameter channel: The channel to use for filtering tokens.
-    -- 
+    --
     -- public convenience
-    procedure Init (Self : in out …; tokenSource : TokenSource; Channel : Channel_Number) {
+    procedure Initialize (Self : in out …; tokenSource : TokenSource; Channel : Channel_Number) {
         self.init (tokenSource);
         self.channel := channel
     end if;
 
-    override
+    overriding
     -- internal
     function adjustSeekIndex (i : Integer) return Integer is
 begin
         return nextTokenOnChannel (i, channel);
     end if;
 
-    override
+    overriding
     -- internal
     function LB (k : Integer) return Optional_Token is
    begin
         if k = 0 or else (p - k) < 0 then
-            return null;
+            return (Valid => False);
         end if;
 
         i := p
@@ -92,25 +92,25 @@ begin
             n := @ + 1;
         end loop;
         if i < 0 then
-            return null;
+            return (Valid => False);
         end if;
-        return tokens[i]
+        return tokens.Element (i);
     end if;
 
-    override
+    overriding
     -- public
     function LT (k : Integer) return Optional_Token is
    begin
         --System.out.println ("enter LT ("+k+")");
         lazyInit ();
         if k = 0 then
-            return null;
+            return (Valid => False);
         end if;
         if k < 0 then
             return LB (-k);
         end if;
         i := p
-        n := 1 -- we know tokens[p] is a good one
+        n := 1 -- we know tokens.Element (p) is a good one
         -- find k good tokens
         while n < k loop
             -- skip off-channel tokens, but make sure to not look past EOF
@@ -119,13 +119,13 @@ begin
             end if;
             n := @ + 1;
         end loop;
---		if ( i>range ) range := i;
-        return tokens[i];
+--      if ( i>range ) range := i;
+        return tokens.Element (i);
     end if;
 
-    -- 
+    --
     -- Count EOF just once.
-    -- 
+    --
     -- public
     function getNumberOfOnChannelTokens (This : …) return Integer is
 begin

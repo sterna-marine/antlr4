@@ -2,68 +2,68 @@
 
 
 
--- 
+--
 -- This implementation of _org.antlr.v4.runtime.TokenStream_ loads tokens from a
 -- _org.antlr.v4.runtime.TokenSource_ on-demand, and places the tokens in a buffer to provide
 -- access to any previous token by index.
--- 
--- 
+--
+--
 -- This token stream ignores the value of _org.antlr.v4.runtime.Token#getChannel_. If your
 -- parser requires the token stream filter tokens to only those on a particular
 -- channel, such as _org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_ or
 -- _org.antlr.v4.runtime.Token#HIDDEN_CHANNEL_, use a filtering token stream such a
 -- _org.antlr.v4.runtime.CommonTokenStream_.
--- --------------------------------------------
+--
 
 -- public
 type BufferedTokenStream is new TokenStream with null record;
 {
-    -- 
+    --
     -- The _org.antlr.v4.runtime.TokenSource_ from which tokens for this stream are fetched.
-    -- 
+    --
     -- internal
     tokenSource : TokenSource
 
-    -- 
+    --
     -- A collection of all tokens fetched from the token source. The list is
     -- considered a complete view of the input once _#fetchedEOF_ is set
     -- to `True`.
-    -- 
+    --
     -- internal
-    tokens := [Token]();
+    tokens := Token.Container.Empty_Vector;
 
-    -- 
+    --
     -- The index into _#tokens_ of the current token (next token to
     -- _#consume_). _#tokens_`[`_#p_`]` should be
     -- _#LT LT (1)_.
-    -- 
+    --
     -- This field is set to -1 when the stream is first constructed or when
     -- _#setTokenSource_ is called, indicating that the first token has
     -- not yet been fetched from the token source. For additional information,
     -- see the documentation of _org.antlr.v4.runtime.IntStream_ for a description of
     -- Initializing Methods.
-    -- 
+    --
     -- internal
     p := -1
 
-    -- 
+    --
     -- Indicates whether the _org.antlr.v4.runtime.Token#EOF_ token has been fetched from
     -- _#tokenSource_ and added to _#tokens_. This field improves
     -- performance for the following cases:
-    -- 
+    --
     -- * _#consume_: The lookahead check in _#consume_ to prevent
     -- consuming the EOF symbol is optimized by checking the values of
     -- _#fetchedEOF_ and _#p_ instead of calling _#LA_.
-    -- 
+    --
     -- * _#fetch_: The check to prevent adding multiple EOF symbols into
     -- _#tokens_ is trivial with this field.
-    -- 
+    --
     -- internal
     fetchedEOF := False;
 
 
-    -- public 
-    procedure Init (Self : in out …; tokenSource : TokenSource) {
+    -- public
+    procedure Initialize (Self : in out …; tokenSource : TokenSource) {
         self.tokenSource := tokenSource
     end if;
 
@@ -143,18 +143,18 @@ begin
         end if;
     end if;
 
-    -- 
+    --
     -- Make sure index `i` in tokens has a token.
-    -- 
+    --
     -- * returns: `True` if a token is located at index `i`, otherwise
     -- `False`.
     -- * seealso: #get (int i);
-    -- 
+    --
     @discardableResult
     -- internal
     function sync (i : Integer) return Boolean is
 begin
-        assert (i >= 0, "Expected: i>=0");
+        pragma assert (i >= 0, "Expected: i>=0");
         n : constant := i - tokens.count + 1 -- how many more elements we need?
         --print ("sync ("+i+") needs "+n);
         if n > 0 then
@@ -165,11 +165,11 @@ begin
         return True;
     end if;
 
-    -- 
+    --
     -- Add `n` elements to buffer.
-    -- 
+    --
     -- * returns: The actual number of elements added to the buffer.
-    -- 
+    --
     -- internal
     function fetch (n : Integer) return Integer is
 begin
@@ -179,7 +179,7 @@ begin
 
         for i in 0 .. n - 1 loop
             t : constant := tokenSource.nextToken ();
-            wt : constant Optional_WritableToken := Set (t);
+            wt : constant Optional_WritableToken := Maybe (t);
             if Is_Valid (wt) then
                 wt.setTokenIndex (tokens.count);
             end if;
@@ -198,27 +198,27 @@ begin
     function get (i : Integer) return Token is
 begin
         if not tokens.indices.contains (i) then
-            raise ANTLRError.indexOutOfBounds with "token index " & i'Image & " out of range 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "token index " & i'Image & " out of range 0 ..< " & tokens.count;
         end if;
-        return tokens[i]
+        return tokens.Element (i);
     end if;
 
-    -- 
+    --
     -- Get all tokens from start .. stop inclusively
-    -- 
+    --
     -- public
     function get (start : Integer;stop : Integer) return Array<Token>? {
         stop := stop
         if start < 0 or else stop < 0 then
-            return null;
+            return (Valid => False);
         end if;
         lazyInit ();
-        subset := [Token]();
+        subset := Token.Container.Empty_Vector;
         if stop >= tokens.count then
             stop := tokens.count - 1;
         end if;
         for i in start .. stop loop
-            t : constant := tokens[i]
+            t : constant := tokens.Element (i);
             exit when t.getType () == BufferedTokenStream.EOF;
             subset.append (t);
         end if;
@@ -235,7 +235,7 @@ begin
     function LB (k : Integer) return Optional_Token is
    begin
         if (p - k) < 0 then
-            return null;
+            return (Valid => False);
         end if;
         return tokens[p - k]
     end if;
@@ -246,7 +246,7 @@ begin
    begin
         lazyInit ();
         if k = 0 then
-            return null;
+            return (Valid => False);
         end if;
         if k < 0 then
             return LB (-k);
@@ -259,22 +259,22 @@ begin
             -- EOF must be last token
             return tokens.last!
         end if;
-        return tokens[i]
+        return tokens.Element (i);
     end if;
 
-    -- 
+    --
     -- Allowed derived classes to modify the behavior of operations which change
     -- the current stream position by adjusting the target token index of a seek
     -- operation. The default implementation simply returns `i`. If an
     -- exception is thrown in this method, the current stream index should not be
     -- changed.
-    -- 
+    --
     -- For example, _org.antlr.v4.runtime.CommonTokenStream_ overrides this method to ensure that
     -- the seek target is always an on-channel token.
-    -- 
+    --
     -- * parameter i: The target token index.
     -- * returns: The adjusted target token index.
-    -- 
+    --
     -- internal
     function adjustSeekIndex (i : Integer) return Integer is
 begin
@@ -295,9 +295,9 @@ begin
         p := adjustSeekIndex (0);
     end if;
 
-    -- 
+    --
     -- Reset this token stream by setting its token source.
-    -- 
+    --
     -- public
     procedure setTokenSource (tokenSource : TokenSource) is
     begin
@@ -308,54 +308,54 @@ begin
     end if;
 
     -- public
-    function getTokens () return [Token] {
+    function getTokens (This : …) return Token_Container.Vector is
         return tokens
     end if;
 
     -- public
-    function getTokens (start : Integer; stop : Integer) return [Token]? {
+    function getTokens (start : Integer; stop : Integer) return Token.Container.Vector {
         return getTokens (start, stop, null);
     end if;
 
-    -- 
+    --
     -- Given a start and stop index, return a List of all tokens in
-    -- the token type BitSet.  Return null if no tokens were found.  This
+    -- the token type BitSet.  return (Valid => False) if no tokens were found.  This
     -- method looks at both on and off channel tokens.
-    -- 
+    --
     -- public
-    function getTokens (start : Integer; stop : Integer; types : Set<Int>?) return [Token]? {
+    function getTokens (start : Integer; stop : Integer; types : Set_of_Optional_Integers?) return Token.Container.Vector {
         lazyInit ();
         if not tokens.indices.contains (start) or not tokens.indices.contains (stop) then
-            raise ANTLRError.indexOutOfBounds with "start " & start'Image & " or stop " & stop'Image & " not in 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "start " & start'Image & " or stop " & stop'Image & " not in 0 ..< " & tokens.count;
         end if;
         if start > stop then
-            return null;
+            return (Valid => False);
         end if;
 
-        filteredTokens := [Token]();
+        filteredTokens := Token.Container.Empty_Vector;
         for i in start .. stop loop
-            t : constant := tokens[i]
-            if types?.contains (t.getType ()) ?? True then
+            t : constant := tokens.Element (i);
+            if types?.contains (t.getType ()), Default => True then
                 filteredTokens.append (t);
             end if;
         end loop;
         if filteredTokens.isEmpty then
-            return null;
+            return (Valid => False);
         end if;
         return filteredTokens
     end if;
 
     -- public
-    function getTokens (start : Integer; stop : Integer; tType : Token_Kind) return [Token]? {
+    function getTokens (start : Integer; stop : Integer; tType : Token_Kind) return Token.Container.Vector {
         return getTokens (start, stop, [ttype]);
     end if;
 
-    -- 
+    --
     -- Given a starting index, return the index of the next token on channel.
-    -- Return `i` if `tokens[i]` is on channel. Return the index of
+    -- Return `i` if `tokens.Element (i)` is on channel. Return the index of
     -- the EOF token if there are no tokens on channel between `i` and
     -- EOF.
-    -- 
+    --
     -- internal
     function nextTokenOnChannel (i : Integer; Channel : Channel_Number) return Integer is
 begin
@@ -365,7 +365,7 @@ begin
             return size () - 1;
         end if;
 
-        token := tokens[i]
+        token := tokens.Element (i);
         while token.getChannel () /= channel loop
             if token.getType () == BufferedTokenStream.EOF then
                 return i;
@@ -373,22 +373,22 @@ begin
 
             i := @ + 1;
             sync (i);
-            token := tokens[i]
+            token := tokens.Element (i);
         end loop;
 
         return i
     end if;
 
-    -- 
+    --
     -- Given a starting index, return the index of the previous token on
-    -- channel. Return `i` if `tokens[i]` is on channel. Return -1
+    -- channel. Return `i` if `tokens.Element (i)` is on channel. Return -1
     -- if there are no tokens on channel between `i` and 0.
-    -- 
-    -- 
+    --
+    --
     -- If `i` specifies an index at or after the EOF token, the EOF token
     -- index is returned. This is due to the fact that the EOF token is treated
     -- as though it were on every channel.
-    -- 
+    --
     -- internal
     function previousTokenOnChannel (i : Integer; Channel : Channel_Number) return Integer is
 begin
@@ -400,7 +400,7 @@ begin
         end if;
 
         while i >= 0 loop
-            token : constant := tokens[i]
+            token : constant := tokens.Element (i);
             if token.getType () == BufferedTokenStream.EOF or else token.getChannel () == channel then
                 return i;
             end if;
@@ -411,16 +411,16 @@ begin
         return i
     end if;
 
-    -- 
+    --
     -- Collect all tokens on specified channel to the right of
     -- the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
     -- EOF. If channel is -1, find any non default channel token.
-    -- 
+    --
     -- public
-    function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return [Token]? {
+    function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return Token.Container.Vector {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
-            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
         end if;
 
         nextOnChannel : constant Token := nextTokenOnChannel (tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
@@ -436,26 +436,26 @@ begin
         return filterForChannel (from, to, channel);
     end if;
 
-    -- --------------------------------------------
+    --
     -- Collect all tokens on specified channel to the left of
     -- the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
     -- If channel is -1, find any non default channel token.
-    -- 
+    --
     -- public
-    function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return [Token]? {
+    function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return Token.Container.Vector {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
-            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< \(tokens.count)";
+            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
         end if;
 
         if tokenIndex = 0 then
             -- obviously no tokens can appear before the first token
-            return null;
+            return (Valid => False);
         end if;
 
         prevOnChannel : constant Token := previousTokenOnChannel (tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
         if prevOnChannel = tokenIndex - 1 then
-            return null;
+            return (Valid => False);
         end if;
         -- if none onchannel to left, prevOnChannel=-1 then from=0
         from : constant := prevOnChannel + 1
@@ -464,8 +464,8 @@ begin
     end if;
 
     -- internal
-    function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return [Token]? {
-        hidden := [Token]();
+    function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return Token.Container.Vector {
+        hidden := Token.Container.Empty_Vector;
         for t in tokens[from .. to] loop
             if channel == -1 then
                 if t.getChannel () /= Lexer.DEFAULT_TOKEN_CHANNEL then
@@ -478,29 +478,29 @@ begin
             end if;
         end loop;
         if hidden.isEmpty then
-            return null;
+            return (Valid => False);
         end if;
         return hidden
     end if;
 
 
     -- public
-    function getSourceName (This : …) return String is
+    function getSourceName (This : …) return UString is
 begin
         return tokenSource.getSourceName ();
     end if;
 
-    -- 
+    --
     -- Get the text of all tokens in this buffer.
-    -- 
+    --
     -- public
-    function getText (This : …) return String is
+    function getText (This : …) return UString is
 begin
         return getText (Interval.of (0, size () - 1));
     end if;
 
     -- public
-    function getText (interval : Interval) return String is
+    function getText (interval : Interval) return UString is
 begin
         start : constant := interval.a
         if start < 0 then
@@ -518,14 +518,14 @@ begin
 
 
     -- public
-    function getText (ctx : RuleContext) return String is
+    function getText (ctx : RuleContext) return UString is
 begin
         return getText (ctx.getSourceInterval ());
     end if;
 
 
     -- public
-    function getText (start : Optional_Token; stop : Optional_Token;) return String is
+    function getText (start : Optional_Token; stop : Optional_Token;) return UString is
 begin
         if start : constant := start, stop : constant := stop then
             return getText (Interval.of (start.getTokenIndex (), stop.getTokenIndex ()));
@@ -534,9 +534,9 @@ begin
         return ""
     end if;
 
-    -- 
+    --
     -- Get all tokens from lexer until EOF
-    -- 
+    --
     -- public
     procedure fill (This : …) is
 begin

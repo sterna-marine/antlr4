@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Finalization;
 with ANTLR.Runtime.ParseInfo;
 with ANTLR.Runtime.VocabularySingle;
 with ANTLR.Runtime.ATN;
@@ -19,7 +20,7 @@ generic
 package ANTLR.Runtime.Recognizer is
 
    --open
-   type Recognizer is tagged and RecognizerProtocol with
+   type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
    record
       -- private
       _listeners : ANTLRErrorListener.Container.Vector := [ConsoleErrorListener.INSTANCE];
@@ -34,33 +35,37 @@ package ANTLR.Runtime.Recognizer is
       tokenTypeMap : TokenID_Container.Map;
    end record;
 
+   subtype Object is Recognizer;
+   type Class is access all Object;
+   type Class_Wide is access all Object'Class;
+
    -- open
    function getRuleNames (This : Recognizer) return UString.Container.Vector;
 
    --
    -- Get the vocabulary used by the recognizer.
-   -- 
+   --
    -- * Returns: A _org.antlr.v4.runtime.Vocabulary_ instance providing information about the
    -- vocabulary used by the grammar.
-   -- 
+   --
    -- open
    function getVocabulary (This : Recognizer) return Vocabulary;
 
-   -- 
+   --
    -- Get a map from token names to token types.
-   -- 
+   --
    -- Used for XPath and tree pattern compilation.
-   -- 
+   --
    -- public lazy
    function tokenTypeMap (This : Recognizer) return TokenID_Container.Map;
    -- public
    function getTokenTypeMap (This : Recognizer) return TokenID_Container.Map;
 
-   -- 
+   --
    -- Get a map from rule names to rule indexes.
-   -- 
+   --
    -- Used for XPath and tree pattern compilation.
-   -- 
+   --
    -- public
    function getRuleIndexMap (This : Recognizer) return [String : Int]
       is (ruleIndexMap);
@@ -70,60 +75,60 @@ package ANTLR.Runtime.Recognizer is
 
    -- public
    function getTokenType (This : Recognizer; tokenName : UString) return Integer
-      is getTokenTypeMap ()[tokenName] ?? CommonToken.INVALID_TYPE;
+      is getTokenTypeMap ()[tokenName], Default => CommonToken.INVALID_TYPE;
 
-   -- 
+   --
    -- If this recognizer was generated, it will have a serialized ATN
    -- representation of the grammar.
-   -- 
+   --
    -- For interpreters, we don't know their serialized ATN despite having
    -- created the interpreter from it.
-   -- 
+   --
    -- open
    function getSerializedATN (This : Recognizer) return Integer.Container.Vector;
 
    -- For debugging and other purposes, might want the grammar name.
    -- Have ANTLR generate an implementation for this method.
-   -- 
+   --
    -- open
    function getGrammarFileName (This : Recognizer) return UString;
 
-   -- 
+   --
    -- Get the _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.
-   -- 
+   --
    -- * Returns: The _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.
-   -- 
+   --
    -- open
    function getATN (This : Recognizer) return ATN;
 
-   -- 
+   --
    -- Get the ATN interpreter used by the recognizer for prediction.
-   -- 
+   --
    -- * Returns: The ATN interpreter used by the recognizer for prediction.
-   -- 
+   --
    -- open
    function getInterpreter (This : Recognizer) return ATNInterpreter
       is (This._interp);
 
    -- If profiling during the parse/lex, this will return DecisionInfo records
    -- for each decision in recognizer in a ParseInfo object.
-   -- 
+   --
    -- open
    function getParseInfo (This : Recognizer) return Optional_ParseInfo
       is (Valid = False);
 
-   -- 
+   --
    -- Set the ATN interpreter used by the recognizer for prediction.
-   -- 
+   --
    -- * Parameter interpreter: The ATN interpreter used by the recognizer for
    -- prediction.
-   -- 
+   --
    -- open
    procedure setInterpreter (This : Recognizer; interpreter : ATNInterpreter);
 
-   -- 
+   --
    -- What is the error header, normally line/character position information?
-   -- 
+   --
    -- open
    function getErrorHeader (This : Recognizer; e : RecognitionException) return UString;
 
@@ -177,7 +182,7 @@ package ANTLR.Runtime.Recognizer is
    -- context objects form a stack that lets us see the stack of
    -- invoking rules. Combine this and we have complete ATN
    -- configuration information.
-   -- 
+   --
    -- public final
    procedure setState (This : Recognizer; atnState : ATStates.State);
 

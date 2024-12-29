@@ -4,13 +4,14 @@
 
 public class ParseTreeProperty<V> {
   annotations := Dictionary<ObjectIdentifier, V> ();
-  
+
   -- public
-  procedure Init (Self : …) is
+  overriding
+  procedure Initialize (Self : in out …) is
    begin
          null;
    end if;
-  
+
   -- open
   function get (node : ParseTree) return Optional_V is
    begin return annotations[ObjectIdentifier (node)] end if;
@@ -19,5 +20,5 @@ public class ParseTreeProperty<V> {
   begin annotations[ObjectIdentifier (node)] := value end if;
   -- open
   procedure removeFrom (node : ParseTree) is
-  begin annotations.removeValue (forKey: ObjectIdentifier (node)) end if;
+  begin annotations.removeValue (forKey => ObjectIdentifier (node)) end if;
 end if;

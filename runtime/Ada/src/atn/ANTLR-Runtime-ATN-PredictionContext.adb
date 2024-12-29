@@ -1,8 +1,8 @@
 -- €
 
-package body ANTLR.Runtime.ATN.PredictionContext is 
+package body ANTLR.Runtime.ATN.PredictionContext is
 
-   -- private static 
+   -- private static
    INITIAL_HASH : constant Hash_code := 1;
 
    protected body globalNodeCount is
@@ -20,40 +20,40 @@ package body ANTLR.Runtime.ATN.PredictionContext is
    end globalNodeCount;
 
 
-   procedure Init (Self : PredictionContext; cachedHashCode : Hash_code) is
+   procedure Initialize (Self : PredictionContext; cachedHashCode : Hash_code) is
    begin
       self.cachedHashCode := cachedHashCode;
-   end Init;
+   end Initialize;
 
    function fromRuleContext (atn : ATN; outerContext : Optional_RuleContext) return PredictionContext is
    begin
-      _outerContext : constant := outerContext ?? ParserRuleContext.EMPTY
+      _outerContext : constant := outerContext, Default => ParserRuleContext.EMPTY
 
       -- if we are in RuleContext of start rule, s, then PredictionContext
       -- is EMPTY. Nobody called us. (if we are empty, return empty);
-      if (_outerContext.parent = null or else _outerContext === ParserRuleContext.EMPTY) then
+      if (not Is_Valid (_outerContext.parent) or else _outerContext === ParserRuleContext.EMPTY) then
             return EmptyPredictionContext.Instance;
       end if;
 
       -- If we have a parent, convert it to a PredictionContext graph
       parent : constant := PredictionContext.fromRuleContext (atn, _outerContext.parent);
 
-      state : constant := atn.states[_outerContext.invokingState]!
+      state : constant := atn.states.Element (_outerContext.invokingState)!
       transition : constant RuleTransition := RuleTransition (state.transition (0));
       return SingletonPredictionContext.create (parent, transition.followState.stateNumber);
    end fromRuleContext;
 
-   function size (This : PredictionContext) return Integer is
+   function size (This : PredictionContext) return Integer with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.size() must be overridden";
    end size;
 
-   function getParent (This : PredictionContext; index : Integer) return Optional_PredictionContext is
+   function getParent (This : PredictionContext; index : Integer) return Optional_PredictionContext with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.getParent() must be overridden";
    end getParent;
 
-   function getReturnState (This : PredictionContext; index : Integer) return ATNStates.State is
+   function getReturnState (This : PredictionContext; index : Integer) return ATNStates.State with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.getReturnState() must be overridden";
    end getReturnState;
@@ -84,7 +84,7 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       return MurmurHash.finish (hash, 2);
    end calculateHashCode;
 
-   function calculateHashCode (parents : [PredictionContext?], returnStates : [Int]) return Hash_Code is
+   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer.Container.Vector) return Hash_Code is
       hash : Hash_Code;
    begin
       hash := MurmurHash.initialize (INITIAL_HASH);
@@ -101,13 +101,13 @@ package body ANTLR.Runtime.ATN.PredictionContext is
    function merge (a : PredictionContext;
                    b : PredictionContext;
                    rootIsWildcard : Boolean;
-                   mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?)
+                   mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
                    return PredictionContext is
       a := a
       b := b
    begin
-      -- assert ( a /= null and then b /= null,"Expected: a /= null and b /= null");
-      -- assert ( a /= null and then b /= null,"Expected: a /= null and b /= null"); -- must be empty context, never null
+      -- pragma assert ( Is_Valid (a) and then Is_Valid (b),"Expected: Is_Valid (a) and Is_Valid (b)");
+      -- pragma assert ( Is_Valid (a) and then Is_Valid (b),"Expected: Is_Valid (a) and Is_Valid (b)"); -- must be empty context, never null
       -- share same graph if both same
 
 
@@ -115,10 +115,10 @@ package body ANTLR.Runtime.ATN.PredictionContext is
          return a;
       end if;
 
-      spc_a : constant Optional_SingletonPredictionContext := Set (a);
-      spc_b : constant Optional_SingletonPredictionContext := Set (b);
+      spc_a : constant Optional_SingletonPredictionContext := Maybe (a);
+      spc_b : constant Optional_SingletonPredictionContext := Maybe (b);
       if Is_Valid (spc_a) and Is_Valid (spc_b) then
-         return mergeSingletons (spc_a, spc_b, rootIsWildcard, &mergeCache);
+         return mergeSingletons (spc_a, spc_b, rootIsWildcard, mergeCache'Access);
       end if;
 
       -- At least one of a or b is array
@@ -133,22 +133,22 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       end if;
 
       -- convert singleton so both are arrays to normalize
-      spc_a : constant Optional_SingletonPredictionContext := Set (a);
+      spc_a : constant Optional_SingletonPredictionContext := Maybe (a);
       if Is_Valid (spc_a) then
          a := ArrayPredictionContext (spc_a);
       end if;
-      spc_b : constant Optional_SingletonPredictionContext := Set (b);
+      spc_b : constant Optional_SingletonPredictionContext := Maybe (b);
       if Is_Valid (spc_b) then
          b := ArrayPredictionContext (spc_b);
       end if;
       return mergeArrays (ArrayPredictionContext (a), ArrayPredictionContext (b),
-         rootIsWildcard, &mergeCache);
+         rootIsWildcard, mergeCache'Access);
    end merge;
 
    function mergeSingletons (a : SingletonPredictionContext;
                              b : SingletonPredictionContext;
                              rootIsWildcard : Boolean;
-                             mergeCache : inxout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?)
+                             mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
                              return PredictionContext is
    begin
       if mergeCache : constant := mergeCache then
@@ -169,7 +169,7 @@ package body ANTLR.Runtime.ATN.PredictionContext is
 
       if a.returnState = b.returnState then
          -- a = b
-         parent : constant := merge (a.parent!, b.parent!, rootIsWildcard, &mergeCache);
+         parent : constant := merge (a.parent!, b.parent!, rootIsWildcard, mergeCache'Access);
          -- if parent is same as existing a or b parent or reduced to a parent, return it
          if parent === a.parent! then
             return a;
@@ -187,9 +187,9 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       else
          -- a /= b payloads differ
          -- see if we can collapse parents due to $+x parents if local ctx
-         singleParent : Optional_PredictionContext; := null;
+         singleParent : Optional_PredictionContext; := (Valid => False);
          --added by janyou
-         if a === b or else (a.parent /= null and then a.parent! == b.parent) then
+         if a === b or else (Is_Valid (a.parent) and then a.parent! == b.parent) then
             -- ax + bx := [a,b]x
             singleParent := a.parent
          end if;
@@ -198,8 +198,8 @@ package body ANTLR.Runtime.ATN.PredictionContext is
             -- sort payloads and use same parent
             payloads := [a.returnState, b.returnState]
             if a.returnState > b.returnState then
-                  payloads[0] := b.returnState
-                  payloads[1] := a.returnState
+                  payloads.Insert (Key => 0, New_Item => b.returnState);
+                  payloads.Insert (Key => 1, New_Item => a.returnState);
             end if;
             parents : constant := [singleParent, singleParent]
             a_ : constant := ArrayPredictionContext (parents, payloads);
@@ -213,12 +213,12 @@ package body ANTLR.Runtime.ATN.PredictionContext is
          parents := [a.parent, b.parent]
          if a.returnState > b.returnState then
             -- sort by payload
-            payloads[0] := b.returnState
-            payloads[1] := a.returnState
+            payloads.Insert (Key => 0, New_Item => b.returnState);
+            payloads.Insert (Key => 1, New_Item => a.returnState);
             parents := [b.parent, a.parent]
          end if;
          if a is EmptyPredictionContext then
-            null;  -- print ("parent is null");
+            null;  -- Text_IO.Put_Line ("parent is null");
          end if;
          a_ : constant := ArrayPredictionContext (parents, payloads);
          mergeCache?.put (a, b, a_);
@@ -257,16 +257,16 @@ package body ANTLR.Runtime.ATN.PredictionContext is
             return joined
          end if;
       end if;
-      return null;
+      return (Valid => False);
    end mergeRoot;
 
    function mergeArrays (a : ArrayPredictionContext;
                          b : ArrayPredictionContext;
                          rootIsWildcard : Boolean;
-                         mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?)
+                         mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
                          return PredictionContext is
    begin
-      if previous : constant := mergeCache?.get (a, b) ?? mergeCache?.get (b, a) then
+      if previous : constant := mergeCache?.get (a, b), Default => mergeCache?.get (b, a) then
          return previous;
       end if;
 
@@ -279,9 +279,9 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       bReturnStatesLength : constant := b.returnStates.count
 
       mergedReturnStatesLength : constant := aReturnStatesLength + bReturnStatesLength
-      mergedReturnStates := [Int](repeating: 0, count: mergedReturnStatesLength);
+      mergedReturnStates := [Int](repeating => 0, count => mergedReturnStatesLength);
 
-      mergedParents := [PredictionContext?](repeating: null, count: mergedReturnStatesLength);
+      mergedParents := [PredictionContext?](repeating => null, count => mergedReturnStatesLength);
       -- walk and merge to yield mergedParents, mergedReturnStates
       aReturnStates : constant := a.returnStates
       bReturnStates : constant := b.returnStates
@@ -289,35 +289,35 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       bParents : constant := b.parents
 
       while i < aReturnStatesLength and then j < bReturnStatesLength loop
-         a_parent : constant := aParents[i]
-         b_parent : constant := bParents[j]
-         if aReturnStates[i] == bReturnStates[j] then
+         a_parent : constant := aParents.Element (i);
+         b_parent : constant := bParents.Element (j);
+         if aReturnStates.Element (i) == bReturnStates.Element (j) then
             -- same payload (stack tops are equal), must yield merged singleton
-            payload : constant := aReturnStates[i]
+            payload : constant := aReturnStates.Element (i);
             -- $+$ := $
-            let both$ := ((payload = EMPTY_RETURN_STATE) and then a_parent = null and then b_parent = null);
-            ax_ax : constant := (a_parent /= null and then b_parent /= null and then a_parent = b_parent);
+            let both$ := ((payload = EMPTY_RETURN_STATE) and then not Is_Valid (a_parent) and then not Is_Valid (b_parent));
+            ax_ax : constant := (Is_Valid (a_parent) and then Is_Valid (b_parent) and then a_parent = b_parent);
 
             if both$ or else ax_ax then
-                  mergedParents[k] := a_parent -- choose left
-                  mergedReturnStates[k] := payload
+                  mergedParents.Insert (Key => k, New_Item => a_parent); -- choose left
+                  mergedReturnStates.Insert (Key => k, New_Item => payload);
             else
                   -- ax+ay -> a'[x,y]
-                  mergedParent : constant := merge (a_parent!, b_parent!, rootIsWildcard, &mergeCache);
-                  mergedParents[k] := mergedParent
-                  mergedReturnStates[k] := payload
+                  mergedParent : constant := merge (a_parent!, b_parent!, rootIsWildcard, mergeCache'Access);
+                  mergedParents.Insert (Key => k, New_Item => mergedParent);
+                  mergedReturnStates.Insert (Key => k, New_Item => payload);
             end if;
             i := @ + 1; -- hop over left one as usual
             j := @ + 1; -- but also skip one in right side since we merge
-         end if; elsif aReturnStates[i] < bReturnStates[j] then
-            -- copy a[i] to M
-            mergedParents[k] := a_parent
-            mergedReturnStates[k] := aReturnStates[i]
+         end if; elsif aReturnStates.Element (i) < bReturnStates.Element (j) then
+            -- copy a.Element (i) to M
+            mergedParents.Insert (Key => k, New_Item => a_parent);
+            mergedReturnStates.Insert (Key => k, New_Item => aReturnStates.Element (i));
             i := @ + 1;
          else
-            -- b > a, copy b[j] to M
-            mergedParents[k] := b_parent
-            mergedReturnStates[k] := bReturnStates[j]
+            -- b > a, copy b.Element (j) to M
+            mergedParents.Insert (Key => k, New_Item => b_parent);
+            mergedReturnStates.Insert (Key => k, New_Item => bReturnStates.Element (j));
             j := @ + 1;
          end if;
          k := @ + 1;
@@ -327,14 +327,14 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       if i < aReturnStatesLength then
 
          for p in i .. aReturnStatesLength - 1 loop
-            mergedParents[k] := aParents[p]
-            mergedReturnStates[k] := aReturnStates[p]
+            mergedParents.Insert (Key => k, New_Item => aParents.Element (p));
+            mergedReturnStates.Insert (Key => k, New_Item => aReturnStates.Element (p));
             k := @ + 1;
          end loop;
       else
          for p in j .. bReturnStatesLength - 1 loop
-            mergedParents[k] := bParents[p]
-            mergedReturnStates[k] := bReturnStates[p]
+            mergedParents.Insert (Key => k, New_Item => bParents.Element (p));
+            mergedReturnStates.Insert (Key => k, New_Item => bReturnStates.Element (p));
             k := @ + 1;
          end loop;
       end if;
@@ -344,7 +344,7 @@ package body ANTLR.Runtime.ATN.PredictionContext is
          -- write index < last position; trim
          if k = 1 then
             -- for just one merged element, return singleton top
-            a_ : constant := SingletonPredictionContext.create (mergedParents[0], mergedReturnStates[0]);
+            a_ : constant := SingletonPredictionContext.create (mergedParents.Element (0), mergedReturnStates.Element (0));
             mergeCache?.put (a, b, a_);
             --print ("merge array 1 " & a_'Image);
             return a_
@@ -367,23 +367,23 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       end if;
 
       --modify by janyou
-      --combineCommonParents (&mergedParents);
+      --combineCommonParents (mergedParents'Access);
       M.combineCommonParents ();
 
       mergeCache?.put (a, b, M);
-      -- print ("merge array 4 " & M'Image);
+      -- Text_IO.Put_Line ("merge array 4 " & M'Image);
       return M
    end mergeArrays;
 
    -- public static
-   function toDOTString (context : Optional_PredictionContext) return String is
+   function toDOTString (context : Optional_PredictionContext) return UString is
    begin
-      if context = null then
+      if not Is_Valid (context) then
             return "";
       end if;
       buf := ""
-      buf := @ + "digraph G {\n";
-      buf := @ + "rankdir=LR;\n";
+      buf := @ & "digraph G {\n";
+      buf := @ & "rankdir=LR;\n";
 
       nodes := getAllContextNodes (context!);
       -- closure
@@ -393,30 +393,30 @@ package body ANTLR.Runtime.ATN.PredictionContext is
 
       for current in nodes loop
          if current is SingletonPredictionContext then
-            buf := @ + "  s\(current.id)";
-            returnState : UString := String (current.getReturnState (0));
+            buf := @ & "  s" & current.id;
+            returnState : UString := UString (current.getReturnState (0));
             if current is EmptyPredictionContext then
                returnState := "$";
             end if;
-            buf := @ + " [label=""" & returnState'Image & """];\n";
+            buf := @ & " [label=""" & returnState'Image & """];\n";
             goto CONTINUE_NODES_A;
          end if;
          arr : constant ArrayPredictionContext := ArrayPredictionContext (current);
-         buf := @ + "  s\(arr.id) [shape=box, label=""[";
+         buf := @ & "  s" & arr.id) [shape=box, label=""[";
          first := True;
          returnStates : constant := arr.returnStates
          for inv in returnStates loop
             if not first then
-               buf := @ + ", ";
+               buf := @ & ", ";
             end if;
             if inv = EMPTY_RETURN_STATE then
-               buf := @ + "$";
+               buf := @ & "$";
             else
-               buf := @ + String (inv);
+               buf := @ + UString (inv);
             end if;
             first := False;
          end loop;
-         buf := @ + "]""];\n";
+         buf := @ & "]""];\n";
          <<CONTINUE_NODES_A>>
       end loop;
 
@@ -430,11 +430,11 @@ package body ANTLR.Runtime.ATN.PredictionContext is
             if not Is_Valid (currentParent) then
                goto CONTINUE_NODES_C;
             end if;
-            buf := @ + "  s\(current.id) -> s\(currentParent.id)";
+            buf := @ & "  s" & current.id) -> s" & currentParent.id;
             if current.size () > 1 then
-               buf := @ + " [label=""parent[" & i'Image & "]""];\n";
+               buf := @ & " [label=""parent[" & i'Image & "]""];\n";
             else
-               buf := @ + ";\n";
+               buf := @ & ";\n";
             end if;
             <<CONTINUE_NODES_C>>
          end loop;
@@ -454,17 +454,17 @@ package body ANTLR.Runtime.ATN.PredictionContext is
          return context;
       end if;
 
-      if visitedContext : constant := visited[context] then
+      if visitedContext : constant := visited.Element (context) then
          return visitedContext;
       end if;
 
       if cachedContext : constant := contextCache.get (context) then
-         visited[context] := cachedContext
+         visited.Insert (Key => context, New_Item => cachedContext);
          return cachedContext
       end if;
 
       changed := False;
-      parents := [PredictionContext?](repeating: null, count: context.size ());
+      parents := [PredictionContext?](repeating => null, count => context.size ());
       length : constant := parents.count
       for i in 0 .. length - 1 loop
          p : constant := context.getParent (i);
@@ -472,25 +472,25 @@ package body ANTLR.Runtime.ATN.PredictionContext is
             return context
          end if;
 
-         parent : constant := getCachedContext (p, contextCache, &visited);
+         parent : constant := getCachedContext (p, contextCache, visited'Access);
          if changed or else parent !== p then
             if not changed then
-               parents := [PredictionContext?](repeating: null, count: context.size ());
+               parents := [PredictionContext?](repeating => null, count => context.size ());
 
                for j in 0 .. context - 1.size () loop
-                  parents[j] := context.getParent (j);
+                  parents.Insert (Key => j, New_Item => context.getParent (j));
                end loop;
 
                changed := True;
             end if;
 
-            parents[i] := parent
+            parents.Insert (Key => i, New_Item => parent);
          end if;
       end loop;
 
       if not changed then
          contextCache.add (context);
-         visited[context] := context
+         visited.Insert (Key => context, New_Item => context);
          return context
       end if;
 
@@ -498,15 +498,15 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       if parents.isEmpty then
          updated := EmptyPredictionContext.Instance;
       elsif parents.count = 1 then
-         updated := SingletonPredictionContext.create (parents[0], context.getReturnState (0));
+         updated := SingletonPredictionContext.create (parents.Element (0), context.getReturnState (0));
       else
          arrayPredictionContext : constant ArrayPredictionContext := ArrayPredictionContext (context);
          updated := ArrayPredictionContext (parents, arrayPredictionContext.returnStates);
       end if;
 
       contextCache.add (updated);
-      visited[updated] := updated
-      visited[context] := updated
+      visited.Insert (Key => updated, New_Item => updated);
+      visited.Insert (Key => context, New_Item => updated);
 
       return updated
    end getCachedContext;
@@ -514,11 +514,11 @@ package body ANTLR.Runtime.ATN.PredictionContext is
 
 
    -- ter's recursive version of Sam's getAllNodes ();
-   function getAllContextNodes (context : PredictionContext) return [PredictionContext] is
-      nodes := [PredictionContext]();
+   function getAllContextNodes (context : PredictionContext) return PredictionContext_Container.Vector is
+      nodes := PredictionContext.Container.Empty_Vector;
       visited := [PredictionContext: PredictionContext]();
    begin
-      getAllContextNodes_ (context, &nodes, &visited);
+      getAllContextNodes_ (context, nodes'Access, visited'Access);
       return nodes
    end getAllContextNodes;
 
@@ -526,32 +526,32 @@ package body ANTLR.Runtime.ATN.PredictionContext is
    procedure getAllContextNodes_ (context : Optional_PredictionContext;
                                   nodes : in out [PredictionContext],
                                   visited : in out [PredictionContext: PredictionContext]) is
-   begin   
-      if not Is_Valid (context) or (visited[context] = null) then
+   begin
+      if not Is_Valid (context) or not Is_Valid (visited.Element (context)) then
          exit;
       end if;
-      visited[context] := context
+      visited.Insert (Key => context, New_Item => context);
       nodes.append (context);
       length : constant := context.size ();
       for i in 0 .. length - 1 loop
-         getAllContextNodes_ (context.getParent (i), &nodes, &visited);
+         getAllContextNodes_ (context.getParent (i), nodes'Access, visited'Access);
       end loop;
    end getAllContextNodes_;
 
-   function toString<T> (recog : Recognizer<T>) return String is
+   function toString<T> (recog : Recognizer<T>) return UString is
    begin
-      return String (describing: PredictionContext.self);
-      --		return toString (recog, ParserRuleContext.EMPTY);
+      return UString (describing: PredictionContext.self);
+      --      return toString (recog, ParserRuleContext.EMPTY);
    end toString;
 
-   function toStrings<T> (recognizer : Recognizer<T>, currentState : ATStates.State) return [String] is
+   function toStrings<T> (recognizer : Recognizer<T>, currentState : ATStates.State) return UString_Container.Vector is
    begin
       return toStrings (recognizer, EmptyPredictionContext.Instance, currentState);
    end if;
 
    -- public
-   function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : ATStates.State) return [String] is
-      result := [String]();
+   function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : ATStates.State) return UString_Container.Vector is
+      result := UString.Container.Empty_Vector;
       perm := 0
    begin
       OUTER: loop
@@ -564,12 +564,12 @@ package body ANTLR.Runtime.ATN.PredictionContext is
             index := 0
             if p.size () > 0 then
                bits := 1
-               while (1 << bits) < p.size () loop
+               while Shift_Left (1, bits) < p.size () loop
                   bits := @ + 1;
                end loop;
 
-               mask : constant := (1 << bits) - 1
-               index := (perm >> offset) & mask
+               mask : constant := Shift_Left (1, bits) - 1
+               index :=  Shift_Right (perm, offset) & mask
 
                --last := @ and  index >= p.size () - 1;
                --last := Bool (Int (last) & (index >= p.size () - 1));
@@ -584,28 +584,28 @@ package body ANTLR.Runtime.ATN.PredictionContext is
             if recognizer : constant := recognizer then
                if localBuffer.count > 1 then
                   -- first char is '[', if more than that this isn't the first rule
-                  localBuffer := @ + " ";
+                  localBuffer := @ & " ";
                end if;
 
                atn : constant := recognizer.getATN ();
-               s : constant ATNStates.State := atn.states[stateNumber]!
+               s : constant ATNStates.State := atn.states.Element (stateNumber)!
                ruleName : constant := recognizer.getRuleNames ()[s.ruleIndex!]
                localBuffer.append (ruleName);
             elsif p.getReturnState (index) /= PredictionContext.EMPTY_RETURN_STATE then
                if not p.isEmpty () then
                   if localBuffer.count > 1 then
                      -- first char is '[', if more than that this isn't the first rule
-                     localBuffer := @ + " ";
+                     localBuffer := @ & " ";
                   end if;
 
-                  localBuffer := @ + String (p.getReturnState (index));
+                  localBuffer := @ + UString (p.getReturnState (index));
                end if;
             end if;
             stateNumber := p.getReturnState (index);
             p := p.getParent (index)!
             <<CONTINUE_OUTER>>
          end loop;
-         localBuffer := @ + "]";
+         localBuffer := @ & "]";
          result.append (localBuffer);
 
          exit when last;
@@ -616,11 +616,11 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       return result
    end toStrings<T>;
 
-   function Image return UString
-      is (describing: PredictionContext.self) + "@" + String (Unmanaged.passUnretained (self).toOpaque ().hashValue);
+   function Description (This : …) return UString
+      is (describing: PredictionContext.self) + "@" + UString (Unmanaged.passUnretained (self).toOpaque ().hashValue);
 
    function "=" (lhs: RuleContext; rhs: ParserRuleContext) return Boolean is
-      lhs : constant Optional_ParserRuleContext := Set (lhs);
+      lhs : constant Optional_ParserRuleContext := Maybe (lhs);
    begin
       if Is_Valid (lhs) then
          return lhs === rhs
@@ -629,7 +629,7 @@ package body ANTLR.Runtime.ATN.PredictionContext is
       end if;
    end "=";
 
-   function "=" (lhs: PredictionContext; rhs: PredictionContext) return Boolean is
+   function "=" (Lhs, Rhs : PredictionContext) return Boolean is
    begin
       if lhs === rhs then
          return True;
@@ -638,14 +638,14 @@ package body ANTLR.Runtime.ATN.PredictionContext is
          return lhs === rhs;
       end if;
 
-      lhs : constant Optional_SingletonPredictionContext := Set (lhs);
-      rhs : constant Optional_SingletonPredictionContext := Set (rhs);
+      lhs : constant Optional_SingletonPredictionContext := Maybe (lhs);
+      rhs : constant Optional_SingletonPredictionContext := Maybe (rhs);
       if Is_Valid (lhs) and Is_Valid (rhs) then
          return lhs = rhs;
       end if;
 
-      lhs : constant Optional_ArrayPredictionContext := Set (lhs);
-      rhs : constant Optional_ArrayPredictionContext := Set (rhs);
+      lhs : constant Optional_ArrayPredictionContext := Maybe (lhs);
+      rhs : constant Optional_ArrayPredictionContext := Maybe (rhs);
       if Is_Valid (lhs) and Is_Valid (rhs) then
          return lhs = rhs;
       end if;

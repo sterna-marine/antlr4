@@ -33,6 +33,7 @@ __pycache__/
 *.user
 *.userosscache
 *.sln.docstates
+*.tbz
 
 # User-specific files (MonoDevelop/Xamarin Studio/Visual Studio)
 *.userprefs
@@ -109,6 +110,7 @@ runtime/PHP
 
 # Swift binaries
 .build/
+build/
 
 # Code coverage reports
 coverage/

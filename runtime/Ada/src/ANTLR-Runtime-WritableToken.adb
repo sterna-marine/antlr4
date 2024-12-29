@@ -2,7 +2,7 @@
 
 -- public
 type WritableToken is interface and Token;
-    procedure setText (text : String);
+    procedure setText (text : UString);
 
     procedure setType (tType : Token_Kind);
 

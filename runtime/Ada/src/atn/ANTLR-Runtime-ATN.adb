@@ -2,13 +2,13 @@
 
 package body ANTLR.Runtime.ATN is
 
-   procedure Init (Self : in out ATN;
+   procedure Initialize (Self : in out ATN;
                    grammarType : ATNType;
                    maxTokenType : Token_Kind) is
    begin
       self.grammarType := grammarType;
       self.maxTokenType := maxTokenType;
-   end Init;
+   end Initialize;
 
    function nextTokens (This : ATN; s : ATNState; ctx : Optional_RuleContext;) return IntervalSet is
       anal : constant := LL1Analyzer (This);
@@ -23,7 +23,7 @@ package body ANTLR.Runtime.ATN is
       if Is_Valid (nextTokenWithinRule) then
          return nextTokenWithinRule;
       else
-         declare 
+         declare
             intervalSet : constant IntervalSet := nextTokens (s, null);
             --TOFIX S : ATNState;
          begin
@@ -51,17 +51,18 @@ package body ANTLR.Runtime.ATN is
       --states.set (state.stateNumber, null); -- just free mem, don't shift states in list
    end removeState;
 
-   function defineDecisionState (This : ATN; s : DecisionState) return Integer is
+   function defineDecisionState (This : ATN; s : DecisionState) return State is
    begin
       This.decisionToState.Append (s);
-      s.decision := This.decisionToState.Length - 1;
+      -- s.decision := State'Val (This.decisionToState.Length - 1);
+      s.decision := State'Val (This.decisionToState.Length - 1); --TOFIX
       return s.decision;
    end defineDecisionState;
 
-   function getDecisionState (This : ATN; decision : Integer) return Optional_DecisionState is
+   function getDecisionState (This : ATN; decision : State) return Optional_DecisionState is
    begin
       if not This.decisionToState.isEmpty  then
-         return This.decisionToState.Element (decision);
+         return This.decisionToState.Element (decision); --TOFIX
       else
          return (Valid => False);
       end if;
@@ -81,19 +82,19 @@ package body ANTLR.Runtime.ATN is
       end if;
 
       expected : constant := IntervalSet ();
-      expected.addAll (following);; -- try!
-      expected.remove (CommonToken.EPSILON);; -- try!
+      expected.addAll (following); -- try!
+      expected.remove (CommonToken.EPSILON); -- try!
       ctxWrap : constant := ctx;
-      while Is_Valid (ctxWrap) 
-         and then ctxWrap.invokingState >= 0 
+      while Is_Valid (ctxWrap)
+         and then ctxWrap.invokingState >= 0
          and then following.contains (CommonToken.EPSILON) loop
             declare
                invokingState : constant := This.states.Element (ctxWrap.invokingState);
                rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
             begin
                following := nextTokens (rt.followState);
-               expected.addAll (following); -- try! 
-               expected.remove (CommonToken.EPSILON); -- try! 
+               expected.addAll (following); -- try!
+               expected.remove (CommonToken.EPSILON); -- try!
                ctx := ctxWrap.parent;
             exception
                when others => null;
@@ -101,7 +102,7 @@ package body ANTLR.Runtime.ATN is
       end loop;
 
       if following.contains (CommonToken.EPSILON) then
-         expected.add (CommonToken.EOF);; -- try!
+         expected.add (CommonToken.EOF); -- try!
       end if;
 
       return expected;

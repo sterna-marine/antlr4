@@ -1,12 +1,12 @@
 -- €
 
--- --------------------------------------------
+--
 --  ANTLRError.swift
 --  antlr.swift
 
 package ANTLRError is
 
--- public 
+-- public
    ANTLRError : exception; -- : Error { … }
    unsupportedOperation : exception; -- (msg:String);
    indexOutOfBounds : exception;, -- (msg:String);

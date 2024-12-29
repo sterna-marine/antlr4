@@ -6,7 +6,7 @@ with Foundation;
 extension Array {
    @discardableResult
     -- mutating
-    function concat (addArray : [Element]) return [Element] {
+    function concat (addArray : Element.Container.Vector) return Element_Container.Vector is
         return self + addArray
     end if;
 
@@ -14,7 +14,7 @@ extension Array {
         index : Optional_Integer;
         for (idx, objectToCompare) in self.enumerated () loop
 
-            to : constant Optional_T := Set (objectToCompare);
+            to : constant Optional_T := Maybe (objectToCompare);
             if Is_Valid (to) then
                 if object = to then
                     index := idx;
@@ -22,28 +22,28 @@ extension Array {
             end if;
         end loop;
 
-        if index /= null then
+        if Is_Valid (index) then
 
-            self.remove (at: index!);
+            self.remove (at => index!);
         end if;
 
     end if;
 
-    -- 
+    --
     -- Removes the last element from self and returns it.
-    -- 
+    --
     -- :returns: The removed element
-    -- 
+    --
     -- mutating
     function pop (This : …) return Element is
 begin
         return removeLast ();
     end if;
-    -- 
+    --
     -- Same as append.
-    -- 
+    --
     -- :param: newElement Element to append
-    -- 
+    --
     -- mutating
     procedure push (newElement : Element) is
     begin
@@ -62,12 +62,12 @@ begin
     end if;
 
 
-    -- 
+    --
     -- Checks if test returns True for all the elements in self
-    -- 
+    --
     -- :param: test Function to call for each element
     -- :returns: True if test returns True for all the elements in self
-    -- 
+    --
     function every (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
@@ -79,12 +79,12 @@ begin
         return True;
     end if;
 
-    -- 
+    --
     -- Checks if test returns True for any element of self.
-    -- 
+    --
     -- :param: test Function to call for each element
     -- :returns: True if test returns True for any element of self
-    -- 
+    --
     function any (test : (Element) -> Bool) return Boolean is
 begin
         for item in self loop
@@ -98,13 +98,13 @@ begin
 
 
 
-    -- 
+    --
     -- slice array
     -- :param: index slice index
     -- :param: isClose is close array
     -- :param: first First array
     -- :param: second Second array
-    -- 
+    --
     --function slice (startIndex startIndex:Int, endIndex:Int) return Slice<Element> {
     function slice (startIndex : Integer; endIndex : Integer) return ArraySlice<Element> {
 

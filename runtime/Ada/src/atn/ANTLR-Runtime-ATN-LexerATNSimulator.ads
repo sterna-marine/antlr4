@@ -9,7 +9,7 @@ use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.ATNSimulator;
 use ANTLR.Runtime.DFA.DFAState;
 
-package body ANTLR.Runtime.ATN.LexerATNSimulator is
+package ANTLR.Runtime.ATN.LexerATNSimulator is
 
    --
    -- "dup" of ParserInterpreter
@@ -34,18 +34,19 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    -- internal
    type SimState is private;
 
-   -- public static 
+   -- public static
    debug :  constant Boolean := False;
-   -- public
-   dfa_debug : constant Boolean := False;
 
-   -- public static 
+   -- public static
    MIN_DFA_EDGE : constant Integer := 0;
-   MAX_DFA_EDGE : constant Integer := 127  -- forces unicode to stay in ATN
+   MAX_DFA_EDGE : constant Integer := 127;  -- forces unicode to stay in ATN
 
    -- open
    type LexerATNSimulator is new ATNSimulator with
    record
+
+      -- public
+      dfa_debug : constant Boolean := False;
 
       -- internal weak
       recog : Optional_Lexer;
@@ -57,7 +58,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       -- ATN-generated exception object.
       --
       -- internal
-      startIndex := -1;
+      startIndex : Integer := -1;
 
       --
       -- line number 1 .. n within the input
@@ -81,45 +82,68 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       -- Used during DFA/ATN exec to record the most recent accept configuration info
       --
 
-      -- internal final 
+      -- internal final
       prevAccept : SimState;
 
    end record;
 
 
    -- public convenience
-   procedure Init (Self : in out LexerATNSimulator;
+   procedure Initialize (Self : in out LexerATNSimulator;
                    atn : ATN;
                    decisionToDFA : DFA.Container.Vector;
-                   sharedContextCache : PredictionContextCache) is
+                   sharedContextCache : PredictionContextCache);
 
-   -- public 
-   procedure Init (Self : in out LexerATNSimulator;
+   -- public
+   procedure Initialize (Self : in out LexerATNSimulator;
                    recog : Optional_Lexer;
                    atn : ATN;
-                   decisionToDFA : DFA.Container.Vector,
-                   sharedContextCache : PredictionContextCache) is
+                   decisionToDFA : DFA.Container.Vector;
+                   sharedContextCache : PredictionContextCache);
 
    -- open
-   procedure copyState (This : LexerATNSimulator; simulator : LexerATNSimulator) is
+   procedure copyState (This : LexerATNSimulator; simulator : LexerATNSimulator);
 
    -- open
-   function match (This : LexerATNSimulator; input : CharStream; mode : Lexer_Mode) return Integer is
+   function match (This : LexerATNSimulator; input : CharStream; mode : Lexer_Mode) return Integer;
 
-   override
+   overriding
    -- open
-   procedure reset (This : LexerATNSimulator) is
+   procedure reset (This : LexerATNSimulator);
 
-   override
+   overriding
    -- open
-   procedure clearDFA (This : LexerATNSimulator) is
+   procedure clearDFA (This : LexerATNSimulator);
+
+   -- internal
+   function matchATN (This : LexerATNSimulator; input : CharStream) return Integer;
+
+   -- internal
+   function execATN (This : LexerATNSimulator; input : CharStream; ds0 : DFAState) return Integer;
+
+   --
+   -- Get an existing target state for an edge in the DFA. If the target state
+   -- for the edge has not yet been computed or is otherwise not available,
+   -- this method returns `null`.
+   --
+   -- * parameter s: The current DFA state
+   -- * parameter t: The next input symbol
+   -- * returns: The existing target DFA state for the given input symbol
+   -- `t`, or `null` if the target state for this edge is not
+   -- already cached
+   --
+   -- internal
+   function getExistingTargetState (This : LexerATNSimulator;
+                                    s : DFAState;
+                                    t : Integer)
+                                    return Optional_DFAState;
 
 
    -- final
    function computeStartState (This : LexerATNSimulator;
                                input : CharStream;
                                p : ATNState)
-                               return ATNConfigSet is
+                               return ATNConfigSet;
 
    --
    -- Since the alternatives within any lexer decision are ordered by
@@ -140,7 +164,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                      currentAltReachedAcceptState : Boolean;
                      speculative : Boolean;
                      treatEofAsEpsilon : Boolean)
-                     return Boolean is
+                     return Boolean;
 
    -- side-effect: can alter configs.hasSemanticContext
 
@@ -148,11 +172,11 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    function getEpsilonTarget (This : LexerATNSimulator;
                               input : CharStream;
                               config : LexerATNConfig;
-                              t : Transition;
+                              t : ATNTransition;
                               configs : ATNConfigSet;
                               speculative : Boolean;
                               treatEofAsEpsilon  : Boolean)
-                              return Optional_LexerATNConfig is
+                              return Optional_LexerATNConfig;
 
    --
    -- Evaluate a predicate specified in the lexer.
@@ -181,17 +205,17 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                                ruleIndex : Integer;
                                predIndex : Integer;
                                speculative  : Boolean)
-                               return Boolean is
- 
+                               return Boolean;
+
    -- private final
    function addDFAEdge (This : LexerATNSimulator;
                         from : DFAState;
                         t : Integer;
                         q : ATNConfigSet)
-                        return DFAState is
+                        return DFAState;
 
    -- private final
-   procedure addDFAEdge (This : LexerATNSimulator; p : DFAState; t : Integer; q : DFAState) is
+   procedure addDFAEdge (This : LexerATNSimulator; p : DFAState; t : Integer; q : DFAState);
 
    --
    -- Add a new DFA state if there isn't one with this set of
@@ -200,7 +224,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    -- traversing the DFA, we will know which rule to accept.
    --
    -- final
-   function addDFAState (This : LexerATNSimulator; configs : ATNConfigSet) return DFAState is
+   function addDFAState (This : LexerATNSimulator; configs : ATNConfigSet) return DFAState;
 
    -- public final
    function getDFA (This : LexerATNSimulator; mode : Lexer_Mode) return DFA
@@ -211,27 +235,27 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    --
 
    -- public
-   function getText (This : LexerATNSimulator; input : CharStream) return UString is
+   function getText (This : LexerATNSimulator; input : CharStream) return UString;
 
    -- public
    function getLine (This : LexerATNSimulator) return Integer
       is (This.line);
 
    -- public
-   procedure setLine (This : LexerATNSimulator; line : Integer) is
+   procedure setLine (This : LexerATNSimulator; line : Integer);
 
    -- public
    function getCharPositionInLine (This : LexerATNSimulator) return Integer
       is (This.charPositionInLine);
 
    -- public
-   procedure setCharPositionInLine (This : LexerATNSimulator; charPositionInLine : Integer) is
+   procedure setCharPositionInLine (This : LexerATNSimulator; charPositionInLine : Integer);
 
    -- public
-   procedure consume (This : LexerATNSimulator; input : CharStream) is
+   procedure consume (This : LexerATNSimulator; input : CharStream);
 
    -- public
-   function getTokenName (This : LexerATNSimulator; t : Integer) return String is
+   function getTokenName (This : LexerATNSimulator; t : Integer) return UString;
 
 private
    type SimState is record

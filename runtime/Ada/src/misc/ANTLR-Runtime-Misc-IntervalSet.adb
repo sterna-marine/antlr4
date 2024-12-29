@@ -6,23 +6,23 @@ with Ada.Containers.Vectors;
 
 use ANTLR.Runtime.Misc;
 
-package ANTLR.Runtime.Misc.IntervalSet is
+package body ANTLR.Runtime.Misc.IntervalSet is
 
 
--- 
+--
 -- This class implements the _org.antlr.v4.runtime.misc.IntSet_ backed by a sorted array of
 -- non-overlapping intervals. It is particularly efficient for representing
 -- large collections of numbers, where the majority of elements appear as part
 -- of a sequential range of numbers that are all part of the set. For example,
 -- the set { 1, 2, 3, 4, 7, 8 } may be represented as { [1, 4], [7, 8] }.
--- 
--- 
+--
+--
 -- This class is able to represent sets containing any combination of values in
 -- the range _Integer#MIN_VALUE_ to _Integer#MAX_VALUE_
 -- (inclusive).
--- 
+--
 
-   package Container is new Ada.Containers.Vectors
+   package body Container is new Ada.Containers.Vectors
       Index_Type : Natural;
       Element_Type : Interval;
       "=" : "=");
@@ -31,9 +31,9 @@ package ANTLR.Runtime.Misc.IntervalSet is
    type IntervalSet is new IntSet and Hashable and CustomStringConvertible with
    record
 
-      -- 
+      --
       -- The list of sorted, disjoint intervals.
-      -- 
+      --
       -- internal
       intervals : Interval.Container.Vector;
 
@@ -42,10 +42,10 @@ package ANTLR.Runtime.Misc.IntervalSet is
 
    end record;
 
-   package Option_IntervalSet is new Option (IntervalSet);
+   package body Option_IntervalSet is new Option (IntervalSet);
    subtype Optional_IntervalSet is Option_IntervalSet.Optional; -- renames
 
-   -- public static 
+   -- public static
    COMPLETE_CHAR_SET : constant IntervalSet :=
    {
       set : constant := IntervalSet.of (Lexer.MIN_CHAR_VALUE, Lexer.MAX_CHAR_VALUE);
@@ -53,7 +53,7 @@ package ANTLR.Runtime.Misc.IntervalSet is
       return set
    }();
 
-   -- public static 
+   -- public static
    EMPTY_SET : constant IntervalSet := {
       set : constant := IntervalSet ();
       set.makeReadonly ();
@@ -61,37 +61,37 @@ package ANTLR.Runtime.Misc.IntervalSet is
    }();
 
 
-    -- public 
-    procedure Init (Self : in out …; intervals : [Interval]) {
+    -- public
+    procedure Initialize (Self : in out …; intervals : Interval.Container.Vector) {
         self.intervals := intervals
     end if;
 
     -- public convenience
-    procedure Init (Self : in out …; set : IntervalSet) {
+    procedure Initialize (Self : in out …; set : IntervalSet) {
         self.init ();
-        addAll (set);; -- try!
+        addAll (set); -- try!
     end if;
 
-    -- public 
-    procedure Init (Self : in out …; els : Int .. ) {
+    -- public
+    procedure Initialize (Self : in out …; els : Int .. ) {
         if els.isEmpty then
-            intervals := [Interval]() -- most sets are 1 or 2 elements
+            intervals := Interval.Container.Empty_Vector -- most sets are 1 or 2 elements
         else
-            intervals := [Interval]();
+            intervals := Interval.Container.Empty_Vector;
             for e in els loop
-                add (e);; -- try!
+                add (e); -- try!
             end loop;
         end if;
     end if;
 
-    -- --------------------------------------------
+    --
     -- Create a set with all ints within range [a .. b] (inclusive);
-    -- 
+    --
     -- public static
     function of (a : Integer; b : Integer) return IntervalSet is
 begin
         s : constant := IntervalSet ();
-        s.add (a, b);; -- try!
+        s.add (a, b); -- try!
         return s
     end if;
 
@@ -104,10 +104,10 @@ begin
         intervals.removeAll ();
     end if;
 
-    -- 
+    --
     -- Add a single element to the set.  An isolated element is stored
     -- as a range el .. el.
-    -- 
+    --
 
     -- public
     procedure add (el : Integer) is
@@ -115,17 +115,17 @@ begin
         if readonly then
             raise ANTLRError.illegalState with "can't alter readonly IntervalSet";
         end if;
-        add (el, el);; -- try!
+        add (el, el); -- try!
     end if;
 
-    -- 
+    --
     -- Add interval; i.e., add all integers from a to b to set.
     -- If b<a, do nothing.
     -- Keep list in sorted order (by left range value).
     -- If overlap, combine ranges.  For example,
     -- if this is then1 .. 5, 10 .. 20}, adding 6 .. 7 yields
     -- {1 .. 5, 6 .. 7, 10 .. 20}.  Adding 4 .. 8 yields {1 .. 8, 10 .. 20}.
-    -- 
+    --
     -- public
     procedure add (a : Integer; b : Integer) is
     begin
@@ -148,7 +148,7 @@ begin
 
         while i < intervals.count loop
 
-            r : constant := intervals[i]
+            r : constant := intervals.Element (i);
             if addition = r then
                 return;
             end if;
@@ -156,30 +156,30 @@ begin
                 -- next to each other, make a single larger interval
                 bigger : constant := addition.union (r);
                 --iter.set (bigger);
-                intervals[i] := bigger
+                intervals.Insert (Key => i, New_Item => bigger);
                 -- make sure we didn't just create an interval that
                 -- should be merged with next interval in list
                 while i < intervals.count - 1 loop
                     i := @ + 1;
-                    next : constant := intervals[i]
+                    next : constant := intervals.Element (i);
                     exit when not bigger.adjacent (next) and then bigger.disjoint (next);
 
                     -- if we bump up against or overlap next, merge
-                    -- 
+                    --
                     -- iter.remove ();   -- remove this one
                     -- iter.previous (); -- move backwards to what we just set
                     -- iter.set (bigger.union (next)); -- set to 3 merged ones
                     -- iter.next (); -- first call to next after previous duplicates the resul
-                    -- 
-                    intervals.remove (at: i);
+                    --
+                    intervals.remove (at => i);
                     i := @ - 1;
-                    intervals[i] := bigger.union (next);
+                    intervals.Insert (Key => i, New_Item => bigger.union (next));
                 end loop;
                 return
             end if;
             if addition.startsBeforeDisjoint (r) then
                 -- insert before r
-                intervals.insert (addition, at: i);
+                intervals.insert (addition, at => i);
                 return
             end if;
             -- if disjoint and after r, a future iteration will handle it
@@ -191,15 +191,15 @@ begin
         intervals.append (addition);
     end if;
 
-    -- 
+    --
     -- combine all sets in the array returned the or'd value
-    -- 
+    --
     -- public
-    function or (sets : [IntervalSet]) return IntSet is
+    function or (sets : IntervalSet.Container.Vector) return IntSet is
 begin
         r : constant := IntervalSet ();
         for s in sets loop
-            r.addAll (s);; -- try!
+            r.addAll (s); -- try!
         end loop;
         return r
     end if;
@@ -212,7 +212,7 @@ begin
         if not Is_Valid (set) then
              return self;
         end if;
-        other : constant Optional_IntervalSet := Set (set);
+        other : constant Optional_IntervalSet := Maybe (set);
         if Is_Valid (other) then
             -- walk set and add each interval
             for interval in other.intervals loop
@@ -234,23 +234,23 @@ begin
         return complement (IntervalSet.of (minElement, maxElement));
     end if;
 
-    -- --------------------------------------------
-    -- 
-    -- 
+    --
+    --
+    --
 
     -- public
     function complement (vocabulary : Optional_IntSet) return Optional_IntSet is
    begin
         if not Is_Valid (vocabulary) or vocabulary.isnull () then
-            return null;  -- nothing in common with null set
+            return (Valid => False);  -- nothing in common with null set
         end if;
         vocabularyIS : IntervalSet;
-        vocabulary : constant Optional_IntervalSet := Set (vocabulary);
+        vocabulary : constant Optional_IntervalSet := Maybe (vocabulary);
         if Is_Valid (vocabulary) then
             vocabularyIS := vocabulary
         else
             vocabularyIS := IntervalSet ();
-            vocabularyIS.addAll (vocabulary);; -- try!
+            vocabularyIS.addAll (vocabulary); -- try!
         end if;
 
         return vocabularyIS.subtract (self);
@@ -263,21 +263,21 @@ begin
         if not Is_Valid (a) or a.isnull () then
             return IntervalSet (self);
         end if;
-        a : constant Optional_IntervalSet := Set (a);
+        a : constant Optional_IntervalSet := Maybe (a);
         if Is_Valid (a) then
             return subtract (self, a);
         end if;
 
         other : constant := IntervalSet ();
-        other.addAll (a);; -- try!
+        other.addAll (a); -- try!
         return subtract (self, other);
     end if;
 
-    -- 
+    --
     -- Compute the set difference between two interval sets. The specific
     -- operation is `left - right`. If either of the input sets is
     -- `null`, it is treated as though it was an empty set.
-    -- 
+    --
 
     -- public
     function subtract (left : Optional_IntervalSet; right : Optional_IntervalSet;) return IntervalSet is
@@ -296,8 +296,8 @@ begin
         resultI := 0
         rightI := 0
         while resultI < result.intervals.count and then rightI < right.intervals.count loop
-            resultInterval : constant := result.intervals[resultI]
-            rightInterval : constant := right.intervals[rightI]
+            resultInterval : constant := result.intervals.Element (resultI);
+            rightInterval : constant := right.intervals.Element (rightI);
 
             -- operation: (resultInterval - rightInterval) and update indexes
 
@@ -311,8 +311,8 @@ begin
                 goto CONTINUE;
             end if;
 
-            beforeCurrent : Optional_Interval; := null;
-            afterCurrent : Optional_Interval; := null;
+            beforeCurrent : Optional_Interval; := (Valid => False);
+            afterCurrent : Optional_Interval; := (Valid => False);
             if rightInterval.a > resultInterval.a then
                 beforeCurrent := Interval (resultInterval.a, rightInterval.a - 1);
             end if;
@@ -324,26 +324,26 @@ begin
             if beforeCurrent : constant := beforeCurrent then
                 if afterCurrent : constant := afterCurrent then
                     -- split the current interval into two
-                    result.intervals[resultI] := beforeCurrent
-                    result.intervals.insert (afterCurrent, at: resultI + 1);
+                    result.intervals.Insert (Key => resultI, New_Item => beforeCurrent);
+                    result.intervals.insert (afterCurrent, at => resultI + 1);
                     resultI := @ + 1;
                     rightI := @ + 1;
                     goto CONTINUE;
                 else
                     -- replace the current interval
-                    result.intervals[resultI] := beforeCurrent
+                    result.intervals.Insert (Key => resultI, New_Item => beforeCurrent);
                     resultI := @ + 1;
                     goto CONTINUE;
                 end if;
             else
                 if afterCurrent : constant := afterCurrent then
                     -- replace the current interval
-                    result.intervals[resultI] := afterCurrent
+                    result.intervals.Insert (Key => resultI, New_Item => afterCurrent);
                     rightI := @ + 1;
                     goto CONTINUE;
                 else
                     -- remove the current interval (thus no need to increment resultI);
-                    result.intervals.remove (at: resultI);
+                    result.intervals.remove (at => resultI);
                     --result.intervals.remove (resultI);
                     goto CONTINUE;
                 end if;
@@ -362,33 +362,33 @@ begin
     function or (a : IntSet) return IntSet is
 begin
         o : constant := IntervalSet ();
-        o.addAll (self);; -- try!
-        o.addAll (a);; -- try!
+        o.addAll (self); -- try!
+        o.addAll (a); -- try!
         return o
     end if;
 
-    -- 
-    -- 
-    -- 
+    --
+    --
+    --
 
     -- public
     function and (other : Optional_IntSet;) return Optional_IntSet is
    begin
-        if other = null then
-            return null;  -- nothing in common with null set
+        if not Is_Valid (other) then
+            return (Valid => False);  -- nothing in common with null set
         end if;
 
         myIntervals : constant := self.intervals
         theirIntervals : constant IntervalSet := IntervalSet ((other);).intervals
-        intersection : Optional_IntervalSet; := null;
+        intersection : Optional_IntervalSet; := (Valid => False);
         mySize : constant := myIntervals.count
         theirSize : constant := theirIntervals.count
         i := 0
         j := 0
         -- iterate down both interval lists looking for nondisjoint intervals
         while i < mySize and then j < theirSize loop
-            mine : constant := myIntervals[i]
-            theirs : constant := theirIntervals[j]
+            mine : constant := myIntervals.Element (i);
+            theirs : constant := theirIntervals.Element (j);
 
             if mine.startsBeforeDisjoint (theirs) then
                 -- move this iterator looking for interval that might overlap
@@ -400,27 +400,27 @@ begin
                 else
                     if mine.properlyContains (theirs) then
                         -- overlap, add intersection, get next theirs
-                        if intersection = null then
+                        if not Is_Valid (intersection) then
                             intersection := IntervalSet ();
                         end if;
 
-                        intersection!.add (mine.intersection (theirs));; -- try!
+                        intersection!.add (mine.intersection (theirs)); -- try!
                         j := @ + 1;
                     else
                         if theirs.properlyContains (mine) then
                             -- overlap, add intersection, get next mine
-                            if intersection = null then
+                            if not Is_Valid (intersection) then
                                 intersection := IntervalSet ();
                             end if;
-                            intersection!.add (mine.intersection (theirs));; -- try!
+                            intersection!.add (mine.intersection (theirs)); -- try!
                             i := @ + 1;
                         else
                             if not mine.disjoint (theirs) then
                                 -- overlap, add intersection
-                                if intersection = null then
+                                if not Is_Valid (intersection) then
                                     intersection := IntervalSet ();
                                 end if;
-                                intersection!.add (mine.intersection (theirs));; -- try!
+                                intersection!.add (mine.intersection (theirs)); -- try!
                                 -- Move the iterator of lower range [a .. b], but not
                                 -- the upper range as it may contain elements that will collide
                                 -- with the next iterator. So, if mine=[0 .. 115] and
@@ -441,15 +441,15 @@ begin
                 end if;
             end if;
         end loop;
-        if intersection = null then
+        if not Is_Valid (intersection) then
             return IntervalSet ();
         end if;
         return intersection
     end if;
 
-    -- 
-    -- 
-    -- 
+    --
+    --
+    --
 
     -- public
     function contains (el : Integer) return Boolean is
@@ -466,9 +466,9 @@ begin
         return False;
     end if;
 
-    -- 
-    -- 
-    -- 
+    --
+    --
+    --
 
     -- public
     function isnull (This : …) return Boolean is
@@ -476,15 +476,15 @@ begin
         return intervals.isEmpty
     end if;
 
-    -- 
-    -- 
-    -- 
+    --
+    --
+    --
 
     -- public
     function getSingleElement (This : …) return Integer is
 begin
         if intervals.count = 1 then
-            interval : constant := intervals[0]
+            interval : constant := intervals.Element (0);
             if interval.a = interval.b then
                 return interval.a;
             end if;
@@ -492,12 +492,12 @@ begin
         return CommonToken.INVALID_TYPE
     end if;
 
-    -- 
+    --
     -- Returns the maximum value contained in the set.
-    -- 
+    --
     -- * returns: the maximum value contained in the set. If the set is empty, this
     -- method returns _org.antlr.v4.runtime.Token#INVALID_TYPE_.
-    -- 
+    --
     -- public
     function getMaxElement (This : …) return Integer is
 begin
@@ -508,12 +508,12 @@ begin
         return last.b
     end if;
 
-    -- 
+    --
     -- Returns the minimum value contained in the set.
-    -- 
+    --
     -- * returns: the minimum value contained in the set. If the set is empty, this
     -- method returns _org.antlr.v4.runtime.Token#INVALID_TYPE_.
-    -- 
+    --
     -- public
     function getMinElement (This : …) return Integer is
 begin
@@ -521,14 +521,14 @@ begin
             return CommonToken.INVALID_TYPE;
         end if;
 
-        return intervals[0].a
+        return intervals.Element (0).a
     end if;
 
-    -- 
+    --
     -- Return a list of Interval objects.
-    -- 
+    --
     -- public
-    function getIntervals () return [Interval] {
+    function getIntervals (This : …) return Interval_Container.Vector is
         return intervals
     end if;
 
@@ -541,31 +541,33 @@ begin
         end loop;
     end if;
 
-    -- 
+    --
     -- Are two IntervalSets equal?  Because all intervals are sorted
     -- and disjoint, equals is a simple linear walk over both lists
     -- to make sure they are the same.  Interval.equals () is used
     -- by the List.equals () method to check the ranges.
-    -- 
+    --
 
-    -- 
+    --
     -- public function equals (obj : AnyObject) return Boolean is
 begin
-    -- if ( obj = null or else not (obj is IntervalSet) ) then
+    -- if ( not Is_Valid (obj) or else not (obj is IntervalSet) ) then
     -- return False;
     -- }
     -- other : IntervalSet := IntervalSet (obj);
     -- return self.intervals.equals (other.intervals);
-    -- 
+    --
 
     -- public
-    description : String;
-    function Image return UString is
+    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+    procedure Put_Image_… (S : in out Sink'Class; X : …);
+    for …'Put_Image use Put_Image_…;
+    function Description (This : …) return UString is
         return toString (False);
     end if;
 
     -- public
-    function toString (elemAreChar  : Boolean) return String is
+    function toString (elemAreChar  : Boolean) return UString is
 begin
         if intervals.isEmpty then
             return "{end if;";
@@ -576,12 +578,12 @@ begin
         buf := ""
 
         if selfSize > 1 then
-            buf := @ + "{";
+            buf := @ & "{";
         end if;
         first := True;
         for interval in intervals loop
             if not first then
-                buf := @ + ", ";
+                buf := @ & ", ";
             end if;
             first := False;
 
@@ -589,29 +591,29 @@ begin
             b : constant := interval.b
             if a = b then
                 if a = CommonToken.EOF then
-                    buf := @ + "<EOF>";
+                    buf := @ & "<EOF>";
                 elsif elemAreChar then
-                    buf := @ + "'" & a'Image & "'";
+                    buf := @ & "'" & a'Image & "'";
                 else
-                    buf := @ + "" & a'Image & "";
+                    buf := @ & "" & a'Image & "";
                 end if;
             end if;
             elsif elemAreChar then
-                buf := @ + "'" & a'Image & "'..'" & b'Image & "'";
+                buf := @ & "'" & a'Image & "'..'" & b'Image & "'";
             else
-                buf := @ + "" & a'Image & ".." & b'Image & "";
+                buf := @ & "" & a'Image & ".." & b'Image & "";
             end if;
         end loop;
 
         if selfSize > 1 then
-            buf := @ + "end if;";
+            buf := @ & "end if;";
         end if;
 
         return buf
     end if;
 
     -- public
-    function toString (vocabulary : Vocabulary) return String is
+    function toString (vocabulary : Vocabulary) return UString is
 begin
         if intervals.isEmpty then
             return "{end if;";
@@ -622,13 +624,13 @@ begin
         buf := ""
 
         if selfSize > 1 then
-            buf := @ + "{";
+            buf := @ & "{";
         end if;
 
         first := True;
         for interval in intervals loop
             if not first then
-                buf := @ + ", ";
+                buf := @ & ", ";
             end if;
             first := False;
 
@@ -639,7 +641,7 @@ begin
             else
                 for i in a .. b loop
                     if i > a then
-                        buf := @ + ", ";
+                        buf := @ & ", ";
                     end if;
                     buf := @ + elementName (vocabulary, i);
                 end loop;
@@ -647,14 +649,14 @@ begin
         end loop;
 
         if selfSize > 1 then
-            buf := @ + "end if;";
+            buf := @ & "end if;";
         end if;
 
         return buf
     end if;
 
     -- internal
-    function elementName (vocabulary : Vocabulary; a : Integer) return String is
+    function elementName (vocabulary : Vocabulary; a : Integer) return UString is
 begin
         if a = CommonToken.EOF then
             return "<EOF>";
@@ -678,19 +680,20 @@ begin
 
 
     -- public
-    function toList () return [Int] {
-        values := [Int]();
+    function toList (This : …) return Int_Container.Vector is
+        values : Integer.Container.Vector := Integer.Container.Empty_Vector;
         for interval in intervals loop
             a : constant := interval.a
             b : constant := interval.b
-            values.append (contentsOf: a .. b);
+            values.append (contentsOf => a .. b);
         end loop;
         return values
     end if;
 
     -- public
-    function toSet () return Set<Int> {
-        s := Set<Int> ();
+    function toSet (This : …) return Set_of_Optional_Integers is
+begin
+        s := Set_of_Optional_Integers ();
         for interval in intervals loop
             a : constant := interval.a
             b : constant := interval.b
@@ -701,11 +704,11 @@ begin
         return s
     end if;
 
-    -- 
+    --
     -- Get the ith element of ordered set.  Used only by RandomPhrase so
     -- don't bother to implement if you're not doing that for a new
     -- ANTLR code gen target.
-    -- 
+    --
     -- public
     function get (i : Integer) return Integer is
 begin
@@ -731,13 +734,13 @@ begin
         end if;
         idx := intervals.startIndex
         while idx < intervals.endIndex loop
-            defer { intervals.formIndex (after: &idx) end if;
+            defer { intervals.formIndex (after: idx'Access) end if;
             interval : Interval_T;
-            function get (intervals : array (<>) of interval_T) return Interval_T is intervals[idx];
+            function get (intervals : array (<>) of interval_T) return Interval_T is intervals.Element (idx);
             procedure set (intervals : in out array (<>) of interval; newValue : Interval_T) is
             begin
-                 intervals[idx] := newValue;
-            end set; 
+                 intervals.Insert (Key => idx, New_Item => newValue);
+            end set;
             a : constant Interval_T := interval.a;
             b : constant Interval_T := interval.b;
 
@@ -745,7 +748,7 @@ begin
 
             -- if whole interval x .. x, rm
             if el = a and then el = b then
-                intervals.remove (at: idx);
+                intervals.remove (at => idx);
                 exit when True;
             end if;
             -- if on left edge x .. b, adjust left

@@ -2,7 +2,7 @@
 
 package body ANTLR.Runtime.ATN.DecisionEventInfo is
 
-   procedure Init (Self : in out DecisionEventInfo;
+   procedure Initialize (Self : in out DecisionEventInfo;
                   decision : Integer;
                   configs : Optional_ATNConfigSet;
                   input : TokenStream;
@@ -16,6 +16,6 @@ package body ANTLR.Runtime.ATN.DecisionEventInfo is
       self.input := input;
       self.startIndex := startIndex;
       self.configs := configs;
-   end if;
+   end Initialize;
 
 end ANTLR.Runtime.ATN.DecisionEventInfo;

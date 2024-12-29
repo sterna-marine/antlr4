@@ -2,12 +2,12 @@
 
 use ANTLR.Runtime.ATN;
 
-package ANTLR.Runtime.ATN.PredicateTransition is 
+package body ANTLR.Runtime.ATN.PredicateTransition is
 
-   procedure Init (Self : in out PrecedencePredicateTransition; target : ATNStates.ATNState; precedence : Integer) is
+   procedure Initialize (Self : in out PrecedencePredicateTransition; target : ATNStates.ATNState; precedence : Integer) is
    begin
       Self.precedence := precedence;
       AbstractPredicateTransition.init (Target); -- Super
-   end Init;
+   end Initialize;
 
 end ANTLR.Runtime.ATN.PredicateTransition;

@@ -6,62 +6,66 @@
 -- predictions via adaptivePredict but this class moves a pointer through the
 -- ATN to simulate parsing. ParserATNSimulator just
 -- makes us efficient rather than having to backtrack, for example.
--- 
+--
 -- This properly creates parse trees even for left recursive rules.
--- 
+--
 -- We rely on the left recursive rule invocation and special predicate
 -- transitions to make left recursive rules work.
--- 
+--
 -- See TestParserInterpreter for examples.
--- 
+--
 
 -- public
 type ParserInterpreter is new Parser with null record;
 {
-    internal grammarFileName : constant String;
+    internal grammarFileName : constant UString;
     -- internal
     atn : constant ATN;
     -- This identifies StarLoopEntryState's that begin the ( .. )*
     -- precedence loops of left recursive rules.
-    -- 
+    --
     -- internal
     statesNeedingLeftRecursionContext : constant BitSet;
 
     -- internal final
-    decisionToDFA : [DFA];
+    decisionToDFA : DFA.Container.Vector;
     -- not shared like it is for generated parsers
     internal sharedContextCache : constant := PredictionContextCache ();
 
     -- internal
-    ruleNames : constant [String];
+    ruleNames : constant [UString];
 
-    -- private 
+    -- private
     vocabulary : constant Vocabulary;
 
     -- Tracks LR rules for adjusting the contexts
     -- internal final
-    _parentContextStack : Array<(ParserRuleContext?, Int)> =;
-    Array<(ParserRuleContext?, Int)>();
+    type  Ctxt_ID is record
+      Ctxt : Optional_ParserRuleContext;
+      ID :  Integer;
+    end record;
+
+    _parentContextStack : array (<>) of Ctxt_ID;
 
     -- We need a map from (decision,inputIndex)->forced alt for computing ambiguous
     -- parse trees. For now, we allow exactly one override.
-    -- 
+    --
     -- internal
-    overrideDecision : Integer := -1
+    overridingDecision : State := INVALID_STATE_NUMBER; -- -1
     -- internal
-    overrideDecisionInputIndex : Integer := -1
+    overridingDecisionInputIndex : Integer := -1
     -- internal
-    overrideDecisionAlt : Integer := -1
+    overridingDecisionAlt : Integer := -1
 
     -- A copy constructor that creates a new parser interpreter by reusing
     -- the fields of a previous interpreter.
-    -- 
+    --
     -- * Since: 4.5.1
-    -- 
+    --
     -- * Parameter old: The interpreter to copy
-    -- 
-    -- public 
-    procedure Init (Self : in out …; old : ParserInterpreter) {
+    --
+    -- public
+    procedure Initialize (Self : in out …; old : ParserInterpreter) {
 
         self.atn := old.atn
         self.grammarFileName := old.grammarFileName
@@ -69,66 +73,66 @@ type ParserInterpreter is new Parser with null record;
         self.decisionToDFA := old.decisionToDFA
         self.ruleNames := old.ruleNames
         self.vocabulary := old.vocabulary
-        super.init (old.getTokenStream ()!);
+        super.Initialize (Self, old.getTokenStream ()!);
         setInterpreter (ParserATNSimulator (self, atn,
                 decisionToDFA,
                 sharedContextCache));
     end if;
 
-    -- public 
-    procedure Init (Self : in out …; grammarFileName : String; vocabulary : Vocabulary;
-                ruleNames : Array<String>, atn : ATN; input : TokenStream) {
+    -- public
+    procedure Initialize (Self : in out …; grammarFileName : UString; vocabulary : Vocabulary;
+                ruleNames : array (<>) of UString, atn : ATN; input : TokenStream) {
 
         self.grammarFileName := grammarFileName
         self.atn := atn
         self.ruleNames := ruleNames
         self.vocabulary := vocabulary
-        self.decisionToDFA := [DFA]();
+        self.decisionToDFA := DFA.Container.Empty_Vector;
         for i in 0 ..< atn.getNumberOfDecisions () loop
             decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
         end loop;
 
         -- identify the ATN states where pushNewRecursionContext () must be called
-        self.statesNeedingLeftRecursionContext := try! BitSet (atn.states.count);
+        self.statesNeedingLeftRecursionContext := BitSet (atn.states.count); -- try!
         for  state in atn.states loop
-            state : constant Optional_StarLoopEntryState := Set (state);
+            state : constant Optional_StarLoopEntryState := Maybe (state);
             if Is_Valid (state) then
                 if state.precedenceRuleDecision then
-                    self.statesNeedingLeftRecursionContext.set (state.stateNumber);; -- try!
+                    self.statesNeedingLeftRecursionContext.set (state.stateNumber); -- try!
                 end if;
             end if;
 
         end loop;
-        super.init (input);
+        super.Initialize (Self, input);
         -- get atn simulator that knows how to do predictions
         setInterpreter (ParserATNSimulator (self, atn,
                 decisionToDFA,
                 sharedContextCache));
     end if;
 
-    override
+    overriding
     -- public
     function getATN (This : …) return ATN is
 begin
         return atn
     end if;
 
-    override
+    overriding
     -- public
     function getVocabulary (This : …) return Vocabulary is
 begin
         return vocabulary
     end if;
 
-    override
+    overriding
     -- public
-    function getRuleNames () return [String] {
+    function getRuleNames (This : …) return UString_Container.Vector is
         return ruleNames
     end if;
 
-    override
+    overriding
     -- public
-    function getGrammarFileName (This : …) return String is
+    function getGrammarFileName (This : …) return UString is
 begin
         return grammarFileName
     end if;
@@ -137,7 +141,7 @@ begin
     -- public
     function parse (startRuleIndex : Integer) return ParserRuleContext is
 begin
-        startRuleStartState : constant := atn.ruleToStartState[startRuleIndex]
+        startRuleStartState : constant := atn.ruleToStartState.Element (startRuleIndex);
 
         rootContext : constant := InterpreterRuleContext (null, ATNState.INVALID_STATE_NUMBER, startRuleIndex);
         if startRuleStartState.isPrecedenceRule then
@@ -183,7 +187,7 @@ begin
         end loop;
     end if;
 
-    override
+    overriding
     -- public
     procedure enterRecursionRule (localctx : ParserRuleContext; state : Integer; ruleIndex : Integer; precedence : Integer) is
     begin
@@ -193,7 +197,7 @@ begin
     end if;
 
     -- internal
-    function getATNState () return Optional_ATNState is
+    function getATNState (This : …) return Optional_ATNState is
    begin
         return atn.states[getState ()]
     end if;
@@ -232,7 +236,7 @@ begin
         when Transition.ATOM =>
             match ((AtomTransition (transition)).label);
 
-        when Transition.RANGE => fallthrough;
+        when TRANSITION_RANGE => fallthrough;
         when Transition.SET => fallthrough;
         when Transition.NOT_SET =>
             if not transition.matches (_input.LA (1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then;
@@ -265,7 +269,7 @@ begin
 
         when Transition.PRECEDENCE =>
             if not precpred (_ctx!, (PrecedencePredicateTransition (transition)).precedence) then
-                raise ANTLRException.recognition with FailedPredicateException (self, "precpred (_ctx,\((PrecedencePredicateTransition (transition)).precedence))");
+                raise ANTLRException.recognition with FailedPredicateException (self, "precpred (_ctx," & (PrecedencePredicateTransition (transition)).precedence))");
             end if;
 
         when others =>
@@ -297,7 +301,7 @@ begin
     -- allowing the adaptive prediction mechanism to choose the
     -- first alternative within a block that leads to a successful parse,
     -- force it to take the alternative, 1 .. n for n alternatives.
-    -- 
+    --
     -- As an implementation limitation right now, you can only specify one
     -- override. This is sufficient to allow construction of different
     -- parse trees for ambiguous input. It means re-parsing the entire input
@@ -305,17 +309,17 @@ begin
     -- live in the various parse trees. For example, in one interpretation,
     -- an ambiguous input sequence would be matched completely in expression
     -- but in another it could match all the way back to the root.
-    -- 
+    --
     -- s : e '!'? ;
     -- e : ID
     -- | ID '!'
     -- ;
-    -- 
+    --
     -- Here, x! can be matched as (s (e ID) !) or (s (e ID !)). In the first
     -- case, the ambiguous sequence is fully contained only by the root.
     -- In the second case, the ambiguous sequences fully contained within just
     -- e, as in: (e ID !).
-    -- 
+    --
     -- Rather than trying to optimize this and make
     -- some intelligent decisions for optimization purposes, I settled on
     -- just re-parsing the whole input and then using
@@ -326,17 +330,17 @@ begin
     -- the actual call stack. That impedance mismatch was enough to make
     -- it it challenging to restart the parser at a deeply nested rule
     -- invocation.
-    -- 
+    --
     -- Only parser interpreters can override decisions so as to avoid inserting
     -- override checking code in the critical ALL (*) prediction execution path.
-    -- 
+    --
     -- * Since: 4.5.1
-    -- 
+    --
     -- public
     procedure addDecisionOverride (decision : Integer; tokenIndex : Integer; forcedAlt : Integer) is
     begin
-        overrideDecision := decision
-        overrideDecisionInputIndex := tokenIndex
-        overrideDecisionAlt := forcedAlt
+        overridingDecision := decision
+        overridingDecisionInputIndex := tokenIndex
+        overridingDecisionAlt := forcedAlt
     end if;
 end if;

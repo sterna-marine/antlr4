@@ -2,17 +2,17 @@
 
 package body ANTLR.Runtime.ATN.LexerATNConfig is
 
-   procedure Init (Self : in out LexerATNConfig;
+   procedure Initialize (Self : in out LexerATNConfig;
                    state : ATNStates.ATNState;
                    alt : Integer;
                    context : PredictionContext) is
    begin
       self.passedThroughNonGreedyDecision := False;
-      self.lexerActionExecutor := null;
+      self.lexerActionExecutor := (Valid => False);
       ATNConfig.init (state, alt, context, SemanticContext.Empty.Instance); -- Super
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out LexerATNConfig;
+   procedure Initialize (Self : in out LexerATNConfig;
                    state : ATNStates.ATNState;
                    alt : Integer;
                    context : PredictionContext;
@@ -21,18 +21,18 @@ package body ANTLR.Runtime.ATN.LexerATNConfig is
       self.lexerActionExecutor := lexerActionExecutor;
       self.passedThroughNonGreedyDecision := False;
       ATNConfig.init (state, alt, context, SemanticContext.Empty.Instance); -- Super
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out LexerATNConfig;
+   procedure Initialize (Self : in out LexerATNConfig;
                    c : LexerATNConfig;
                    state : ATNStates.ATNState) is
    begin
       self.lexerActionExecutor := c.lexerActionExecutor;
       self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision (c, state);
       ATNConfig.init (c, state, c.context, c.semanticContext); -- Super
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out LexerATNConfig;
+   procedure Initialize (Self : in out LexerATNConfig;
                    c : LexerATNConfig;
                    state : ATNStates.ATNState;
                    lexerActionExecutor : Optional_LexerActionExecutor) is
@@ -40,20 +40,20 @@ package body ANTLR.Runtime.ATN.LexerATNConfig is
       self.lexerActionExecutor := lexerActionExecutor;
       self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision (c, state);
       ATNConfig.init (c, state, c.context, c.semanticContext); -- Super
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out LexerATNConfig;
+   procedure Initialize (Self : in out LexerATNConfig;
                    c : LexerATNConfig;
                    state : ATNStates.ATNState;
                    context : PredictionContext) is
-   begin  
+   begin
       self.lexerActionExecutor := c.lexerActionExecutor;
       self.passedThroughNonGreedyDecision := LexerATNConfig.checkNonGreedyDecision (c, state);
       ATNConfig.init (c, state, context, c.semanticContext); -- Super
-   end Init;
+   end Initialize;
 
-   
-   override
+
+   overriding
    procedure hash (This : LexerATNConfig; hasher: in out Hasher) {
       hasher.combine (state.stateNumber);
       hasher.combine (alt);
@@ -63,7 +63,7 @@ package body ANTLR.Runtime.ATN.LexerATNConfig is
       hasher.combine (lexerActionExecutor);
    end hash;
 
-   function "=" (lhs: LexerATNConfig; rhs: LexerATNConfig) return Boolean is
+   function "=" (Lhs, Rhs : LexerATNConfig) return Boolean is
    begin
 
       --  if lhs === rhs then
@@ -100,7 +100,7 @@ package body ANTLR.Runtime.ATN.LexerATNConfig is
    function checkNonGreedyDecision (source : LexerATNConfig; target : ATNStates.ATNState) return Boolean is
    begin
       return source.passedThroughNonGreedyDecision
-             or else target is DecisionState 
+             or else target is DecisionState
              and then (DecisionState (target)).nonGreedy
    end checkNonGreedyDecision;
 

@@ -4,13 +4,14 @@ with ANTLR.Runtime.ATN.ATNStates;
 with ANTLR.Runtime.ATN.DecisionState;
 
 use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.ATNStates;
 
-package ANTLR.Runtime.ATN.PlusLoopbackState is 
+package ANTLR.Runtime.ATN.PlusLoopbackState is
 
-   -- 
+   --
    -- Decision state for `A+` and `(A|B)+`.  It has two transitions:
    -- one to the loop back to start of the block and one to exit.
-   -- 
+   --
 
    -- public final
    type PlusLoopbackState is new DecisionState with null record;
@@ -18,9 +19,9 @@ package ANTLR.Runtime.ATN.PlusLoopbackState is
    package Option_PlusLoopbackState is new Option (PlusLoopbackState);
    subtype Optional_PlusLoopbackState is Option_PlusLoopbackState.Optional; -- renames
 
-   override
+   overriding
    -- public
-   function getStateType (This : PlusLoopbackState) return ATNStates.State
-      is ATNStates.PLUS_LOOP_BACK;
+   function getStateType (This : PlusLoopbackState) return State
+      is (PLUS_LOOP_BACK);
 
 end ANTLR.Runtime.ATN.PlusLoopbackState;

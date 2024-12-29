@@ -1,6 +1,9 @@
 -- €
 
 with Ada.Containers.Vectors;
+with ANTLR.Runtime.ATN.ATNConfig;
+
+use ANTLR.Runtime.ATN.ATNConfig;
 
 package ANTLR.Runtime.LookupDictionary is
 
@@ -10,31 +13,33 @@ package ANTLR.Runtime.LookupDictionary is
       lookup  => 0,
       ordered => 1);
 
-   -- public struct 
+   -- public struct
    type LookupDictionary is record with private;
 
    -- public
-   procedure Init (Self : in out LookupDictionary;
+   procedure Initialize (Self : in out LookupDictionary;
                    Type_of_LookupDictionary : LookupDictionaryType := LookupDictionaryType.lookup);
 
 -- public mutating
    function getOrAdd (This : in out LookupDictionary; config : ATNConfig) return ATNConfig;
 
--- public 
-   function isEmpty (This : LookupDictionary) return Boolean;
+-- public
+   function isEmpty (This : LookupDictionary) return Boolean
+      is (Hashed_ATNConfig.Is_Empty (This.Cache));
+
 
 -- public
    function contains (This : LookupDictionary; config : ATNConfig) return Boolean;
-   
--- public mutating 
+
+-- public mutating
    procedure removeAll (This : LookupDictionary);
 
 private
 
    type LookupDictionary is record
-      -- private let 
+      -- private let
       Type_of_LookupDictionary : LookupDictionaryType;
-      -- private 
+      -- private
       Cache := Hashed_ATNConfig.Map; -- [Int: ATNConfig](); --TOFIX
    end record;
 

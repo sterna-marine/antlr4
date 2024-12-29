@@ -1,21 +1,21 @@
 -- €
 
 
--- 
+--
 -- This signifies any kind of mismatched input exceptions such as
 -- when the current input does not match the expected token.
--- 
+--
 
 -- public
 type InputMismatchException is new RecognitionException with null record;
 {
-    -- public 
-    procedure Init (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: Optional_ParserRuleContext; := null) {
-        bestCtx : constant := ctx ?? recognizer._ctx
+    -- public
+    procedure Initialize (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: Optional_ParserRuleContext; := (Valid => False)) {
+        bestCtx : constant := ctx, Default => recognizer._ctx
 
-        super.init (recognizer, recognizer.getInputStream ()!, bestCtx);
+        super.init (Self, recognizer, recognizer.getInputStream ()!, bestCtx);
 
-        if token : constant := try? recognizer.getCurrentToken () then
+        if token : constant := recognizer.getCurrentToken () then -- try?
             setOffendingToken (token);
         end if;
         if (state /= ATNState.INVALID_STATE_NUMBER) then

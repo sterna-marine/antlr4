@@ -4,16 +4,16 @@
 -- public
 type LexerDFASerializer is new DFASerializer with null record;
 {
-    -- public 
-    procedure Init (Self : in out …; dfa : DFA) {
-        super.init (dfa, Vocabulary.EMPTY_VOCABULARY);
+    -- public
+    procedure Initialize (Self : in out …; dfa : DFA) {
+        super.init (Self, dfa, Vocabulary.EMPTY_VOCABULARY);
     end if;
 
-    override
+    overriding
 
     -- internal
-    function getEdgeLabel (i : Integer) return String is
+    function getEdgeLabel (i : Integer) return UString is
 begin
-        return "'\(Character (integerLiteral: i))'"
+        return "'" & Character (integerLiteral => i))'"
     end if;
 end if;

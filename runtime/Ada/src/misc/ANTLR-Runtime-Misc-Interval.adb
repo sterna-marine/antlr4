@@ -1,12 +1,12 @@
 -- €
 
-package ANTLR.Runtime.Misc.Interval is
+package body ANTLR.Runtime.Misc.Interval is
 
-   procedure Init (Self : in out Interval; A : Integer; B : Integer) is
+   procedure Initialize (Self : in out Interval; A : Integer; B : Integer) is
    begin
       Self.A := A;
       Self.B := B;
-   end Init;
+   end Initialize;
 
    function Length (This : Interval) return Natural is
    begin
@@ -37,7 +37,10 @@ package ANTLR.Runtime.Misc.Interval is
    end differenceNotProperlyContained;
 
    -- public
-   function Image (This : Interval) return UString is
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_Interval (S : in out Sink'Class; X : Interval);
+   for Interval'Put_Image use Put_Image_Interval;
+   function Description (This : Interval) return UString is
       return This.A'Image & ".." & This.B'Image;
    end Image;
 

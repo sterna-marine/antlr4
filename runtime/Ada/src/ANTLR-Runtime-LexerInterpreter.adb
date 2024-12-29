@@ -2,8 +2,8 @@
 
 package body ANTLR.Runtime.LexerInterpreter is
 
-   procedure Init (Self : in out LexerInterpreter;
-                   grammarFileName : String;
+   procedure Initialize (Self : in out LexerInterpreter;
+                   grammarFileName : UString;
                    vocabulary : Vocabulary;
                    ruleNames : array (<>) of UString;
                    channelNames : array (<>) of UString;
@@ -17,7 +17,7 @@ package body ANTLR.Runtime.LexerInterpreter is
       self.channelNames := channelNames;
       self.modeNames := modeNames;
       self.vocabulary := vocabulary;
-      self._decisionToDFA := [DFA]();
+      self._decisionToDFA := DFA.Container.Empty_Vector;
 
       for i in 0 ..< atn.getNumberOfDecisions () loop
          _decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
@@ -29,11 +29,11 @@ package body ANTLR.Runtime.LexerInterpreter is
       if atn.grammarType /= ATNType.lexer then
          raise ANTLRError.illegalArgument with "The ATN must be a lexer ATN.";
       end if;
-    end Init;
+    end Initialize;
 
-   procedure Init (input : CharStream) is
+   procedure Initialize (input : CharStream) is
    begin
       raise PROGRAM_ERROR with "Use the other initializer";
-   end Init;
+   end Initialize;
 
 end ANTLR.Runtime.LexerInterpreter;

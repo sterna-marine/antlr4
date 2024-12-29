@@ -2,25 +2,29 @@
 
 with ANTLR.Runtime.ATN.DecisionEventInfo;
 with ANTLR.Runtime.ATN.SemanticContext;
+with ANTLR.Runtime.ATN.PredicateEvalInfo;
 
 use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.DecisionEventInfo;
+use ANTLR.Runtime.ATN.SemanticContext;
+use ANTLR.Runtime.ATN.PredicateEvalInfo;
 
-package ANTLR.Runtime.ATN.PredicateTransition is 
+package ANTLR.Runtime.ATN.PredicateTransition is
 
-   -- 
+   --
    -- This class represents profiling event information for semantic predicate
    -- evaluations which occur during prediction.
-   -- 
+   --
    -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext
-   -- 
+   --
 
    -- public
    type PredicateEvalInfo is new DecisionEventInfo with private;
 
-   -- 
+   --
    -- Constructs a new instance of the _org.antlr.v4.runtime.atn.PredicateEvalInfo_ class with the
    -- specified detailed predicate evaluation information.
-   -- 
+   --
    -- * parameter decision: The decision number
    -- * parameter input: The input token stream
    -- * parameter startIndex: The start index for the current prediction
@@ -35,12 +39,12 @@ package ANTLR.Runtime.ATN.PredicateTransition is
    -- * parameter fullCtx: `True` if the semantic context was
    --   evaluated during LL prediction; otherwise, `False` if the semantic
    --   context was evaluated during SLL prediction
-   -- 
+   --
    -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#evalSemanticContext (org.antlr.v4.runtime.atn.SemanticContext, org.antlr.v4.runtime.ParserRuleContext, int, boolean);
    -- * seealso: org.antlr.v4.runtime.atn.SemanticContext#eval (org.antlr.v4.runtime.Recognizer, org.antlr.v4.runtime.RuleContext);
-   -- 
-   -- public 
-   procedure Init (Self : in out PredicateEvalInfo; decision : Integer;
+   --
+   -- public
+   procedure Initialize (Self : in out PredicateEvalInfo; decision : State;
                    input : TokenStream;
                    startIndex : Integer;
                    stopIndex : Integer;
@@ -53,22 +57,22 @@ private
 
    type PredicateEvalInfo is new DecisionEventInfo with
    record
-      -- 
+      --
       -- The semantic context which was evaluated.
-      -- 
+      --
       -- public private (set);
       semctx : SemanticContext;
-      -- 
+      --
       -- The alternative number for the decision which is guarded by the semantic
       -- context _#semctx_. Note that other ATN
       -- configurations may predict the same alternative which are guarded by
       -- other semantic contexts and/or _org.antlr.v4.runtime.atn.SemanticContext#NONE_.
-      -- 
+      --
       -- public private (set);
       predictedAlt : Integer;
-      -- 
+      --
       -- The result of evaluating the semantic context _#semctx_.
-      -- 
+      --
       -- public private (set);
       evalResult : Boolean;
    end record;

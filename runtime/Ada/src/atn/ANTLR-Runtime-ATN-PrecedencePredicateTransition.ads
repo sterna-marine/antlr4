@@ -6,7 +6,7 @@ with ANTLR.Runtime.ATN.ATNStates;
 
 use ANTLR.Runtime.ATN;
 
-package ANTLR.Runtime.ATN.PredicateTransition is 
+package ANTLR.Runtime.ATN.PredicateTransition is
 
    -- public final
    type PrecedencePredicateTransition is new AbstractPredicateTransition and CustomStringConvertible with
@@ -15,20 +15,20 @@ package ANTLR.Runtime.ATN.PredicateTransition is
       precedence : constant Integer;
    end record;
 
-   -- public 
-   procedure Init (Self : in out PrecedencePredicateTransition; target : ATNStates.ATNState; precedence : Integer);
-  
-   override
+   -- public
+   procedure Initialize (Self : in out PrecedencePredicateTransition; target : ATNStates.ATNState; precedence : Integer);
+
+   overriding
    -- public
    function getSerializationType (This : PrecedencePredicateTransition) return Transitions.Transition
       is (Transitions.PRECEDENCE);
 
-   override
+   overriding
    -- public
    function isEpsilon (This : PrecedencePredicateTransition) return Boolean
       is (True);
 
-   override
+   overriding
    -- public
    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
       is (False);
@@ -38,7 +38,7 @@ package ANTLR.Runtime.ATN.PredicateTransition is
       is (SemanticContext.PrecedencePredicate (This.precedence));
 
    -- public
-   function Image return UString
+   function Description (This : …) return UString
       is (precedence'Image & "  >= _p");
 
 end ANTLR.Runtime.ATN.PredicateTransition;

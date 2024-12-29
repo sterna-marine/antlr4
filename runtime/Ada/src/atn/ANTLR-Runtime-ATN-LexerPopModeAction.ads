@@ -1,0 +1,73 @@
+-- €
+
+with ANTLR.Runtime.ATN.LexerAction;
+
+use ANTLR.Runtime.ATN.LexerAction;
+
+package ANTLR.Runtime.ATN.LexerPopModeAction is
+
+   --
+   -- Implements the `popMode` lexer action by calling _org.antlr.v4.runtime.Lexer#popMode_.
+   --
+   -- The `popMode` command does not have any parameters, so this action is
+   -- implemented as a singleton instance exposed by _#INSTANCE_.
+   --
+
+   --
+   -- Provides a singleton instance of this parameterless lexer action.
+   --
+   -- public static
+   INSTANCE : constant LexerPopModeAction := LexerPopModeAction ();
+
+   -- public final
+   type LexerPopModeAction is new LexerAction and CustomStringConvertible with null record;
+
+   --
+   -- Constructs the singleton instance of the lexer `popMode` command.
+   --
+   -- private
+   overriding
+   procedure Initialize (Self : LexerPopModeAction) is null;
+
+   --
+   --
+   -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#popMode_.
+   --
+   overriding
+   -- public
+   function getActionType (This : LexerPopModeAction) return LexerActionType
+      is (This.LexerActionType.popMode);
+
+   --
+   --
+   -- * returns: This method returns `False`.
+   --
+   --public
+   overriding
+   function isPositionDependent (This : LexerPopModeAction) return Boolean
+      is (False);
+
+   --
+   --
+   --
+   -- This action is implemented by calling _org.antlr.v4.runtime.Lexer#popMode_.
+   --
+   -- public
+   overriding
+   procedure execute (This : LexerPopModeAction; lexer : Lexer);
+
+   -- public
+   overriding
+   procedure hash (This : LexerPopModeAction; hasher : in out Hasher);
+
+   -- public
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_LexerPopModeAction (S : in out Sink'Class; X : LexerPopModeAction);
+   for LexerPopModeAction'Put_Image use Put_Image_LexerPopModeAction;
+   function Description (This : LexerPopModeAction) return UString
+      is ("popMode");
+   
+   -- public
+   function "=" (Lhs, Rhs : LexerPopModeAction) return Boolean;
+
+end ANTLR.Runtime.ATN.LexerPopModeAction;

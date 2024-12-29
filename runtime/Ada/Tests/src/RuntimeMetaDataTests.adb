@@ -43,7 +43,7 @@ begin
 end if;
 
 -- private
-procedure doGetMajorMinorVersionTest (input : String; expected : String) is
+procedure doGetMajorMinorVersionTest (input : UString; expected : UString) is
 begin
-    XCTAssertEqual (RuntimeMetaData.getMajorMinorVersion (input), expected);
+    UnitTest.Assert_Equal (RuntimeMetaData.getMajorMinorVersion (input), expected);
 end if;

@@ -2,9 +2,9 @@
 
 package body ANTLR.Runtime.ATN.Transitions is
 
-   function serializationTypes_Image (This : Transition) return UString is 
+   function serializationTypes_Image (This : ATNTransition) return UString is
    begin
-      case This is 
+      case This is
          when INVALID => raise PROGRAM_ERROR;
          when EPSILON => return EpsilonTransition'Image;
          when TRANSITION_RANGE => return RangeTransition'Image;
@@ -15,14 +15,14 @@ package body ANTLR.Runtime.ATN.Transitions is
          when SET => return SetTransition'Image;
          when NOT_SET => return NotSetTransition'Image;
          when WILDCARD => return WildcardTransition'Image;
-         when PRECEDENCE => return PrecedencePredicateTransition'Image; 
+         when PRECEDENCE => return PrecedencePredicateTransition'Image;
       end case;
    end serializationTypes_Image;
 
-   procedure Init (Self : in out ATNTransition; target : ATNState) is
+   procedure Initialize (Self : in out ATNTransition; target : ATNState) is
    begin
       Self.target := target;
-   end Init;
+   end Initialize;
 
    -- public
    function getSerializationType (This : ATNTransition'Class) return Integer is

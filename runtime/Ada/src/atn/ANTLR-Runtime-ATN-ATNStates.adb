@@ -7,12 +7,27 @@ use ANTLR.Runtime.ATN;
 
 package body ANTLR.Runtime.ATN.ATNStates is
 
+   function Hash (Element : ATNState) return Ada.Containers.Hash_Type is
+   begin
+      return 0; --TOFIX
+   end Hash;
+
+   function Equivalent_Elements (Left, Right : ATNState) return Boolean;
+   begin
+      return Hash (Left) = Hash (Right); 
+   end Equivalent_Elements;
+
+   function Equal (Left, Right : ATNState) return Boolean;
+   begin
+      return Left = Right; --TOFIX
+   end Equal;
+
    procedure hash (This : ATNState; Some_Hasher : in out Hasher) is
    begin
       Some_Hasher.combine (This.stateNumber);
    end hash;
 
-   procedure addTransition (This : ATNState; e : Transition'Class) is
+   procedure addTransition (This : ATNState; e : ATNTransition'Class) is
       alreadyPresent :Boolean := False;
    begin
       if Transitions.Container.isEmpty (This.Transitions) then
@@ -45,7 +60,7 @@ package body ANTLR.Runtime.ATN.ATNStates is
       end if;
    end addTransition;
 
-   procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : Transition) is
+   procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : ATNTransition) is
    begin
       Transitions.Container.Replace_Element (
          Container => This.transitions,
@@ -55,7 +70,7 @@ package body ANTLR.Runtime.ATN.ATNStates is
 
    -- public final
    function removeTransition (This : ATNState; Index : Transitions.Container_Index) return Transition is
-      Element : Transition;
+      Element : ATNTransition;
    begin
       Element := Transitions.Container.Element (Container => This.transitions, Index => Index);
       Transitions.Container.Delete (
@@ -77,7 +92,7 @@ package body ANTLR.Runtime.ATN.ATNStates is
     end if;
 
    -- public
-   function "=" (Lhs : ATNState; Rhs : ATNState) return Boolean is
+   function "=" (Lhs, Rhs : ATNState) return Boolean is
    begin
       --  if Lhs === Rhs then
       --     return True;

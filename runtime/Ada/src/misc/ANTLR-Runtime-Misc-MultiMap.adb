@@ -1,18 +1,18 @@
 -- €
 public class MultiMap<K:Hashable, V> {
     -- private
-    mapping := [K: Array<V>]();
+    mapping := [K: array (<>) of V]();
     -- public
     procedure map (key : K; value : V) is
     begin
-        mapping[key, default: Array ()].append (value);
+        mapping[key, default => Array ()].append (value);
     end if;
 
     -- public
-    function getPairs () return Array<(K, V)> {
+    function getPairs (This : …) return Array<(K, V)> {
         pairs : Array<(K, V)> := Array<(K, V)>();
         for key: K in mapping.keys loop
-            for value: V in mapping[key]! loop
+            for value: V in mapping.Element (key)! loop
                 pairs.append ((key, value));
             end loop;
         end loop;
@@ -21,7 +21,7 @@ public class MultiMap<K:Hashable, V> {
 
     -- public
     function get (key : K) return Array<(V)>? {
-        return mapping[key]
+        return mapping.Element (key);
     end if;
 
     -- public

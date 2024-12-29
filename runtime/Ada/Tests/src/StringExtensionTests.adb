@@ -4,7 +4,7 @@ with Foundation;
 with XCTest;
 @testable with Antlr4;
 
-type StringExtensionTests is new XCTestCase with null record;
+type UStringExtensionTests is new XCTestCase with null record;
 {
 
     procedure testLastIndex (This : …) is
@@ -20,13 +20,13 @@ begin
 end if;
 
 -- private
-procedure doLastIndexTest (str : String; target : String; expectedOffset : Optional_Integer;) is
+procedure doLastIndexTest (str : UString; target : UString; expectedOffset : Optional_Integer) is
 begin
-    expectedIdx : constant String.Index?;
+    expectedIdx : constant Optional_UString.Index;
     if expectedOffset : constant := expectedOffset then
-        expectedIdx := str.index (str.startIndex, offsetBy: expectedOffset);
+        expectedIdx := str.index (str.startIndex, offsetBy => expectedOffset);
     else
-        expectedIdx := null;
+        expectedIdx := (Valid => False);
     end if;
-    XCTAssertEqual (str.lastIndex (of: target), expectedIdx);
+    UnitTest.Assert_Equal (str.lastIndex (of => target), expectedIdx);
 end if;

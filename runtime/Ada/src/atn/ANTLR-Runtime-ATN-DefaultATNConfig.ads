@@ -20,7 +20,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --
 --}
 --
---public func ==(lhs: DefaultATNConfig; rhs : DefaultATNConfig) -> Bool {
+--public func ==(Lhs, Rhs : DefaultATNConfig) -> Bool {
 --
 --    if lhs === rhs {
 --        return true
@@ -50,7 +50,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --
 --}
 --
---public func ==(lhs: DefaultATNConfig; rhs : DefaultATNConfig) -> Bool {
+--public func ==(Lhs, Rhs : DefaultATNConfig) -> Bool {
 --
 --    if lhs === rhs {
 --        return true

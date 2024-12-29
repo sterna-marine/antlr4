@@ -1,8 +1,8 @@
 -- €
 
-package ANTLR.Runtime.ATN.PredicateTransition is 
+package body ANTLR.Runtime.ATN.PredicateTransition is
 
-   procedure Init (Self : in out PredicateEvalInfo; decision : Integer;
+   procedure Initialize (Self : in out PredicateEvalInfo; decision : Integer;
                    input : TokenStream;
                    startIndex : Integer;
                    stopIndex : Integer;
@@ -15,6 +15,6 @@ package ANTLR.Runtime.ATN.PredicateTransition is
       self.evalResult := evalResult;
       self.predictedAlt := predictedAlt;
       DecisionEventInfo.init (decision, ATNConfigSet (), input, startIndex, stopIndex, fullCtx); -- Super
-   end Init;
+   end Initialize;
 
-end package ANTLR.Runtime.ATN.PredicateTransition;
+end package body ANTLR.Runtime.ATN.PredicateTransition;

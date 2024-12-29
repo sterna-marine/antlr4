@@ -1,31 +1,16 @@
 -- €
 
-with ANTLR.Runtime.ATN.Transitions;
+package body ANTLR.Runtime.ATN.NotSetTransition is
 
-use ANTLR.Runtime.ATN;
-
-package ANTLR.Runtime.ATN.NotSetTransition is
-
-   -- public final
-   type NotSetTransition is new SetTransition with null record;
-
---	public override 
-   procedure init (Self : in out NotSetTransition;
-                   Target : ATNState; 
+   overriding
+   procedure Initialize (Self : in out NotSetTransition;
+                   Target : ATNState;
                    Set : in out Optional_IntervalSet) is
    begin
       SetTransition.init (Self, Target, Set); -- Super
-   end Init;
+   end Initialize;
 
-   override
-   -- public
-   function getSerializationType (This : NotSetTransition) return Transitions.Transition is
-   begin
-      return Transitions.NOT_SET;
-   end getSerializationType;
-
-   override
-   -- public
+   overriding
    function matches (This : NotSetTransition;
                      symbol : Integer;
                      minVocabSymbol : Integer;
@@ -34,12 +19,7 @@ package ANTLR.Runtime.ATN.NotSetTransition is
    begin
       return symbol >= minVocabSymbol
              and then symbol <= maxVocabSymbol
-             and then not super.matches (symbol, minVocabSymbol, maxVocabSymbol); -- TOFIX
+             and then not SetTransition.matches (SetTransition (This), symbol, minVocabSymbol, maxVocabSymbol); -- TOFIX super
    end matches;
-
-   override
-   -- public
-   function Image return UString
-      is ("~" & super.description); -- TOFIX
 
 end ANTLR.Runtime.ATN.NotSetTransition;

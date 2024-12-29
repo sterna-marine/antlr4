@@ -1,16 +1,20 @@
 -- €
 
 with ANTLR.Runtime.ATN.ATNStates;
+with Option;
 with Interfaces;
+with Ada.Containers.Hashed_Maps;
 
 use ANTLR.Runtime.ATN;
+use Option;
+use Ada.Containers.Hashed_Maps;
 
-package ANTLR.Runtime.ATN.PredictionContext is 
+package ANTLR.Runtime.ATN.PredictionContext is
 
    type Context_ID is new Natural;
    type Hash_Code  is new Interfaces.Unsigned_32;
 
-   -- public static 
+   -- public static
    protected globalNodeCount  is
       procedure New_ID;
       function Last_ID return Context_ID;
@@ -56,7 +60,36 @@ package ANTLR.Runtime.ATN.PredictionContext is
       cachedHashCode : Hash_code; -- constant
    end record;
 
-   procedure Init (Self : PredictionContext; cachedHashCode : Hash_code);
+   package Option_PredictionContext is new Option (PredictionContext);
+   subtype Optional_PredictionContext is Option_PredictionContext.Optional; -- renames
+
+   function Hash (Key : Integer) return Ada.Containers.Hash_Type;
+   function Equivalent_Keys (Left, Right : Integer) return Boolean;
+   function Equal (Left, Right : PredictionContext) return Boolean;
+   package Map is new Ada.Containers.Hashed_Maps (
+      Key_Type => Integer,
+      Element_Type => PredictionContext,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => Equal);
+
+   function Hash (Key : PredictionContext) return Ada.Containers.Hash_Type;
+   function Equivalent_Keys (Left, Right : PredictionContext) return Boolean;
+   function Equal (Left, Right : PredictionContext) return Boolean;
+   package Map2 is new Ada.Containers.Hashed_Maps (
+      Key_Type => PredictionContext,
+      Element_Type => PredictionContext,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => Equal);
+
+   package mergeCacheMap is new DoubleKeyMap (
+      Key1 => PredictionContext,
+      Key2 => PredictionContext,
+      Value => PredictionContext,
+      Optional_Value => Optional_PredictionContext);
+
+   procedure Initialize (Self : PredictionContext; cachedHashCode : Hash_code);
 
    --
    -- Convert a _org.antlr.v4.runtime.RuleContext_ tree to a _org.antlr.v4.runtime.atn.PredictionContext_ graph.
@@ -66,13 +99,13 @@ package ANTLR.Runtime.ATN.PredictionContext is
    function fromRuleContext (atn : ATN; outerContext : Optional_RuleContext) return PredictionContext;
 
    -- public
-   function size (This : PredictionContext) return Integer;
+   function size (This : PredictionContext) return Integer with No_Return;
 
    -- public
-   function getParent (This : PredictionContext; index : Integer) return Optional_PredictionContext;
+   function getParent (This : PredictionContext; index : Integer) return Optional_PredictionContext with No_Return;
 
    -- public
-   function getReturnState (This : PredictionContext; index : Integer) return ATNStates.State;
+   function getReturnState (This : PredictionContext; index : Integer) return ATNStates.State with No_Return;
 
    --
    -- This means only the _#EMPTY_ context is in set.
@@ -96,14 +129,14 @@ package ANTLR.Runtime.ATN.PredictionContext is
    function calculateHashCode (parent : Optional_PredictionContext; returnState : ATStates.State) return Hash_Code;
 
    -- static
-   function calculateHashCode (parents : [PredictionContext?], returnStates : [Int]) return Hash_Code;
+   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer.Container.Vector) return Hash_Code;
 
    -- dispatch
-   -- public static 
+   -- public static
    function merge (a : PredictionContext;
                    b : PredictionContext;
                    rootIsWildcard : Boolean;
-                   mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?)
+                   mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
                    return PredictionContext;
 
    --
@@ -133,11 +166,11 @@ package ANTLR.Runtime.ATN.PredictionContext is
    -- otherwise False to indicate a full-context merge
    -- * parameter mergeCache:
    --
-   -- public static 
+   -- public static
    function mergeSingletons (a : SingletonPredictionContext;
                              b : SingletonPredictionContext;
                              rootIsWildcard : Boolean;
-                             mergeCache : inxout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?)
+                             mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
                              return PredictionContext;
 
    --
@@ -178,7 +211,7 @@ package ANTLR.Runtime.ATN.PredictionContext is
    -- * parameter rootIsWildcard: `True` if this is a local-context merge,
    -- otherwise False to indicate a full-context merge
    --
-   -- public static 
+   -- public static
    function mergeRoot (a : SingletonPredictionContext;
                        b : SingletonPredictionContext;
                        rootIsWildcard : Boolean)
@@ -203,19 +236,19 @@ package ANTLR.Runtime.ATN.PredictionContext is
    -- _org.antlr.v4.runtime.atn.SingletonPredictionContext_.
    --
    --
-   -- public static 
+   -- public static
    function mergeArrays (a : ArrayPredictionContext;
                          b : ArrayPredictionContext;
                          rootIsWildcard : Boolean;
-                         mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?)
+                         mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
                          return PredictionContext;
 
    -- public static
-   function toDOTString (context : Optional_PredictionContext) return String;
+   function toDOTString (context : Optional_PredictionContext) return UString;
    begin
 
    -- From Sam
-   -- public static 
+   -- public static
    function getCachedContext (context : PredictionContext;
                               contextCache : PredictionContextCache;
                               visited : in out [PredictionContext: PredictionContext])
@@ -223,8 +256,8 @@ package ANTLR.Runtime.ATN.PredictionContext is
 
    -- ter's recursive version of Sam's getAllNodes ();
    -- public static
-   function getAllContextNodes (context : PredictionContext) return [PredictionContext];
-      nodes := [PredictionContext]();
+   function getAllContextNodes (context : PredictionContext) return PredictionContext_Container.Vector;
+      nodes := PredictionContext.Container.Empty_Vector;
       visited := [PredictionContext: PredictionContext]();
 
    -- private static
@@ -235,28 +268,28 @@ package ANTLR.Runtime.ATN.PredictionContext is
    -- public
    generic
       type T is ;--TOFIX
-   function toString<T> (recog : Recognizer<T>) return String;
+   function toString<T> (recog : Recognizer<T>) return UString;
 
    -- public
    generic
       type T is ;--TOFIX
-   function toStrings<T> (recognizer : Recognizer<T>, currentState : ATStates.State) return [String];
+   function toStrings<T> (recognizer : Recognizer<T>, currentState : ATStates.State) return UString_Container.Vector;
 
    -- FROM SAM
    -- public
    generic
       type T is ;--TOFIX
-   function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : ATStates.State) return [String];
+   function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : ATStates.State) return UString_Container.Vector;
 
    -- public
-   function Image return UString
-      is (describing: PredictionContext.self) + "@" + String (Unmanaged.passUnretained (self).toOpaque ().hashValue);
+   function Description (This : …) return UString
+      is (describing: PredictionContext.self) + "@" + UString (Unmanaged.passUnretained (self).toOpaque ().hashValue);
 
    -- public
    function "=" (lhs: RuleContext; rhs: ParserRuleContext) return Boolean;
 
    -- public
-   function "=" (lhs: PredictionContext; rhs: PredictionContext) return Boolean;
+   function "=" (Lhs, Rhs : PredictionContext) return Boolean;
 
    -- public
    function "=" (lhs: ArrayPredictionContext; rhs: SingletonPredictionContext) return Boolean

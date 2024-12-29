@@ -4,9 +4,9 @@
 -- during a parse that makes the data structure look like a simple parse tree.
 -- This node represents both internal nodes, rule invocations,
 -- and leaf nodes, token matches.
--- 
+--
 -- The payload is either a _org.antlr.v4.runtime.Token_ or a _org.antlr.v4.runtime.RuleContext_ object.
--- --------------------------------------------
+--
 -- public
 type ParseTree is interface and SyntaxTree and CustomStringConvertible and CustomDebugStringConvertible;
     -- Set the parent for this leaf node.
@@ -18,11 +18,11 @@ type ParseTree is interface and SyntaxTree and CustomStringConvertible and Custo
     -- Return the combined text of all leaf nodes. Does not get any
     -- off-channel tokens (if any) so won't return whitespace and
     -- comments if they are sent to parser on hidden channel.
-    function getText () return String
+    function getText (This : …) return UString
 
     -- Specialize toStringTree so that it can print out more information
     -- based upon the parser.
-    function toStringTree (parser : Parser) return String
+    function toStringTree (parser : Parser) return UString
 
     -- Equivalent to `getChild (index)! as! ParseTree`
     subscript (index : Integer) return ParseTree is

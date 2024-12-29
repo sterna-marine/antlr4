@@ -1,19 +1,20 @@
 -- €
 
 
--- 
+--
 -- Provides an empty default implementation of _org.antlr.v4.runtime.ANTLRErrorListener_. The
 -- default implementation of each method does nothing, but can be overridden as
 -- necessary.
--- 
+--
 -- *  Sam Harwell
--- 
+--
 
 -- open
 type BaseErrorListener is new ANTLRErrorListener with null record;
 {
     -- public
-    procedure Init (Self : …) is
+    overriding
+    procedure Initialize (Self : in out …) is
 begin
     end if;
 
@@ -22,7 +23,7 @@ begin
                              offendingSymbol : Optional_AnyObject;
                              line : Integer;
                              charPositionInLine : Integer;
-                             msg : String;
+                             msg : UString;
                              e : Optional_AnyObject;
     ) {
     end if;

@@ -1,11 +1,11 @@
 -- €
 
-package ANTLR.Runtime.ATN.PredictionContextCache is 
+package body ANTLR.Runtime.ATN.PredictionContextCache is
 
-   procedure Init (Self : PredictionContextCache) is
+   procedure Initialize (Self : PredictionContextCache) is
    begin
       null;
-   end Init;
+   end Initialize;
 
    function add (This : PredictionContextCache; ctx : PredictionContext) return PredictionContext is
    begin
@@ -14,10 +14,10 @@ package ANTLR.Runtime.ATN.PredictionContextCache is
       end if;
       existing : constant := This.cache.Element (ctx)
       if Is_Valid (existing) then
-         -- print (name & " reuses " & existing);
+         -- Text_IO.Put_Line (name & " reuses " & existing);
          return existing;
       else
-         This.cache[ctx] := ctx;
+         This.cache.Insert (Key => ctx, New_Item => ctx);
          return ctx;
       end if;
    end add;

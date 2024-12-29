@@ -21,7 +21,7 @@ begin
         stream.fill ();
         result : constant := stream.getText ();
         expecting : constant := "abc"
-        XCTAssertEqual (expecting, result);
+        UnitTest.Assert_Equal (expecting, result);
     end if;
 
     procedure testLexerB (This : …) is
@@ -34,7 +34,7 @@ begin
         stream.fill ();
         result : constant := stream.getText ();
         expecting : constant := "x := 3 * 0 + 2 * 0;"
-        XCTAssertEqual (expecting, result);
+        UnitTest.Assert_Equal (expecting, result);
     end if;
 
     procedure testCalculator (This : …) is
@@ -48,7 +48,7 @@ begin
         parser : constant := parserInterpData.createParser (input:CommonTokenStream (lexer));
 
         context : constant := parser.parse (parser.getRuleIndex ("s"));
-        XCTAssertEqual ("(s (expr (expr 2) + (expr (expr 8) / (expr 2))) <EOF>)", context.toStringTree (parser));
+        UnitTest.Assert_Equal ("(s (expr (expr 2) + (expr (expr 8) / (expr 2))) <EOF>)", context.toStringTree (parser));
     end if;
 
 end if;

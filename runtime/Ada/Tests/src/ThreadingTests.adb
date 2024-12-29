@@ -11,9 +11,9 @@ type ThreadingTests is new XCTestCase with null record;
         ("testParallelExecution", testParallelExecution),
     ]
 
-    -- --------------------------------------------
+    --
     -- This test verifies parallel execution of the parser
-    -- --------------------------------------------
+    --
     procedure testParallelExecution (This : …) is
 begin
         input : constant := [
@@ -31,16 +31,16 @@ begin
             DispatchQueue.global ().async {
                 lexer : constant := ThreadingLexer (ANTLRInputStream (input[i % 7]));
                 tokenStream : constant Token := CommonTokenStream (lexer);
-                parser : constant := try? ThreadingParser (tokenStream);
+                parser : constant := ThreadingParser (tokenStream); -- try?
 
-                _ : constant := try? parser?.s ();
+                _ : constant := parser?.s (); -- try?
 
                 exp.fulfill ();
             end if;
         end loop;
 
-        waitForExpectations (timeout: 30.0) { (_) in
-            print ("Completed");
+        waitForExpectations (timeout => 30.0) { (_) in
+            Text_IO.Put_Line ("Completed");
         end if;
     end if;
 end if;

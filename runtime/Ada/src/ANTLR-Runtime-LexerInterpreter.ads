@@ -14,7 +14,7 @@ package ANTLR.Runtime.LexerInterpreter is
    type LexerInterpreter is new Lexer with
    record
       -- internal
-      grammarFileName : String; -- constant
+      grammarFileName : UString; -- constant
 
       -- internal
       atn : ATN; -- constant
@@ -26,7 +26,7 @@ package ANTLR.Runtime.LexerInterpreter is
       -- internal
       modeNames : UString.Container.Vector; -- constant
 
-      -- private 
+      -- private
       vocabulary : Optional_Vocabulary; -- constant
 
       -- internal final
@@ -34,12 +34,17 @@ package ANTLR.Runtime.LexerInterpreter is
 
       -- internal
       _sharedContextCache : := PredictionContextCache (); -- constant
-   
+
    end record;
 
-   -- public 
-   procedure Init (Self : in out LexerInterpreter;
-                   grammarFileName : String;
+   subtype Object is LexerInterpreter;
+   subtype Super is Lexer;
+   type Class is access all Object;
+   type Class_Wide is access all Object'Class;
+
+   -- public
+   procedure Initialize (Self : in out LexerInterpreter;
+                   grammarFileName : UString;
                    vocabulary : Vocabulary;
                    ruleNames : array (<>) of UString;
                    channelNames : array (<>) of UString;
@@ -47,38 +52,38 @@ package ANTLR.Runtime.LexerInterpreter is
                    atn : ATN;
                    input : CharStream);
 
-   -- public required 
-   procedure Init (input : CharStream);
+   -- public required
+   procedure Initialize (input : CharStream);
 
-   override
+   overriding
    -- public
    function getATN (This : LexerInterpreter) return ATN
       is (This.atn);
 
-   override
+   overriding
    -- public
-   function getGrammarFileName (This : LexerInterpreter) return String
+   function getGrammarFileName (This : LexerInterpreter) return UString
       is (This.grammarFileName);
 
-   override
+   overriding
    -- public
    function getRuleNames (This : LexerInterpreter) return UString.Container.Vector
       is (This.ruleNames);
 
-   override
+   overriding
    -- public
    function getChannelNames (This : LexerInterpreter) return UString.Container.Vector
       is (This.channelNames);
 
-   override
+   overriding
    -- public
    function getModeNames (This : LexerInterpreter) return UString.Container.Vector
       is (This.modeNames);
 
-   override
+   overriding
    -- public
    function getVocabulary (This : LexerInterpreter) return Vocabulary
-      is (Is_Valid (This.vocabulary) return This.vocabulary 
+      is (Is_Valid (This.vocabulary) return This.vocabulary
          else return Lexer.getVocabulary (This));
 
 end ANTLR.Runtime.LexerInterpreter;

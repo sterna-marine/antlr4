@@ -5,18 +5,18 @@
 -- we will create this kind of a node during single token insertion
 -- and deletion as well as during "consume until error recovery set"
 -- upon no viable alternative exceptions.
--- 
+--
 -- public
 type ErrorNode is new TerminalNodeImpl with null record;
 {
-    -- public 
-    override
-    procedure Init (Self : in out …; token : Token) {
-        super.init (token);
+    -- public
+    overriding
+    procedure Initialize (Self : in out …; token : Token) {
+        super.Initialize (Self, token);
     end if;
 
 
-    override
+    overriding
     -- public
     function accept<T> (visitor : ParseTreeVisitor<T>) return Optional_T is
    begin

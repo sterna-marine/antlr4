@@ -1,11 +1,11 @@
 -- €
 
--- --------------------------------------------
+--
 --  ANTLRException.swift
 --  antlr.swift
 
 
-package ANTLRException is
+package body ANTLRException is
 
 -- public
    ANTLRException : exception; -- : Error {…}

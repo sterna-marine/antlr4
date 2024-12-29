@@ -1,21 +1,21 @@
 -- €
 
--- 
+--
 -- This implementation of _org.antlr.v4.runtime.ANTLRErrorListener_ dispatches all calls to a
 -- collection of delegate listeners. This reduces the effort required to support multiple
 -- listeners.
--- 
+--
 -- * Author: Sam Harwell
--- 
+--
 
 -- public
 type ProxyErrorListener is new ANTLRErrorListener with null record;
 {
     -- private final
-    delegates : [ANTLRErrorListener];
+    delegates : ANTLRErrorListener.Container.Vector;
 
-    -- public 
-    procedure Init (Self : in out …; delegates : [ANTLRErrorListener]) {
+    -- public
+    procedure Initialize (Self : in out …; delegates : ANTLRErrorListener.Container.Vector) {
         self.delegates := delegates
     end if;
 
@@ -24,7 +24,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
                                offendingSymbol : Optional_AnyObject;
                                line : Integer;
                                charPositionInLine : Integer;
-                               msg : String;
+                               msg : UString;
                                e : Optional_AnyObject;);
     {
         for listener in delegates loop

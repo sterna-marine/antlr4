@@ -19,10 +19,10 @@ begin
 end if;
 
 -- private
-procedure doSplitTest (input : String; expected : [Chunk]) is
+procedure doSplitTest (input : UString; expected : Chunk.Container.Vector) is
 begin
     matcher : constant := makeMatcher ();
-    XCTAssertEqual (matcher.split (input), expected);
+    UnitTest.Assert_Equal (matcher.split (input), expected);
 end if;
 
 -- private

@@ -1,12 +1,12 @@
 -- €
--- --------------------------------------------
+--
 --  Stack.swift
 --  antlr.swift
 
 with Foundation;
 
 public struct Stack<T> {
-    items := [T]();
+    items := T.Container.Empty_Vector;
     -- public mutating
     procedure push (item : T) is
     begin
@@ -25,7 +25,7 @@ begin
     end if;
 
     -- public
-    function peek () return Optional_T is
+    function peek (This : …) return Optional_T is
    begin
         return items.last
     end if;

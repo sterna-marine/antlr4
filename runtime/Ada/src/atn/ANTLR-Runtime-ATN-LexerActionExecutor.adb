@@ -5,7 +5,7 @@ with ANTLR.Runtime.ATN.LexerAction;
 
 package body ANTLR.Runtime.ATN.LexerActionExecutor is
 
-   procedure Init (Self : in out LexerActionExecutor; lexerActions : LexerAction.Container.Vector) is
+   procedure Initialize (Self : in out LexerActionExecutor; lexerActions : LexerAction.Container.Vector) is
    begin
       self.lexerActions := lexerActions;
       hash := MurmurHash.initialize ();
@@ -13,7 +13,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutor is
             hash := MurmurHash.update (hash, Some_lexerAction); --TOFIX
       end loop;
       self.hashCode := MurmurHash.finish (hash, lexerActions.count); --TOFIX
-   end Init;
+   end Initialize;
 
    function append (This : LexerActionExecutor;
                     lexerActionExecutor : Optional_LexerActionExecutor;
@@ -25,7 +25,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutor is
             return LexerActionExecutor ([lexerAction]); --TOFIX
       end if;
 
-      --lexerActions : [LexerAction] := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
+      --lexerActions : LexerAction.Container.Vector := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
       lexerActions := lexerActionExecutor.lexerActions;
       LexerActionContainer.Append (lexerActions, lexerAction);
       --lexerActions[lexerActions.length - 1] := lexerAction;
@@ -37,16 +37,16 @@ package body ANTLR.Runtime.ATN.LexerActionExecutor is
       length : constant Ada.Containers.Count_Type := LexerAction.Container.Legnth (This.lexerActions);
    begin
       for i in 0 .. length - 1 loop
-         if lexerActions[i].isPositionDependent () and then not (lexerActions[i] is LexerIndexedCustomAction) then
-            if updatedLexerActions = null then
+         if lexerActions.Element (i).isPositionDependent () and then not (lexerActions.Element (i) is LexerIndexedCustomAction) then
+            if not Is_Valid (updatedLexerActions) then
                updatedLexerActions := lexerActions;  --lexerActions.clone ();
             end if;
 
-            updatedLexerActions![i] := LexerIndexedCustomAction (offset, lexerActions[i]);
+            updatedLexerActions!.Replace_Element (Index =>i, New_Item => LexerIndexedCustomAction (offset, lexerActions.Element (i));
          end if;
       end loop;
 
-      if updatedLexerActions = null then
+      if not Is_Valid (updatedLexerActions) then
             return This;
       else
          return LexerActionExecutor (updatedLexerActions!);
@@ -62,7 +62,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutor is
       stopIndex : constant Integer := input.index ();
 
       for lexerAction : LexerAction in self.lexerActions loop
-         runLexerAction : constant Optional_LexerIndexedCustomAction := Set (lexerAction);
+         runLexerAction : constant Optional_LexerIndexedCustomAction := Maybe (lexerAction);
          if Is_Valid (runLexerAction) then
             offset : constant Integer := runLexerAction.getOffset ();
             input.seek (startIndex + offset);
@@ -81,7 +81,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutor is
       defer:
          begin
             if requiresSeek then
-               input.seek (stopIndex);; -- try!
+               input.seek (stopIndex); -- try!
             end if;
          end defer;
 
@@ -92,7 +92,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutor is
       hasher.combine (hashCode);
    end hash;
 
-   function "=" (lhs, rhs: LexerActionExecutor) return Boolean is
+   function "=" (lhs, rhs : LexerActionExecutor) return Boolean is
    begin
       --  if lhs === rhs then
       --     return True;

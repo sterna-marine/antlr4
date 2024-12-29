@@ -1,135 +1,87 @@
 -- €
 
-package body ANTLR.Runtime.ATN.ArrayPredictionContext is 
+package body ANTLR.Runtime.ATN.ArrayPredictionContext is
 
--- public
-type ArrayPredictionContext is new PredictionContext with null record;
-{
-    -- 
-    -- Parent can be null only if full ctx mode and we make an array
-    -- from _#EMPTY_ and non-empty. We merge _#EMPTY_ by using null parent and
-    -- returnState = _#EMPTY_RETURN_STATE_.
-    -- 
-    -- public private (set) final var
-    parents : [PredictionContext?];
-
-    -- 
-    -- Sorted for merge, no duplicates; if present,
-    -- _#EMPTY_RETURN_STATE_ is always last.
-    -- 
-    -- public final 
-     returnStates : constant [Int];
-
-    -- public convenience
-    procedure Init (Self : in out …; a : SingletonPredictionContext) {
-        parents : constant := [a.parent]
-        self.init (parents, [a.returnState]);
-    end if;
-
-    -- public 
-    procedure Init (Self : in out …; parents : [PredictionContext?], returnStates : [Int]) {
-
-        self.parents := parents
-        self.returnStates := returnStates
-        super.init (PredictionContext.calculateHashCode (parents, returnStates));
-    end if;
-
-    override
-    -- final public
-    function isEmpty (This : …) return Boolean is
-begin
-        -- since EMPTY_RETURN_STATE can only appear in the last position, we
-        -- don't need to verify that size = 1
-        return returnStates[0] == PredictionContext.EMPTY_RETURN_STATE
-    end if;
-
-    override
-    -- final public
-    function size (This : …) return Integer is
-begin
-        return returnStates.count
-    end if;
-
-    override
-    -- final public
-    function getParent (index : Integer) return Optional_PredictionContext is
+   procedure Initialize (Self : in out ArrayPredictionContext; a : SingletonPredictionContext) is
+      parents : constant Option_PredictionContext.Container.Vector := [a.parent];
    begin
-        return parents[index]
-    end if;
+      Self.init (parents, [a.returnState]);
+   end Initialize;
 
-    override
-    -- final public
-    function getReturnState (index : Integer) return Integer is
-begin
-        return returnStates[index]
-    end if;
+   procedure Initialize (Self : in out ArrayPredictionContext;
+                   parents : Optional_PredictionContext.Container.Vector;
+                   returnStates : Integer.Container.Vector) is
+   begin
+      self.parents := parents;
+      self.returnStates := returnStates;
+      PredictionContext.init (Self, PredictionContext.calculateHashCode (parents, returnStates)); -- super
+   end Initialize;
 
-    override
-    -- public
-    description : String;
-    function Image return UString is
-        if isEmpty () then
+   overriding
+   function Description (This : …) return UString is
+   begin
+      if isEmpty () then
             return "[]";
-        end if;
-        buf := "["
-        for (i, returnState) in returnStates.enumerated () loop
-            if i > 0 then
-                buf := @ + ", ";
+      end if;
+      buf := "[";
+      for (i, returnState) in returnStates.enumerated () loop
+
+         if i > 0 then
+            buf := @ & ", ";
+         end if;
+
+         if returnState = PredictionContext.EMPTY_RETURN_STATE then
+            buf := @ & "$";
+            goto CONTINUE;
+         end if;
+
+         buf := @ & "" & returnState'Image & "";
+         if parent : constant := parents.Element (i) then
+            buf := @ & " " & parent'Image & "";
+         else
+            buf := @ & "null";
+         end if;
+
+         <<CONTINUE>>
+      end loop;
+      buf := @ & "]";
+      return buf;
+   end Image;
+
+   procedure combineCommonParents (This : ArrayPredictionContext) is
+      length : constant : Ada.Containers.Count_Type := This.parents.Length;
+   begin
+      uniqueParents : Dictionary<PredictionContext, PredictionContext> :=
+         Dictionary<PredictionContext, PredictionContext> ();
+      for p in This.parents loop
+         parent : constant PredictionContext := p;
+         if Is_Valid (parent) then
+            -- if not uniqueParents.keys.contains (parent) then
+            if uniqueParents.Element (parent) = (Valid => False) then
+               uniqueParents.Insert (Key => parent, New_Item => parent); -- don't replace
             end if;
-            if returnState = PredictionContext.EMPTY_RETURN_STATE then
-                buf := @ + "$";
-                goto CONTINUE;
-            end if;
-            buf := @ + "" & returnState'Image & "";
-            if parent : constant := parents[i] then
-                buf := @ + " " & parent'Image & "";
-            else
-                buf := @ + "null";
-            end if;
-            <<CONTINUE>>
-        end loop;
-        buf := @ + "]";
-        return buf
-    end if;
+         end if;
+      end loop;
 
-    internal final procedure combineCommonParents (This : …) is
-begin
+      for p in 0 .. length - 1 loop
+         parent : constant PredictionContext := parents.Element (p);
+         if Is_Valid (parent) then
+            parents.Insert (Key => p, New_Item => uniqueParents.Element (parent));
+         end if;
+      end loop;
 
-        length : constant := parents.count
-        uniqueParents : Dictionary<PredictionContext, PredictionContext> =;
-        Dictionary<PredictionContext, PredictionContext> ();
-        for p in parents loop
-            -- if
-            parent : constant PredictionContext := p then;
-                -- if not uniqueParents.keys.contains (parent) then
-                if uniqueParents[parent] == null then
-                    uniqueParents[parent] := parent;  -- don't replace
-                end if;
-            end if;
-        end loop;
+   end combineCommonParents;
 
-        for p in 0 .. length - 1 loop
-            -- if
-            parent : constant PredictionContext := parents[p] then;
-                parents[p] := uniqueParents[parent];
-            end if;
-        end loop;
+   function "=" (Lhs, Rhs : ArrayPredictionContext) return Boolean is
+   begin
+      --  if lhs === rhs then
+      --     return True;
+      --  end if;
+      if lhs.hashValue /= rhs.hashValue then
+         return False;
+      end if;
 
-    end if;
-end if;
-
-
--- public
-function "=" (Lhs, Rhs : ArrayPredictionContext) return Boolean is
-begin
-    if lhs === rhs then
-        return True;
-    end if;
-    if lhs.hashValue /= rhs.hashValue then
-        return False;
-    end if;
-
-    return lhs.returnStates = rhs.returnStates and then lhs.parents = rhs.parents
-end if;
+      return lhs.returnStates = rhs.returnStates and then lhs.parents = rhs.parents
+   end "=";
 
 end ANTLR.Runtime.ATN.ArrayPredictionContext;

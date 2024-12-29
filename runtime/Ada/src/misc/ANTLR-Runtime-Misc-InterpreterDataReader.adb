@@ -1,41 +1,41 @@
--- Copyright (c) 2021 The ANTLR Project. All rights reserved.
--- Use of this file is governed by the BSD 3-clause license that
--- can be found in the LICENSE.txt file in the project root.
+-- €
+
+with Ada.Finalization;
 
 -- A class to read plain text interpreter data produced by ANTLR.
 -- public
-type InterpreterDataReader is tagged record
-    
+type InterpreterDataReader is new Ada.Finalization.Controlled record
+
     let filePath:String,
         atn:ATN,
         vocabulary:Vocabulary,
-        ruleNames:[String],
-        channelNames:[String], -- Only valid for lexer grammars.
-        modeNames:[String] -- ditto
-    
-    -- --------------------------------------------
+        ruleNames:[UString],
+        channelNames:[UString], -- Only valid for lexer grammars.
+        modeNames:[UString] -- ditto
+
+    --
     -- The structure of the data file is line based with empty lines
     -- separating the different parts. For lexers the layout is:
     -- token literal names:
-    --  .. 
+    --  ..
      *
     -- token symbolic names:
-    --  .. 
+    --  ..
      *
     -- rule names:
-    --  .. 
+    --  ..
      *
     -- channel names:
-    --  .. 
+    --  ..
      *
     -- mode names:
-    --  .. 
+    --  ..
      *
     -- atn:
     -- <a single line with comma separated Integer values> enclosed in a pair of squared brackets.
      *
     -- Data for a parser does not contain channel and mode names.
-    -- --------------------------------------------
+    --
     type Part is (
         partName,
         tokenLiteralNames,
@@ -47,18 +47,18 @@ type InterpreterDataReader is tagged record
 
 
     Error : exception; --Swift.Error {dataError (String)};
-    
-    -- public 
-    procedure Init (Self : in out …; _ filePath:String) {
+
+    -- public
+    procedure Initialize (Self : in out …; _ filePath:String) {
         self.filePath := filePath
-        contents : constant String := To_String (contentsOfFile: filePath, encoding: String.Encoding.utf8);
+        contents : constant UString := To_String (contentsOfFile => filePath, encoding => UString.Encoding.utf8);
         part := Part.partName,
-            literalNames := [String](),
-            symbolicNames := [String](),
-            ruleNames := [String](),
-            channelNames := [String](),
-            modeNames := [String](),
-            atnText := [Substring](),
+            literalNames := UString.Container.Empty_Vector,
+            symbolicNames := UString.Container.Empty_Vector,
+            ruleNames := UString.Container.Empty_Vector,
+            channelNames := UString.Container.Empty_Vector,
+            modeNames := UString.Container.Empty_Vector,
+            atnText := Substring.Container.Empty_Vector,
             fail: Optional_Error;
         contents.enumerateLines { (line,stop) in
             -- have to be moved outside the enumerateLines block
@@ -109,10 +109,18 @@ type InterpreterDataReader is tagged record
         self.ruleNames := ruleNames
         self.channelNames := channelNames
         self.modeNames := modeNames
-        atnSerialized : constant := atnText.map{Int ($0.trimmingCharacters (in:.whitespaces))!}
+      atnSerialized : Integer_Container.Vector;
+        declare
+            procedure Map (At_Cursor : atnText.Cursor) is
+            begin
+               atnSerialized.Append (Integer (Element (At_Cursor).trimmingCharacters (in => .whitespaces))!);
+            end Map;
+         begin
+            atnText.Iterate (Map'Access);
+         end;
         atn := ATNDeserializer ().deserialize (atnSerialized);
     end if;
-        
+
     -- public
     procedure createLexer (input: CharStream)throws->LexerInterpreter is
     begin
@@ -124,7 +132,7 @@ type InterpreterDataReader is tagged record
                                     atn,
                                     input);
     end if;
-    
+
     -- public
     procedure createParser (input: TokenStream)throws->ParserInterpreter is
     begin

@@ -2,17 +2,17 @@
 
 package body ANTLR.Runtime.ATN.LexerChannelAction is
 
-   procedure Init (Self : in out LexerChannelAction; channel : Channel_Number) is
+   procedure Initialize (Self : in out LexerChannelAction; channel : Channel_Number) is
       self.channel := channel;
-   end Init;
+   end Initialize;
 
    procedure execute (This : LexerChannelAction; lexer : Lexer) is
    begin
       lexer.setChannel (This.channel);
    end execute;
 
-   override
-   procedure hash (This : LexerChannelAction; into hasher: in out Hasher) is
+   overriding
+   procedure hash (This : LexerChannelAction; hasher : in out Hasher) is
    begin
       hasher.combine (getActionType ());
       hasher.combine (This.channel);

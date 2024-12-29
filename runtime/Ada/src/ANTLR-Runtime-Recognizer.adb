@@ -101,7 +101,7 @@ package body ANTLR.Runtime.Recognizer is
 
    procedure setState (This : Recognizer; atnState : ATStates.State) is
    begin
-      --	System.err.println ("setState "+atnState);
+      --   System.err.println ("setState "+atnState);
       This._stateNumber := atnState;
       -- if ( traceATNStates ) _ctx.trace (atnState);
    end setState;

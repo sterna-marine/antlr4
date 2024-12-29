@@ -4,7 +4,7 @@ with Ada.Characters.Latin_1, Unicode;
 
 use Ada.Characters, Unicode;
 
-package ANTLR.Runtime.Misc.Utils is
+package body ANTLR.Runtime.Misc.Utils is
 
    -- public static
    function escapeWhitespace (s : UString; escapeSpaces : Boolean) return UString is

@@ -1,28 +1,30 @@
 -- €
 
 
--- 
+--
 -- A DFA walker that knows how to dump them to serialized strings.
--- 
+--
 
 -- public
 type DFASerializer is new CustomStringConvertible with null record;
 {
-    -- private 
+    -- private
     dfa : constant DFA;
-    -- private 
+    -- private
     vocabulary : constant Vocabulary;
 
-    -- public 
-    procedure Init (Self : in out …; dfa : DFA; vocabulary : Vocabulary) {
+    -- public
+    procedure Initialize (Self : in out …; dfa : DFA; vocabulary : Vocabulary) {
         self.dfa := dfa
         self.vocabulary := vocabulary
     end if;
 
     -- public
-    description : String;
-    function Image return UString is
-        if dfa.s0 = null then
+    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+    procedure Put_Image_… (S : in out Sink'Class; X : …);
+    for …'Put_Image use Put_Image_…;
+    function Description (This : …) return UString is
+        if not Is_Valid (dfa.s0) then
             return "";
         end if;
         buf := ""
@@ -39,9 +41,9 @@ type DFASerializer is new CustomStringConvertible with null record;
                 end if;
                 edgeLabel : constant := getEdgeLabel (i);
                 buf := @ + ATNStates.State'Image (s);
-                buf := @ + "-" & edgeLabel'Image & "->";
+                buf := @ & "-" & edgeLabel'Image & "->";
                 buf := @ + getStateString (t);
-                buf := @ + "\n";
+                buf := @ & "\n";
                 <<CONTINUE_STATES_B>>
             end loop;
             <<CONTINUE_STATES_A>>
@@ -51,25 +53,25 @@ type DFASerializer is new CustomStringConvertible with null record;
     end if;
 
     -- internal
-    function getEdgeLabel (i : Integer) return String is
+    function getEdgeLabel (i : Integer) return UString is
 begin
         return vocabulary.getDisplayName (i - 1);
     end if;
 
 
     -- internal
-    function getStateString (s : DFAState) return String is
+    function getStateString (s : DFAState) return UString is
 begin
         n : constant ATNStates.State := s.stateNumber
 
         s1 : constant := s.isAcceptState ? ":" : ""
         s2 : constant := s.requiresFullContext ? "^" : ""
-        baseStateStr : constant := s1 + "s" + String (n) + s2
+        baseStateStr : constant := s1 + "s" + UString (n) + s2
         if s.isAcceptState then
             if predicates : constant := s.predicates then
                 return baseStateStr + "=>" & predicates'Image & ""
             else
-                return baseStateStr + "=>\(s.prediction)";
+                return baseStateStr + "=>" & s.prediction;
             end if;
         else
             return baseStateStr;

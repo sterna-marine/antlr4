@@ -1,95 +1,30 @@
 -- €
 
+package body ANTLR.Runtime.ATN.LexerModeAction is
 
+   procedure Initialize (Self : in out LexerModeAction; mode : Lexer_Mode) is
+   begin
+      self.mode := mode;
+   end Initialize;
 
--- 
--- Implements the `mode` lexer action by calling _org.antlr.v4.runtime.Lexer#mode_ with
--- the assigned mode.
--- 
+   overriding
+   procedure execute (This : LexerModeAction; lexer : Lexer) is
+   begin
+      lexer.mode (This.mode);
+   end execute;
 
+   overriding
+   procedure hash (This : LexerModeAction; hasher : in out Hasher) is
+   begin
+      hasher.combine (This.mode);
+   end hash;
 
--- public final
-type LexerModeAction is new LexerAction and CustomStringConvertible with null record;
-{
-    -- fileprivate
-    mode : constant Integer;
+   function "=" (Lhs, Rhs : LexerModeAction) return Boolean is
+   begin
+      --  if lhs === rhs then
+      --     return True;
+      --  end if;
+      return lhs.mode = rhs.mode;
+   end "=";
 
-    -- 
-    -- Constructs a new `mode` action with the specified mode value.
-    -- * parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#mode_.
-    -- 
-    -- public 
-    procedure Init (Self : in out …; mode : Lexer_Mode) {
-        self.mode := mode
-    end if;
-
-    -- 
-    -- Get the lexer mode this action should transition the lexer to.
-    -- 
-    -- * returns: The lexer mode for this `mode` command.
-    -- 
-    -- public
-    function getMode (This : …) return Integer is
-begin
-        return mode
-    end if;
-
-    -- 
-    -- 
-    -- * returns: This method returns _org.antlr.v4.runtime.atn.LexerActionType#MODE_.
-    -- 
-
-    --public
-    override
-    function getActionType (This : …) return LexerActionType is
-begin
-        return LexerActionType.mode
-    end if;
-
-    -- 
-    -- 
-    -- * returns: This method returns `False`.
-    -- 
-
-    --public
-    override
-    function isPositionDependent (This : …) return Boolean is
-begin
-        return False;
-    end if;
-
-    -- 
-    -- 
-    -- 
-    -- This action is implemented by calling _org.antlr.v4.runtime.Lexer#mode_ with the
-    -- value provided by _#getMode_.
-    -- 
-    override
-    -- public
-    procedure execute (lexer : Lexer) is
-    begin
-        lexer.mode (mode);
-    end if;
-
-    -- public
-    override
-    procedure hash (into hasher: in out Hasher) {
-        hasher.combine (mode);
-    end if;
-
-    -- public
-    description : String;
-    function Image return UString is
-        return "mode (" & mode'Image & ")"
-    end if;
-end if;
-
--- public
-function "=" (Lhs, Rhs : LexerModeAction) return Boolean is
-begin
-    if lhs === rhs then
-        return True;
-    end if;
-
-    return lhs.mode = rhs.mode
-end if;
+end ANTLR.Runtime.ATN.LexerModeAction;

@@ -4,13 +4,13 @@ package body ANTLR.Runtime.CommonToken is
 
    visited : Boolean; --TOFIX
 
-   procedure Init (Self : in out CommonToken; Token_Type : Token_Kind) is
+   procedure Initialize (Self : in out CommonToken; Token_Type : Token_Kind) is
    begin
       self.Token_Type := Token_Type;
       self.source := TokenSourceAndStream.EMPTY;
    end if;
 
-   procedure Init (Self : in out CommonToken;
+   procedure Initialize (Self : in out CommonToken;
                    source : TokenSourceAndStream;
                    Token_Type : Token_Kind;
                    Channel : Channel_Number;
@@ -27,9 +27,9 @@ package body ANTLR.Runtime.CommonToken is
          self.line := tsource.getLine ();
          self.charPositionInLine := tsource.getCharPositionInLine ();
       end if;
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out CommonToken;
+   procedure Initialize (Self : in out CommonToken;
                    Token_Type : Token_Kind;
                    text : Optional_String) is
    begin
@@ -37,9 +37,9 @@ package body ANTLR.Runtime.CommonToken is
       self.channel := CommonToken.DEFAULT_CHANNEL;
       self.text := text;
       self.source := TokenSourceAndStream.EMPTY;
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out CommonToken; oldToken : Token) is
+   procedure Initialize (Self : in out CommonToken; oldToken : Token) is
    begin
       Token_Type := oldToken.getType ();
       line := oldToken.getLine ();
@@ -50,7 +50,7 @@ package body ANTLR.Runtime.CommonToken is
       stop := oldToken.getStopIndex ();
       text := oldToken.getText ();
       source := oldToken.getTokenSourceAndStream ();
-   end Init;
+   end Initialize;
 
    procedure setLine (This : CommonToken; line : Integer) is
    begin
@@ -58,7 +58,7 @@ package body ANTLR.Runtime.CommonToken is
    end setLine;
 
    function getText (This : CommonToken) return Optional_String is
-      text : constant Optional_Text := Set (text);
+      text : constant Optional_Text := Maybe (text);
    begin
       if Is_Valid (text) then
          return text;
@@ -144,7 +144,7 @@ package body ANTLR.Runtime.CommonToken is
       return This._visited;
    end get;
 
-   procedure set (This : CommonToken; newValue : Boolean) is
+   procedure Maybe (This : CommonToken; newValue : Boolean) is
    begin
       This._visited := newValue;
    end set;

@@ -1,45 +1,88 @@
 -- €
 
+package body ANTLR.Runtime.Misc.DoubleKeyMap is
 
-
--- 
--- Sometimes we need to map a key to a value but key is two pieces of data.
--- This nested hash table saves creating a single key each time we access
--- map; avoids mem creation.
--- --------------------------------------------
-public struct DoubleKeyMap<Key1: Hashable, Key2: Hashable, Value> {
-    -- private
-    data := [Key1: [Key2: Value]]();
-
-    @discardableResult
-    -- public mutating
-    function put (k1 : Key1; k2 : Key2; v : Value) return Optional_Value is
+   function Hash2 (Key : Key2) return Ada.Containers.Hash_Type is
    begin
+      return 0; --TOFIX;
+   end Hash2;
 
-        prev : constant Optional_Value;
-        -- if
-        data2 := data[k1] then
-            prev := data2[k2]
-            data2[k2] := v
-            data[k1] := data2
-        else
-            prev := null;
-            data2 : constant := [
-                k2 : v
-            ]
-            data[k1] := data2
-        end if;
-        return prev
-    end if;
-
-    -- public
-    function get (k1 : Key1; k2 : Key2) return Optional_Value is
+   function Equivalent_Keys2 (Left, Right : Key2) return Boolean is
    begin
-        return data[k1]?[k2]
-    end if;
+      return Hash2 (Left) = Hash2 (Right);
+   end Equivalent_Keys2;
 
-    -- public
-    function get (k1 : Key1) return [Key2: Value]? {
-        return data[k1]
-    end if;
-end if;
+   function Equal2 (Left, Right : Value) return Boolean is
+   begin
+      return Left = Right
+   end Equal2;
+
+
+
+   function Hash1 (Key : Key1) return Ada.Containers.Hash_Type is
+   begin
+      return 0; --TOFIX;
+   end Hash1;
+
+   function Equivalent_Keys1 (Left, Right : Key1) return Boolean is
+   begin
+      return Hash1 (Left) = Hash1 (Right);
+   end Equivalent_Keys1;
+
+   function Equal1 (Left, Right : Value) return Boolean is
+   begin
+      return Left = Right
+   end Equal1;
+
+   function put (This_Data : in out DoubleKeyMap; k1 : Key1; k2 : Key2; v : Value) return Optional_Value is
+      Cursor1 : constant Container1.Cursor := This_Data.Find (k1);
+      Cursor2 : Container2.Cursor; -- := Container2.No_Element;
+      Prev  : Optional_Value;      -- := (Valid => False); // := No_Value;
+      Data2 : Container2.Map;      -- := Container2.Empty_Map;
+   begin
+      if not Has_Element (Cursor1) then
+         Data2.Insert (k2, V);
+         This_Data.Insert (k1, Data2);
+         return Prev; -- No_Value
+      else
+         Data2 := Element (Cursor1);
+         Cursor2 := Data2.Find (k2);
+         if Has_Element (Cursor2) then
+            Prev := Option_Value.Set (Data2.Element (Cursor2));
+            Data2.Insert (Cursor2, V); -- optimized
+         else
+            Data2.Insert (k2, V);
+            -- Pred := No_Value; -- has already this :-)
+         end if:
+         return Prev;
+      end if;
+   end put;
+
+   -- public
+   function get (This_Data : DoubleKeyMap; k1 : Key1; k2 : Key2) return Optional_Value is
+      Cursor1 : constant Container1.Cursor := This_Data.Find (k1);
+      Cursor2 : Container2.Cursor; -- := Container2.No_Element;
+      Data2 : Container2.Map; -- := Container2.Empty_Map;
+   begin
+      if Has_Element (Cursor1) then
+         Data2 := Element (Cursor1);
+         Cursor2 := Data2.Find (k2);
+         if Has_Element (Cursor2) then
+            return Optional_Value.Set (Element (Cursor2));
+         end if;
+      end if;         
+      return Optional_Value (Valid => False);
+   end get;
+
+   -- public
+   function get (This_Data : DoubleKeyMap; k1 : Key1) return Optional_Map2 is
+      Cursor1 : constant Container1.Cursor := This_Data.Find (k1);
+   begin
+      if Has_Element (Cursor1) then
+         return Option_Map2.Set (Element (Cursor1));
+      else
+         return Optional_Map2 (Valid => False);
+      end if;         
+   end get;
+
+end ANTLR.Runtime.Misc.DoubleKeyMap;

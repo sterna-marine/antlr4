@@ -1,64 +1,54 @@
 -- €
--- --------------------------------------------
---  CommonUtil.swift
---   antlr.swift
-
-with Foundation;
-
-procedure errPrint (msg : String) {
-    fputs (msg + "\n", stderr);
-end if;
 
 -- public
-function +(Lhs : String; Rhs : Integer) return String is
+function +(Lhs : UString; Rhs : Integer) return UString is
 begin
-    return lhs + String (rhs);
+    return lhs + UString (rhs);
 end if;
 
 -- public
-function +(lhs : Integer; rhs: String) return String is
+function +(lhs : Integer; rhs => UString) return UString is
 begin
-    return String (lhs) + rhs
+    return UString (lhs) + rhs
 end if;
 
 -- public
-function +(lhs: String; rhs : Token) return String is
+function +(lhs: UString; rhs : Token) return UString is
 begin
     return lhs + rhs.description
 end if;
 
 -- public
-function +(lhs: Token; rhs : String) return String is
+function +(lhs: Token; rhs : UString) return UString is
 begin
     return lhs.description + rhs
 end if;
 
-infix operator >>> : BitwiseShiftPrecedence
 
-function >>> (Lhs, Rhs : Int32) return Int32 is
+function Shift_Right_Arithmetic (Lhs, Rhs : Integer_32) return Integer_32 is
 begin
     return lhs &>> rhs
 end if;
 
-function >>> (Lhs, Rhs : Int64) return Int64 is
+function Shift_Right_Arithmetic (Lhs, Rhs : Integer_64) return Integer_64 is
 begin
     return lhs &>> rhs
 end if;
 
-function >>> (lhs : Integer; rhs : Integer) return Integer is
+function Shift_Right_Arithmetic (Lhs, Rhs : Integer) return Integer is
 begin
     return lhs &>> rhs
 end if;
 
-function intChar2String (i : Integer) return String is
+function intChar2String (i : Integer) return UString is
 begin
-    return String (Character (integerLiteral: i));
+    return UString (Character (integerLiteral => i));
 end if;
 
 procedure log (message : UString := "", file: UString := #file, function: UString := #function, lineNum: Integer := #line) {
 
     -- #if DEBUG
-    print ("FILE: \(URL (fileURLWithPath: file).pathComponents.last!),FUNC: " & function'Image & ", LINE: " & lineNum'Image & " MESSAGE: " & message'Image);
+    Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last! & ", FUNC: " & function'Image & ", LINE: " & lineNum'Image & ", MESSAGE: " & message'Image);
     --   #else
     -- do nothing
     --   #endif
@@ -69,21 +59,21 @@ begin
     return c.unicodeValue
 end if;
 
-function toInt32 (data : [Character], offset : Integer) return Integer is
+function toInteger_32 (data : Character.Container.Vector, offset : Integer) return Integer is
 begin
-    return data[offset].unicodeValue | (data[offset + 1].unicodeValue << 16);
+    return data.Element (offset).unicodeValue or Shift_Left (data.Element (offset + 1).unicodeValue, 16);
 end if;
 
-function toLong (data : [Character], offset : Integer) return Int64 is
+function toLong (data : Character.Container.Vector, offset : Integer) return Integer_64 is
 begin
-    mask : constant Int64 := 0x0000_0000_FFFF_FFFF;
-    lowOrder : constant Int64 := Int64 (toInt32 (data, offset)) & mask;
-    return lowOrder | Int64 (toInt32 (data, offset + 2) << 32);
+    mask : constant Integer_64 := 0x0000_0000_FFFF_FFFF;
+    lowOrder : constant Integer_64 := Integer_64 (toInteger_32 (data, offset)) & mask;
+    return lowOrder | Integer_64 (toInteger_32 (data, offset + 2) << 32);
 end if;
 
-function toUUID (data : [Character], offset : Integer) return UUID is
+function toUUID (data : Character.Container.Vector, offset : Integer) return UUID is
 begin
-    leastSigBits : constant Int64 := toLong (data, offset);
-    mostSigBits : constant Int64 := toLong (data, offset + 4);
-    return UUID (mostSigBits: mostSigBits, leastSigBits: leastSigBits);
+    leastSigBits : constant Integer_64 := toLong (data, offset);
+    mostSigBits : constant Integer_64 := toLong (data, offset + 4);
+    return UUID (mostSigBits => mostSigBits, leastSigBits => leastSigBits);
 end if;

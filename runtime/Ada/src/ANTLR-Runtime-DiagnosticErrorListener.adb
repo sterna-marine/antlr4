@@ -1,12 +1,12 @@
 -- €
 
 
--- 
+--
 -- This implementation of _org.antlr.v4.runtime.ANTLRErrorListener_ can be used to identify
 -- certain potential correctness and performance problems in grammars. "Reports"
 -- are made by calling _org.antlr.v4.runtime.Parser#notifyErrorListeners_ with the appropriate
 -- message.
--- 
+--
 -- * __Ambiguities__: These are cases where more than one path through the
 -- grammar can match the input.
 -- * __Weak context sensitivity__: These are cases where full-context
@@ -17,45 +17,45 @@
 -- __and__ the minimum alternative of the SLL conflict was found to not be
 -- a truly viable alternative. Two-stage parsing cannot be used for inputs where
 -- this situation occurs.
--- 
+--
 -- *  Sam Harwell
--- 
+--
 
 with Foundation;
 
 -- public
 type DiagnosticErrorListener is new BaseErrorListener with null record;
 {
-    -- 
+    --
     -- When `True`, only exactly known ambiguities are reported.
-    -- 
+    --
     -- internal final
     exactOnly : Boolean;
 
-    -- 
+    --
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_ which only
     -- reports exact ambiguities.
-    -- 
-    -- public convenience 
-    override
-    procedure Init (Self : …) is
+    --
+    -- public convenience
+    overriding
+    procedure Initialize (Self : in out …) is
 begin
         self.init (True);
     end if;
 
-    -- 
+    --
     -- Initializes a new instance of _org.antlr.v4.runtime.DiagnosticErrorListener_, specifying
     -- whether all ambiguities or only exact ambiguities are reported.
-    -- 
+    --
     -- * parameter exactOnly: `True` to report only exact ambiguities, otherwise
     -- `False` to report all ambiguities.
-    -- 
-    -- public 
-    procedure Init (Self : in out …; exactOnly  : Boolean) {
+    --
+    -- public
+    procedure Initialize (Self : in out …; exactOnly  : Boolean) {
         self.exactOnly := exactOnly
     end if;
 
-    override
+    overriding
     -- public
     procedure reportAmbiguity (recognizer : Parser;
         dfa : DFA;
@@ -75,7 +75,7 @@ begin
             recognizer.notifyErrorListeners (message);
     end if;
 
-    override
+    overriding
     -- public
     procedure reportAttemptingFullContext (recognizer : Parser;
         dfa : DFA;
@@ -89,7 +89,7 @@ begin
             recognizer.notifyErrorListeners (message);
     end if;
 
-    override
+    overriding
     -- public
     procedure reportContextSensitivity (recognizer : Parser;
         dfa : DFA;
@@ -104,52 +104,50 @@ begin
     end if;
 
     -- internal
-    function getDecisionDescription (recognizer : Parser; dfa : DFA) return String is
+    function getDecisionDescription (recognizer : Parser; dfa : DFA) return UString is
 begin
         decision : constant Integer := dfa.decision;
         ruleIndex : constant Integer := dfa.atnStartState.ruleIndex!;
 
-        ruleNames : constant [String] := recognizer.getRuleNames ();
+        ruleNames : constant [UString] := recognizer.getRuleNames ();
         if not ruleNames.indices.contains (ruleIndex) then
-            return String (decision);
+            return UString (decision);
         end if;
 
-        ruleName : constant String := ruleNames[ruleIndex];
-        --if (ruleName = null or else ruleName.isEmpty ()) {
+        ruleName : constant UString := ruleNames.Element (ruleIndex);
+        --if (ruleName = (Valid => False) or else ruleName.isEmpty ()) {
         if ruleName.isEmpty then
-            return String (decision);
+            return UString (decision);
         end if;
         return "" & decision'Image & " (" & ruleName'Image & ")"
     end if;
 
-    -- 
+    --
     -- Computes the set of conflicting or ambiguous alternatives from a
     -- configuration set, if that information was not already provided by the
     -- parser.
-    -- 
+    --
     -- * parameter reportedAlts: The set of conflicting or ambiguous alternatives, as
     -- reported by the parser.
     -- * parameter configs: The conflicting or ambiguous configuration set.
     -- * returns: Returns `reportedAlts` if it is not `null`, otherwise
     -- returns the set of alternatives represented in `configs`.
-    -- 
+    --
     -- internal
     function getConflictingAlts (reportedAlts : Optional_BitSet; configs : ATNConfigSet) return BitSet is
 begin
-        return reportedAlts ?? configs.getAltBitSet ();
+        return reportedAlts, Default => configs.getAltBitSet ();
     end if;
 end if;
 
 
--- fileprivate
-function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex : Integer) return String is
-begin
-    declare
-    begin
-        return recognizer.getTokenStream ()?.getText (Interval.of (startIndex, stopIndex)) ?? "<unknown>";
-    end if;
-    exception
-       when others =>
-        return "<unknown>"
-    end if;
+   -- fileprivate
+   function getTextInInterval (recognizer : Parser; startIndex : Integer; stopIndex : Integer) return UString is
+   begin
+      return recognizer.getTokenStream ()?.getText (Interval.of (startIndex, stopIndex)), Default => "<unknown>";
+   exception
+      when others =>
+         return "<unknown>";
+   end getTextInInterval;
+
 end if;

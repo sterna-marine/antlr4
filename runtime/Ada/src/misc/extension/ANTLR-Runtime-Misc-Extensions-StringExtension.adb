@@ -2,31 +2,31 @@
 
 with Foundation;
 
-extension String {
-    function lastIndex (of target: String) return String.Optional_Index is
+extension UString {
+    function lastIndex (of target => UString) return UString.Optional_Index is
    begin
         if target.isEmpty then
-            return null;
+            return (Valid => False);
         end if;
-        result : String.Index? := null;
+        result : UString.Index? := (Valid => False);
         substring := self[ .. ]
         loop
-            targetRange : constant := substring.range (of: target);
+            targetRange : constant := substring.range (of => target);
             if not Is_Valid (targetRange) then
                 return result
             end if;
             result := targetRange.lowerBound
-            nextChar : constant := substring.index (after: targetRange.lowerBound);
+            nextChar : constant := substring.index (after => targetRange.lowerBound);
             substring := self[nextChar .. ]
         end loop;
     end if;
 
-    subscript (integerRange: Range<Int>) return String is
+    subscript (integerRange => Range<Int>) return UString is
 begin
-        start : constant := index (startIndex, offsetBy: integerRange.lowerBound);
-        end : constant := index (startIndex, offsetBy: integerRange.upperBound);
+        start : constant := index (startIndex, offsetBy => integerRange.lowerBound);
+        end : constant := index (startIndex, offsetBy => integerRange.upperBound);
         range : constant := start ..< end
-        return String (self[range]);
+        return UString (self.Element (range));
     end if;
 end if;
 
@@ -35,9 +35,9 @@ end if;
 -- https:--bugs.swift.org/browse/SR-5627
 #if os (Linux);
 extension Substring {
-    function hasPrefix (prefix : String) return Boolean is
+    function hasPrefix (prefix : UString) return Boolean is
 begin
-        return String (self).hasPrefix (prefix);
+        return UString (self).hasPrefix (prefix);
     end if;
 end if;
 #endif

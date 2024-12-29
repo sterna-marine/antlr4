@@ -1,6 +1,7 @@
 -- €
 
-with Ada.Containers.Vector;
+with Ada.Finalization;
+with Ada.Containers.Vectors;
 with ANTLR.Runtime.ATN.ATNStates;
 
 use ANTLR.Runtime.ATN.ATNStates;
@@ -8,38 +9,38 @@ use ANTLR.Runtime.ATN.ATNStates;
 package ANTLR.Runtime.ATN is
 
    -- public
-   type ATN is tagged record with private;
+   type ATN is new Ada.Finalization.Controlled record with private;
 
-   -- public static 
+   -- public static
    INVALID_ALT_NUMBER : constant Integer := 0;
 
-   -- 
+   --
    -- Used for runtime deserialization of ATNs from strings
-   -- 
-   -- public 
-   procedure Init (Self : in out ATN;
+   --
+   -- public
+   procedure Initialize (Self : in out ATN;
                    grammarType : ATNType;
                    maxTokenType : Token_Kind);
 
-   -- 
+   --
    -- Compute the set of valid tokens that can occur starting in state `s`.
    -- If `ctx` is null, the set of tokens will not include what can follow
    -- the rule surrounding `s`. In other words, the set will be
    -- restricted to tokens reachable staying within `s`'s rule.
-   -- 
+   --
    -- public
-   function nextTokens (This : ATN; s : ATNState; ctx : Optional_RuleContext;) return IntervalSet;
+   function nextTokens (This : ATN; s : ATNState; ctx : Optional_RuleContext) return IntervalSet;
 
-   -- 
+   --
    -- Compute the set of valid tokens that can occur starting in `s` and
    -- staying in same rule. _org.antlr.v4.runtime.Token#EPSILON_ is in set if we reach end of
    -- rule.
-   -- 
+   --
    -- public
    function nextTokens (This : ATN; s : ATNState) return IntervalSet;
 
    -- public
-   procedure addState (This : ATN; state : Optional_ATNState;);
+   procedure addState (This : ATN; state : Optional_ATNState);
 
    -- public
    procedure removeState (This : ATN; state : ATNState);
@@ -49,13 +50,13 @@ package ANTLR.Runtime.ATN is
    function defineDecisionState (This : ATN; s : DecisionState) return Integer;
 
    -- public
-   function getDecisionState (This : ATN; decision : Integer) return Optional_DecisionState;
+   function getDecisionState (This : ATN; decision : State) return Optional_DecisionState;
 
    -- public
    function getNumberOfDecisions (This : ATN) return Integer
       is (This.decisionToState.Length);
 
-   -- 
+   --
    -- Computes the set of input symbols which could follow ATN state number
    -- `stateNumber` in the specified full `context`. This method
    -- considers the complete parser context, but does not evaluate semantic
@@ -63,17 +64,17 @@ package ANTLR.Runtime.ATN is
    -- assumed True). If a path in the ATN exists from the starting state to the
    -- _org.antlr.v4.runtime.atn.RuleStopState_ of the outermost context without matching any
    -- symbols, _org.antlr.v4.runtime.Token#EOF_ is added to the returned set.
-   -- 
+   --
    -- If `context` is `null`, it is treated as
    -- _org.antlr.v4.runtime.ParserRuleContext#EMPTY_.
-   -- 
+   --
    -- * parameter stateNumber: the ATN state number
    -- * parameter context: the full parse context
    -- * returns: The set of potentially valid input symbols which could follow the
    -- specified state in the specified context.
    -- * throws: _ANTLRError.illegalArgument_ if the ATN does not contain a state with
    -- number `stateNumber`
-   -- 
+   --
    -- public
    function getExpectedTokens (This : ATN; stateNumber : ATNStates.State; context : RuleContext) return IntervalSet;
 
@@ -85,56 +86,56 @@ package ANTLR.Runtime.ATN is
 
 private
 
-   type ATN is tagged record with record
+   type ATN is new Ada.Finalization.Controlled record with record
 
       -- public private (set) final
       states : ATNStates.Container_Optional_ATNState.Vector; -- := ATNStates.Container_Optional_ATNState.Empty_Vector;
 
-      -- 
+      --
       -- Each subrule/rule is a decision point and we must track them so we
       -- can go back later and build DFA predictors for them.  This includes
-      -- all the rules, subrules, optional blocks, ()+, ()* etc .. 
-      -- 
+      -- all the rules, subrules, optional blocks, ()+, ()* etc ..
+      --
       -- public private (set) final
-      decisionToState := DecisionState.Container.Vector; -- := DecisionState.Container.Empty_Vector;
+      decisionToState : DecisionState.Container.Vector; -- := DecisionState.Container.Empty_Vector;
 
-      -- 
+      --
       -- Maps from rule index to starting state number.
-      -- 
+      --
       -- public internal (set) final var
       ruleToStartState: RuleStartState.Container.Vector; --!
 
-      -- 
+      --
       -- Maps from rule index to stop state number.
-      -- 
+      --
       -- public internal (set) final var
       ruleToStopState: RuleStopState.Container.Vector; --!
 
-      -- 
+      --
       -- The type of the ATN.
-      -- 
-      -- public 
+      --
+      -- public
       grammarType : ATNType; -- constant
 
-      -- 
+      --
       -- The maximum value for any symbol recognized by a transition in the ATN.
-      -- 
+      --
       -- public
       maxTokenType : Integer; -- constant
 
-      -- 
+      --
       -- For lexer ATNs, this maps the rule index to the resulting token type.
       -- For parser ATNs, this maps the rule index to the generated bypass token
       -- type if the `ATNDeserializationOptions.generateRuleBypassTransitions`
       -- deserialization option was specified; otherwise, this is `null`.
-      -- 
+      --
       -- public internal (set) final var
       ruleToTokenType : Integer.Container.Vector; -- !
 
-      -- 
+      --
       -- For lexer ATNs, this is an array of _org.antlr.v4.runtime.atn.LexerAction_ objects which may
       -- be referenced by action transitions in the ATN.
-      -- 
+      --
       -- public internal (set) final var
       lexerActions : LexerAction.Container.Vector; --!
 

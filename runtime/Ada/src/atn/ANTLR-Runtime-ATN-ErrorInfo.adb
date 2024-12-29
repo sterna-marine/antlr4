@@ -2,7 +2,7 @@
 
 package body ANTLR.Runtime.ATN.ErrorInfo is
 
-   procedure Init (Self : in out ErrorInfo;
+   procedure Initialize (Self : in out ErrorInfo;
                    decision : Integer;
                    configs : ATNConfigSet;
                    input : TokenStream;
@@ -10,7 +10,7 @@ package body ANTLR.Runtime.ATN.ErrorInfo is
                    stopIndex : Integer;
                    fullCtx  : Boolean) is
    begin
-      DecisionEventInfo.Init (decision, configs, input, startIndex, stopIndex, fullCtx); -- Super
-   end Init;
+      DecisionEventInfo.Init (Self, decision, configs, input, startIndex, stopIndex, fullCtx); -- Super
+   end Initialize;
 
 end ANTLR.Runtime.ATN.ErrorInfo;

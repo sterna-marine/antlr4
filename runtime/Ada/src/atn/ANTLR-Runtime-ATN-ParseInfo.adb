@@ -1,181 +1,102 @@
 -- €
 
+package body ANTLR.Runtime.ATN.ParseInfo is
 
+   procedure Initialize (Self : in out ParseInfo; atnSimulator : ProfilingATNSimulator) is
+   begin
+      self.atnSimulator := atnSimulator;
+   end Initialize;
 
--- 
--- This class provides access to specific and aggregate statistics gathered
--- during profiling of a parser.
--- 
--- *  4.3
--- 
+   function getLLDecisions (This : ParseInfo) return Integer.Container.Vector is
+      LL : Integer.Container.Vector;
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      fallBack : Integer_64; -- constant
+   begin
+      for i in 0 .. decisions.Length - 1 loop
+         fallBack := decisions.Element (i).LL_Fallback;
+         if fallBack > 0 then
+               LL.append (i);
+               -- LL.add (i);
+         end if;
+      end loop;
+      return LL;
+   end getLLDecisions;
 
--- public
-type ParseInfo is tagged record
-    -- internal
-    atnSimulator : constant ProfilingATNSimulator;
+   function getTotalTimeInPrediction (This : ParseInfo) return Integer_64 is
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      t : Integer_64 := 0;
+   begin
+      for d of decisions loop
+         t := @ + d.timeInPrediction;
+      end loop;
+      return t;
+   end getTotalTimeInPrediction;
 
-    -- public 
-    procedure Init (Self : in out …; atnSimulator : ProfilingATNSimulator) {
-        self.atnSimulator := atnSimulator
-    end if;
+   function getTotalSLLLookaheadOps (This : ParseInfo) return Integer_64 is
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      k : Integer_64 := 0;
+   begin
+      for d of decisions loop
+         k := @ + d.SLL_TotalLook;
+      end loop;
+      return k;
+   end getTotalSLLLookaheadOps;
 
-    -- 
-    -- Gets an array of _org.antlr.v4.runtime.atn.DecisionInfo_ instances containing the profiling
-    -- information gathered for each decision in the ATN.
-    -- 
-    -- * returns: An array of _org.antlr.v4.runtime.atn.DecisionInfo_ instances, indexed by decision
-    -- number.
-    -- 
-    -- public
-    function getDecisionInfo () return [DecisionInfo] {
-        return atnSimulator.getDecisionInfo ();
-    end if;
+   function getTotalLLLookaheadOps (This : ParseInfo) return Integer_64 is
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      k : Integer_64 := 0;
+   begin
+      for d of decisions loop
+         k := @ + d.LL_TotalLook;
+      end loop;
+      return k;
+   end getTotalLLLookaheadOps;
 
-    -- 
-    -- Gets the decision numbers for decisions that required one or more
-    -- full-context predictions during parsing. These are decisions for which
-    -- _org.antlr.v4.runtime.atn.DecisionInfo#LL_Fallback_ is non-zero.
-    -- 
-    -- * returns: A list of decision numbers which required one or more
-    -- full-context predictions during parsing.
-    -- 
-    -- public
-    function getLLDecisions () return Array<Int> {
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        LL : Array<Int> := Array<Int> ();
-        length : constant := decisions.count
-        for i in 0 .. length - 1 loop
-            fallBack : constant Int64 := decisions[i].LL_Fallback;
-            if fallBack > 0 then
-                LL.append (i);
-                -- LL.add (i);
-            end if;
-        end loop;
-        return LL
-    end if;
+   function getTotalSLLATNLookaheadOps (This : ParseInfo) return Integer_64 is
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      k : Integer_64 := 0;
+   begin
+      for d of decisions loop
+         k := @ + d.SLL_ATNTransitions;
+      end loop;
+      return k;
+   end getTotalSLLATNLookaheadOps;
 
-    -- 
-    -- Gets the total time spent during prediction across all decisions made
-    -- during parsing. This value is the sum of
-    -- _org.antlr.v4.runtime.atn.DecisionInfo#timeInPrediction_ for all decisions.
-    -- 
-    -- public
-    function getTotalTimeInPrediction (This : …) return Int64 is
-begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        t : Int64 := 0;
-        for d in decisions loop
-            t := @ + d.timeInPrediction;
-        end loop;
-        return t
-    end if;
+   function getTotalLLATNLookaheadOps (This : ParseInfo) return Integer_64 is
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      k : Integer_64 := 0;
+   begin
+      for d of decisions loop
+         k := @ + d.LL_ATNTransitions;
+      end loop;
+      return k;
+   end getTotalLLATNLookaheadOps;
 
-    -- 
-    -- Gets the total number of SLL lookahead operations across all decisions
-    -- made during parsing. This value is the sum of
-    -- _org.antlr.v4.runtime.atn.DecisionInfo#SLL_TotalLook_ for all decisions.
-    -- 
-    -- public
-    function getTotalSLLLookaheadOps (This : …) return Int64 is
-begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        k : Int64 := 0;
-        for d in decisions loop
-            k := @ + d.SLL_TotalLook;
-        end loop;
-        return k
-    end if;
+   function getTotalATNLookaheadOps (This : ParseInfo) return Integer_64 is
+      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      k : Integer_64 := 0;
+   begin
+      for d in decisions loop
+         k := @ + d.SLL_ATNTransitions;
+         k := @ + d.LL_ATNTransitions;
+      end loop;
+      return k;
+   end getTotalATNLookaheadOps;
 
-    -- 
-    -- Gets the total number of LL lookahead operations across all decisions
-    -- made during parsing. This value is the sum of
-    -- _org.antlr.v4.runtime.atn.DecisionInfo#LL_TotalLook_ for all decisions.
-    -- 
-    -- public
-    function getTotalLLLookaheadOps (This : …) return Int64 is
-begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        k : Int64 := 0;
-        for d in decisions loop
-            k := @ + d.LL_TotalLook;
-        end loop;
-        return k
-    end if;
+   function getDFASize (This : ParseInfo) return Integer is
+      decisionToDFA : constant DFA.Container.Vector := This.atnSimulator.decisionToDFA;
+      n : Integer := 0;
+   begin
+      for i in 0 .. decisionToDFA.Length - 1 loop
+         n := @ + getDFASize (i);
+      end loop;
+      return n;
+   end getDFASize;
 
-    -- 
-    -- Gets the total number of ATN lookahead operations for SLL prediction
-    -- across all decisions made during parsing.
-    -- 
-    -- public
-    function getTotalSLLATNLookaheadOps (This : …) return Int64 is
-begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        k : Int64 := 0;
-        for d in decisions loop
-            k := @ + d.SLL_ATNTransitions;
-        end loop;
-        return k
-    end if;
+   function getDFASize (This : ParseInfo; decision : Integer) return Integer is
+      decisionToDFA : constant DFA := This.atnSimulator.decisionToDFA.Element (decision);
+   begin
+      return decisionToDFA.states.Length;
+   end getDFASize;
 
-    -- 
-    -- Gets the total number of ATN lookahead operations for LL prediction
-    -- across all decisions made during parsing.
-    -- 
-    -- public
-    function getTotalLLATNLookaheadOps (This : …) return Int64 is
-begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        k : Int64 := 0;
-        for d in decisions loop
-            k := @ + d.LL_ATNTransitions;
-        end loop;
-        return k
-    end if;
-
-    -- 
-    -- Gets the total number of ATN lookahead operations for SLL and LL
-    -- prediction across all decisions made during parsing.
-    -- 
-    -- 
-    -- This value is the sum of _#getTotalSLLATNLookaheadOps_ and
-    -- _#getTotalLLATNLookaheadOps_.
-    -- 
-    -- public
-    function getTotalATNLookaheadOps (This : …) return Int64 is
-begin
-        decisions : constant [DecisionInfo] := atnSimulator.getDecisionInfo ();
-        k : Int64 := 0;
-        for d in decisions loop
-            k := @ + d.SLL_ATNTransitions;
-            k := @ + d.LL_ATNTransitions;
-        end loop;
-        return k
-    end if;
-
-    -- 
-    -- Gets the total number of DFA states stored in the DFA cache for all
-    -- decisions in the ATN.
-    -- 
-    -- public
-    function getDFASize (This : …) return Integer is
-begin
-        n : Integer := 0;
-        decisionToDFA : constant [DFA] := atnSimulator.decisionToDFA;
-        length : constant := decisionToDFA.count
-        for i in 0 .. length - 1 loop
-            n := @ + getDFASize (i);
-        end loop;
-        return n
-    end if;
-
-    -- 
-    -- Gets the total number of DFA states stored in the DFA cache for a
-    -- particular decision.
-    -- 
-    -- public
-    function getDFASize (decision : Integer) return Integer is
-begin
-        decisionToDFA : constant DFA := atnSimulator.decisionToDFA[decision];
-        return decisionToDFA.states.count
-    end if;
-end if;
+end ANTLR.Runtime.ATN.ParseInfo;

@@ -2,5 +2,5 @@
 
 -- public
 type RuleNode is interface and ParseTree;
-    function getRuleContext () return RuleContext
+    function getRuleContext (This : …) return RuleContext
 end if;

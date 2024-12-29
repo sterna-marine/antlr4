@@ -1,40 +1,28 @@
 -- €
 
--- --------------------------------------------
---  LookupATNConfig.swift
---  objc2swiftwithswith
+package body ANTLR.Runtime.ATN.LookupATNConfig is
 
-with Foundation;
+   procedure Initialize (Self : in out LookupATNConfig; old : ATNConfig) is
+   begin
+      -- dup
+      Self.config := old;
+   end Initialize;
 
--- public
-type LookupATNConfig is new Hashable with null record;
-{
+   procedure hash (This : LookupATNConfig; hasher : in out Hasher) is
+   begin
+      hasher.combine (This.config.state.stateNumber);
+      hasher.combine (This.config.alt);
+      hasher.combine (This.config.semanticContext);
+   end hash;
 
-    -- public 
-    config : constant ATNConfig;
-    -- public 
-    procedure Init (Self : in out …; old : ATNConfig) {
-        -- dup
-        config := old
-    end if;
+   function "=" (Lhs, Rhs : LookupATNConfig) return Boolean is
+   begin
+      --  if lhs.config === rhs.config then
+      --     return True;
+      --  end if;
+      return lhs.config.state.stateNumber = rhs.config.state.stateNumber
+               and then lhs.config.alt = rhs.config.alt
+               and then lhs.config.semanticContext = rhs.config.semanticContext
+   end "=";
 
-    -- public
-    procedure hash (into hasher: in out Hasher) is
-    begin
-        hasher.combine (config.state.stateNumber);
-        hasher.combine (config.alt);
-        hasher.combine (config.semanticContext);
-    end if;
-end if;
-
--- public
-function "=" (Lhs, Rhs : LookupATNConfig) return Boolean is
-begin
-    if lhs.config === rhs.config then
-        return True;
-    end if;
-
-    return lhs.config.state.stateNumber = rhs.config.state.stateNumber and
-            lhs.config.alt = rhs.config.alt and
-            lhs.config.semanticContext = rhs.config.semanticContext
-end if;
+end ANTLR.Runtime.ATN.LookupATNConfig;

@@ -2,7 +2,7 @@
 
 package ANTLR.Runtime.ATN.ATNDeserializationOptions is
 
-   -- public struct 
+   -- public struct
    type ATNDeserializationOptions is record
       verifyATN : Boolean := True;
       generateRuleBypassTransitions : Boolean := False;

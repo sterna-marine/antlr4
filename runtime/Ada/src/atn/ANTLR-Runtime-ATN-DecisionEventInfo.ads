@@ -1,11 +1,13 @@
 -- €
 
+with Ada.Finalization;
+
 package ANTLR.Runtime.ATN.DecisionEventInfo is
 
--- 
+--
 -- This is the base class for gathering detailed information about prediction
 -- events which occur during parsing.
--- 
+--
 -- Note that we could record the parser call stack at the time this event
 -- occurred but in the presence of left recursive rules, the stack is kind of
 -- meaningless. It's better to look at the individual configurations for their
@@ -14,56 +16,56 @@ package ANTLR.Runtime.ATN.DecisionEventInfo is
 -- (start .. stop) of the various subtrees. Examining the stack tops of all
 -- configurations provide the return states for the rule invocations.
 -- From there you can get the enclosing rule.
--- 
+--
 
    -- public
-   type DecisionEventInfo is tagged record
-      -- 
+   type DecisionEventInfo is new Ada.Finalization.Controlled record
+      --
       -- The invoked decision number which this event is related to.
-      -- 
+      --
       -- * seealso: org.antlr.v4.runtime.atn.ATN#decisionToState
-      -- 
+      --
       -- public
-      decision : Integer; -- constant
+      decision : State; -- constant
 
-      -- 
+      --
       -- The configuration set containing additional information relevant to the
       -- prediction state when the current event occurred, or `null` if no
       -- additional information is relevant or available.
-      -- 
-      -- public 
-      configs : ATNConfigSet?; -- constant
+      --
+      -- public
+      configs : Optional_ATNConfigSet; -- constant
 
-      -- 
+      --
       -- The input token stream which is being parsed.
-      -- 
-      -- public 
+      --
+      -- public
       input : TokenStream; -- constant
 
-      -- 
+      --
       -- The token index in the input stream at which the current prediction was
       -- originally invoked.
-      -- 
+      --
       -- public
       startIndex : Integer; -- constant
 
-      -- 
+      --
       -- The token index in the input stream at which the current event occurred.
-      -- 
+      --
       -- public
       stopIndex : Integer; -- constant
 
-      -- 
+      --
       -- `True` if the current event occurred during LL prediction;
       -- otherwise, `False` if the input occurred during SLL prediction.
-      -- 
+      --
       -- public
       fullCtx : Boolean; -- constant
    end record;
 
-   -- public 
-   procedure Init (Self : in out DecisionEventInfo;
-                  decision : Integer;
+   -- public
+   procedure Initialize (Self : in out DecisionEventInfo;
+                  decision : State;
                   configs : Optional_ATNConfigSet;
                   input : TokenStream;
                   startIndex : Integer;

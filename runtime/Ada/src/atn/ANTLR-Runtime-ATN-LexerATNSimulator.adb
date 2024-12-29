@@ -2,29 +2,6 @@
 
 package body ANTLR.Runtime.ATN.LexerATNSimulator is
 
-   -- internal
-   function matchATN (This : LexerATNSimulator; input : CharStream) return Integer is
-
-   -- internal
-   function execATN (This : LexerATNSimulator; input : CharStream; ds0 : DFAState) return Integer is
-
-   --
-   -- Get an existing target state for an edge in the DFA. If the target state
-   -- for the edge has not yet been computed or is otherwise not available,
-   -- this method returns `null`.
-   --
-   -- * parameter s: The current DFA state
-   -- * parameter t: The next input symbol
-   -- * returns: The existing target DFA state for the given input symbol
-   -- `t`, or `null` if the target state for this edge is not
-   -- already cached
-   --
-   -- internal
-   function getExistingTargetState (This : LexerATNSimulator;
-                                    s : DFAState;
-                                    t : Integer)
-                                    return Optional_DFAState is
-
    --
    -- Compute a target state for an edge in the DFA, and attempt to add the
    -- computed state and corresponding edge to the DFA.
@@ -70,11 +47,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                      charPos : Integer) is
 
    -- internal
-   function getReachableTarget (This : LexerATNSimulator; trans : Transition; t : Integer) return Optional_ATNState is
-
-   -- internal
-   procedure reset (This : SimState) is
-
+   function getReachableTarget (This : LexerATNSimulator; trans : ATNTransition; t : Integer) return Optional_ATNState is
 
    -- final
    procedure captureSimState (This : LexerATNSimulator;
@@ -83,8 +56,9 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                               dfaState : DFAState) is
 
 
-   -- ========================================================
-
+   -- -------- --
+   -- SimState --
+   -- -------- --
    procedure reset (This : SimState) is
    begin
       This.index := -1;
@@ -93,15 +67,18 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       This.dfaState := Optional_DFAState (Valid => False);
    end reset;
 
-   procedure Init (Self : in out LexerATNSimulator;
+   -- ----------------- --
+   -- LexerATNSimulator --
+   -- ----------------- --
+   procedure Initialize (Self : in out LexerATNSimulator;
                    atn : ATN;
                    decisionToDFA : DFA.Container.Vector;
                    sharedContextCache : PredictionContextCache) is
    begin
-      Self.init (null, atn, decisionToDFA, sharedContextCache);
-   end Init;
+      self.init (null, atn, decisionToDFA, sharedContextCache);
+   end Initialize;
 
-   procedure Init (Self : in out LexerATNSimulator;
+   procedure Initialize (Self : in out LexerATNSimulator;
                    recog : Optional_Lexer;
                    atn : ATN;
                    decisionToDFA : DFA.Container.Vector,
@@ -110,7 +87,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       self.decisionToDFA := decisionToDFA;
       self.recog := recog;
       ATNSimulator.init (atn, sharedContextCache); -- Super
-   end Init;
+   end Initialize;
 
    procedure copyState (This : LexerATNSimulator; simulator : LexerATNSimulator) is
    begin
@@ -121,12 +98,12 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    end copyState;
 
    function match (This : LexerATNSimulator; input : CharStream; mode : Lexer_Mode) return Integer is
-      dfa : constant DFA := DFA.Container.Element (decisionToDFA, mode); 
+      dfa : constant DFA := DFA.Container.Element (decisionToDFA, mode);
       Result : Integer;
 
       procedure Defered_Release is
-      begin 
-         input.release (mark);; -- try!
+      begin
+         input.release (mark); -- try!
       exception
          when others => null;
       end Defered_Release;
@@ -149,7 +126,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       end if;
    end match;
 
-   override
+   overriding
    procedure reset (This : LexerATNSimulator) is
    begin
       This.prevAccept.reset ();
@@ -159,7 +136,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       This.mode := Lexer.DEFAULT_MODE;
    end reset;
 
-   override
+   overriding
    procedure clearDFA (This : LexerATNSimulator) is
    begin
       for d in This.decisionToDFA loop --TOFIX
@@ -175,20 +152,20 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    begin
 
       if LexerATNSimulator.debug then
-            print ("matchATN mode " & mode'Image & " start: " & startState'Image & "\n");
+            Text_IO.Put_Line ("matchATN mode " & mode'Image & " start: " & startState'Image & "\n");
       end if;
 
       s0_closure.hasSemanticContext := False;
 
       next := addDFAState (s0_closure); -- constant
       if not suppressEdge then
-            decisionToDFA[mode].s0 := next;
+            decisionToDFA.Element (mode).s0 := next;
       end if;
 
       predict := execATN (input, next); -- constant
 
       if LexerATNSimulator.debug then
-            print ("DFA after matchATN: \(decisionToDFA[old_mode].toLexerString ())");
+            Text_IO.Put_Line ("DFA after matchATN: " & decisionToDFA.Element (old_mode).toLexerString ());
       end if;
 
       return predict;
@@ -198,7 +175,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    begin
       --print ("enter exec index "+input.index ()+" from "+ds0.configs);
       if LexerATNSimulator.debug then
-            print ("start state closure=\(ds0.configs)\n");
+            Text_IO.Put_Line ("start state closure=" & ds0.configs & "\n");
       end if;
 
       if ds0.isAcceptState then
@@ -213,15 +190,15 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       loop
          -- while more work
          if LexerATNSimulator.debug then
-            print ("execATN loop starting closure: \(s.configs)\n");
+            Text_IO.Put_Line ("execATN loop starting closure: " & s.configs & "\n");
          end if;
 
          -- As we move src->trg, src->trg, we keep track of the previous trg to
          -- avoid looking up the DFA state again, which is expensive.
          -- If the previous target was already part of the DFA, we might
-         -- be able to avoid doing a reach operation upon t. If s /= null,
+         -- be able to avoid doing a reach operation upon t. If Is_Valid (s),
          -- it means that semantic predicates didn't prevent us from
-         -- creating a DFA state. Once we know s /= null, we check to see if
+         -- creating a DFA state. Once we know Is_Valid (s), we check to see if
          -- the DFA state has an edge already for t. If so, we can just reuse
          -- it's configuration set; there's no point in re-computing it.
          -- This is kind of like doing DFA simulation within the ATN
@@ -275,7 +252,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       else
          target := s.edges.Element (t - LexerATNSimulator.MIN_DFA_EDGE); -- constant
          if LexerATNSimulator.debug and then not target.Is_Empty then
-               print ("reuse state " & s.stateNumber & " edge to " & target!.stateNumber);
+               Text_IO.Put_Line ("reuse state " & s.stateNumber & " edge to " & target!.stateNumber);
          end if;
          return target;
       end if;
@@ -286,7 +263,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                                 s : DFAState;
                                 t : Integer)
                                 return DFAState is
-      reach : constant := ATNConfigSet (True, isOrdered: True);
+      reach : constant := ATNConfigSet (True, isOrdered => True);
    begin
 
       -- if we don't find an existing DFA state
@@ -326,7 +303,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
          -- if no accept and EOF is first char, return EOF
          if t = BufferedTokenStream.EOF and then input.index () == startIndex then
             return CommonToken.EOF;
-         else 
+         else
             raise ANTLRException.recognition with LexerNoViableAltException (recog, input, startIndex, reach);
          end if;
       end if;
@@ -338,7 +315,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       -- than a config that already reached an accept state for the same rule
       skipAlt := ATN.INVALID_ALT_NUMBER
       for c in closureConfig.configs loop
-            c : constant LexerATNConfig := LexerATNConfig (c); as? 
+            c : constant LexerATNConfig := Optional_LexerATNConfig (c);
             if not Is_Valid (c) then
                goto CONTINUE;
             end if;
@@ -348,7 +325,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
             end if;
 
             if LexerATNSimulator.debug then
-               print ("testing \(getTokenName (t)) at \(c.toString (recog, True))\n");
+               Text_IO.Put_Line ("testing " & getTokenName (t) & " at " & c.toString (recog, True) & "\n");
 
             end if;
 
@@ -389,7 +366,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                      charPos : Integer) is
    begin
       if LexerATNSimulator.debug then
-         print ("ACTION " & String (describing => lexerActionExecutor) & "\n");
+         Text_IO.Put_Line ("ACTION " & UString (describing => lexerActionExecutor) & "\n");
       end if;
 
       -- seek to after last char in token
@@ -404,12 +381,12 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       end if;
    end accept;
 
-   function getReachableTarget (This : LexerATNSimulator; trans : Transition; t : Integer) return Optional_ATNState is
+   function getReachableTarget (This : LexerATNSimulator; trans : ATNTransition; t : Integer) return Optional_ATNState is
    begin
       if trans.matches (t, Character.MIN_VALUE, Character.MAX_VALUE) then
             return trans.target;
       else
-         return null;
+         return (Valid => False);
       end if;
    end if;
 
@@ -418,7 +395,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                                p : ATNState)
                                return ATNConfigSet is
       initialContext : constant := EmptyPredictionContext.Instance;
-      configs : constant := ATNConfigSet (True, isOrdered: True);
+      configs : constant := ATNConfigSet (True, isOrdered => True);
       length : constant := p.getNumberOfTransitions ();
    begin
       for i in 0 .. length - 1 loop
@@ -440,20 +417,20 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       currentAltReachedAcceptState := currentAltReachedAcceptState;
    begin
       if LexerATNSimulator.debug then
-            print ("closure (" + config.toString (recog, True) + ")");
+            Text_IO.Put_Line ("closure (" + config.toString (recog, True) + ")");
       end if;
 
       if config.state is RuleStopState then
          if LexerATNSimulator.debug then
             if recog : constant := recog then
-               print ("closure at " & recog.getRuleNames ()[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
+               Text_IO.Put_Line ("closure at " & recog.getRuleNames ()[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
             else
-               print ("closure at rule stop " & config'Image & "\n");
+               Text_IO.Put_Line ("closure at rule stop " & config'Image & "\n");
             end if;
          end if;
 
-         if config.context?.hasEmptyPath () ?? True then
-            if config.context?.isEmpty () ?? True then
+         if config.context?.hasEmptyPath (), Default => True then
+            if config.context?.isEmpty (), Default => True then
                configs.add (config);
                return True;
             else
@@ -500,12 +477,12 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    function getEpsilonTarget (This : LexerATNSimulator;
                               input : CharStream;
                               config : LexerATNConfig;
-                              t : Transition;
+                              t : ATNTransition;
                               configs : ATNConfigSet;
                               speculative : Boolean;
                               treatEofAsEpsilon  : Boolean)
                               return Optional_LexerATNConfig is
-      c : Optional_LexerATNConfig; := null;
+      c : Optional_LexerATNConfig; := (Valid => False);
    begin
       case t.getSerializationType () is
 
@@ -540,7 +517,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
             --
             pt : constant PredicateTransition := PredicateTransition (t);
             if LexerATNSimulator.debug then
-               print ("EVAL rule \(pt.ruleIndex):\(pt.predIndex)");
+               Text_IO.Put_Line ("EVAL rule " & pt.ruleIndex & ":" & pt.predIndex);
             end if;
             configs.hasSemanticContext := True;
             if evaluatePredicate (input, pt.ruleIndex, pt.predIndex, speculative) then
@@ -548,7 +525,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
             end if;
 
          when Transition.ACTION =>
-            if config.context = null
+            if not Is_Valid (config.context)
             or else config.context!.hasEmptyPath () then
                -- execute actions anywhere in the start rule for a token.
                --
@@ -573,7 +550,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
             c := LexerATNConfig (config, t.target);
 
          when Transition.ATOM => fallthrough;
-         when Transition.RANGE => fallthrough;
+         when TRANSITION_RANGE => fallthrough;
          when Transition.SET =>
             if treatEofAsEpsilon then
                if t.matches (BufferedTokenStream.EOF, Character.MIN_VALUE, Character.MAX_VALUE) then
@@ -595,7 +572,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
                                speculative  : Boolean)
                                return Boolean is
       Result : Boolean;
- 
+
       procedure Defered_Release is
       begin
          charPositionInLine := savedCharPositionInLine;
@@ -672,9 +649,9 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    procedure addDFAEdge (This : LexerATNSimulator; p : DFAState; t : Integer; q : DFAState) is
 
       function Closure return LexerATNSimulator is
-         if p.edges = null then
+         if not Is_Valid (p.edges) then
                --  make room for tokens 1 .. n and -1 masquerading as index 0
-               p.edges := [DFAState?](repeating: null, count: LexerATNSimulator.MAX_DFA_EDGE - LexerATNSimulator.MIN_DFA_EDGE + 1);
+               p.edges := [DFAState?](repeating => null, count => LexerATNSimulator.MAX_DFA_EDGE - LexerATNSimulator.MIN_DFA_EDGE + 1);
          end if;
          p.edges[t - LexerATNSimulator.MIN_DFA_EDGE] := q -- connect
       end Closure;
@@ -688,7 +665,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       end if;
 
       if LexerATNSimulator.debug then
-            print ("EDGE " & p'Image & " -> " & q'Image & " upon " & t'Image);
+            Text_IO.Put_Line ("EDGE " & p'Image & " -> " & q'Image & " upon " & t'Image);
       end if;
 
       p.Mutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
@@ -699,7 +676,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    function addDFAState (This : LexerATNSimulator; configs : ATNConfigSet) return DFAState is
 
       function Closure return DFAState is
-         existing : constant := dfa.states[proposed];
+         existing : constant := dfa.states.Element (proposed);
       begin
          if Is_Valid (existing) then
                return existing;
@@ -710,7 +687,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
             begin
                configs.setReadonly (True);
                newState.configs := configs;
-               dfa.states[newState] := newStateO;
+               dfa.states.Insert (Key => newState, New_Item => newStateO);
                return newStateO;
             end;
          end if;
@@ -723,7 +700,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       -- the lexer evaluates predicates on-the-fly; by this point configs
       -- should not contain any configurations with unevaluated predicates.
       --
-      assert (not configs.hasSemanticContext, "Expected: not configs.hasSemanticContext");
+      pragma assert (not configs.hasSemanticContext, "Expected: not configs.hasSemanticContext");
 
       proposed : constant := DFAState (configs);
 
@@ -733,7 +710,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
             proposed.prediction := atn.ruleToTokenType[rss.state.ruleIndex!];
       end if;
 
-      dfa : constant := decisionToDFA[mode]
+      dfa : constant := decisionToDFA.Element (mode);
 
       dfa.statesMutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
       return Closure_Return_Value;
@@ -761,7 +738,7 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
    procedure consume (This : LexerATNSimulator; input : CharStream) is
       curChar : constant := input.LA (1);
    begin
-      if String (Character (integerLiteral: curChar)) == "\n" then
+      if UString (Character (integerLiteral => curChar)) == "\n" then
             line := @ + 1;
             charPositionInLine := 0;
       else
@@ -770,13 +747,13 @@ package body ANTLR.Runtime.ATN.LexerATNSimulator is
       input.consume ();
    end consume;
 
-   function getTokenName (This : LexerATNSimulator; t : Integer) return String is
+   function getTokenName (This : LexerATNSimulator; t : Integer) return UString is
    begin
       if t = -1 then
          return "EOF";
       else
-         --if ( atn.g /= null ) return atn.g.getTokenDisplayName (t);
-         return "'" + String (Character (integerLiteral: t)) + "'";
+         --if ( Is_Valid (atn.g) ) return atn.g.getTokenDisplayName (t);
+         return "'" + UString (Character (integerLiteral => t)) + "'";
       end if;
    end getTokenName;
 

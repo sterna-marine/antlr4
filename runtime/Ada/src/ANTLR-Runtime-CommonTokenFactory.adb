@@ -2,15 +2,16 @@
 
 package body ANTLR.Runtime.CommonTokenFactory is
 
-   procedure Init (Self : in out CommonTokenFactory; copyText : Boolean) is
+   procedure Initialize (Self : in out CommonTokenFactory; copyText : Boolean) is
    begin
       self.copyText := copyText;
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out CommonTokenFactory) is
+   overriding
+   procedure Initialize (Self : in out CommonTokenFactory) is
    begin
-      Self.init (Self, False);
-   end Init;
+      Self.init (False);
+   end Initialize;
 
    function create (source : TokenSourceAndStream;
                     Type : Token_Kind;
@@ -25,7 +26,7 @@ package body ANTLR.Runtime.CommonTokenFactory is
    begin
       t.setLine (line);
       t.setCharPositionInLine (charPositionInLine);
-      text : constant Optional_Text := Set (text);
+      text : constant Optional_Text := Maybe (text);
          if Is_Valid (text) then
             t.setText (text);
       elsif cStream : constant := source.stream, copyText then
@@ -34,7 +35,7 @@ package body ANTLR.Runtime.CommonTokenFactory is
 
       return t
       exception
-         when others => null;      
+         when others => null;
    end create;
 
 end ANTLR.Runtime.CommonTokenFactory;

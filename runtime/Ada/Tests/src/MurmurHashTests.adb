@@ -34,7 +34,7 @@ begin
         doMurmurHashTest ("ππππππππ", 0x9747b28c, 0xD58063C1) --U+03C0: Greek Small Letter Pi
 
         --String of 256 characters.
-        doMurmurHashTest (String (repeating: "a", count: 256), 0x9747b28c, 0x37405BDC);
+        doMurmurHashTest (String (repeating: "a", count => 256), 0x9747b28c, 0x37405BDC);
 
         doMurmurHashTest ("abc", 0, 0xB3DD93FA);
         doMurmurHashTest ("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 0, 0xEE925B90);
@@ -43,7 +43,7 @@ begin
 end if;
 
 -- private
-procedure doMurmurHashTest (input : String; seed : UInt32; expected : UInt32) is
+procedure doMurmurHashTest (input : UString; seed : Unsigned_32; expected : Unsigned_32) is
 begin
-    XCTAssertEqual (MurmurHash.hashString (input, seed), expected);
+    UnitTest.Assert_Equal (MurmurHash.hashString (input, seed), expected);
 end if;

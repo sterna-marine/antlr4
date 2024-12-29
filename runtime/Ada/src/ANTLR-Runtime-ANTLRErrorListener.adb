@@ -1,22 +1,22 @@
 -- €
 
 -- How to emit recognition errors.
--- 
+--
 
 -- public
 type ANTLRErrorListener is interface;
-    -- 
+    --
     -- Upon syntax error, notify any interested parties. This is not how to
     -- recover from errors or compute error messages. _org.antlr.v4.runtime.ANTLRErrorStrategy_
     -- specifies how to recover from syntax errors and how to compute error
     -- messages. This listener's job is simply to emit a computed message,
     -- though it has enough information to create its own message in many cases.
-    -- 
+    --
     -- The _RecognitionException_ is non-null for all syntax errors except
     -- when we discover mismatched token errors that we can recover from
     -- in-line, without returning from the surrounding rule (via the single
     -- token insertion and deletion mechanism).
-    -- 
+    --
     -- * parameter recognizer:
     -- What parser got the error. From this
     -- object, you can access the context as well
@@ -37,28 +37,28 @@ type ANTLRErrorListener is interface;
     -- the reporting of an error. It is null in the case where
     -- the parser was able to recover in line without exiting the
     -- surrounding rule.
-    -- 
+    --
     procedure syntaxError<T> (recognizer : Recognizer<T>,
                         offendingSymbol : Optional_AnyObject;
                         line : Integer;
                         charPositionInLine : Integer;
-                        msg : String;
+                        msg : UString;
                         e : Optional_AnyObject;
     );
 
-    -- 
+    --
     -- This method is called by the parser when a full-context prediction
     -- results in an ambiguity.
-    -- 
+    --
     -- Each full-context prediction which does not result in a syntax error
     -- will call either _#reportContextSensitivity_ or
     -- _#reportAmbiguity_.
-    -- 
+    --
     -- When `ambigAlts` is not null, it contains the set of potentially
     -- viable alternatives identified by the prediction algorithm. When
     -- `ambigAlts` is null, use _org.antlr.v4.runtime.atn.ATNConfigSet#getAlts_ to obtain the
     -- represented alternatives from the `configs` argument.
-    -- 
+    --
     -- When `exact` is `True`, __all__ of the potentially
     -- viable alternatives are truly viable, i.e. this is reporting an exact
     -- ambiguity. When `exact` is `False`, __at least two__ of
@@ -66,13 +66,13 @@ type ANTLRErrorListener is interface;
     -- the prediction algorithm terminated as soon as it determined that at
     -- least the __minimum__ potentially viable alternative is truly
     -- viable.
-    -- 
+    --
     -- When the _org.antlr.v4.runtime.atn.PredictionMode#LL_EXACT_AMBIG_DETECTION_ prediction
     -- mode is used, the parser is required to identify exact ambiguities so
     -- `exact` will always be `True`.
-    -- 
+    --
     -- This method is not used by lexers.
-    -- 
+    --
     -- * parameter recognizer: the parser instance
     -- * parameter dfa: the DFA for the current decision
     -- * parameter startIndex: the input index where the decision started
@@ -85,7 +85,7 @@ type ANTLRErrorListener is interface;
     -- set of represented alternatives in `configs`
     -- * parameter configs: the ATN configuration set where the ambiguity was
     -- identified
-    -- 
+    --
     procedure reportAmbiguity (recognizer : Parser;
                          dfa : DFA;
                          startIndex : Integer;
@@ -94,17 +94,17 @@ type ANTLRErrorListener is interface;
                          ambigAlts : BitSet;
                          configs : ATNConfigSet);
 
-    -- 
+    --
     -- This method is called when an SLL conflict occurs and the parser is about
     -- to use the full context information to make an LL decision.
-    -- 
+    --
     -- If one or more configurations in `configs` contains a semantic
     -- predicate, the predicates are evaluated before this method is called. The
     -- subset of alternatives which are still viable after predicates are
     -- evaluated is reported in `conflictingAlts`.
-    -- 
+    --
     -- This method is not used by lexers.
-    -- 
+    --
     -- * parameter recognizer: the parser instance
     -- * parameter dfa: the DFA for the current decision
     -- * parameter startIndex: the input index where the decision started
@@ -116,7 +116,7 @@ type ANTLRErrorListener is interface;
     -- as null).
     -- * parameter configs: the ATN configuration set where the SLL conflict was
     -- detected
-    -- 
+    --
     procedure reportAttemptingFullContext (recognizer : Parser;
                                      dfa : DFA;
                                      startIndex : Integer;
@@ -124,14 +124,14 @@ type ANTLRErrorListener is interface;
                                      conflictingAlts : Optional_BitSet;
                                      configs : ATNConfigSet);
 
-    -- 
+    --
     -- This method is called by the parser when a full-context prediction has a
     -- unique result.
-    -- 
+    --
     -- Each full-context prediction which does not result in a syntax error
     -- will call either _#reportContextSensitivity_ or
     -- _#reportAmbiguity_.
-    -- 
+    --
     -- For prediction implementations that only evaluate full-context
     -- predictions when an SLL conflict is found (including the default
     -- _org.antlr.v4.runtime.atn.ParserATNSimulator_ implementation), this method reports cases
@@ -139,20 +139,20 @@ type ANTLRErrorListener is interface;
     -- i.e. the decision was context-sensitive. This report does not necessarily
     -- indicate a problem, and it may appear even in completely unambiguous
     -- grammars.
-    -- 
+    --
     -- `configs` may have more than one represented alternative if the
     -- full-context prediction algorithm does not evaluate predicates before
     -- beginning the full-context prediction. In all cases, the final prediction
     -- is passed as the `prediction` argument.
-    -- 
+    --
     -- Note that the definition of "context sensitivity" in this method
     -- differs from the concept in _org.antlr.v4.runtime.atn.DecisionInfo#contextSensitivities_.
     -- This method reports all instances where an SLL conflict occurred but LL
     -- parsing produced a unique result, whether or not that unique result
     -- matches the minimum alternative in the SLL conflicting set.
-    -- 
+    --
     -- This method is not used by lexers.
-    -- 
+    --
     -- * parameter recognizer: the parser instance
     -- * parameter dfa: the DFA for the current decision
     -- * parameter startIndex: the input index where the decision started
@@ -161,7 +161,7 @@ type ANTLRErrorListener is interface;
     -- * parameter prediction: the unambiguous result of the full-context prediction
     -- * parameter configs: the ATN configuration set where the unambiguous prediction
     -- was determined
-    -- 
+    --
     procedure reportContextSensitivity (recognizer : Parser;
                                   dfa : DFA;
                                   startIndex : Integer;

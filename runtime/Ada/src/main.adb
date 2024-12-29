@@ -2,16 +2,16 @@ with Ada.Text_IO;
 use Ada.Text_IO;
 
 with Option;
-with ANTLR;
-with ANTLR.Runtime;
-with ANTLR.Runtime.Misc;
+--  with ANTLR;
+--  with ANTLR.Runtime;
+--  with ANTLR.Runtime.Misc;
 -- with ANTLR.Runtime.Misc.ANTLRException;
 -- with ANTLR.Runtime.Misc.BitSet;
 -- with ANTLR.Runtime.Misc.DoubleKeyMap;
 -- with ANTLR.Runtime.Misc.InterpreterDataReader;
-with ANTLR.Runtime.Misc.Interval;
-with ANTLR.Runtime.Misc.IntervalSet;
-with ANTLR.Runtime.Misc.IntSet;
+--  with ANTLR.Runtime.Misc.Interval;
+--  with ANTLR.Runtime.Misc.IntervalSet;
+--  with ANTLR.Runtime.Misc.IntSet;
 -- with ANTLR.Runtime.Misc.MultiMap;
 -- with ANTLR.Runtime.Misc.MurmurHash;
 -- with ANTLR.Runtime.Misc.Extensions.ArrayExtension;
@@ -24,7 +24,7 @@ with ANTLR.Runtime.Misc.IntSet;
 -- with ANTLR.Runtime.Misc.Utils.Mutex;
 -- with ANTLR.Runtime.Misc.Utils.Stack;
 -- with ANTLR.Runtime.Misc.Utils;
-with ANTLR.Runtime.ANTLRError;
+--  with ANTLR.Runtime.ANTLRError;
 -- with ANTLR.Runtime.ANTLRErrorListener;
 -- with ANTLR.Runtime.ANTLRErrorStrategy;
 -- with ANTLR.Runtime.ANTLRFileStream;
@@ -75,7 +75,7 @@ with ANTLR.Runtime.ANTLRError;
 -- with ANTLR.Runtime.ATN.ATNDeserializationOptions;
 -- with ANTLR.Runtime.ATN.ATNDeserializer;
 -- with ANTLR.Runtime.ATN.ATNSimulator;
-with ANTLR.Runtime.ATN.ATNStates;
+--  with ANTLR.Runtime.ATN.ATNStates;
 -- with ANTLR.Runtime.ATN.ATNType;
 -- with ANTLR.Runtime.ATN.AtomTransition;
 -- with ANTLR.Runtime.ATN.BasicBlockStartState;
@@ -91,7 +91,7 @@ with ANTLR.Runtime.ATN.ATNStates;
 -- with ANTLR.Runtime.ATN.EmptyPredictionContext;
 -- with ANTLR.Runtime.ATN.EpsilonTransition;
 -- with ANTLR.Runtime.ATN.ErrorInfo;
-with ANTLR.Runtime.ATN.LexerAction;
+--  with ANTLR.Runtime.ATN.LexerAction;
 -- with ANTLR.Runtime.ATN.LexerActionExecutor;
 -- with ANTLR.Runtime.ATN.LexerActionType;
 -- with ANTLR.Runtime.ATN.LexerATNConfig;
@@ -132,7 +132,7 @@ with ANTLR.Runtime.ATN.LexerAction;
 -- with ANTLR.Runtime.ATN.StarLoopbackState;
 -- with ANTLR.Runtime.ATN.StarLoopEntryState;
 -- with ANTLR.Runtime.ATN.TokensStartState;
-with ANTLR.Runtime.ATN.Transitions;
+--  with ANTLR.Runtime.ATN.Transitions;
 -- with ANTLR.Runtime.ATN.WildcardTransition;
 -- with ANTLR.Runtime.DFA;
 -- with ANTLR.Runtime.DFA.DFASerializer;
@@ -169,7 +169,7 @@ procedure Main is
       Red  => Character'Pos ('R'));
    for Color'Size use 8;
 
-   package Option_Color is new Option (Color);
+   package body Option_Color is new Option (Color);
    subtype Optional_Color is Option_Color.Optional; -- renames
 
    use Option_Color;
@@ -180,7 +180,7 @@ begin
    Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (My_Color, Red)");
-   Set (My_Color, Red);
+   set (My_Color, Red);
    Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (My_Color, ""Red"")");
@@ -202,7 +202,7 @@ begin
 
    Put_Line ("===============");
    Put_Line ("Set (Red)");
-   Set (Red);
+   set (Red);
    Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (""Red"")");
@@ -221,4 +221,6 @@ begin
    Enum_Val (Character'Pos ('R'));
    Put_Line (My_Color'Image);
    Put_Line ("===============");
+
+
 end Main;

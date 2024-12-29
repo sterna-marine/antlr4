@@ -2,622 +2,499 @@
 
 package body ANTLR.Runtime.ATN.ATNConfigSet is
 
--- --------------------------------------------
--- Specialized _java.util.Set_`<`_org.antlr.v4.runtime.atn.ATNConfig_`>` that can track
--- info about the set, with support for combining similar configurations using a
--- graph-structured stack.
--- --------------------------------------------
--- public final
-type ATNConfigSet is new Hashable and CustomStringConvertible with null record;
-{
-    -- --------------------------------------------
-    -- The reason that we need this is because we don't want the hash map to use
-    -- the standard hash code and equals. We need all configurations with the same
-    -- `(s,i,_,semctx)` to be equal. Unfortunately, this key effectively doubles
-    -- the number of objects associated with ATNConfigs. The other solution is to
-    -- use a hash table that lets us specify the equals/hashcode operation.
-    -- --------------------------------------------
+   procedure Initialize (Self : in out ATNConfigSet;
+                   fullCtx  : Boolean := True;
+                   isOrdered : Boolean := False) is
+   begin
+      if isOrdered then
+         Self.configLookup :=  LookupDictionary.Init (Type_of_LookupDictionary => LookupDictionaryType.ordered);
+      else
+         Self.configLookup :=  LookupDictionary.Init ();
+      end if;
+      self.fullCtx := fullCtx;
+   end Initialize;
 
+   overriding
+   function add (This : in out ATNConfigSet; config : ATNConfig) return Boolean is
+      mergeCache : PredictionContext.Optional_DoubleKeyMap; --  := (Valid => False) / Empty_Map by default;
+   begin
+      return This.add (config, mergeCache);
+   end add;
 
-    -- --------------------------------------------
-    -- Indicates that the set of configurations is read-only. Do not
-    -- allow any code to manipulate the set; DFA states will point at
-    -- the sets and they must not change. This does not protect the other
-    -- fields; in particular, conflictingAlts is set after
-    -- we've made this readonly.
-    -- --------------------------------------------
-    -- private
-    readonly := False;
+   function add (This : in out ATNConfigSet;
+                 config : ATNConfig;
+                 mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
+                 return Boolean is
+      existing : ATNConfig;
+      merged : PredictionContext;
+   begin
+      if This.readonly then
+         raise ANTLRError.illegalState with "This set is readonly";
+      end if;
+      if config.semanticContext /= This.SemanticContext.Empty.Instance then
+            This.hasSemanticContext := True;
+      end if;
+      if config.getOuterContextDepth () > 0 then
+            This.dipsIntoOuterContext := True;
+      end if;
 
-    -- --------------------------------------------
-    -- All configs but hashed by (s, i, _, pi) not including context. Wiped out
-    -- when we go readonly as this set becomes a DFA state.
-    -- --------------------------------------------
-    -- private
-    configLookup : LookupDictionary
-
-    -- --------------------------------------------
-    -- Track the elements as they are added to the set; supports get (i);
-    -- --------------------------------------------
-    -- public private (set);
-    configs := [ATNConfig]();
-
-    -- TODO: these fields make me pretty uncomfortable but nice to pack up info together, saves recomputation
-    -- TODO: can we track conflicts as they are added to save scanning configs later?
-    -- public internal (set)
-    uniqueAlt: … := ATN.INVALID_ALT_NUMBER;
-    --TODO no default
-    -- --------------------------------------------
-    -- Currently this is only used when we detect SLL conflict; this does
-    -- not necessarily represent the ambiguous alternatives. In fact,
-    -- I should also point out that this seems to include predicated alternatives
-    -- that have predicates that evaluate to False. Computed in computeTargetState ().
-    -- --------------------------------------------
-    -- internal
-    conflictingAlts : Optional_BitSet;
-
-    -- Used in parser and lexer. In lexer, it indicates we hit a pred
-    -- while computing a closure operation.  Don't make a DFA state from this.
-    -- public internal (set)
-    hasSemanticContext : Boolean := False;;
-    --TODO no default
-    -- public internal (set)
-    dipsIntoOuterContext : Boolean := False;;
-    --TODO no default
-
-    -- --------------------------------------------
-    -- Indicates that this configuration set is part of a full context
-    -- LL prediction. It will be used to determine how to merge $. With SLL
-    -- it's a wildcard whereas it is not for LL context merge.
-    -- --------------------------------------------
-    -- public
-    fullCtx : constant Boolean;
-
-    -- private
-    cachedHashCode := -1
-
-    -- public 
-    procedure Init (Self : in out …; fullCtx  : Boolean := True, isOrdered : Boolean := False) {
-        configLookup := isOrdered ? LookupDictionary (Type_of_LookupDictionary: LookupDictionaryType.ordered) : LookupDictionary ();
-        self.fullCtx := fullCtx
-    end if;
-
-    --override
-    @discardableResult
-    -- public
-    function add (config : ATNConfig) return Boolean is
-begin
-        mergeCache : DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>? := null;
-        return add (config, &mergeCache);
-    end if;
-
-    -- --------------------------------------------
-    -- Adding a new config means merging contexts with existing configs for
-    -- `(s, i, pi, _)`, where `s` is the
-    -- _org.antlr.v4.runtime.atn.ATNConfig#state_, `i` is the _org.antlr.v4.runtime.atn.ATNConfig#alt_, and
-    -- `pi` is the _org.antlr.v4.runtime.atn.ATNConfig#semanticContext_. We use
-    -- `(s,i,pi)` as key.
-    -- --------------------------------------------
-    -- This method updates _#dipsIntoOuterContext_ and
-    -- _#hasSemanticContext_ when necessary.
-    -- --------------------------------------------
-    @discardableResult
-    -- public
-    procedure add (
-        config : ATNConfig;
-        mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?) return Boolean is
-begin
-            if readonly then
-                raise ANTLRError.illegalState with "This set is readonly";
-            end if;
-
-            if config.semanticContext /= SemanticContext.Empty.Instance then
-                hasSemanticContext := True;
-            end if;
-            if config.getOuterContextDepth () > 0 then
-                dipsIntoOuterContext := True;
-            end if;
-            existing : constant ATNConfig := getOrAdd (config);
-            if existing === config then
-                -- we added this new one
-                cachedHashCode := -1
-                configs.append (config)  -- track order here
-                return True;
-            end if;
-            -- a previous (s,i,pi,_), merge with it and save result
-            rootIsWildcard : constant := not fullCtx
-
-            merged : constant := PredictionContext.merge (existing.context!, config.context!, rootIsWildcard, &mergeCache);
-
-            -- no need to check for existing.context, config.context in cache
-            -- since only way to create new graphs is "call rule" and here. We
-            -- cache at both places.
-            existing.reachesIntoOuterContext =
-                max (existing.reachesIntoOuterContext, config.reachesIntoOuterContext);
-
-            -- make sure to preserve the precedence filter suppression during the merge
-            if config.isPrecedenceFilterSuppressed () then
-                existing.setPrecedenceFilterSuppressed (True);
-            end if;
-
-            existing.context := merged -- replace context; no need to alt mapping
+      existing := This.getOrAdd (config);
+      if existing === config then
+            -- we added this new one
+            cachedHashCode := -1;
+            This.configs.append (config);  -- track order here
             return True;
-    end if;
+      end if;
+      -- a previous (s,i,pi,_), merge with it and save result
+      rootIsWildcard : constant Boolean := not This.fullCtx;
 
-    -- public
-    function getOrAdd (config : ATNConfig) return ATNConfig is
-begin
+      merged := PredictionContext.merge (
+            a => Value (existing.context),
+            b => Value (config.context),
+            rootIsWildcard => rootIsWildcard,
+            mergeCache => mergeCache);
 
-        return configLookup.getOrAdd (config);
-    end if;
+      -- no need to check for existing.context, config.context in cache
+      -- since only way to create new graphs is "call rule" and here. We
+      -- cache at both places.
+      existing.reachesIntoOuterContext :=
+            max (existing.reachesIntoOuterContext, config.reachesIntoOuterContext);
 
+      -- make sure to preserve the precedence filter suppression during the merge
+      if config.isPrecedenceFilterSuppressed () then
+            existing.setPrecedenceFilterSuppressed (True);
+      end if;
 
-    -- --------------------------------------------
-    -- Return a List holding list of configs
-    -- --------------------------------------------
-    -- public
-    function elements () return [ATNConfig] {
-        return configs
-    end if;
+      existing.context := merged -- replace context; no need to alt mapping
+      return True;
+   end add;
 
-    -- public
-    function getStates () return Set<ATNState> {
-        states := Set<ATNState> (minimumCapacity: configs.count);
-        for config in configs loop
-            states.insert (config.state);
-        end loop;
-        return states
-    end if;
+   function getStates (This : ATNConfigSet) return Set_of_ATNStates is
+      states : Set_of_ATNStates; -- (minimumCapacity => configs.count);
+   begin
+      for config of This.configs loop
+         states.insert (config.state);
+      end loop;
+      return states;
+   end getStates;
 
-    -- --------------------------------------------
-    -- Gets the complete set of represented alternatives for the configuration
-    -- set.
-    -- --------------------------------------------
-    -- * returns: the set of represented alternatives in this configuration set
-    -- --------------------------------------------
-    -- * since: 4.3
-    -- --------------------------------------------
-    -- public
-    function getAlts (This : …) return BitSet is
-begin
-        alts : constant := BitSet ();
-        for config in configs loop
-            alts.set (config.alt);; -- try!
-        end loop;
-        return alts
-    end if;
+   function getAlts (This : ATNConfigSet) return BitSet is
+      alts : constant := BitSet;
+   begin
+      for config of This.configs loop
+         alts.set (config.alt); -- try!
+      end loop;
+      return alts;
+   end getAlts;
 
-    -- public
-    function getPredicates () return [SemanticContext] {
-        preds := [SemanticContext]();
-        for config in configs loop
-            if config.semanticContext /= SemanticContext.Empty.Instance then
-                preds.append (config.semanticContext);
-            end if;
-        end loop;
-        return preds
-    end if;
+   function getPredicates (This : ATNConfigSet) return SemanticContext.Container.Vector is
+      preds : SemanticContext.Container.Vector;
+   begin
+      for config of This.configs loop
+         if config.semanticContext /= SemanticContext.Empty.Instance then
+               preds.append (config.semanticContext);
+         end if;
+      end loop;
+      return preds;
+   end getPredicates;
 
-    -- public
-    function get (i : Integer) return ATNConfig is
-begin
-        return configs[i]
-    end if;
+   procedure optimizeConfigs (This : ATNConfigSet; interpreter : ATNSimulator) is
+   begin
+      if This.readonly then
+         raise ANTLRError.illegalState with "This set is readonly";
+      end if;
+      if configLookup.isEmpty then
+         exit;
+      end if;
+      for config of This.configs loop
+         config.context := interpreter.getCachedContext (Value (config.context)); --TOFIX
+      end loop;
+   end optimizeConfigs;
 
-    -- public
-    procedure optimizeConfigs (interpreter : ATNSimulator) is
-    begin
-        if readonly then
-            raise ANTLRError.illegalState with "This set is readonly";
-        end if;
-        if configLookup.isEmpty then
-            return;
-        end if;
-        for config in configs loop
-            config.context := interpreter.getCachedContext (config.context!);
+   function addAll (This : ATNConfigSet; coll : ATNConfigSet) return Boolean is
+   begin
+      for c of coll.configs loop
+         This.add (c);
+      end loop;
+      return False;
+   end addAll;
 
-        end loop;
-    end if;
+   procedure hash (This : ATNConfigSet; hasher : in out Hasher) is
+   begin
+      if This.isReadonly () then
+         if This.cachedHashCode = -1 then
+               This.cachedHashCode := configsHashValue;
+         end if;
+         hasher.combine (This.cachedHashCode);
+      else
+         hasher.combine (configsHashValue);
+      end if;
+   end if;
 
-    @discardableResult
-    -- public
-    function addAll (coll : ATNConfigSet) return Boolean is
-begin
-        for c in coll.configs loop
-            add (c);
-        end loop;
-        return False;
-    end if;
+   function configshashValue return Ada.Containers.Hash_Type is
+      hashCode : Ada.Containers.Hash_Type := 1;
+   begin
+      for item of This.configs loop
+         --  hashCode := hashCode &* 3 &+ item.hashValue;
+         hashCode := hashCode * 3 + item.hashValue;  --TOFIX
+      end loop;
+      return hashCode
+   end configshashValue;
 
-    -- public
-    procedure hash (into hasher: in out Hasher) is
-    begin
-        if isReadonly () then
-            if cachedHashCode == -1 then
-                cachedHashCode := configsHashValue;
-            end if;
-            hasher.combine (cachedHashCode);
-        else
-            hasher.combine (configsHashValue);
-        end if;
-    end if;
+   procedure clear (This : ATNConfigSet) is
+   begin
+      if This.readonly then
+         raise ANTLRError.illegalState with "This set is readonly";
+      end if;
+      This.configs.removeAll;
+      This.cachedHashCode := -1;
+      This.configLookup.removeAll;
+   end clear;
 
-    -- private
-    configsHashValue : Integer {
-        hashCode := 1
-        for item in configs loop
-            hashCode := hashCode &* 3 &+ item.hashValue
-        end loop;
-        return hashCode
-    end if;
+   procedure setReadonly (This : ATNConfigSet; readonly  : Boolean) is
+   begin
+      This.readonly := readonly;
+      This.configLookup.removeAll;
+   end setReadonly;
 
-    -- public
-    count : Integer;
-    function count return Integer is
-        return configs.count
-    end if;
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_ATNConfigSet (S : in out Sink'Class; X : ATNConfigSet);
+   for ATNConfigSet'Put_Image use Put_Image_ATNConfigSet;
+   function Description (This : ATNConfigSet) return UString is
+      buf : UString; -- := "";
+   begin
+      buf := @ & UString (describing => elements ());
+      if This.hasSemanticContext then
+         buf := @ & ",hasSemanticContext=True";
+      end if;
+      if This.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
+         buf := @ & ",uniqueAlt=" & uniqueAlt'Image;
+      end if;
+      if Is_Valid (This.conflictingAlts) then
+         buf := @ & ",conflictingAlts=" & This.conflictingAlts'Image;
+      end if;
+      if This.dipsIntoOuterContext then
+         buf := @ & ",dipsIntoOuterContext";
+      end if;
+      return buf;
+   end Image;
 
-    -- public
-    function size (This : …) return Integer is
-begin
-        return configs.count
-    end if;
+   function configHash (This : ATNConfigSet;
+                        stateNumber : ATNStates.State;
+                        context : Optional_PredictionContext)
+                        return Ada.Containers.Hash_Type is
+      hashCode : Ada.Containers.Hash_Type;
+   begin
+      hashCode := MurmurHash.initialize (7);
+      hashCode := MurmurHash.update (hashCode, stateNumber);
+      hashCode := MurmurHash.update (hashCode, context);
+      return MurmurHash.finish (hashCode, 2);
+   end configHash;
 
+   function getConflictingAltSubsets (This : ATNConfigSet) return BitSet_Map is
+      configToAlts : BitSet_Map;
+      hash : Ada.Containers.Hash_Type;
+      alts : BitSet;
+   begin
+      for cfg of This.configs loop
+         hash := configHash (cfg.state.stateNumber, cfg.context);
+         configToAlt := configToAlts.Element (hash);
+         if configToAlt then --TOFIX
+            alts := configToAlt;
+         else
+            alts := BitSet ();
+            configToAlts.Insert (Key => hash, New_Item => alts);
+         end if;
 
-    -- public
-    function isEmpty (This : …) return Boolean is
-begin
-        return configs.isEmpty
-    end if;
+         alts.set (cfg.alt); -- try!
+      end loop;
 
+      return Array (configToAlts.values);
+   end getConflictingAltSubsets;
 
-    -- public
-    function contains (o : ATNConfig) return Boolean is
-begin
-        return configLookup.contains (o);
-    end if;
+   function getStateToAltMap (This : ATNConfigSet) return BitSet_Map is
+      m : BitSet_Map;
+      alts : BitSet;
+   begin
+      for cfg of configs loop
+         mAlts : constant :=  m.Element (cfg.state.stateNumber);
+         if mAlts then
+            alts := mAlts;
+         else
+            alts := BitSet ();
+            m.Insert (Key => cfg.state.stateNumber, New_Item => alts);
+         end if;
 
+         alts.set (cfg.alt); -- try!
+      end loop;
+      return m;
+   end getStateToAltMap;
 
-    -- public
-    procedure clear (This : …) is
-begin
-        if readonly then
-            raise ANTLRError.illegalState with "This set is readonly";
-        end if;
-        configs.removeAll ();
-        cachedHashCode := -1
-        configLookup.removeAll ();
-    end if;
-
-    -- public
-    function isReadonly (This : …) return Boolean is
-begin
-        return readonly
-    end if;
-
-    -- public
-    procedure setReadonly (readonly  : Boolean) is
-    begin
-        self.readonly := readonly
-        configLookup.removeAll ();
-
-    end if;
-
-    -- public
-    description : String;
-    function Image return UString is
-        buf := ""
-        buf := @ + String (describing: elements ());
-        if hasSemanticContext then
-            buf := @ + ",hasSemanticContext=True";
-        end if;
-        if uniqueAlt /= ATN.INVALID_ALT_NUMBER then
-            buf := @ + ",uniqueAlt=" & uniqueAlt'Image & "";
-        end if;
-        if conflictingAlts : constant := conflictingAlts then
-            buf := @ + ",conflictingAlts=" & conflictingAlts'Image & "";
-        end if;
-        if dipsIntoOuterContext then
-            buf := @ + ",dipsIntoOuterContext";
-        end if;
-        return buf
-    end if;
-
-    -- --------------------------------------------
-    -- override
-    -- public <T> function toArray (a : [T]) return [T] {
-    -- return configLookup.toArray (a);
-    -- --------------------------------------------
-    -- private
-    function configHash (stateNumber : ATNStates.State;context : Optional_PredictionContext;) return Int{
-        hashCode := MurmurHash.initialize (7);
-        hashCode := MurmurHash.update (hashCode, stateNumber);
-        hashCode := MurmurHash.update (hashCode, context);
-        return MurmurHash.finish (hashCode, 2);
-    end if;
-
-    -- public
-    function getConflictingAltSubsets () return [BitSet] {
-        configToAlts := [Int: BitSet]();
-
-        for cfg in configs loop
-            hash : constant := configHash (cfg.state.stateNumber, cfg.context);
-            alts : BitSet;
-            if configToAlt : constant := configToAlts[hash] then
-                alts := configToAlt
-            else
-                alts := BitSet ();
-                configToAlts[hash] := alts
-            end if;
-
-            alts.set (cfg.alt);; -- try!
-        end loop;
-
-        return Array (configToAlts.values);
-    end if;
-
-    -- public
-    function getStateToAltMap () return [Int: BitSet] {
-        m := [Int: BitSet]();
-
-        for cfg in configs loop
-            alts : BitSet;
-            if mAlts : constant :=  m[cfg.state.stateNumber] then
-                alts := mAlts
-            else
-                alts := BitSet ();
-                m[cfg.state.stateNumber] := alts
-            end if;
-
-            alts.set (cfg.alt);; -- try!
-        end loop;
-        return m
-    end if;
-
-    --for DFAState
-    -- public
-    function getAltSet () return Set<Int>?  {
-        if configs.isEmpty then
-            return null;
-        end if;
-        alts := Set<Int> ();
-        for config in configs loop
+   function getAltSet (This : ATNConfigSet) return Set_of_Optional_Integers is
+   begin
+      if This.configs.isEmpty then
+         return (Valid => False);
+      else
+         alts := Set_of_Optional_Integers ();
+         for config of This.configs loop
             alts.insert (config.alt);
-        end loop;
-        return alts
-    end if;
+         end loop;
+         return alts;
+      end if;
+   end getAltSet;
 
-    --for DiagnosticErrorListener
-    -- public
-    function getAltBitSet () return BitSet  {
-        result : constant := BitSet ();
-        for config in configs loop
-            result.set (config.alt);; -- try!
-        end loop;
-        return result
-    end if;
+   function getAltBitSet (This : ATNConfigSet) return BitSet is
+      result : constant := BitSet ();
+   begin
+      for config of This.configs loop
+         result.set (config.alt); -- try!
+      end loop;
+      return result
+   end getAltBitSet;
 
-    --LexerATNSimulator
-    -- public
-    firstConfigWithRuleStopState : Optional_ATNConfig;
-    function firstConfigWithRuleStopState return ATNConfig? is
-        for config in configs loop
+   function firstConfigWithRuleStopState return Optional_ATNConfig is
+   begin
+      for config of This.configs loop
+         if config.state is RuleStopState then
+               return config;
+         end if;
+      end loop;
+      return (Valid => False);
+   end firstConfigWithRuleStopState;
+
+   function getUniqueAlt (This : ATNConfigSet) return Integer is
+      alt : Integer;
+   begin
+      alt := ATN.INVALID_ALT_NUMBER;
+      for config of This.configs loop
+         if alt = ATN.INVALID_ALT_NUMBER then
+            alt := config.alt -- found first alt;
+         elsif config.alt /= alt then
+            return ATN.INVALID_ALT_NUMBER;
+         end if;
+      end loop;
+      return alt
+   end getUniqueAlt;
+
+   function removeAllConfigsNotInRuleStopState (This : ATNConfigSet;
+                                                mergeCache : in out PredictionContext.Optional_DoubleKeyMap;
+                                                lookToEndOfRule : Boolean;
+                                                atn : ATN)
+                                                return ATNConfigSet is
+   begin
+      if PredictionModes.allConfigsInRuleStopStates (This) then
+         return This;
+      else
+         result : constant := ATNConfigSet (fullCtx);
+         for config of This.configs loop
             if config.state is RuleStopState then
-                return config;
-            end if;
-        end loop;
-
-        return null;
-    end if;
-
-    --ParserATNSimulator
-
-    -- public
-    function getUniqueAlt (This : …) return Integer is
-begin
-        alt := ATN.INVALID_ALT_NUMBER
-        for config in configs loop
-            if alt = ATN.INVALID_ALT_NUMBER then
-                alt := config.alt -- found first alt;
-            end if; elsif config.alt /= alt then
-                return ATN.INVALID_ALT_NUMBER;
-            end if;
-        end loop;
-        return alt
-    end if;
-
-    -- public
-    function removeAllConfigsNotInRuleStopState (mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,lookToEndOfRule : Boolean;atn : ATN) return ATNConfigSet is
-begin
-        if PredictionModes.allConfigsInRuleStopStates (self) then
-            return self;
-        end if;
-
-        result : constant := ATNConfigSet (fullCtx);
-        for config in configs loop
-            if config.state is RuleStopState then
-                result.add (config, &mergeCache);; -- try!
-                goto CONTINUE_CONFIGS;
+               result.add (config, mergeCache); -- try!
+               goto CONTINUE_CONFIGS;
             end if;
 
             if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions () then
-                nextTokens : constant := atn.nextTokens (config.state);
-                if nextTokens.contains (CommonToken.EPSILON) then
-                    endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
-                    result.add (ATNConfig (config, endOfRuleState), &mergeCache);; -- try!
-                end if;
+               nextTokens : constant := atn.nextTokens (config.state);
+               if nextTokens.contains (CommonToken.EPSILON) then
+                  endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
+                  result.add (ATNConfig (config, endOfRuleState), mergeCache); -- try!
+               end if;
             end if;
             <<CONTINUE_CONFIGS>>
-        end loop;
+         end loop;
+         return result;
+      end if;
+   end removeAllConfigsNotInRuleStopState;
 
-        return result
-    end if;
+   function applyPrecedenceFilter (mergeCache : in out PredictionContext.Optional_DoubleKeyMap,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
+      configSet : constant := ATNConfigSet (fullCtx);
+      statesFromAlt1 : PredictionContext.Map;
+   begin
+      for config of This.configs loop
+         -- handle alt 1 first
+         if config.alt /= 1 then
+               goto CONTINUE_CONFIGS;
+         end if;
 
-    -- public
-    function applyPrecedenceFilter (mergeCache : in out DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
-begin
+         updatedContext : constant := config.semanticContext.evalPrecedence (parser, _outerContext);
+         if not Is_Valid (updatedContext) then
+               -- the configuration was eliminated
+               goto CONTINUE_CONFIGS;
+         end if;
 
-        configSet : constant := ATNConfigSet (fullCtx);
-        statesFromAlt1 := [Int: PredictionContext]();
-        for config in configs loop
-            -- handle alt 1 first
-            if config.alt /= 1 then
-                goto CONTINUE_CONFIGS;
-            end if;
+         statesFromAlt1.Insert (Key => config.state.stateNumber, New_Item => config.context);
+         if updatedContext /= config.semanticContext then
+               configSet.add (ATNConfig (config, updatedContext!), mergeCache); -- try!
+         else
+               configSet.add (config, mergeCache); -- try!
+         end if;
+         <<CONTINUE_CONFIGS>>
+      end loop;
 
-            updatedContext : constant := config.semanticContext.evalPrecedence (parser, _outerContext);
-            if updatedContext = null then
-                -- the configuration was eliminated
-                goto CONTINUE_CONFIGS;
-            end if;
+      for config of This.configs loop
+         if config.alt = 1 then
+               -- already handled
+               goto CONTINUE;
+         end if;
 
-            statesFromAlt1[config.state.stateNumber] := config.context
-            if updatedContext /= config.semanticContext then
-                configSet.add (ATNConfig (config, updatedContext!), &mergeCache);; -- try!
-            else
-                configSet.add (config, &mergeCache);; -- try!
-            end if;
-            <<CONTINUE_CONFIGS>>
-        end loop;
+         if not config.isPrecedenceFilterSuppressed () then
+               --
+               -- In the future, this elimination step could be updated to also
+               -- filter the prediction context for alternatives predicting alt>1
+               -- (basically a graph subtraction algorithm).
+               --
+               context : constant := statesFromAlt1.Element (config.state.stateNumber);
+               if Is_Valid (context) and then context = config.context then 
+               --TOFIX if statesFromAlt1.Has_Element then
+                  --TOFIX context : constant := statesFromAlt1.Element (config.state.stateNumber);
+                  --TOFIX if context = config.context then
+                     -- eliminated
+                     goto CONTINUE;
+                  --TOFIX end if;
+               end if;
+         end if;
 
-        for config in configs loop
-            if config.alt = 1 then
-                -- already handled
-                goto CONTINUE;
-            end if;
+         configSet.add (config, mergeCache); -- try!
+         <<CONTINUE>>
+      end loop;
 
-            if not config.isPrecedenceFilterSuppressed () then
-                -- --------------------------------------------
-                -- In the future, this elimination step could be updated to also
-                -- filter the prediction context for alternatives predicting alt>1
-                -- (basically a graph subtraction algorithm).
-                -- --------------------------------------------
-                context : constant := statesFromAlt1[config.state.stateNumber]
-                if context /= null and then context = config.context then
-                    -- eliminated
-                    goto CONTINUE;
-                end if;
-            end if;
+      return configSet;
+   end applyPrecedenceFilter;
 
-            configSet.add (config, &mergeCache);; -- try!
-            <<CONTINUE>>
-        end loop;
+   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_Container.Vector is -- ]?
+      altToPred : SemanticContext_Container.Vector := SemanticContext_Container.To_Vector (New_Item => null, Length => nalts + 1);
+      for config of This.configs loop
+         if ambigAlts.get (config.alt) then -- try!
+               altToPred.Insert (Key => config.alt, New_Item => SemanticContext.or (altToPred.Element (config.alt), config.semanticContext));
+         end if;
+      end loop;
+      nPredAlts := 0;
+      for i in 1 .. nalts loop
+         if not Is_Valid (altToPred.Element (i)) then
+               altToPred.Insert (Key => i, New_Item => SemanticContext.Empty.Instance);
+         elsif altToPred.Element (i) /= SemanticContext.Empty.Instance then
+               nPredAlts := @ + 1;
+         end if;
+      end loop;
 
-        return configSet
-    end if;
+      --      -- Optimize away p or p and p and p TODO: optimize () was a no-op
+      --      for i in 0 .. altToPred.length - 1 loop
+      --         altToPred.Insert (Key => i, New_Item => altToPred.Element (i).optimize ());
+      --       i := @ + 1;
+      --      end loop;
 
-    -- internal
-    function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return [SemanticContext?]? {
-        altToPred := [SemanticContext?](repeating: null, count: nalts + 1);
-        for config in configs loop
-            if try! ambigAlts.get (config.alt) then
-                altToPred[config.alt] := SemanticContext.or (altToPred[config.alt], config.semanticContext);
-            end if;
-        end loop;
-        nPredAlts := 0
-        for i in 1 .. nalts loop
-            if altToPred[i] == null then
-                altToPred[i] := SemanticContext.Empty.Instance;
-            elsif altToPred[i] /= SemanticContext.Empty.Instance then
-                nPredAlts := @ + 1;
-            end if;
-        end loop;
+      -- nonambig alts are null in altToPred
+      return (if nPredAlts = 0 then
+               return Optional_SemanticContext_Container.Empty_Vector; --null
+               else return altToPred);
+   end getPredsForAmbigAlts;
 
-        --		-- Optimize away p or p and p and p TODO: optimize () was a no-op
-        --		for i in 0 .. altToPred.length - 1 loop
-        --			altToPred[i] := altToPred[i].optimize ();
-        --       i := @ + 1;
-        --		end loop;
+   function getAltThatFinishedDecisionEntryRule (This : ATNConfigSet) return Integer is
+      alts : constant IntervalSet := IntervalSet ();
+   begin
+      for config of This.configs loop
+         if config.getOuterContextDepth () > 0
+         or else (config.state is RuleStopState and config.context!.hasEmptyPath ()) then
+            alts.add (config.alt); -- try!
+         end if;
+      end loop;
+      if alts.size () = 0 then
+         return ATN.INVALID_ALT_NUMBER;
+      end if;
+      return alts.getMinElement ();
+   end getAltThatFinishedDecisionEntryRule;
 
-        -- nonambig alts are null in altToPred
-        return (nPredAlts = 0 ? null : altToPred);
-    end if;
+   function evalSemanticContext (P1 : SemanticContext;
+                                 P2 : ParserRuleContext;
+                                 P3 : Integer;
+                                 P4 : Boolean)
+                                 return Boolean;
+   type evalSemanticContext_Access is evalSemanticContext'Access;
 
-    -- public
-    function getAltThatFinishedDecisionEntryRule (This : …) return Integer is
-begin
-        alts : constant := IntervalSet ();
-        for config in configs loop
-            if config.getOuterContextDepth () > 0 or else
-                (config.state is RuleStopState and
-                    config.context!.hasEmptyPath ()) {
-                alts.add (config.alt);; -- try!
-            end if;
-        end loop;
-        if alts.size () == 0 then
-            return ATN.INVALID_ALT_NUMBER;
-        end if;
-        return alts.getMinElement ();
-    end if;
+   procedure splitAccordingToSemanticValidity (This : ATNConfigSet;
+                                               outerContext : ParserRuleContext;
+                                               evalSemanticContext : evalSemanticContext_Access) --TOFIX
+                                               return (ATNConfigSet, ATNConfigSet) is --TOFIX
+      succeeded : constant ATNConfigSet := ATNConfigSet (fullCtx);
+      failed : constant ATNConfigSet := ATNConfigSet (fullCtx);
+   begin
+      for config of This.configs loop
+         if config.semanticContext /= SemanticContext.Empty.Instance then
+               predicateEvaluationResult : constant := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
+               if predicateEvaluationResult then
+                  succeeded.add (config); -- try!
+               else
+                  failed.add (config); -- try!
+               end if;
+         else
+               succeeded.add (config); -- try!
+         end if;
+      end loop;
+      return (succeeded, failed);
+   end splitAccordingToSemanticValidity;
 
-    -- --------------------------------------------
-    -- Walk the list of configurations and split them according to
-    -- those that have preds evaluating to True/False.  If no pred, assume
-    -- True pred and include in succeeded set.  Returns Pair of sets.
-    -- --------------------------------------------
-    -- Create a new set so as not to alter the incoming parameter.
-    -- --------------------------------------------
-    -- Assumption: the input stream has been restored to the starting point
-    -- prediction, which is where predicates need to evaluate.
-    -- --------------------------------------------
-    -- public
-    procedure splitAccordingToSemanticValidity (
-        outerContext : ParserRuleContext;
-        evalSemanticContext : (SemanticContext, ParserRuleContext, Int, Bool) return Bool) rereturn (ATNConfigSet, ATNConfigSet) {
-        succeeded : constant := ATNConfigSet (fullCtx);
-        failed : constant := ATNConfigSet (fullCtx);
-        for config in configs loop
-            if config.semanticContext /= SemanticContext.Empty.Instance then
-                predicateEvaluationResult : constant := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
-                if predicateEvaluationResult then
-                    succeeded.add (config);; -- try!
-                else
-                    failed.add (config);; -- try!
-                end if;
-            else
-                succeeded.add (config);; -- try!
-            end if;
-        end loop;
-        return (succeeded, failed);
-    end if;
+   function dupConfigsWithoutSemanticPredicates (This : ATNConfigSet) return ATNConfigSet is
+      dup : constant ATNConfigSet := ATNConfigSet ();
+   begin
+      for config of This.configs loop
+         c : constant := ATNConfig (config, SemanticContext.Empty.Instance);
+         dup.add (c); -- try!
+      end loop;
+      return dup;
+   end dupConfigsWithoutSemanticPredicates;
 
-    -- public
-    function dupConfigsWithoutSemanticPredicates (This : …) return ATNConfigSet is
-begin
-        dup : constant := ATNConfigSet ();
-        for config in configs loop
-            c : constant := ATNConfig (config, SemanticContext.Empty.Instance);
-            dup.add (c);; -- try!
-        end loop;
-        return dup
-    end if;
+   function hasConfigInRuleStopState (This : ATNConfigSet) return Boolean is
 
-    -- public
-    hasConfigInRuleStopState : Boolean {
-        return configs.contains (where: { $0.state is RuleStopState });
-    end if;
+      RuleStopState_Found : Boolean := False;
 
-    -- public
-    allConfigsInRuleStopStates : Boolean {
-        return not configs.contains (where: { not ($0.state is RuleStopState) });
-    end if;
-end if;
+      function Check_RuleStopState (At_Cursor : configs.Cursor) is
+      begin
+         if Element (At_Cursor).state is RuleStopState then
+            RuleStopState_Found := True;
+         end if;
+      end Check_RuleStopState;
 
+   begin
+      for At_Cursor in configs.Iterate loop
+         if Check_RuleStopState (At_Cursor) then
+            exit; -- RuleStopState_Found !
+         end loop;
+      return RuleStopState_Found;
+   end hasConfigInRuleStopState;
 
--- public
-function "=" (Lhs, Rhs : ATNConfigSet) return Boolean is
-begin
-    if lhs === rhs then
-        return True;
-    end if;
+   function allConfigsInRuleStopStates return Boolean is
 
-    return
-        lhs.configs = rhs.configs and then -- includes stack context
-        lhs.fullCtx = rhs.fullCtx and
-        lhs.uniqueAlt = rhs.uniqueAlt and
-        lhs.conflictingAlts = rhs.conflictingAlts and
-        lhs.hasSemanticContext = rhs.hasSemanticContext and
-        lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext
-end if;
+      RuleStopState_Found : Boolean := False;
+
+      function Check_RuleStopState (At_Cursor : configs.Cursor) is
+      begin
+         if Element (At_Cursor).state is RuleStopState then
+            RuleStopState_Found := True;
+         else
+            RuleStopState_Found := False;
+         end if;
+      end Check_RuleStopState;
+
+   begin
+      for At_Cursor in configs.Iterate loop
+         if not Check_RuleStopState (At_Cursor) then
+            exit; -- some state is not a RuleStopState !
+         end loop;
+      return RuleStopState_Found;
+   end allConfigsInRuleStopStates;
+
+   function "=" (Lhs, Rhs : ATNConfigSet) return Boolean is
+   begin
+      --  if lhs === rhs then
+      --     return True;
+      --  end if;
+
+      return
+         lhs.configs = rhs.configs and then -- includes stack context
+         lhs.fullCtx = rhs.fullCtx and then
+         lhs.uniqueAlt = rhs.uniqueAlt and then
+         lhs.conflictingAlts = rhs.conflictingAlts and then
+         lhs.hasSemanticContext = rhs.hasSemanticContext and then
+         lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext
+   end "=";
 
 end ANTLR.Runtime.ATN.ATNConfigSet;

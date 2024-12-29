@@ -2,6 +2,7 @@
 
 with Ada.Containers;
 with Ada.Containers.Vectors;
+with Ada.Containers.Hashed_Sets;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.Misc.IntervalSet;
@@ -12,67 +13,67 @@ use ANTLR.Runtime.ATN;
 
 package ANTLR.Runtime.ATN.ATNStates is
 
-   -- 
-   -- 
+   --
+   --
    -- The following images show the relation of states and
    -- _org.antlr.v4.runtime.atn.ATNState#transitions_ for various grammar constructs.
-   -- 
-   -- 
+   --
+   --
    -- * Solid edges marked with an &#0949; indicate a required
    -- _org.antlr.v4.runtime.atn.EpsilonTransition_.
-   -- 
+   --
    -- * Dashed edges indicate locations where any transition derived from
    -- _org.antlr.v4.runtime.atn.Transition_ might appear.
-   -- 
+   --
    -- * Dashed nodes are place holders for either a sequence of linked
    -- _org.antlr.v4.runtime.atn.BasicState_ states or the inclusion of a block representing a nested
    -- construct in one of the forms below.
-   -- 
+   --
    -- * Nodes showing multiple outgoing alternatives with a ` ... ` support
    -- any number of alternatives (one or more). Nodes without the ` ... ` only
    -- support the exact number of alternatives shown in the diagram.
-   -- 
-   -- 
+   --
+   --
    -- ## Basic Blocks
-   -- 
+   --
    -- ### Rule
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ## Block of 1 or more alternatives
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ## Greedy Loops
-   -- 
+   --
    -- ### Greedy Closure: `( … )*`
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ### Greedy Positive Closure: `( … )+`
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ### Greedy Optional: `( … )?`
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ## Non-Greedy Loops
-   -- 
+   --
    -- ### Non-Greedy Closure: `( … )*?`
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ### Non-Greedy Positive Closure: `( … )+?`
-   -- 
-   -- 
-   -- 
+   --
+   --
+   --
    -- ### Non-Greedy Optional: `( … )??`
-   -- 
-   -- 
-   -- 
-   -- 
-   
+   --
+   --
+   --
+   --
+
    type State is (
       INVALID_STATE_NUMBER,
       INVALID,
@@ -119,8 +120,8 @@ package ANTLR.Runtime.ATN.ATNStates is
    -- public
    type ATNState is new Hashable with record
       -- Which ATN are we in?
-      -- 
-      -- public final 
+      --
+      -- public final
       atn : Optional_ATN;
 
       -- public internal (set) final var
@@ -133,15 +134,15 @@ package ANTLR.Runtime.ATN.ATNStates is
       -- public private (set) final var
       epsilonOnlyTransitions : Boolean := False;
 
-      -- 
+      --
       -- Track the transitions emanating from this ATN state.
-      -- 
+      --
       -- internal private (set) final
       transitions : Transitions.Container.Vector := Transitions.Container.Empty_Vector;
 
-      -- 
+      --
       -- Used to cache lookahead during parsing, not used during construction
-      -- 
+      --
       -- public internal (set) final var
       nextTokenWithinRule: Option_IntervalSet.Optional;
    end record;
@@ -161,6 +162,17 @@ package ANTLR.Runtime.ATN.ATNStates is
       Element_Type : Optional_ATNState;
       "=" : "=");
 
+   function Hash (Element : ATNState) return Ada.Containers.Hash_Type;
+   function Equivalent_Elements (Left, Right : ATNState) return Boolean;
+   function Equal (Left, Right : ATNState) return Boolean;
+   -- public
+   package Set_Container is new Ada.Containers.Hashed_Sets (
+      Element_Type => ATNState,
+      Hash => Hash,
+      Equivalent_Elements => Equivalent_Elements,
+      "=" => Equal);
+   subtype Set_of_ATNStates is Set_Container.Set;
+
    -- public
    procedure hash (This : ATNState; Some_Hasher : in out Hasher);
 
@@ -169,7 +181,7 @@ package ANTLR.Runtime.ATN.ATNStates is
       is (False);
 
    -- public
-   function Image return UString;
+   function Description (This : …) return UString;
       --return "MyClass " & string'Image & ""
       (stateNumber);
 
@@ -182,13 +194,13 @@ package ANTLR.Runtime.ATN.ATNStates is
       is Transitions.Container.Length (This.transitions);
 
    -- public final
-   procedure addTransition (This : ATNState; e : Transition'Class);
+   procedure addTransition (This : ATNState; e : ATNTransition'Class);
 
    function transition (This : ATNState; i : Transitions.Container_Index) return Transition
       is Transitions.Container.Element (Container => This.transitions, Index => i);
 
    -- public final
-   procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : Transition);
+   procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : ATNTransition);
 
    -- public final
    function removeTransition (This : ATNState; Index : Transitions.Container_Index) return Transition;
@@ -204,6 +216,6 @@ package ANTLR.Runtime.ATN.ATNStates is
     procedure setRuleIndex (This : ATNState; ruleIndex : Integer);
 
    -- public
-   function "=" (Lhs : ATNState; Rhs : ATNState) return Boolean;
+   function "=" (Lhs, Rhs : ATNState) return Boolean;
 
 end ANTLR.Runtime.ATN.ATNStates;

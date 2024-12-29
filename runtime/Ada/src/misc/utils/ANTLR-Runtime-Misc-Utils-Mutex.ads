@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.Misc.Utils.Mutex is 
+package ANTLR.Runtime.Misc.Utils.Mutex is
 
    --
    -- Running the supplied closure synchronously.

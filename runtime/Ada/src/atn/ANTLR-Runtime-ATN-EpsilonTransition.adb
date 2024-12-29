@@ -2,19 +2,19 @@
 
 package body ANTLR.Runtime.ATN.EpsilonTransition is
 
-   override
-   procedure Init (Self : in out EpsilonTransition;
+   overriding
+   procedure Initialize (Self : in out EpsilonTransition;
                    target : ATNState) is
    begin
       Self.init (target, -1);
-   end Init;
+   end Initialize;
 
-   procedure Init (Self : in out EpsilonTransition;
+   procedure Initialize (Self : in out EpsilonTransition;
                    target : ATNState;
                    outermostPrecedenceReturn : Integer) is
    begin
       Self.outermostPrecedenceReturnInside := outermostPrecedenceReturn;
       Transition.init (target); -- Super
-   end Init;
+   end Initialize;
 
 end ANTLR.Runtime.ATN.EpsilonTransition;

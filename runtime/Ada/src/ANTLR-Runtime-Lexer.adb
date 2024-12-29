@@ -2,22 +2,22 @@
 
 package body ANTLR.Runtime.Lexer is
 
-   override
-   procedure Init (Self : Lexer) is
+   overriding
+   procedure Initialize (Self : Lexer) is
    begin
       self._tokenFactorySourcePair := TokenSourceAndStream ();
       Recognizer.init (); -- Super
       self._tokenFactorySourcePair.tokenSource := self;
-   end Init;
+   end Initialize;
 
-   procedure Init (input : CharStream) is
+   procedure Initialize (input : CharStream) is
    begin
       self._input := input;
       self._tokenFactorySourcePair := TokenSourceAndStream ();
-      super.init ();
+      super.Initialize (Self);
       self._tokenFactorySourcePair.tokenSource := self;
       self._tokenFactorySourcePair.stream := input;
-   end Init;
+   end Initialize;
 
    procedure reset (This : Lexer) is
    begin
@@ -60,12 +60,12 @@ package body ANTLR.Runtime.Lexer is
                   return This._token!
                end if;
 
-               This._token := null;
+               This._token := (Valid => False);
                This._channel := CommonToken.DEFAULT_CHANNEL
                This._tokenStartCharIndex := This._input.index ();
                This._tokenStartCharPositionInLine := getInterpreter ().getCharPositionInLine ();
                This._tokenStartLine := getInterpreter ().getLine ();
-               This._text := null;
+               This._text := (Valid => False);
                loop
                   This._Token_Type := CommonToken.INVALID_Token_Type
                   tType : Token_Kind;
@@ -74,8 +74,8 @@ package body ANTLR.Runtime.Lexer is
                   begin
                      ttype := getInterpreter ().match (This._input, This._mode);
                   exception
-                     when ANTLRException.recognition => (let e) 
-                        notifyListeners (LexerNoViableAltException (e), recognizer: This);
+                     when ANTLRException.recognition => (let e)
+                        notifyListeners (LexerNoViableAltException (e), recognizer => This);
                         recover (LexerNoViableAltException (e));
                         ttype := Lexer.SKIP
                   end;
@@ -92,7 +92,7 @@ package body ANTLR.Runtime.Lexer is
                   exit when This._Token_Type = Lexer.MORE;
                end loop;
 
-               if This._token = null then
+               if This._token = (Valid => False) then
                   emit ();
                end if;
 
@@ -102,10 +102,10 @@ package body ANTLR.Runtime.Lexer is
             end loop OUTER;
       end;
       defer:
-         begin 
+         begin
             -- make sure we release marker after match or
             -- unbuffered char stream will keep buffering
-            This._input.release (tokenStartMarker);; -- try!
+            This._input.release (tokenStartMarker); -- try!
          end defer;
    end nextToken;
 
@@ -127,7 +127,7 @@ package body ANTLR.Runtime.Lexer is
    procedure pushMode (This : Lexer; m : Lexer_Mode) is
    begin
       if LexerATNSimulator.debug then
-         print ("pushMode " & m'Image);
+         Text_IO.Put_Line ("pushMode " & m'Image);
       end if;
       This._modeStack.push (This._mode);
       mode (m);
@@ -140,22 +140,22 @@ package body ANTLR.Runtime.Lexer is
       end if;
 
       if LexerATNSimulator.debug then
-         print ("popMode back to " & String (describing => This._modeStack.peek ()));
+         Text_IO.Put_Line ("popMode back to " & UString (describing => This._modeStack.peek ()));
       end if;
       mode (This._modeStack.pop ());
       return This._mode;
    end popMode;
 
-   override
+   overriding
    procedure setTokenFactory (This : Lexer; factory : TokenFactory) is
    begin
       This._factory := factory;
    end setTokenFactory;
 
-   override
+   overriding
    procedure setInputStream (This : Lexer; input : IntStream) is
    begin
-      This._input := null;
+      This._input := (Valid => False);
       This._tokenFactorySourcePair := makeTokenSourceAndStream ();
       reset ();
       This._input := Is_Valid (input); -- as CharStream
@@ -203,16 +203,16 @@ package body ANTLR.Runtime.Lexer is
       getInterpreter ().setCharPositionInLine (charPositionInLine);
    end setCharPositionInLine;
 
-   function getText (This : Lexer) return String is
+   function getText (This : Lexer) return UString is
    begin
-      if This._text /= null then
+      if This._text /= (Valid => False) then
          return This._text!;
       else
          return getInterpreter ().getText (This._input!);
       end if;
    end getText;
 
-   procedure setText (This : Lexer; text : String) is
+   procedure setText (This : Lexer; text : UString) is
    begin
       This._text := text;
    end setText;
@@ -255,7 +255,7 @@ package body ANTLR.Runtime.Lexer is
    procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: Recognizer<T>) is
       msg : UString;
    begin
-      text : constant String;
+      text : constant UString;
 
       declare
       begin
@@ -271,7 +271,7 @@ package body ANTLR.Runtime.Lexer is
       listener.syntaxError (recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e);
    end notifyListeners;
 
-   function getErrorDisplay (This : Lexer; s : String) return String is
+   function getErrorDisplay (This : Lexer; s : UString) return UString is
       buf := "";
    begin
       for c in s loop
@@ -280,7 +280,7 @@ package body ANTLR.Runtime.Lexer is
       return buf;
    end getErrorDisplay;
 
-   function getErrorDisplay (This : Lexer; c : Character) return String is
+   function getErrorDisplay (This : Lexer; c : Character) return UString is
    begin
       if c.integerValue = CommonToken.EOF then
          return "<EOF>";
@@ -293,7 +293,7 @@ package body ANTLR.Runtime.Lexer is
             when "\r" =>
                   return "\\r";
             when others =>
-                  return String (c);
+                  return UString (c);
             end case;
       end if;
    end getErrorDisplay;

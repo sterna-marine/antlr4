@@ -1,52 +1,54 @@
 -- €
 
--- 
+with Ada.Finalization;
+
+--
 -- This class provides access to the current version of the ANTLR 4 runtime
 -- library as compile-time and runtime constants, along with methods for
 -- checking for matching version numbers and notifying listeners in the case
 -- where a version mismatch is detected.
--- 
--- 
+--
+--
 -- The runtime version information is provided by _#VERSION_ and
 -- _#getRuntimeVersion ()_. Detailed information about these values is
 -- provided in the documentation for each member.
--- 
--- 
+--
+--
 -- The runtime version check is implemented by _#checkVersion_. Detailed
 -- information about incorporating this call into user code, as well as its use
 -- in generated code, is provided in the documentation for the method.
--- 
--- 
+--
+--
 -- Version strings x.y and x.y.z are considered "compatible" and no error
 -- would be generated. Likewise, version strings x.y-SNAPSHOT and x.y.z are
 -- considered "compatible" because the major and minor components x.y
 -- are the same in each.
--- 
--- 
+--
+--
 -- To trap any error messages issued by this code, use System.setErr ();
 -- in your main () startup code.
--- 
--- 
+--
+--
 -- * Since: 4.3
--- 
+--
 
 -- public
-type RuntimeMetaData is tagged record
-    -- 
+type RuntimeMetaData is new Ada.Finalization.Controlled record
+    --
     -- A compile-time constant containing the current version of the ANTLR 4
     -- runtime library.
-    -- 
+    --
     -- This compile-time constant value allows generated parsers and other
     -- libraries to include a literal reference to the version of the ANTLR 4
     -- runtime library the code was compiled against. At each release, we
     -- change this value.
-    -- 
+    --
     -- Version numbers are assumed to have the form
-    -- 
+    --
     -- __major__.__minor__.__patch__.__revision__-__suffix__,
-    -- 
+    --
     -- with the individual components defined as follows.
-    -- 
+    --
     -- * __major__ is a required non-negative integer, and is equal to
     -- `4` for ANTLR 4.
     -- * __minor__ is a required non-negative integer.
@@ -59,40 +61,40 @@ type RuntimeMetaData is tagged record
     -- * __suffix__ is an optional string. When __suffix__ is
     -- omitted, the `-` (hyphen-minus) appearing before it is also
     -- omitted.
-    -- 
-    -- public static 
-    VERSION : constant String := "4.13.2";
+    --
+    -- public static
+    VERSION : constant UString := "4.13.2";
 
-    -- 
+    --
     -- Gets the currently executing version of the ANTLR 4 runtime library.
-    -- 
-    -- 
+    --
+    --
     -- This method provides runtime access to the _#VERSION_ field, as
     -- opposed to directly referencing the field as a compile-time constant.
-    -- 
+    --
     -- * Returns: The currently executing version of the ANTLR 4 library
-    -- 
+    --
 
     -- public static
-    function getRuntimeVersion (This : …) return String is
+    function getRuntimeVersion (This : …) return UString is
 begin
         return RuntimeMetaData.VERSION
     end if;
 
-    -- 
+    --
     -- This method provides the ability to detect mismatches between the version
     -- of ANTLR 4 used to generate a parser, the version of the ANTLR runtime a
     -- parser was compiled against, and the version of the ANTLR runtime which
     -- is currently executing.
-    -- 
+    --
     -- The version check is designed to detect the following two specific
     -- scenarios.
-    -- 
+    --
     -- * The ANTLR Tool version used for code generation does not match the
     -- currently executing runtime version.
     -- * The ANTLR Runtime version referenced at the time a parser was
     -- compiled does not match the currently executing runtime version.
-    -- 
+    --
     -- Starting with ANTLR 4.3, the code generator emits a call to this method
     -- using two constants in each generated lexer and parser: a hard-coded
     -- constant indicating the version of the tool used to generate the parser
@@ -100,12 +102,12 @@ begin
     -- runtime, this method is called during the initialization of the generated
     -- parser to detect mismatched versions, and notify the registered listeners
     -- prior to creating instances of the parser.
-    -- 
+    --
     -- This method does not perform any detection or filtering of semantic
     -- changes between tool and runtime versions. It simply checks for a
     -- version match and emits an error to stderr if a difference
     -- is detected.
-    -- 
+    --
     -- Note that some breaking changes between releases could result in other
     -- types of runtime exceptions, such as a _LinkageError_, prior to
     -- calling this method. In these cases, the underlying version mismatch will
@@ -115,28 +117,28 @@ begin
     -- class loader. As with semantic changes, changes that break binary
     -- compatibility between releases are mentioned in the release notes
     -- accompanying the affected release.
-    -- 
+    --
     -- __ Additional note for target developers:__ The version check
     -- implemented by this class is designed to address specific compatibility
     -- concerns that may arise during the execution of Java applications. Other
     -- targets should consider the implementation of this method in the context
     -- of that target's known execution environment, which may or may not
     -- resemble the design provided for the Java target.
-    -- 
+    --
     -- * Parameter generatingToolVersion: The version of the tool used to generate a parser.
     -- This value may be null when called from user code that was not generated
     -- by, and does not reference, the ANTLR 4 Tool itself.
     -- * Parameter compileTimeVersion: The version of the runtime the parser was
     -- compiled against. This should always be passed using a direct reference
     -- to _#VERSION_.
-    -- 
-    -- public static 
-    procedure checkVersion (generatingToolVersion : String; compileTimeVersion : String) {
-        runtimeVersion : constant String := RuntimeMetaData.VERSION;
+    --
+    -- public static
+    procedure checkVersion (generatingToolVersion : UString; compileTimeVersion : UString) {
+        runtimeVersion : constant UString := RuntimeMetaData.VERSION;
         runtimeConflictsWithGeneratingTool : Boolean := False;
         runtimeConflictsWithCompileTimeTool : Boolean := False;
 
-        --if ( generatingToolVersion /= null ) {
+        --if ( Is_Valid (generatingToolVersion) ) {
         runtimeConflictsWithGeneratingTool =
                 not (runtimeVersion == (generatingToolVersion)) and
                 not (getMajorMinorVersion (runtimeVersion) == (getMajorMinorVersion (generatingToolVersion)));
@@ -147,33 +149,33 @@ begin
                 not (getMajorMinorVersion (runtimeVersion) == (getMajorMinorVersion (compileTimeVersion)));
 
         if runtimeConflictsWithGeneratingTool then
-            print ("ANTLR Tool version " & generatingToolVersion'Image & " used for code generation does not match the current runtime version " & runtimeVersion'Image);
+            Text_IO.Put_Line ("ANTLR Tool version " & generatingToolVersion'Image & " used for code generation does not match the current runtime version " & runtimeVersion'Image);
         end if;
         if runtimeConflictsWithCompileTimeTool then
-            print ("ANTLR Runtime version " & compileTimeVersion'Image & "used for parser compilation does not match the current runtime version " & runtimeVersion'Image);
+            Text_IO.Put_Line ("ANTLR Runtime version " & compileTimeVersion'Image & "used for parser compilation does not match the current runtime version " & runtimeVersion'Image);
         end if;
     end if;
 
-    -- 
+    --
     -- Gets the major and minor version numbers from a version string. For
     -- details about the syntax of the input `version`.
     -- E.g., from x.y.z return x.y.
-    -- 
+    --
     -- * Parameter version: The complete version string.
     -- * Returns: A string of the form __major__.__minor__ containing
     -- only the major and minor components of the version string.
-    -- 
+    --
     -- public static
-    function getMajorMinorVersion (version : String) return String is
+    function getMajorMinorVersion (version : UString) return UString is
 begin
         result := version
 
-        dotBits : constant := version.split (separator: ".", maxSplits: 2, omittingEmptySubsequences: False);
+        dotBits : constant := version.split (separator: ".", maxSplits => 2, omittingEmptySubsequences => False);
         if dotBits.count >= 2 then
             result := dotBits[0 .. 2 - 1].joined (separator: ".");
         end if;
 
-        dashBits : constant := result.split (separator: "-", maxSplits: 1, omittingEmptySubsequences: False);
-        return String (dashBits[0]);
+        dashBits : constant := result.split (separator: "-", maxSplits => 1, omittingEmptySubsequences => False);
+        return UString (dashBits.Element (0));
     end if;
 end if;
