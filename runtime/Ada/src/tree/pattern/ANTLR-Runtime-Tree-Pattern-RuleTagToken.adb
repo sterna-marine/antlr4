@@ -41,7 +41,7 @@ type RuleTagToken is new Token with null record;
     --
     -- public convenience
     procedure Initialize (Self : in out …; ruleName : UString; bypassTokenType : Token_Kind) {
-        self.init (ruleName, bypassTokenType, null);
+        Self.Initialize (ruleName, bypassTokenType, null);
     end if;
 
     --

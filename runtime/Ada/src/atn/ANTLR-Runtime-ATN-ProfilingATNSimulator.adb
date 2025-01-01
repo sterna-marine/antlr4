@@ -49,7 +49,7 @@ package body ANTLR.Runtime.ATN.ProfilingATNSimulator is
    procedure Initialize (Self : in out ProfilingATNSimulator; parser : Parser) is
    begin
       Self.decisions := DecisionInfo.Container.Empty_Vector;
-      ParserATNSimulator.init (Self, 
+      Super (Self).Initialize (
                               parser,
                               parser.getInterpreter ().atn,
                               parser.getInterpreter ().decisionToDFA,

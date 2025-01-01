@@ -23,7 +23,7 @@ type UnbufferedTokenStream is new TokenStream with null record;
     n := 0
 
     --
-    -- `0 .. n-1` index into `self.tokens` of next token.
+    -- `0 .. n - 1` index into `self.tokens` of next token.
     --
     -- The `LT (1)` token is `tokens.Element (p)`. If `p = n`, we are
     -- out of buffered tokens.
@@ -35,7 +35,7 @@ type UnbufferedTokenStream is new TokenStream with null record;
     -- Count up with _#mark mark ()_ and down with
     -- _#release release ()_. When we `release ()` the last mark,
     -- `numMarkers` reaches 0 and we reset the buffer. Copy
-    -- `tokens.Element (p)..tokens[n-1]` to `tokens.Element (0)..tokens[(n-1)-p]`.
+    -- `tokens.Element (p)..tokens[n - 1]` to `tokens.Element (0)..tokens[(n - 1)-p]`.
     --
     -- internal
     numMarkers := 0
@@ -99,7 +99,7 @@ begin
 
         if index >= n then
             --Token.EOF
-            pragma assert (n > 0 and then tokens[n - 1].getType () == CommonToken.EOF, "Expected: n>0 and tokens[n-1].getType () = Token.EOF");
+            pragma assert (n > 0 and then tokens[n - 1].getType () == CommonToken.EOF, "Expected: n>0 and tokens[n - 1].getType () = Token.EOF");
             return tokens[n - 1]
         end if;
 
@@ -249,7 +249,7 @@ begin
         if numMarkers = 0 then
             -- can we release buffer?
             if p > 0 then
-                -- Copy tokens.Element (p)..tokens[n-1] to tokens.Element (0)..tokens[(n-1)-p], reset ptrs
+                -- Copy tokens.Element (p)..tokens[n - 1] to tokens.Element (0)..tokens[(n - 1)-p], reset ptrs
                 -- p is last valid token; move nothing if p = n as we have no valid char
                 tokens := Array (tokens[p  ..  n - 1]);
                 n := n - p

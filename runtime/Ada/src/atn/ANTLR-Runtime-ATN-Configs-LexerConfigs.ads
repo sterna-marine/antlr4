@@ -5,7 +5,7 @@ with ANTLR.Runtime.ATN.ATNStates;
 
 use ANTLR.Runtime.ATN;
 
-package ANTLR.Runtime.ATN.Configs.LexerConfigs;
+package ANTLR.Runtime.ATN.Configs.LexerConfigs is
 
    type LexerATNConfig is new ATNConfig with private;
 

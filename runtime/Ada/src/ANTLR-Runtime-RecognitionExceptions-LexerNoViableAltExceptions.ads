@@ -26,7 +26,7 @@ type NoViableAltException is new RecognitionException with null record;
     procedure Initialize (Self : in out …; recognizer : Parser) {
         -- LL (1) error
         token : constant := recognizer.getCurrentToken (); -- try!
-        self.init (recognizer,
+        Self.Initialize (recognizer,
                 recognizer.getInputStream ()!,
                 token,
                 token,
@@ -45,7 +45,7 @@ type NoViableAltException is new RecognitionException with null record;
         self.deadEndConfigs := deadEndConfigs
         self.startToken := startToken
 
-        super.init (Self, recognizer, input, ctx);
+        Super (Self).Initialize (recognizer, input, ctx);
         offendingToken : constant Optional_Token := Maybe (offendingToken);
          if Is_Valid (offendingToken) then
             setOffendingToken (offendingToken);

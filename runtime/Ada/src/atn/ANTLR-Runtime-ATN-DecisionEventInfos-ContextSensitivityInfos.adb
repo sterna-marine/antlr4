@@ -9,7 +9,7 @@ package body ANTLR.Runtime.ATN.DecisionEventInfos.ContextSensitivityInfos is
                   startIndex : Integer;
                   stopIndex : Integer) is
    begin
-      DecisionEventInfo.init (Self, decision, configs, input, startIndex, stopIndex, True); -- Super
+      Super (Self).Initialize (decision, configs, input, startIndex, stopIndex, True); -- Super
    end if;
 
 end ANTLR.Runtime.ATN.DecisionEventInfos.ContextSensitivityInfos;

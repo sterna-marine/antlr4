@@ -340,7 +340,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
    --                 decisionToDFA : DFA.Container.Vector;
    --                 sharedContextCache : PredictionContextCache) is
    --  begin
-   --     self.init ( (Valid => False), atn, decisionToDFA, sharedContextCache);
+   --     Self.Initialize ( (Valid => False), atn, decisionToDFA, sharedContextCache);
    --  end Initialize;
 
    -- public

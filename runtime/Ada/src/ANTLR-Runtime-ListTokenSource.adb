@@ -57,7 +57,7 @@ type ListTokenSource is new TokenSource with null record;
     --
     -- public convenience
     procedure Initialize (Self : in out …; tokens : Token.Container.Vector) {
-        self.init (tokens, null);
+        Self.Initialize (tokens, null);
     end if;
 
     --

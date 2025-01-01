@@ -22,6 +22,6 @@ package ANTLR.Runtime.Tree.SyntaxTree_Protocol is
    --
    -- If source interval is unknown, this returns _org.antlr.v4.runtime.misc.Interval#INVALID_.
    --
-   function getSourceInterval (This : SyntaxTree) return Interval;
+   function getSourceInterval (Some : SyntaxTree) return Interval;
 
 end ANTLR.Runtime.Tree.SyntaxTree_Protocol;

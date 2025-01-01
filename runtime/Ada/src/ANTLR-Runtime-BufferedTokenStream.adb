@@ -1,6 +1,6 @@
 -- €
 
-
+package ANTLR.Runtime.Tree.TerminalNode_Protocol is
 
 --
 -- This implementation of _org.antlr.v4.runtime.TokenStream_ loads tokens from a

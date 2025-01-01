@@ -11,7 +11,7 @@ package body ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions is
    begin
       self.startIndex := startIndex;
       self.deadEndConfigs := deadEndConfigs;
-      RecognitionException.init (Self, lexer, input as IntStream, ctx); -- super
+      Super (Self).Initialize (lexer, input as IntStream, ctx); -- super
    end Initialize;
 
    function Description (This : LexerNoViableAltException) return UString is

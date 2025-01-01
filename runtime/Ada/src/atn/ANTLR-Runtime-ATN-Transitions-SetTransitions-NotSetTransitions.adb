@@ -7,7 +7,7 @@ package body ANTLR.Runtime.ATN.Transitions.SetTransitions.NotSetTransitions is
                    Target : ATNState;
                    Set : in out Optional_IntervalSet) is
    begin
-      SetTransition.init (Self, Target, Set); -- Super
+      Super (Self).Initialize (Target, Set); -- Super
    end Initialize;
 
    overriding

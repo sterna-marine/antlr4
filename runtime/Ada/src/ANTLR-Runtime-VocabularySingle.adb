@@ -1,184 +1,205 @@
 -- €
 
---
--- This class provides a default implementation of the _org.antlr.v4.runtime.Vocabulary_
--- interface.
---
--- * Author: Sam Harwell
---
+with Ada.Containers.Vectors;
+with Ada.Finalization;
 
--- public
-type Vocabulary is new Ada.Finalization.Controlled -- and Hashable
-   with null record;
-{
-    -- private static
-    EMPTY_NAMES : constant [String?] := [String?](repeating: "", count => 1);
+package ANTLR.Runtime.Vocabularies is
 
-    --
-    -- Gets an empty _org.antlr.v4.runtime.Vocabulary_ instance.
-    --
-    --
-    -- No literal or symbol names are assigned to token types, so
-    -- _#getDisplayName (int)_ returns the numeric value for all tokens
-    -- except _org.antlr.v4.runtime.Token#EOF_.
-    --
-    -- public static
-    EMPTY_VOCABULARY : constant Vocabulary := Vocabulary (EMPTY_NAMES, EMPTY_NAMES, EMPTY_NAMES);
+   --
+   -- This class provides a default implementation of the _org.antlr.v4.runtime.Vocabulary_
+   -- interface.
+   --
 
+   package Names_Container is new Ada.Containers.Vectors (Index_Type => Natural, Item_Type => UString);
+   subtype Name_Container is Names_Container.Vector;
 
-    -- private
-    literalNames : constant [String?];
+   -- private static
+   EMPTY_NAMES : constant Vocabulary := Names_Container.To_Vector (New_Item => "", Length => 1);
 
-    -- private
-    symbolicNames : constant [String?];
+   -- public
+   type Vocabulary is new Ada.Finalization.Controlled with private; -- and Hashable
 
-    -- private
-    displayNames : constant [String?];
+   subtype Object is Vocabulary;
+   type Class is access all Object;
+   type Class_Wide is access all Object'Class;
 
-    --
-    -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
-    -- literal and symbolic token names.
-    --
-    -- * SeeAlso: #getLiteralName (int);
-    -- * SeeAlso: #getSymbolicName (int);
-    -- * Parameter literalNames: The literal names assigned to tokens, or `null`
-    -- if no literal names are assigned.
-    -- * Parameter symbolicNames: The symbolic names assigned to tokens, or
-    -- `null` if no symbolic names are assigned.
-    --
-    --
-    -- public convenience
-    procedure Initialize (Self : in out …; literalNames : Optional_String.Container.Vector, symbolicNames : Optional_UString.Container.Vector) {
-        self.init (literalNames, symbolicNames, null);
-    end if;
+   --
+   -- Gets an empty _org.antlr.v4.runtime.Vocabulary_ instance.
+   --
+   --
+   -- No literal or symbol names are assigned to token types, so
+   -- _#getDisplayName (int)_ returns the numeric value for all tokens
+   -- except _org.antlr.v4.runtime.Token#EOF_.
+   --
+   -- public static
+   EMPTY_VOCABULARY : constant Vocabulary := (EMPTY_NAMES, EMPTY_NAMES, EMPTY_NAMES);
 
-    --
-    -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
-    -- literal, symbolic, and display token names.
-    --
-    -- * SeeAlso: #getLiteralName (int);
-    -- * SeeAlso: #getSymbolicName (int);
-    -- * SeeAlso: #getDisplayName (int);
-    -- * Parameter literalNames: The literal names assigned to tokens, or `null`
-    -- if no literal names are assigned.
-    -- * Parameter symbolicNames: The symbolic names assigned to tokens, or
-    -- `null` if no symbolic names are assigned.
-    -- * Parameter displayNames: The display names assigned to tokens, or `null`
-    -- to use the values in `literalNames` and `symbolicNames` as
-    -- the source of display names, as described in
-    -- _#getDisplayName (int)_.
-    --
-    --
-    -- public
-    procedure Initialize (Self : in out …; literalNames : Optional_UString.Container.Vector?, symbolicNames : Optional_UString.Container.Vector?, displayNames : Optional_UString.Container.Vector?) {
-        self.literalNames := literalNames, Default => Vocabulary.EMPTY_NAMES
-        self.symbolicNames := symbolicNames, Default => Vocabulary.EMPTY_NAMES
-        self.displayNames := displayNames, Default => Vocabulary.EMPTY_NAMES
-    end if;
+   --
+   -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
+   -- literal and symbolic token names.
+   --
+   -- * SeeAlso: #getLiteralName (int);
+   -- * SeeAlso: #getSymbolicName (int);
+   -- * Parameter literalNames: The literal names assigned to tokens, or `null`
+   -- if no literal names are assigned.
+   -- * Parameter symbolicNames: The symbolic names assigned to tokens, or
+   -- `null` if no symbolic names are assigned.
+   --
+   --
+   -- public convenience
+   procedure Initialize (Self : in out Vocabulary;
+                         literalNames : Optional_String.Container.Vector,
+                         symbolicNames : Optional_UString.Container.Vector) is
+   begin
+      Self.Initialize (literalNames, symbolicNames, (Is_Valid => False));
+   end Initialize;
 
-    --
-    -- Returns a _org.antlr.v4.runtime.Vocabulary_ instance from the specified set of token
-    -- names. This method acts as a compatibility layer for the single
-    -- `tokenNames` array generated by previous releases of ANTLR.
-    --
-    -- The resulting vocabulary instance returns `null` for
-    -- _#getLiteralName (int)_ and _#getSymbolicName (int)_, and the
-    -- value from `tokenNames` for the display names.
-    --
-    -- * Parameter tokenNames: The token names, or `null` if no token names are
-    -- available.
-    -- * Returns: A _org.antlr.v4.runtime.Vocabulary_ instance which uses `tokenNames` for
-    -- the display names of tokens.
-    --
-    -- public static
-    function fromTokenNames (tokenNames : Optional_UString.Container.Vector?) return Vocabulary is
+   --
+   -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
+   -- literal, symbolic, and display token names.
+   --
+   -- * SeeAlso: #getLiteralName (int);
+   -- * SeeAlso: #getSymbolicName (int);
+   -- * SeeAlso: #getDisplayName (int);
+   -- * Parameter literalNames: The literal names assigned to tokens, or `null`
+   --   if no literal names are assigned.
+   -- * Parameter symbolicNames: The symbolic names assigned to tokens, or
+   --   `null` if no symbolic names are assigned.
+   -- * Parameter displayNames: The display names assigned to tokens, or `null`
+   --   to use the values in `literalNames` and `symbolicNames` as
+   --   the source of display names, as described in
+   --   _#getDisplayName (int)_.
+   --
+   --
+   -- public
+   procedure Initialize (Self : in out Vocabulary;
+                         literalNames : Optional_UString.Container.Vector?,
+                         symbolicNames : Optional_UString.Container.Vector?,
+                         displayNames : Optional_UString.Container.Vector?) is
+   begin
+      self.literalNames := literalNames, Default => Vocabulary.EMPTY_NAMES;
+      self.symbolicNames := symbolicNames, Default => Vocabulary.EMPTY_NAMES;
+      self.displayNames := displayNames, Default => Vocabulary.EMPTY_NAMES;
+   end Initialize;
+
+   --
+   -- Returns a _org.antlr.v4.runtime.Vocabulary_ instance from the specified set of token
+   -- names. This method acts as a compatibility layer for the single
+   -- `tokenNames` array generated by previous releases of ANTLR.
+   --
+   -- The resulting vocabulary instance returns `null` for
+   -- _#getLiteralName (int)_ and _#getSymbolicName (int)_, and the
+   -- value from `tokenNames` for the display names.
+   --
+   -- * Parameter tokenNames: The token names, or `null` if no token names are
+   -- available.
+   -- * Returns: A _org.antlr.v4.runtime.Vocabulary_ instance which uses `tokenNames` for
+   -- the display names of tokens.
+   --
+   -- public static
+   function fromTokenNames (tokenNames : Optional_UString.Container.Vector?) return Vocabulary is
 begin
-        if not Is_Valid (tokenNames) or not (tokenNames.count > 0) then
+      if not Is_Valid (tokenNames) or not (tokenNames.count > 0) then
             return EMPTY_VOCABULARY;
-        end if;
+      end if;
 
-        literalNames := tokenNames
-        symbolicNames := tokenNames
-        length : constant := tokenNames.count
-        for i in 0 .. length - 1 loop
+      literalNames := tokenNames
+      symbolicNames := tokenNames
+      length : constant := tokenNames.count
+      for i in 0 .. length - 1 loop
             if not Is_Valid (tokenNames.Element (i))then
-                goto CONTINUE;
+               goto CONTINUE;
             end if;
             if firstChar : constant := tokenName.first then
-                if firstChar == "\'" then
-                    symbolicNames.Insert (Key => i, New_Item => null);
-                    goto CONTINUE;
-                end if;
-                elsif UString (firstChar).uppercased () /= UString (firstChar) then
-                    literalNames.Insert (Key => i, New_Item => null);
-                    goto CONTINUE;
-                end if;
+               if firstChar == "\'" then
+                  symbolicNames.Insert (Key => i, New_Item => null);
+                  goto CONTINUE;
+               end if;
+               elsif UString (firstChar).uppercased () /= UString (firstChar) then
+                  literalNames.Insert (Key => i, New_Item => null);
+                  goto CONTINUE;
+               end if;
             end if;
 
             -- wasn't a literal or symbolic name
             literalNames.Insert (Key => i, New_Item => null);
             symbolicNames.Insert (Key => i, New_Item => null);
             <<CONTINUE>>
-        end loop;
+      end loop;
 
-        return Vocabulary (literalNames, symbolicNames, tokenNames);
-    end if;
+      return Vocabulary (literalNames, symbolicNames, tokenNames);
+   end if;
 
 
-    -- public
-    function getLiteralName (tokenType : Token_Kind) return Optional_String is
+   -- public
+   function getLiteralName (tokenType : Token_Kind) return Optional_String is
    begin
-        if tokenType >= 0 and then tokenType < literalNames.count then
+      if tokenType >= 0 and then tokenType < literalNames.count then
             return literalNames.Element (tokenType);
-        end if;
+      end if;
 
-        return (Valid => False);
-    end if;
+      return (Valid => False);
+   end if;
 
 
-    -- public
-    function getSymbolicName (tokenType : Token_Kind) return Optional_String is
+   -- public
+   function getSymbolicName (tokenType : Token_Kind) return Optional_String is
    begin
-        if tokenType >= 0 and then tokenType < symbolicNames.count then
+      if tokenType >= 0 and then tokenType < symbolicNames.count then
             return symbolicNames.Element (tokenType);
-        end if;
-        if tokenType = CommonToken.EOF then
+      end if;
+      if tokenType = CommonToken.EOF then
             return "EOF";
-        end if;
+      end if;
 
-        return (Valid => False);
-    end if;
+      return (Valid => False);
+   end if;
 
 
-    -- public
-    function getDisplayName (tokenType : Token_Kind) return UString is
+   -- public
+   function getDisplayName (tokenType : Token_Kind) return UString is
 begin
-        if tokenType >= 0 and then tokenType < displayNames.count then
+      if tokenType >= 0 and then tokenType < displayNames.count then
             if displayName : constant := displayNames.Element (tokenType) then
-                return displayName;
+               return displayName;
             end if;
-        end if;
+      end if;
 
-        if literalName : constant := getLiteralName (tokenType) then
+      if literalName : constant := getLiteralName (tokenType) then
             return literalName;
-        end if;
+      end if;
 
-        if symbolicName : constant := getSymbolicName (tokenType) then
+      if symbolicName : constant := getSymbolicName (tokenType) then
             return symbolicName;
-        end if;
+      end if;
 
-        return UString (tokenType);
-    end if;
+      return UString (tokenType);
+   end if;
 
-    -- public
-    procedure hash (into hasher: in out Hasher) is
-    begin
-        hasher.combine (ObjectIdentifier (self));
-    end if;
-end if;
+   -- public
+   procedure hash (into hasher: in out Hasher) is
+   begin
+      hasher.combine (ObjectIdentifier (self));
+   end if;
 
--- public
-function "=" (Lhs, Rhs : Vocabulary) return Boolean is
-begin
-    return lhs === rhs
-end if;
+   -- public
+   function "=" (Lhs, Rhs : Vocabulary) return Boolean is
+   begin
+      return lhs === rhs
+   end if;
+
+private
+   type Vocabulary is new Ada.Finalization.Controlled with -- and Hashable
+   record
+
+      -- private
+      literalNames : Name_Container; -- constant
+
+      -- private
+      symbolicNames : Name_Container; -- constant
+
+      -- private
+      displayNames : Name_Container; -- constant
+   end record;
+
+end ANTLR.Runtime.Vocabularies;

@@ -6,7 +6,7 @@ package body ANTLR.Runtime.ATN.Transitions.EpsilonTransitions is
    procedure Initialize (Self : in out EpsilonTransition;
                    target : ATNState) is
    begin
-      Self.init (target, -1);
+      Self.Initialize (target, -1);
    end Initialize;
 
    procedure Initialize (Self : in out EpsilonTransition;

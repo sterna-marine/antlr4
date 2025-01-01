@@ -5,7 +5,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.Em
    -- public
    procedure Initialize (Self : EmptyPredictionContext) is
    begin
-      SingletonPredictionContext.init (Self, null, PredictionContext.EMPTY_RETURN_STATE); -- Super
+      Super (Self).Initialize (null, PredictionContext.EMPTY_RETURN_STATE); -- Super
    end Initialize;
 
    -- public

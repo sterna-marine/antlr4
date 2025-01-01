@@ -40,7 +40,7 @@ type DiagnosticErrorListener is new BaseErrorListener with null record;
     overriding
     procedure Initialize (Self : in out …) is
 begin
-        self.init (True);
+        Self.Initialize (True);
     end if;
 
     --

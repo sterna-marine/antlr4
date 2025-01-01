@@ -80,4 +80,4 @@ private
       evalResult : Boolean;
    end record;
 
-end package ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfos;
+end ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfos;

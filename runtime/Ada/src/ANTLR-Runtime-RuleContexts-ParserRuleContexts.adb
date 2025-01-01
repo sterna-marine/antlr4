@@ -10,7 +10,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
 
    procedure Initialize (Self : in out ParserRuleContext; parent : Optional_ParserRuleContext; invokingStateNumber : ATNStates.State) is
    begin
-      RuleContext.init (Self, parent, invokingStateNumber); -- Super
+      Super (Self).Initialize (parent, invokingStateNumber); -- Super
    end Initialize;
 
    procedure copyFrom (This : ParserRuleContext; ctx : ParserRuleContext) is

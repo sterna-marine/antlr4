@@ -13,7 +13,7 @@ type InputMismatchException is new RecognitionException with null record;
     procedure Initialize (Self : in out …; recognizer : Parser; state: Integer := ATNState.INVALID_STATE_NUMBER, ctx: Optional_ParserRuleContext; := (Valid => False)) {
         bestCtx : constant := ctx, Default => recognizer._ctx
 
-        super.init (Self, recognizer, recognizer.getInputStream ()!, bestCtx);
+        Super (Self).Initialize (recognizer, recognizer.getInputStream ()!, bestCtx);
 
         if token : constant := recognizer.getCurrentToken () then -- try?
             setOffendingToken (token);

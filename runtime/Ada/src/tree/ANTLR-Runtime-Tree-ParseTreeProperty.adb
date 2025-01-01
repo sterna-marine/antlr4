@@ -1,11 +1,25 @@
 -- €
 
+with Ada.Containers.Hashed_Maps;
+
+generic
+   type V is private;
+   function Equal (Left, Right : V) return Boolean;
 package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
 
+   function Hash (Key : ObjectIdentifier) return Hash_Type;
+   function Equivalent_Keys (Left, Right : ObjectIdentifier) return Boolean
+      is Hash (Left) = Hash (Right);
+   package Annotations_Container is new Ada.Containers.Hashed_Maps (
+      Key_Type => ObjectIdentifier,
+      Element_Type => V,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => Equal);
 
    -- public
    type ParseTreeProperty<V> is tagged with record
-      annotations := Dictionary<ObjectIdentifier, V> ();
+      annotations : Annotations_Container.Hashed_Map;
    end record;
 
    -- public

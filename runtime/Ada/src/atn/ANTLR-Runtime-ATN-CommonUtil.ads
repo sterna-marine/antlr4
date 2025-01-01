@@ -4,7 +4,7 @@ with Interfaces;
 
 use Interfaces;
 
-package  ANTLR.Runtime.ATN.CommonUtil is
+package ANTLR.Runtime.ATN.CommonUtil is
 
    -- public
    function "&" (Lhs: UString; Rhs : Integer) Return UString

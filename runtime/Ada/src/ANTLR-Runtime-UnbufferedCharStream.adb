@@ -36,7 +36,7 @@ type UnbufferedCharStream is new CharStream with null record;
     n := 0
 
     --
-    -- 0 .. n-1 index into {@link #data data} of next character.
+    -- 0 .. n - 1 index into {@link #data data} of next character.
      *
     -- <p>The {@code LA (1)}; character is {@code data.Element (p)}. if then@code p = n}, we are
     -- out of buffered characters.</p>
@@ -48,7 +48,7 @@ type UnbufferedCharStream is new CharStream with null record;
     -- Count up with {@link #mark mark ()} and down with
     -- {@link #release release ()}. When we {@code release ()} the last mark,
     -- {@code numMarkers} reaches 0 and we reset the buffer. Copy
-    -- {@code data.Element (p)..data[n-1]} to {@code data.Element (0)..data[(n-1)-p]}.
+    -- {@code data.Element (p)..data[n - 1]} to {@code data.Element (0)..data[(n - 1)-p]}.
     --
     -- internal
     numMarkers := 0
@@ -229,7 +229,7 @@ begin
         if numMarkers = 0 and then p > 0 then
             -- release buffer when we can, but don't do unnecessary work
 
-            -- Copy data.Element (p)..data[n-1] to data.Element (0)..data[(n-1)-p], reset ptrs
+            -- Copy data.Element (p)..data[n - 1] to data.Element (0)..data[(n - 1)-p], reset ptrs
             -- p is last valid char; move nothing if p = n as we have no valid char
             if p = n then
                 if data.count /= bufferSize then

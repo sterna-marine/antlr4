@@ -69,59 +69,62 @@ package ANTLR.Runtime.Token_Protocol is
    --
    -- Get the text of the token.
    --
-   function getText (This : Token) return UString_Optional;
+   function getText (Some : Token) return Optional_UString;
 
    -- Get the token type of the token
-   function getType (This : Token) return Token_Kind;
+   function getType (Some : Token) return Token_Kind;
 
    -- The line number on which the 1st character of this token was matched,
    -- line=1 .. n
    --
-   function getLine (This : Token) return Integer;
+   function getLine (Some : Token) return Integer;
 
    -- The index of the first character of this token relative to the
-   -- beginning of the line at which it occurs, 0 .. n-1
+   -- beginning of the line at which it occurs, 0 .. n - 1
    --
-   function getCharPositionInLine (This : Token) return Integer;
+   function getCharPositionInLine (Some : Token) return Integer;
 
    -- Return the channel this token. Each token can arrive at the parser
    -- on a different channel, but the parser only "tunes" to a single channel.
    -- The parser ignores everything not on DEFAULT_CHANNEL.
    --
-   function getChannel (This : Token) return Channel_Number;
+   function getChannel (Some : Token) return Channel_Number;
 
-   -- An index from 0 .. n-1 of the token object in the input stream.
+   -- An index from 0 .. n - 1 of the token object in the input stream.
    -- This must be valid in order to print token streams and
    -- use TokenRewriteStream.
    --
    -- Return -1 to indicate that this token was conjured up since
    -- it doesn't have a valid index.
    --
-   function getTokenIndex (This : Token) return Integer;
+   function getTokenIndex (Some : Token) return Integer;
 
    -- The starting character index of the token
    -- This method is optional; return -1 if not implemented.
    --
-   function getStartIndex (This : Token) return Integer;
+   function getStartIndex (Some : Token) return Integer;
 
    -- The last character index of the token.
    -- This method is optional; return -1 if not implemented.
    --
-   function getStopIndex (This : Token) return Integer;
+   function getStopIndex (Some : Token) return Integer;
 
    -- Gets the _org.antlr.v4.runtime.TokenSource_ which created this token.
    --
-   function getTokenSource (This : Token) return TokenSource_Optional;
+   function getTokenSource (Some : Token) return TokenSource_Optional;
 
    --
    -- Gets the _org.antlr.v4.runtime.CharStream_ from which this token was derived.
    --
-   function getInputStream (This : Token) return CharStream_Optional;
+   function getInputStream (Some : Token) return CharStream_Optional;
 
-   function getTokenSourceAndStream (This : Token) return TokenSourceAndStream;
+   function getTokenSourceAndStream (Some : Token) return TokenSourceAndStream;
 
-   function get (is_visited : Boolean);
-
-   procedure set (is_visited : Boolean);
+   protected Visited is
+      function Was_Visited return Boolean; --TOFIX for Some : Token 
+      procedure Set_as_Visited (is_visited : Boolean); --TOFIX for Some : Token 
+   private  
+      Has_Been_Visited : Boolean := False;
+   end Visited;
 
 end ANTLR.Runtime.Token_Protocol;

@@ -26,7 +26,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl.ErrorNode is
 
    overriding
    -- public
-   function accept_T (This : ErrorNode; visitor : ParseTreeVisitors_T.ParseTreeVisitor return Optional_T is
+   function accept_T (This : ErrorNode; visitor : ParseTreeVisitors_T.ParseTreeVisitor) return Optional_T is
    begin
       return visitor.visitErrorNode (self);
    end accept_T;

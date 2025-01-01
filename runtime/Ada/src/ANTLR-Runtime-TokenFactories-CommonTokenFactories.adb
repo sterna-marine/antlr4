@@ -10,7 +10,7 @@ package body ANTLR.Runtime.TokenFactories.CommonTokenFactories is
    overriding
    procedure Initialize (Self : in out CommonTokenFactory) is
    begin
-      Self.init (False);
+      Self.Initialize (False);
    end Initialize;
 
    function create (source : TokenSourceAndStream;

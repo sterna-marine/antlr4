@@ -31,7 +31,7 @@ type TokenTagToken is new CommonToken with null record;
     --
     -- public convenience
     procedure Initialize (Self : in out …; tokenName : UString; Type : Token_Kind) {
-        self.init (tokenName, type, null);
+        Self.Initialize (tokenName, type, null);
     end if;
 
     --

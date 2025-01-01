@@ -75,7 +75,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                    decisionToDFA : DFA.Container.Vector;
                    sharedContextCache : PredictionContextCache) is
    begin
-      self.init (null, atn, decisionToDFA, sharedContextCache);
+      Self.Initialize (null, atn, decisionToDFA, sharedContextCache);
    end Initialize;
 
    procedure Initialize (Self : in out LexerATNSimulator;

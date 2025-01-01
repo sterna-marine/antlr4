@@ -71,7 +71,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
     -- public convenience
     procedure Initialize (Self : in out …; set : IntervalSet) {
-        self.init ();
+        Self.Initialize ();
         addAll (set); -- try!
     end if;
 

@@ -11,7 +11,7 @@ package body ANTLR.Runtime.ATN.DecisionEventInfos.LookaheadEventInfos is
                    stopIndex : Integer;
                    fullCtx  : Boolean) is
    begin
-      DecisionEventInfo.init (Self, decision, configs, input, startIndex, stopIndex, fullCtx); -- super
+      Super (Self).Initialize (decision, configs, input, startIndex, stopIndex, fullCtx); -- super
    end Initialize;
 
 end ANTLR.Runtime.ATN.DecisionEventInfos.LookaheadEventInfos;

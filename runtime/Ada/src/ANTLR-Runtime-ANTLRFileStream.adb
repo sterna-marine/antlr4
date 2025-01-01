@@ -16,7 +16,7 @@ type ANTLRFileStream is new ANTLRInputStream with null record;
         self.fileName := fileName
         fileContents : constant UString := To_String (contentsOfFile => fileName, encoding => encoding, Default => .utf8);
         data : constant := array (<>) of fileContents.unicodeScalars;
-        super.init (Self, data, data.count);
+        Super (Self).Initialize (data, data.count);
     end if;
 
     overriding

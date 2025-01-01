@@ -30,7 +30,7 @@ type FailedPredicateException is new RecognitionException with null record;
 
       self.predicate := predicate
 
-        super.init (Self, recognizer, recognizer.getInputStream ()!, recognizer._ctx, FailedPredicateException.formatMessage (predicate, message));
+        Super (Self).Initialize (recognizer, recognizer.getInputStream ()!, recognizer._ctx, FailedPredicateException.formatMessage (predicate, message));
         if token : constant := recognizer.getCurrentToken () then -- try?
             setOffendingToken (token);
         end if;

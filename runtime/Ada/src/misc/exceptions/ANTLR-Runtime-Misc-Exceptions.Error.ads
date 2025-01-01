@@ -1,12 +1,8 @@
 -- €
 
---
---  ANTLRError.swift
---  antlr.swift
+package ANTLR.Runtime.Misc.Exceptions.Errors is
 
-package ANTLRError is
-
--- public
+   -- public
    ANTLRError : exception; -- : Error { … }
    unsupportedOperation : exception; -- (msg:String);
    indexOutOfBounds : exception;, -- (msg:String);
@@ -14,4 +10,4 @@ package ANTLRError is
    illegalArgument : exception; -- (msg:String);
    negativeArraySize : exception; -- (msg:String);
 
-end ANTLRError;
+end ANTLR.Runtime.Misc.Exceptions.ANTLRErrors;

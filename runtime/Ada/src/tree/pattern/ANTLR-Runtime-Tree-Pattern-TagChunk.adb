@@ -37,7 +37,7 @@ type TagChunk is new Chunk with null record;
     --
     -- public convenience
     procedure Initialize (Self : in out …; tag : UString) {
-        self.init (null, tag);
+        Self.Initialize (null, tag);
     end if;
 
     --

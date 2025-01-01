@@ -28,7 +28,7 @@ package body ANTLR.Runtime.ATN.Configs is
                    c : ATNConfig;
                    state : ATNState) is
    begin
-      Self.init (state, c.alt, c.context, c.semanticContext);
+      Self.Initialize (state, c.alt, c.context, c.semanticContext);
    end Initialize;
 
    procedure Initialize (Self : in out ATNConfig;
@@ -36,13 +36,13 @@ package body ANTLR.Runtime.ATN.Configs is
                    state : ATNState;
                    semanticContext : SemanticContext) is
    begin
-      Self.init (state, c.alt, c.context, semanticContext);
+      Self.Initialize (state, c.alt, c.context, semanticContext);
    end Initialize;
 
    procedure Initialize (Self : in out ATNConfig;
                    c : ATNConfig;
                    semanticContext : SemanticContext) is
-      Self.init (c.state, c.alt, c.context, semanticContext);
+      Self.Initialize (c.state, c.alt, c.context, semanticContext);
    end Initialize;
 
    procedure Initialize (Self : in out ATNConfig;
@@ -50,7 +50,7 @@ package body ANTLR.Runtime.ATN.Configs is
                    state : ATNState;
                    context : Optional_PredictionContext) is
    begin
-      Self.init (state, c.alt, context, c.semanticContext);
+      Self.Initialize (state, c.alt, context, c.semanticContext);
    end Initialize;
 
    procedure Initialize (Self : in out ATNConfig;

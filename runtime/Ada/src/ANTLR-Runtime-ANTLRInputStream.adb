@@ -29,7 +29,7 @@ type ANTLRInputStream is new CharStream with null record;
     n : Integer;
 
     --
-    -- 0 .. n-1 index into string of next char
+    -- 0 .. n - 1 index into string of next char
     --
     -- internal
     p := 0

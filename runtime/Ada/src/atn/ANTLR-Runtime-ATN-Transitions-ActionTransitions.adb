@@ -4,7 +4,7 @@ package body ANTLR.Runtime.ATN.Transitions.ActionTransitions is
 
    procedure Initialize (Self : in out ActionTransition; target : ATNState; ruleIndex : Integer) is
    begin
-      Self.Init (target, ruleIndex, -1, False);
+      Self.Initialize (target, ruleIndex, -1, False);
    end Initialize;
 
    procedure Initialize (Self : in out ActionTransition;

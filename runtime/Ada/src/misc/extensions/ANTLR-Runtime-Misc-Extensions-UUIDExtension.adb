@@ -15,6 +15,6 @@ extension UUID {
             $0.advanced (by => 1).pointee := mostSigBits
         };
         u : constant := NSUUID (uuidBytes => bytes);
-        self.init (uuidString => u.uuidString)!
+        Self.Initialize (uuidString => u.uuidString)!
     end if;
 end if;

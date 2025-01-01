@@ -17,12 +17,12 @@ package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
    -- public
    type ParseTreeListener is interface;
 
-    procedure visitTerminal (This : ParseTreeListener; node : TerminalNode);
+    procedure visitTerminal (Some : ParseTreeListener; node : TerminalNode);
 
-    procedure visitErrorNode (This : ParseTreeListener; node : ErrorNode);
+    procedure visitErrorNode (Some : ParseTreeListener; node : ErrorNode);
 
-    procedure enterEveryRule (This : ParseTreeListener; ctx : ParserRuleContext);
+    procedure enterEveryRule (Some : ParseTreeListener; ctx : ParserRuleContext);
 
-    procedure exitEveryRule (This : ParseTreeListener; ctx : ParserRuleContext);
+    procedure exitEveryRule (Some : ParseTreeListener; ctx : ParserRuleContext);
 
 end ANTLR.Runtime.Tree.ParseTreeListener_Protocol;

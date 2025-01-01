@@ -64,7 +64,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     --
     -- public convenience
     procedure Initialize (Self : in out …; tokenSource : TokenSource; Channel : Channel_Number) {
-        self.init (tokenSource);
+        Self.Initialize (tokenSource);
         self.channel := channel
     end if;
 
@@ -101,7 +101,7 @@ begin
     -- public
     function LT (k : Integer) return Optional_Token is
    begin
-        --System.out.println ("enter LT ("+k+")");
+        --Ada.Wide_Wide_Text_IO.Put_Line ("enter LT ("+k+")");
         lazyInit ();
         if k = 0 then
             return (Valid => False);

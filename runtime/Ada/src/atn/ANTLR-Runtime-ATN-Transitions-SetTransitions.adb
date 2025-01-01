@@ -6,7 +6,7 @@ package body ANTLR.Runtime.ATN.Transitions.SetTransitions is
    procedure Initialize (Self : in out SetTransition; target : ATNState; set : IntervalSet) is
    begin
       self.set := set;
-      ATNTransition.init (Self, target); -- super
+      Super (Self).Initialize (target); -- super
    end Initialize;
 
 end ANTLR.Runtime.ATN.Transitions.SetTransitions;

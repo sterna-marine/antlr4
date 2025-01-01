@@ -66,7 +66,7 @@ package ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       line : Integer := 1;
 
       --
-      -- The index of the character relative to the beginning of the line 0 .. n-1
+      -- The index of the character relative to the beginning of the line 0 .. n - 1
       --
       -- public
       charPositionInLine : Integer := 0;

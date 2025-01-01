@@ -6,7 +6,7 @@ package body ANTLR.Runtime.ATN.Transitions.RangeTransitions is
    begin
       self.from := from;
       self.to := to;
-      ATNTransition.init (Self, target); -- super
+      Super (Self).Initialize (target); -- super
    end Initialize;
 
 end ANTLR.Runtime.ATN.Transitions.RangeTransitions;

@@ -1,15 +1,10 @@
 -- €
 
---
---  ANTLRException.swift
---  antlr.swift
+package ANTLR.Runtime.Misc.Exceptions is
 
-
-package body ANTLRException is
-
--- public
+   -- public
    ANTLRException : exception; -- : Error {…}
    parseCancellation : exception; -- (e: RecognitionException);
    recognition : exception; -- (e: RecognitionException);
 
-end ANTLRException;
+end ANTLR.Runtime.Misc.Exceptions;

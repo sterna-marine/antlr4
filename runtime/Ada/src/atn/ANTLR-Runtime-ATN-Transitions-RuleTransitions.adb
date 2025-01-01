@@ -11,7 +11,7 @@ package body ANTLR.Runtime.ATN.Transitions.RuleTransitions is
       self.ruleIndex := ruleIndex;
       self.precedence := precedence;
       self.followState := followState;
-      ATNTransition.init (Self, ruleStart); -- super
+      Super (Self).Initialize (ruleStart); -- super
    end Initialize;
 
 end ANTLR.Runtime.ATN.Transitions.RuleTransitions;

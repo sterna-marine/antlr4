@@ -1,5 +1,7 @@
 -- €
 
+with Ada.Containers.Hashed_Maps;
+
 package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates is
 
 --

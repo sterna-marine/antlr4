@@ -6,7 +6,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure Initialize (Self : Lexer) is
    begin
       self._tokenFactorySourcePair := TokenSourceAndStream ();
-      Recognizer.init (); -- Super
+      Super (Self).Initialize;; -- Super
       self._tokenFactorySourcePair.tokenSource := self;
    end Initialize;
 

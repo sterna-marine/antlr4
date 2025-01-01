@@ -5,7 +5,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    procedure Initialize (Self : in out ArrayPredictionContext; a : SingletonPredictionContext) is
       parents : constant Option_PredictionContext.Container.Vector := [a.parent];
    begin
-      Self.init (parents, [a.returnState]);
+      Self.Initialize (parents, [a.returnState]);
    end Initialize;
 
    procedure Initialize (Self : in out ArrayPredictionContext;
@@ -14,7 +14,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    begin
       self.parents := parents;
       self.returnStates := returnStates;
-      PredictionContext.init (Self, PredictionContext.calculateHashCode (parents, returnStates)); -- super
+      Super (Self).Initialize (PredictionContext.calculateHashCode (parents, returnStates)); -- super
    end Initialize;
 
    overriding

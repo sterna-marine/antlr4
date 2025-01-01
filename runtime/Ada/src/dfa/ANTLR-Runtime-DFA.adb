@@ -61,7 +61,7 @@ package body ANTLR.Runtime.ATN.DFA is
    -- public convenience
    procedure Initialize (Self : in out DFA; atnStartState : DecisionState) is
    begin
-      self.init (atnStartState, 0);
+      Self.Initialize (atnStartState, 0);
    end Initialize;
 
    -- public
