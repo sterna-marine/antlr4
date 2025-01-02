@@ -1,5 +1,7 @@
 -- €
 
+with ANTLR.Runtime.Token_Protocol;
+
 package body ANTLR.Runtime.Recognizers is
 
    function getRuleNames (This : Recognizer) return UString.Container.Vector is
@@ -11,14 +13,14 @@ package body ANTLR.Runtime.Recognizers is
       raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getVocabulary() must be overridden";
    end getVocabulary;
 
-   function getTokenTypeMap (This : Recognizer) return TokenID_Container.Map is
+   function getTokenTypeMap (This : Recognizer) return TokenID_Map is
    begin
       return TokenTypeMap (This);
    end getTokenTypeMap;
 
-   function TokenTypeMap (This : Recognizer) return TokenID_Container.Map
+   function TokenTypeMap (This : Recognizer) return TokenID_Map
       vocabulary : constant Vocabulary := getVocabulary (This);
-      result : TokenID_Container.Map;
+      result : TokenID_Map;
       length : constant := getATN ().maxTokenType;
    begin
       for i in 0 .. length loop
@@ -39,13 +41,13 @@ package body ANTLR.Runtime.Recognizers is
       return result;
    end TokenTypeMap;
 
-   function ruleIndexMap (This : Recognizer) return TokenID_Container.Map is
+   function ruleIndexMap (This : Recognizer) return TokenID_Map is
       ruleNames : constant UString.Container.Vector := getRuleNames (This);
    begin
       return Utils.toMap (ruleNames);
    end ruleIndexMap;
 
-   function getSerializedATN (This : Recognizer) return Integer.Container.Vector is
+   function getSerializedATN (This : Recognizer) return Integer_List is
       raise PROGRAM_ERROR with "there is no serialized ATN";
    end getSerializedATN;
 

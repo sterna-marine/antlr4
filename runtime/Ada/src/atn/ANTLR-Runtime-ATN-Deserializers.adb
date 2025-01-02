@@ -8,7 +8,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
       self.deserializationOptions := Value (deserializationOptions, Default => ATNDeserializationOptions);
    end Initialize;
 
-   function deserialize (This : ATNDeserializer; data : Integer.Container.Vector) return ATN is
+   function deserialize (This : ATNDeserializer; data : Integer_List) return ATN is
       version : constant Integer := data.Element (0);
       reason : UString;
       grammarType : constant ATNType := ATNType (rawValue => data.Element (1);
@@ -104,7 +104,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
       RULES:
       declare
          nrules : constant Integer := data.Element (p);
-         ruleToTokenType : Integer.Container.Vector; -- := Integer.Container.Empty_Vector;
+         ruleToTokenType : Integer_List; -- := Integer_Container.Empty_Vector;
          ruleToStartState : RuleStartState.Container; -- := RuleStartState.Container.Empty_Vector;
 
          s : Integer;
@@ -250,16 +250,16 @@ package body ANTLR.Runtime.ATN.Deserializers is
       return atn;
    end deserialize;
 
-   function readInt (data : Integer.Container.Vector; p : in out Integer) return Integer is
+   function readInt (data : Integer_List; p : in out Integer) return Integer is
       result : constant Integer := data.Element (p);
    begin
       p := @ + 1;
       return result;
    end readInt;
 
-   function Read_Unicode (P1 : Integer_Container.Vector; P2 : in out Integer) return Integer; --TOFIX
+   function Read_Unicode (P1 : Integer_List; P2 : in out Integer) return Integer; --TOFIX
 
-   procedure readSets (data : Integer.Container.Vector;
+   procedure readSets (data : Integer_List;
                        p : in out Integer;
                        sets : in out IntervalSet_Container.Vector;
                        readUnicode : Read_Unicode'Access) is

@@ -46,29 +46,29 @@ package ANTLR.Runtime.ATN.States is
    --
    -- ## Greedy Loops
    --
-   -- ### Greedy Closure: `( … )*`
+   -- ### Greedy Closure: `( ATNState )*`
    --
    --
    --
-   -- ### Greedy Positive Closure: `( … )+`
+   -- ### Greedy Positive Closure: `( ATNState )+`
    --
    --
    --
-   -- ### Greedy Optional: `( … )?`
+   -- ### Greedy Optional: `( ATNState )?`
    --
    --
    --
    -- ## Non-Greedy Loops
    --
-   -- ### Non-Greedy Closure: `( … )*?`
+   -- ### Non-Greedy Closure: `( ATNState )*?`
    --
    --
    --
-   -- ### Non-Greedy Positive Closure: `( … )+?`
+   -- ### Non-Greedy Positive Closure: `( ATNState )+?`
    --
    --
    --
-   -- ### Non-Greedy Optional: `( … )??`
+   -- ### Non-Greedy Optional: `( ATNState )??`
    --
    --
    --
@@ -108,10 +108,11 @@ package ANTLR.Runtime.ATN.States is
       EMPTY_RETURN_STATE => Integer'Last);
    for State'size use Integer'Size;
 
-   package Container is new Ada.Cantainers.Vector (
-      Index_Type : Natural;
-      Element_Type : State;
-      "=" : "=");
+   package State_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => State,
+      "=" => "=");
+   subtype State_List is State_Container.Vector;
 
    -- Optionals
    package Option_State is new Option (State);
@@ -152,20 +153,22 @@ package ANTLR.Runtime.ATN.States is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   package Container_ATNState is new Ada.Cantainers.Vector (
-      Index_Type : Natural;
-      Element_Type : ATNState;
-      "=" : "=");
-   package Container renames package Container_ATNState;
+   function Equal (Left, Right : ATNState) return Boolean;
+   package ATNState_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => ATNState,
+      "=" => Equal);
+   subtype ATNState_List is ATNState_Container.Vector;
 
    -- Optionals
    package Option_ATNState is new Option (ATNState);
    subtype Optional_ATNState is Option_ATNState.Optional; -- renames
 
-   package Container_Optional_ATNState is new Ada.Cantainers.Vector (
-      Index_Type : Natural;
-      Element_Type : Optional_ATNState;
-      "=" : "=");
+   package Optional_ATNState_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => Optional_ATNState,
+      "=" => "=");
+   subtype Optional_ATNState_List is Optional_ATNState_Container.Vector;
 
    function Hash (Element : ATNState) return Ada.Containers.Hash_Type;
    function Equivalent_Elements (Left, Right : ATNState) return Boolean;
@@ -186,23 +189,23 @@ package ANTLR.Runtime.ATN.States is
       is (False);
 
    -- public
-   function Description (This : …) return UString;
+   function Description (This : ATNState) return UString
       --return "MyClass " & string'Image & ""
-      (stateNumber);
+      is (stateNumber'Image);
 
    -- public final
-   function getTransitions (This : ATNState) return Transitions.Container.Vector
+   function getTransitions (This : ATNState) return Transitions_List
       is (This.transitions);
 
    -- public final
    function getNumberOfTransitions (This : ATNState) return Ada.Containers.Count_Type
-      is Transitions.Container.Length (This.transitions);
+      is (This.Transitions.Length);
 
    -- public final
    procedure addTransition (This : ATNState; e : ATNTransition'Class);
 
    function transition (This : ATNState; i : Transitions.Container_Index) return Transition
-      is Transitions.Container.Element (Container => This.transitions, Index => i);
+      is (Transitions.Container.Element (Container => This.transitions, Index => i));
 
    -- public final
    procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : ATNTransition);
@@ -215,7 +218,7 @@ package ANTLR.Runtime.ATN.States is
 
     -- public final
    function onlyHasEpsilonTransitions (This : ATNState) return Boolean
-      is This.epsilonOnlyTransitions;
+      is (This.epsilonOnlyTransitions);
 
     -- public final
     procedure setRuleIndex (This : ATNState; ruleIndex : Integer);

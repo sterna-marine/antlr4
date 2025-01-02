@@ -84,7 +84,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       return MurmurHash.finish (hash, 2);
    end calculateHashCode;
 
-   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer.Container.Vector) return Hash_Code is
+   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer_List) return Hash_Code is
       hash : Hash_Code;
    begin
       hash := MurmurHash.initialize (INITIAL_HASH);

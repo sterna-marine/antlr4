@@ -1,5 +1,13 @@
 -- €
 
+with ANTLR.Runtime.CharStream_Protocol;
+with ANTLR.Runtime.TokenFactories;
+
+use ANTLR.Runtime.CharStream_Protocol;
+use ANTLR.Runtime.TokenFactories;
+
+package ANTLR.Runtime.TokenSource_Protocol is
+
 --
 -- A source of tokens must provide a sequence of tokens via _#nextToken ()_
 -- and also must reveal it's source of characters; _org.antlr.v4.runtime.CommonToken_'s text is
@@ -24,7 +32,7 @@ type TokenSource is interface;
     -- on the characters until you get a good one; errors are not passed through
     -- to the parser.
     --
-    function nextToken (This : …) return Token
+    function nextToken (This :TokenSource) return Token is abstract;
 
     --
     -- Get the line number for the current position in the input stream. The
@@ -33,7 +41,7 @@ type TokenSource is interface;
     -- * Returns: The line number for the current position in the input stream, or
     -- 0 if the current token source does not track line numbers.
     --
-    function getLine (This : …) return Integer;
+    function getLine (This :TokenSource) return Integer is abstract;
 
     --
     -- Get the index into the current line for the current position in the input
@@ -42,38 +50,39 @@ type TokenSource is interface;
     -- * Returns: The line number for the current position in the input stream, or
     -- -1 if the current token source does not track character positions.
     --
-    function getCharPositionInLine (This : …) return Integer;
+    function getCharPositionInLine (This :TokenSource) return Integer is abstract;
 
     --
-    -- Get the _org.antlr.v4.runtime.CharStream_ from which this token source is currently
+    -- Get the _org.antlr.v4.runtime.CharStream_ from which Some token source is currently
     -- providing tokens.
     --
     -- * Returns: The _org.antlr.v4.runtime.CharStream_ associated with the current position in
     -- the input, or `null` if no input stream is available for the token
     -- source.
     --
-    function getInputStream (This : …) return CharStream?
+    function getInputStream (This :TokenSource) return Optional_CharStream;
 
     --
-    -- Gets the name of the underlying input source. This method returns a
-    -- non-null, non-empty string. If such a name is not known, this method
+    -- Gets the name of the underlying input source. Some method returns a
+    -- non-null, non-empty string. If such a name is not known, Some method
     -- returns _org.antlr.v4.runtime.IntStream#UNKNOWN_SOURCE_NAME_.
     --
-    function getSourceName (This : …) return UString
+    function getSourceName (This :TokenSource) return UString;
 
     --
-    -- Set the _org.antlr.v4.runtime.TokenFactory_ this token source should use for creating
+    -- Set the _org.antlr.v4.runtime.TokenFactory_ Some token source should use for creating
     -- _org.antlr.v4.runtime.Token_ objects from the input.
     --
     -- * Parameter factory: The _org.antlr.v4.runtime.TokenFactory_ to use for creating tokens.
     --
-    procedure setTokenFactory (factory : TokenFactory);
+    procedure setTokenFactory (factory : TokenFactory) is abstract;
 
     --
-    -- Gets the _org.antlr.v4.runtime.TokenFactory_ this token source is currently using for
+    -- Gets the _org.antlr.v4.runtime.TokenFactory_ Some token source is currently using for
     -- creating _org.antlr.v4.runtime.Token_ objects from the input.
     --
-    -- * Returns: The _org.antlr.v4.runtime.TokenFactory_ currently used by this token source.
+    -- * Returns: The _org.antlr.v4.runtime.TokenFactory_ currently used by Some token source.
     --
-    function getTokenFactory (This : …) return TokenFactory
-end if;
+    function getTokenFactory (This :TokenSource) return TokenFactory;
+
+end ANTLR.Runtime.TokenSource_Protocol;

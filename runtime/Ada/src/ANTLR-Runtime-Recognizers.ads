@@ -32,7 +32,7 @@ package ANTLR.Runtime.Recognizers is
       _stateNumber : ATNStates.State := INVALID_STATE_NUMBER;
 
       -- public lazy
-      tokenTypeMap : TokenID_Container.Map;
+      tokenTypeMap : TokenID_Map;
    end record;
 
    subtype Object is Recognizer;
@@ -57,9 +57,9 @@ package ANTLR.Runtime.Recognizers is
    -- Used for XPath and tree pattern compilation.
    --
    -- public lazy
-   function tokenTypeMap (This : Recognizer) return TokenID_Container.Map;
+   function tokenTypeMap (This : Recognizer) return TokenID_Map;
    -- public
-   function getTokenTypeMap (This : Recognizer) return TokenID_Container.Map;
+   function getTokenTypeMap (This : Recognizer) return TokenID_Map;
 
    --
    -- Get a map from rule names to rule indexes.
@@ -71,7 +71,7 @@ package ANTLR.Runtime.Recognizers is
       is (ruleIndexMap);
 
    -- public lazy
-   function ruleIndexMap return TokenID_Container.Map;
+   function ruleIndexMap return TokenID_Map;
 
    -- public
    function getTokenType (This : Recognizer; tokenName : UString) return Integer
@@ -85,7 +85,7 @@ package ANTLR.Runtime.Recognizers is
    -- created the interpreter from it.
    --
    -- open
-   function getSerializedATN (This : Recognizer) return Integer.Container.Vector;
+   function getSerializedATN (This : Recognizer) return Integer_List;
 
    -- For debugging and other purposes, might want the grammar name.
    -- Have ANTLR generate an implementation for this method.

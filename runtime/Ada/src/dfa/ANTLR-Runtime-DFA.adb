@@ -56,7 +56,11 @@ package body ANTLR.Runtime.ATN.DFA is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   package body Container is new Ada.Containers.Vectors;
+   package DFA_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type => DFA,
+      "=" => "=");
+   subtype DFA_List is DFA_Container.Vector;
 
    -- public convenience
    procedure Initialize (Self : in out DFA; atnStartState : DecisionState) is

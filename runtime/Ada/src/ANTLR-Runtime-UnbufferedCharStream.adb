@@ -25,7 +25,7 @@ type UnbufferedCharStream is new CharStream with null record;
     -- we start filling at index 0 again.
     --
     -- internal
-    data : Integer.Container.Vector
+    data : Integer_List
 
     --
     -- The number of characters currently in {@link #data data{}}.

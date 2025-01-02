@@ -2,6 +2,11 @@
 
 package body ANTLR.Runtime.ATN.Transitions is
 
+   function Equal (Left, Right : ATNTransition) return Boolean is
+   begin
+      return Left = Right; --TOFIX
+   end Equal;
+
    function serializationTypes_Image (This : ATNTransition) return UString is
    begin
       case This is

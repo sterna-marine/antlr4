@@ -1,5 +1,8 @@
 -- €
 
+with Ada.Containers;
+with Ada.Containers.Hashed_Maps;
+
 package ANTLR.Runtime.Token_Protocol is
 
    -- A token has properties: text, type, line, character position in the line
@@ -9,7 +12,6 @@ package ANTLR.Runtime.Token_Protocol is
    type Token_Kind is new Integer;
 
    subtype Token_String is UString;
-   subtype hashed_Token is Ada.Containers.Hash_Type;
    subtype Token_ID is Integer;
 
    type TokenID_Item is record
@@ -17,16 +19,17 @@ package ANTLR.Runtime.Token_Protocol is
       ID    : Token_ID;
    end record;
 
-   function Hash (Key : Token_String) return Hashed_Token;
+   function Hash (Key : Token_String) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Token_String) return Boolean;
    function Equal (Left, Right : Token_ID) return Boolean;
 
-   package TokenID_Container is new Ada.Containers.Map (
+   package TokenID_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => Token_String,
       Element_Type => Token_ID,
       Hash => Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => Equal);
+   subtype TokenID_Map is TokenID_Container.Map;
 
    -- public
    type Token is interface;
@@ -69,26 +72,26 @@ package ANTLR.Runtime.Token_Protocol is
    --
    -- Get the text of the token.
    --
-   function getText (Some : Token) return Optional_UString;
+   function getText (This :Token) return Optional_UString;
 
    -- Get the token type of the token
-   function getType (Some : Token) return Token_Kind;
+   function getType (This :Token) return Token_Kind;
 
    -- The line number on which the 1st character of this token was matched,
    -- line=1 .. n
    --
-   function getLine (Some : Token) return Integer;
+   function getLine (This :Token) return Integer;
 
    -- The index of the first character of this token relative to the
    -- beginning of the line at which it occurs, 0 .. n - 1
    --
-   function getCharPositionInLine (Some : Token) return Integer;
+   function getCharPositionInLine (This :Token) return Integer;
 
    -- Return the channel this token. Each token can arrive at the parser
    -- on a different channel, but the parser only "tunes" to a single channel.
    -- The parser ignores everything not on DEFAULT_CHANNEL.
    --
-   function getChannel (Some : Token) return Channel_Number;
+   function getChannel (This :Token) return Channel_Number;
 
    -- An index from 0 .. n - 1 of the token object in the input stream.
    -- This must be valid in order to print token streams and
@@ -97,32 +100,32 @@ package ANTLR.Runtime.Token_Protocol is
    -- Return -1 to indicate that this token was conjured up since
    -- it doesn't have a valid index.
    --
-   function getTokenIndex (Some : Token) return Integer;
+   function getTokenIndex (This :Token) return Integer;
 
    -- The starting character index of the token
    -- This method is optional; return -1 if not implemented.
    --
-   function getStartIndex (Some : Token) return Integer;
+   function getStartIndex (This :Token) return Integer;
 
    -- The last character index of the token.
    -- This method is optional; return -1 if not implemented.
    --
-   function getStopIndex (Some : Token) return Integer;
+   function getStopIndex (This :Token) return Integer;
 
    -- Gets the _org.antlr.v4.runtime.TokenSource_ which created this token.
    --
-   function getTokenSource (Some : Token) return TokenSource_Optional;
+   function getTokenSource (This :Token) return TokenSource_Optional;
 
    --
    -- Gets the _org.antlr.v4.runtime.CharStream_ from which this token was derived.
    --
-   function getInputStream (Some : Token) return CharStream_Optional;
+   function getInputStream (This :Token) return CharStream_Optional;
 
-   function getTokenSourceAndStream (Some : Token) return TokenSourceAndStream;
+   function getTokenSourceAndStream (This :Token) return TokenSourceAndStream;
 
    protected Visited is
-      function Was_Visited return Boolean; --TOFIX for Some : Token 
-      procedure Set_as_Visited (is_visited : Boolean); --TOFIX for Some : Token 
+      function Was_Visited return Boolean; --TOFIX for This :Token 
+      procedure Set_as_Visited (is_visited : Boolean); --TOFIX for This :Token 
    private  
       Has_Been_Visited : Boolean := False;
    end Visited;

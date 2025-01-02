@@ -3,6 +3,7 @@
 with Ada.Containers.Hashed_Sets;
 with Ada.Containers.Vectors;
 with Ada.Finalization;
+with Option;
 
 generic
    type T is private;
@@ -70,6 +71,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       Index_Type => Natural,
       Element_Type => Optional_SemanticContext,
       "=" => Equal);
+   subtype Optional_SemanticContext_List is Optional_SemanticContext_Container.Vector;
 
    package Recognizer_T is new Recognizer (T);
    -- public
@@ -197,6 +199,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       Index_Type : Natural;
       Element_Type : PrecedencePredicate;
       "=" : "=");
+   subtype PrecedencePredicate_List is PrecedencePredicate_Container.Vector;
 
    function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector;
 

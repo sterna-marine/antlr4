@@ -11,6 +11,6 @@ package ANTLR.Runtime.Tree.RuleNode_Protocol is
    -- public
    type RuleNode is interface and ParseTree;
 
-   function getRuleContext (Some : RuleNode) return RuleContext;
+   function getRuleContext (This :RuleNode) return RuleContext;
 
 end ANTLR.Runtime.Tree.RuleNode_Protocol;

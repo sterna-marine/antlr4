@@ -12,12 +12,12 @@ package body ANTLR.Runtime.ATN.States is
       return 0; --TOFIX
    end Hash;
 
-   function Equivalent_Elements (Left, Right : ATNState) return Boolean;
+   function Equivalent_Elements (Left, Right : ATNState) return Boolean is
    begin
       return Hash (Left) = Hash (Right); 
    end Equivalent_Elements;
 
-   function Equal (Left, Right : ATNState) return Boolean;
+   function Equal (Left, Right : ATNState) return Boolean is
    begin
       return Left = Right; --TOFIX
    end Equal;
@@ -30,7 +30,7 @@ package body ANTLR.Runtime.ATN.States is
    procedure addTransition (This : ATNState; e : ATNTransition'Class) is
       alreadyPresent :Boolean := False;
    begin
-      if Transitions.Container.isEmpty (This.Transitions) then
+      if Transitions_List.isEmpty (This.Transitions) then
          This.epsilonOnlyTransitions := e.isEpsilon;
       elsif This.epsilonOnlyTransitions /= e.isEpsilon then
          This.epsilonOnlyTransitions := False;
@@ -42,11 +42,12 @@ package body ANTLR.Runtime.ATN.States is
             declare
                tLabel : constant IntervalSet := t.labelIntervalSet;
                eLabel : constant IntervalSet := e.labelIntervalSet;
+            begin
                if Is_Valid (tLabel) and Is_Valid (eLabel) and tLabel = eLabel then
                   alreadyPresent := True;
                   -- Text_IO.Put_Line ("Repeated transition upon " & eLabel'Image & " from " & stateNumber'Image & "->" & t.target.stateNumber'Image);
                   exit when True;
-               elsif t.isEpsilon () and then e.isEpsilon () then
+               elsif t.isEpsilon and then e.isEpsilon then
                   alreadyPresent := True;
                   -- Text_IO.Put_Line ("Repeated epsilon transition from " & stateNumber'Image & "->" & t.target.stateNumber'Image);
                   exit when True;
@@ -56,26 +57,25 @@ package body ANTLR.Runtime.ATN.States is
       end loop;
 
       if not alreadyPresent then
-         Transitions.Container.Append (Container => This.transitions, New_Item => e);
+         Transitions_List.Append (Container => This.transitions, New_Item => e);
       end if;
    end addTransition;
 
-   procedure setTransition (This : ATNState; i : Transitions.Container_Index; e : ATNTransition) is
+   procedure setTransition (This : ATNState; i : Transitions_List_Index; e : ATNTransition) is
    begin
-      Transitions.Container.Replace_Element (
+      Transitions_List.Replace_Element (
          Container => This.transitions,
          Index => i,
          New_Item => e);
    end setTransition;
 
    -- public final
-   function removeTransition (This : ATNState; Index : Transitions.Container_Index) return Transition is
+   function removeTransition (This : ATNState; Index : Transitions_List_Index) return Transition is
       Element : ATNTransition;
    begin
-      Element := Transitions.Container.Element (Container => This.transitions, Index => Index);
-      Transitions.Container.Delete (
-         Container => This.transitions,
-         Index => Index)
+      Element := Transitions_List.Element (Container => This.transitions, Index => Index);
+      Transitions_List.Delete (Container => This.transitions,
+         Index => Index);
       return Element;
    end removeTransition;
 
@@ -89,7 +89,7 @@ package body ANTLR.Runtime.ATN.States is
     procedure setRuleIndex (This : ATNState; ruleIndex : Integer) is
     begin
         This.ruleIndex := ruleIndex;
-    end if;
+    end setRuleIndex;
 
    -- public
    function "=" (Lhs, Rhs : ATNState) return Boolean is

@@ -15,7 +15,7 @@ package ANTLR.Runtime.Tree_Protocol is
    -- The parent of this node. If the return value is null, then this
    -- node is the root of the tree.
    --
-   function getParent (Some : Tree) return Optional_Tree;
+   function getParent (This :Tree) return Optional_Tree;
 
    --
    -- This method returns whatever object represents the data at this note. For
@@ -24,19 +24,19 @@ package ANTLR.Runtime.Tree_Protocol is
    -- invocation. For abstract syntax trees (ASTs), this is a _org.antlr.v4.runtime.Token_
    -- object.
    --
-   function getPayload (Some : Tree) return AnyObject;
+   function getPayload (This :Tree) return AnyObject;
 
    -- If there are children, get the `i`th value indexed from 0.
-   function getChild (Some : Tree; i : Integer) return Optional_Tree
+   function getChild (This :Tree; i : Integer) return Optional_Tree
 
    -- How many children are there? If there is none, then this
    -- node represents a leaf node.
    --
-   function getChildCount (Some : Tree) return Natural;
+   function getChildCount (This :Tree) return Natural;
 
    -- Print out a whole tree, not just a node, in LISP format
    -- `(root child1 .. childN)`. Print just a node if this is a leaf.
    --
-   function toStringTree (Some : Tree) return UString;
+   function toStringTree (This :Tree) return UString;
 
 end ANTLR.Runtime.Tree_Protocol;

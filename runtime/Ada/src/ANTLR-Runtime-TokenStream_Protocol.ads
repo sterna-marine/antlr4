@@ -27,7 +27,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    --
    -- * SeeAlso: org.antlr.v4.runtime.IntStream#LA
    --
-   function LT (Some : TokenStream; k : Integer) return Optional_Token;
+   function LT (This :TokenStream; k : Integer) return Optional_Token;
 
    --
    -- Gets the _org.antlr.v4.runtime.Token_ at the specified `index` in the stream. When
@@ -47,13 +47,13 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- * Throws: ANTLRError.unsupportedOperation if the stream does not support
    -- retrieving the token at the specified index
    --
-   function get (Some : TokenStream; index : Integer) return Token;
+   function get (This :TokenStream; index : Integer) return Token;
 
    --
    -- Gets the underlying _org.antlr.v4.runtime.TokenSource_ which provides tokens for this
    -- stream.
    --
-   function getTokenSource (Some : TokenStream) return TokenSource;
+   function getTokenSource (This :TokenStream) return TokenSource;
 
    --
    -- Return the text of all tokens within the specified `interval`. This
@@ -75,7 +75,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- stream.
    --
    --
-   function getText (Some : TokenStream; interval : Interval) return UString;
+   function getText (This :TokenStream; interval : Interval) return UString;
 
    --
    -- Return the text of all tokens in the stream. This method behaves like the
@@ -90,7 +90,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    --
    -- * Returns: The text of all tokens in the stream.
    --
-   function getText (Some : TokenStream) return UString;
+   function getText (This :TokenStream) return UString;
 
    --
    -- Return the text of all tokens in the source interval of the specified
@@ -110,7 +110,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- text for.
    -- * Returns: The text of all tokens within the source interval of `ctx`.
    --
-   function getText (Some : TokenStream; ctx : RuleContext) return UString;
+   function getText (This :TokenStream; ctx : RuleContext) return UString;
 
    --
    -- Return the text of all tokens in this stream between `start` and
@@ -141,6 +141,6 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- and `stop` tokens.
    --
    --
-   function getText (Some : TokenStream; start, stop : Optional_Token) return UString;
+   function getText (This :TokenStream; start, stop : Optional_Token) return UString;
 
 end ANTLR.Runtime.TokenStream_Protocol;

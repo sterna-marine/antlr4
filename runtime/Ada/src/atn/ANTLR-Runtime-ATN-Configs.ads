@@ -2,6 +2,7 @@
 
 with Ada.Finalization;
 with ANTLR.Runtime.ATN.ATNStates;
+with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Hashed_Sets;
 with AdaForge.MurMur3_Hash;
@@ -76,11 +77,10 @@ package ANTLR.Runtime.ATN.Configs is
    type Class_Wide is access all Object'Class;
 
    subtype hash_Type is Ada.Containers.Hash_Type; --TOFIX
-   subtype Key_Type is Integer; --TOFIX
-   function MurMur3_Hash (Key : Key_Type) return Hash_Type;
-   function Equivalent_Keys (Left, Right : Key_Type) return Boolean
-      is Left = Right; --TOFIX
-   function "=" (Left, Right : Element_Type) return Boolean
+   function MurMur3_Hash (Key : Integer) return Hash_Type;
+   function Equivalent_Keys (Left, Right : Integer) return Boolean
+      is MurMur3_Hash (Left) = MurMur3_Hash (Right); --TOFIX
+   function "=" (Left, Right : ATNConfig) return Boolean
       is Left = Right; --TOFIX
    package ATNConfig_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => Key_Type,
@@ -88,6 +88,7 @@ package ANTLR.Runtime.ATN.Configs is
       Hash => MurMur3_Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
+   subtype ATNConfig_Map is ATNConfig_Container.Map;
 
    function Hash (Key : ATNConfig) return Ada.Container.Hash_Type;
    function Equivalent_Elements (Left, Right : ATNConfig) return Boolean

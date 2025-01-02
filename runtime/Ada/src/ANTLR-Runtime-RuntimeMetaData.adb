@@ -45,7 +45,7 @@ type RuntimeMetaData is new Ada.Finalization.Controlled record
     --
     -- Version numbers are assumed to have the form
     --
-    -- __major__.__minor__.__patch__.__revision__-__suffix__,
+    -- __major__.__minor__.__patch__.__revision__-__suffix__,
     --
     -- with the individual components defined as follows.
     --

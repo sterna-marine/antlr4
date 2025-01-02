@@ -33,6 +33,7 @@ package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
    -- so that whitespace etc ..  can go to the parser on a "hidden" channel.
    --
    type Channel_Number is new Integer;
+
     -- static public
    DEFAULT_CHANNEL : constant Channel_Number := 0;
    --

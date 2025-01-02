@@ -2,6 +2,7 @@
 
 with ANTLR.Runtime.ATN.ATNStates;
 with ANTLR.Runtime.ATN.DecisionState;
+with Option;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.ATNStates;

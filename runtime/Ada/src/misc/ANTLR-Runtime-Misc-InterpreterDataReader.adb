@@ -109,7 +109,7 @@ type InterpreterDataReader is new Ada.Finalization.Controlled record
         self.ruleNames := ruleNames
         self.channelNames := channelNames
         self.modeNames := modeNames
-      atnSerialized : Integer_Container.Vector;
+      atnSerialized : Integer_List;
         declare
             procedure Map (At_Cursor : atnText.Cursor) is
             begin

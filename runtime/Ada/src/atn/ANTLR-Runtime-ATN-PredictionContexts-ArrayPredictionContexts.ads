@@ -22,7 +22,7 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
       -- _#EMPTY_RETURN_STATE_ is always last.
       --
       -- public final
-      returnStates : constant Integer.Container.Vector;
+      returnStates : constant Integer_List;
    end record;
 
    subtype Object is ArrayPredictionContext;
@@ -37,7 +37,7 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    -- public
    procedure Initialize (Self : in out ArrayPredictionContext;
                    parents : Optional_PredictionContext.Container.Vector;
-                   returnStates : Integer.Container.Vector);
+                   returnStates : Integer_List);
 
    overriding
    -- final public

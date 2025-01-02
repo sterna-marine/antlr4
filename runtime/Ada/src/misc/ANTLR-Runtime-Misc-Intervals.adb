@@ -23,6 +23,11 @@ package body ANTLR.Runtime.Misc.Intervals is
       Some_hasher.combine (This.B);
    end Hash;
 
+   function Equal (Left, Right : Interval) return Boolean is
+   begin
+      return Left.A = Right.A and Left.B = Right.B; --TOFIX
+   end Equal;
+
    function differenceNotProperlyContained (This, Other : Interval) return Optional_Interval is
       Diff : Option_Interval.Optional;
    begin

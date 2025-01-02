@@ -9,7 +9,7 @@ use ANTLR.Runtime.ATN.ATNStates;
 package ANTLR.Runtime.ATN is
 
    -- public
-   type ATN is new Ada.Finalization.Controlled record with private;
+   type ATN is new Ada.Finalization.Controlled with private;
 
    subtype Object is ATN;
    type Class is access all Object;
@@ -90,7 +90,7 @@ package ANTLR.Runtime.ATN is
 
 private
 
-   type ATN is new Ada.Finalization.Controlled record with record
+   type ATN is new Ada.Finalization.Controlled with record
 
       -- public private (set) final
       states : ATNStates.Container_Optional_ATNState.Vector; -- := ATNStates.Container_Optional_ATNState.Empty_Vector;
@@ -134,7 +134,7 @@ private
       -- deserialization option was specified; otherwise, this is `null`.
       --
       -- public internal (set) final var
-      ruleToTokenType : Integer.Container.Vector; -- !
+      ruleToTokenType : Integer_List; -- !
 
       --
       -- For lexer ATNs, this is an array of _org.antlr.v4.runtime.atn.LexerAction_ objects which may

@@ -43,11 +43,17 @@ package ANTLR.Runtime.DFA.States is
       -- public
       pred : constant SemanticContext;
       -- never null; at least SemanticContext.Empty.Instance
+
       -- public
       alt : constant Integer;
    end record;
 
-   package PredPrediction_Container is new Ada.Containers.Vectors (PredPrediction);
+   function Equal (Left, Right : PredPrediction) return Boolean;
+   package PredPrediction_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type  => PredPrediction,
+      "=" => Equal);
+   subtype PredPrediction_List is PredPrediction_Container.Vector;
 
    -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;

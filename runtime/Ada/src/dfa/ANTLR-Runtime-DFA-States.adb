@@ -10,6 +10,12 @@ use ANTLR.Runtime.ATN;
 
 package body ANTLR.Runtime.DFA.States is
 
+   function Equal (Left, Right : PredPrediction) return Boolean is
+   begin
+      return Left.Pred = Right.Pred and Left.Alt = Right.Alt;
+   end Equal;
+
+
    procedure Initialize (Self : in out PredPrediction; pred : SemanticContext; alt : Integer) is
    begin
          self.alt := alt;

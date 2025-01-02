@@ -130,7 +130,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    function calculateHashCode (parent : Optional_PredictionContext; returnState : ATStates.State) return Hash_Code;
 
    -- static
-   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer.Container.Vector) return Hash_Code;
+   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer_List) return Hash_Code;
 
    -- dispatch
    -- public static

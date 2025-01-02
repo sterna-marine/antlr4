@@ -38,23 +38,25 @@ package ANTLR.Runtime.ATN.Transitions is
    -- constants for serialization
    -- public static
    for Transition use (
-      INVALID           => 0;
-      EPSILON           => 1;
-      TRANSITION_RANGE  => 2;
-      RULE              => 3;
-      PREDICATE         => 4;
-      ATOM              => 5;
-      ACTION            => 6;
-      SET               => 7;
-      NOT_SET           => 8;
-      WILDCARD          => 9;
+      INVALID           => 0,
+      EPSILON           => 1,
+      TRANSITION_RANGE  => 2,
+      RULE              => 3,
+      PREDICATE         => 4,
+      ATOM              => 5,
+      ACTION            => 6,
+      SET               => 7,
+      NOT_SET           => 8,
+      WILDCARD          => 9,
       PRECEDENCE        => 10);
 
    subtype Container_Index is Natural;
-   package Container is new Ada.Cantainer.Vector (
-      Index_Type : Container_Index;
-      Element_Type : ATNTransition;
-      "=" : "=");
+   function Equal (Left, Right : ATNTransition) return Boolean;
+   package ATNTransition_Container is new Ada.Cantainers.Vectors (
+      Index_Type => Container_Index,
+      Element_Type => ATNTransition,
+      "=" => Equal);
+   subtype ATNTransition_List is ATNTransition_Container.Vector;
 
       -- public static
    type serializationTypes is array (Transition range EPSILON .. PRECEDENCE) of UString;

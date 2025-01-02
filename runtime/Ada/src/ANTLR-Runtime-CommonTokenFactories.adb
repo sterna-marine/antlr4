@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.TokenFactories.CommonTokenFactories is
+package body ANTLR.Runtime.CommonTokenFactories is
 
    procedure Initialize (Self : in out CommonTokenFactory; copyText : Boolean) is
    begin
@@ -38,4 +38,4 @@ package body ANTLR.Runtime.TokenFactories.CommonTokenFactories is
          when others => null;
    end create;
 
-end ANTLR.Runtime.TokenFactories.CommonTokenFactories;
+end ANTLR.Runtime.CommonTokenFactories;

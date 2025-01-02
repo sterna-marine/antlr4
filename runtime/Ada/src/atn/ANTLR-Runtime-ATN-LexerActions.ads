@@ -17,10 +17,11 @@ package ANTLR.Runtime.ATN.LexerActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   package Container is new Ada.Cantainers.Vector (
+   package LexerAction_Container is new Ada.Containers.Vectors (
       Index_Type : Natural;
       Element_Type : LexerAction;
       "=" : "=");
+   subtype LexerAction_list is LexerAction_Container.Vector;
 
    --
    -- Gets the serialization type of the lexer action.

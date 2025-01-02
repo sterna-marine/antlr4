@@ -21,7 +21,7 @@ package ANTLR.Runtime.ATN.Deserializers is
                    deserializationOptions : Optional_ATNDeserializationOptions := (Valid => False));
 
    -- public
-   function deserialize (This : ATNDeserializer; data : Integer.Container.Vector) return ATN;
+   function deserialize (This : ATNDeserializer; data : Integer_List) return ATN;
 
    --
    -- Analyze the _org.antlr.v4.runtime.atn.StarLoopEntryState_ states in the specified ATN to set
@@ -78,12 +78,12 @@ private
    procedure finalizeATN (This : ATNDeserializer; atn : ATN);
 
    -- private
-   function readInt (data : Integer.Container.Vector; p : in out Integer) return Integer;
+   function readInt (data : Integer_List; p : in out Integer) return Integer;
 
-   function Read_Unicode (P1 : Integer_Container.Vector; P2 : in out Integer) return Integer; --TOFIX
+   function Read_Unicode (P1 : Integer_List; P2 : in out Integer) return Integer; --TOFIX
 
    -- private
-   procedure readSets (data : Integer.Container.Vector;
+   procedure readSets (data : Integer_List;
                        p : in out Integer;
                        sets : in out IntervalSet_Container.Vector;
                        readUnicode : Read_Unicode'Access);

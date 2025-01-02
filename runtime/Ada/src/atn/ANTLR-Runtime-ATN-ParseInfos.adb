@@ -7,8 +7,8 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       self.atnSimulator := atnSimulator;
    end Initialize;
 
-   function getLLDecisions (This : ParseInfo) return Integer.Container.Vector is
-      LL : Integer.Container.Vector;
+   function getLLDecisions (This : ParseInfo) return Integer_List is
+      LL : Integer_List;
       decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
       fallBack : Integer_64; -- constant
    begin

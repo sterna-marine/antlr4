@@ -10,8 +10,11 @@ package ANTLR.Runtime.Vocabularies is
    -- interface.
    --
 
-   package Names_Container is new Ada.Containers.Vectors (Index_Type => Natural, Item_Type => UString);
-   subtype Name_Container is Names_Container.Vector;
+   package Names_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type => UString,
+      "=" => "=");
+   subtype Name_List is Names_Container.Vector;
 
    -- private static
    EMPTY_NAMES : constant Vocabulary := Names_Container.To_Vector (New_Item => "", Length => 1);

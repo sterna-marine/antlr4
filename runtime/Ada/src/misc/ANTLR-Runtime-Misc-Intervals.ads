@@ -17,6 +17,13 @@ package ANTLR.Runtime.Misc.Intervals is
    package Option_Interval is new Option (Interval);
    subtype Optional_Interval is Option_Interval.Optional; -- renames
 
+   function Equal (Left, Right : Interval) return Boolean;
+   package Interval_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => Interval,
+      "=" => "=");
+   subtype Interval_List is Interval_Container.Vector;
+
    -- public static
    Invalid : constant Interval := (-1, -2);
 

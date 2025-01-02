@@ -49,7 +49,7 @@ package ANTLR.Runtime.ATN.ParseInfos is
    -- full-context predictions during parsing.
    --
    -- public
-   function getLLDecisions (This : ParseInfo) return Integer.Container.Vector;
+   function getLLDecisions (This : ParseInfo) return Integer_List;
 
    --
    -- Gets the total time spent during prediction across all decisions made

@@ -37,7 +37,7 @@ package ANTLR.Runtime.RecognizerProtocol is
    -- created the interpreter from it.
    --
    -- open
-   function getSerializedATN (This : RecognizerProtocol) return Integer.Container.Vector is abstract;
+   function getSerializedATN (This : RecognizerProtocol) return Integer_List is abstract;
 
    -- public final
    function getState (This : RecognizerProtocol) return Integer is abstract;

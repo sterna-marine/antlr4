@@ -10,7 +10,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
    procedure Initialize (Self : in out ArrayPredictionContext;
                    parents : Optional_PredictionContext.Container.Vector;
-                   returnStates : Integer.Container.Vector) is
+                   returnStates : Integer_List) is
    begin
       self.parents := parents;
       self.returnStates := returnStates;

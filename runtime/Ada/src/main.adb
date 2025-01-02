@@ -89,6 +89,7 @@ with Option;
 --  with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 --  with ANTLR.Runtime.RuleContexts.ParserRuleContexts.InterpreterRuleContexts;
 --  with ANTLR.Runtime.Token_Protocol;
+with ANTLR.Runtime.TokenStreamRewriters;
 --  with ANTLR.Runtime.TokenFactories.CommonTokenFactories;
 --  with ANTLR.Runtime.Tree_Protocol;
 --  with ANTLR.Runtime.Tree.ParseTree_Protocol;
@@ -112,7 +113,7 @@ procedure Main is
       Red  => Character'Pos ('R'));
    for Color'Size use 8;
 
-   package body Option_Color is new Option (Color);
+   package Option_Color is new Option (Color);
    subtype Optional_Color is Option_Color.Optional; -- renames
 
    use Option_Color;
@@ -120,50 +121,49 @@ procedure Main is
    My_Color : Optional_Color;
 
 begin
-   Put_Line (My_Color'Image);
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (My_Color, Red)");
-   set (My_Color, Red);
-   Put_Line (My_Color'Image);
+   --  Set (My_Color, Red);
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (My_Color, ""Red"")");
-   Value (My_Color, "Red");
-   Put_Line (My_Color'Image);
+   --  Value (My_Color, "Red");
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (My_Color, ""YELLOW"")");
-   Value (My_Color, "YELLOW");
-   Put_Line (My_Color'Image);
+   --  Value (My_Color, "YELLOW");
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (My_Color, " & Color'Pos (Color'Last)'Image & ")");
-   Val (My_Color, Color'Pos (Color'Last));
-   Put_Line (My_Color'Image);
+   --  Val (My_Color, Color'Pos (Color'Last));
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
-   Put_Line ("Set (My_Color, " & Character'Pos ('R')'Image & ")");
-   Enum_Val (My_Color, Character'Pos ('R'));
-   Put_Line (My_Color'Image);
+   --  Put_Line ("Set (My_Color, " & Character'Pos ('R')'Image & ")");
+   --  Enum_Val (My_Color, Character'Pos ('R'));
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
 
    Put_Line ("===============");
    Put_Line ("Set (Red)");
-   set (Red);
-   Put_Line (My_Color'Image);
+   --  set (Red);
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (""Red"")");
-   Value ("Red");
-   Put_Line (My_Color'Image);
+   --  Value ("Red");
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
    Put_Line ("Set (""YELLOW"")");
-   Value ("YELLOW");
-   Put_Line (My_Color'Image);
+   --  Value ("YELLOW");
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
-   Put_Line ("Set (" & Color'Pos (Color'Last)'Image & ")");
-   Val (Color'Pos (Color'Last));
-   Put_Line (My_Color'Image);
+   --  Put_Line ("Set (" & Color'Pos (Color'Last)'Image & ")");
+   --  Val (Color'Pos (Color'Last));
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
-   Put_Line ("Set (" & Character'Pos ('R')'Image & ")");
-   Enum_Val (Character'Pos ('R'));
-   Put_Line (My_Color'Image);
+   --  Put_Line ("Set (" & Character'Pos ('R')'Image & ")");
+   --  Enum_Val (Character'Pos ('R'));
+   --  Put_Line (My_Color'Image);
    Put_Line ("===============");
-
 
 end Main;

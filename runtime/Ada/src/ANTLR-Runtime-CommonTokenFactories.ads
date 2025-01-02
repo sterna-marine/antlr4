@@ -1,21 +1,23 @@
 -- €
 
-package ANTLR.Runtime.TokenFactories.CommonTokenFactories is
+with Ada.Finalize;
+with ANTLR.Runtime.TokenFactory_Protocol,
+with ANTLR.Runtime.Token_Protocol,
+
+use ANTLR.Runtime.TokenFactory_Protocol;
+use ANTLR.Runtime.Token_Protocol,
+
+package ANTLR.Runtime.CommonTokenFactories is
 
    --
    -- This default implementation of _org.antlr.v4.runtime.TokenFactory_ creates
    -- _org.antlr.v4.runtime.CommonToken_ objects.
    --
 
-   --
-   -- This token factory does not explicitly copy token text when constructing
-   -- tokens.
-   --
-   -- public static
-   DEFAULT : TokenFactory := CommonTokenFactory (); -- constant
+   type CommonTokenFactory_Base is new Ada.Finalize.Controlled  with null record;
 
    -- public
-   type CommonTokenFactory is new TokenFactory with
+   type CommonTokenFactory is new CommonTokenFactory_Base and TokenFactory with
    record
       --
       -- The default _org.antlr.v4.runtime.CommonTokenFactory_ instance.
@@ -37,13 +39,19 @@ package ANTLR.Runtime.TokenFactories.CommonTokenFactories is
       -- overhead of copying text for every token unless explicitly requested.
       --
       -- internal
-      copyText : constant Boolean;
+      copyText : constant Boolean := False;
    end record;
 
    subtype Object is CommonTokenFactory;
-   subtype Super is TokenFactory;
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
+
+   --
+   -- This token factory does not explicitly copy token text when constructing
+   -- tokens.
+   --
+   -- public static
+   DEFAULT :  constant CommonTokenFactory;
 
    --
    -- Constructs a _org.antlr.v4.runtime.CommonTokenFactory_ with the specified value for
@@ -72,8 +80,9 @@ package ANTLR.Runtime.TokenFactories.CommonTokenFactories is
 
 
    -- public
-   function create (source : TokenSourceAndStream;
-                    Type : Token_Kind;
+   function create (This : CommonTokenFactory;
+                    source : TokenSourceAndStream;
+                    Token_Kind : Token_Kind;
                     text : Optional_String;
                     Channel : Channel_Number;
                     start : Integer;
@@ -83,7 +92,9 @@ package ANTLR.Runtime.TokenFactories.CommonTokenFactories is
                     return Token;
 
    -- public
-   function create (Type : Token_Kind; text : UString) return
+   function create (This : CommonTokenFactory;
+                    Token_Kind : Token_Kind;
+                    text : UString) return Token
       is (CommonToken (type, text));
 
-end ANTLR.Runtime.TokenFactories.CommonTokenFactories;
+end ANTLR.Runtime.CommonTokenFactories;
