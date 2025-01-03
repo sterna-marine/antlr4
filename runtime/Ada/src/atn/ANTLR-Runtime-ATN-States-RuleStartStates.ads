@@ -1,9 +1,9 @@
 -- €
 
-with ANTLR.Runtime.ATN.RuleStopState;
+with ANTLR.Runtime.ATN.States.RuleStopStates;
 
-use ANTLR.Runtime.ATN.ATNStates;
-use ANTLR.Runtime.ATN.RuleStopState;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.States.RuleStopStates;
 
 package ANTLR.Runtime.ATN.States.RuleStartStates is
 

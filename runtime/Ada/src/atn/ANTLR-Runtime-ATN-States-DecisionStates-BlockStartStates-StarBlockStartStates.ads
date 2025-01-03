@@ -1,10 +1,7 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.BlockStartState;
-
-use ANTLR.Runtime.ATN.ATNStates;
-use ANTLR.Runtime.ATN.BlockStartState;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
 
 package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates.StarBlockStartStates is
 

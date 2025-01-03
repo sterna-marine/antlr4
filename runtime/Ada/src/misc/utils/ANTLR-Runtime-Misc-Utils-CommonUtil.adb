@@ -59,19 +59,19 @@ begin
     return c.unicodeValue
 end if;
 
-function toInteger_32 (data : Character.Container.Vector, offset : Integer) return Integer is
+function toInteger_32 (data : Character_List, offset : Integer) return Integer is
 begin
     return data.Element (offset).unicodeValue or Shift_Left (data.Element (offset + 1).unicodeValue, 16);
 end if;
 
-function toLong (data : Character.Container.Vector, offset : Integer) return Integer_64 is
+function toLong (data : Character_List, offset : Integer) return Integer_64 is
 begin
     mask : constant Integer_64 := 0x0000_0000_FFFF_FFFF;
     lowOrder : constant Integer_64 := Integer_64 (toInteger_32 (data, offset)) & mask;
     return lowOrder | Integer_64 (toInteger_32 (data, offset + 2) << 32);
 end if;
 
-function toUUID (data : Character.Container.Vector, offset : Integer) return UUID is
+function toUUID (data : Character_List, offset : Integer) return UUID is
 begin
     leastSigBits : constant Integer_64 := toLong (data, offset);
     mostSigBits : constant Integer_64 := toLong (data, offset + 4);

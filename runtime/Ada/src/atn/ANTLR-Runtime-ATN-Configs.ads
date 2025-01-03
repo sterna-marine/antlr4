@@ -1,14 +1,14 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.States;
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Hashed_Sets;
 with AdaForge.MurMur3_Hash;
 with Ada.Strings.Unbounded;
 
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.Configs is
    --

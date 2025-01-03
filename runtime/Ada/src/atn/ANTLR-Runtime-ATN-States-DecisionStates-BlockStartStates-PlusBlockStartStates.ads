@@ -1,12 +1,10 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.BlockStartState;
-with ANTLR.Runtime.ATN.PlusLoopbackState;
+with ANTLR.Runtime.ATN.States.DecisionStates.PlusLoopbackStates;
 
-use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.BlockStartState;
-use ANTLR.Runtime.ATN.PlusLoopbackState;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+use ANTLR.Runtime.ATN.States.DecisionStates.PlusLoopbackStates;
 
 package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates.PlusBlockStartStates is
 
@@ -34,4 +32,4 @@ package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates.PlusBlockStartS
    function getStateType (This : PlusBlockStartState) return State
       is (PLUS_BLOCK_START);
 
-end ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates.PlusBlockStartState;
+end ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates.PlusBlockStartStates;

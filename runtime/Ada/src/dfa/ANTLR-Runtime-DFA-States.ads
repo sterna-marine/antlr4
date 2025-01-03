@@ -2,12 +2,15 @@
 
 with Ada.Containers.Vectors;
 with Ada.Finalization;
-with ANTLR.Runtime.ATN.ATNConfigSet;
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.ConfigSets;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.SemanticContext;
 with ANTLR.Runtime.ATN.LexerAction;
 
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.ConfigSets;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.SemanticContext;
+use ANTLR.Runtime.ATN.LexerAction;
 
 package ANTLR.Runtime.DFA.States is
 
@@ -80,7 +83,7 @@ package ANTLR.Runtime.DFA.States is
       -- _org.antlr.v4.runtime.Token#EOF_ maps to `DFAStati.Container.Element (Edges, 0)`.
       --
       -- public internal (set)
-      edges : DFAState.Container.Vector;
+      edges : DFAState_List;
 
       -- public internal (set)
       isAcceptState : Boolean := False;
@@ -126,7 +129,7 @@ package ANTLR.Runtime.DFA.States is
       -- mutex for states changes.
       --
       -- internal private (set);
-      mutex := Mutex.Synchronized;
+      mutex := Mutex.Synchronised;
 
       --
       -- Map a predicate to a predicted alternative.
@@ -160,7 +163,7 @@ package ANTLR.Runtime.DFA.States is
    function Description (This : DFAState) return UString;
 
    --
-   -- Two _org.antlr.v4.runtime.dfa.DFAState_ instances are equal if their ATN configuration sets
+   -- Two _org.antlr.v4.runtime.DFA.States_ instances are equal if their ATN configuration sets
    -- are the same. This method is used to see if a state already exists.
    --
    -- Because the number of alternatives and number of ATN configurations are

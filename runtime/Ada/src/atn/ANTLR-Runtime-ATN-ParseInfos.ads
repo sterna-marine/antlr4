@@ -1,11 +1,11 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.ATN.ProfilingATNSimulator;
+with ANTLR.Runtime.ATN.ProfilingATNSimulators;
 with ANTLR.Runtime.DFA;
 with Interfaces;
 
-use ANTLR.Runtime.ATN.ProfilingATNSimulator;
+use ANTLR.Runtime.ATN.ProfilingATNSimulators;
 use ANTLR.Runtime.DFA;
 use Interfaces;
 
@@ -17,9 +17,9 @@ package ANTLR.Runtime.ATN.ParseInfos is
    --
 
    -- public
-   type ParseInfo is new Ada.Finalization.Controlled record
+   type ParseInfo is new Ada.Finalization.Controlled with record
       -- internal
-      atnSimulator : constant ProfilingATNSimulator;
+      atnSimulator : ProfilingATNSimulator; -- constant
    end record;
 
    subtype Object is ParseInfo;
@@ -37,8 +37,8 @@ package ANTLR.Runtime.ATN.ParseInfos is
    -- number.
    --
    -- public
-   function getDecisionInfo (This : ParseInfo) return DecisionInfo.Container.Vector
-      is (atnSimulator.getDecisionInfo ());
+   function getDecisionInfo (This : ParseInfo) return DecisionInfo_List
+      is (This.atnSimulator.getDecisionInfo);
 
    --
    -- Gets the decision numbers for decisions that required one or more

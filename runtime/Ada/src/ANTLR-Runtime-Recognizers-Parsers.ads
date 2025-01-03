@@ -1,22 +1,33 @@
 -- €
 
+with Ada.Containers.Vectors;
+with ANTLR.Runtime.ATN.ParseInfos;
 with ANTLR.Runtime.ATN.PredictionModes;
 with ANTLR.Runtime.Misc.Utils.Mutex;
 with ANTLR.Runtime.Tree.ParseTreeListener;
+
+use ANTLR.Runtime.ATN.ParseInfos;
+use ANTLR.Runtime.ATN.PredictionModes;
+use ANTLR.Runtime.Misc.Utils.Mutex;
+use ANTLR.Runtime.Tree.ParseTreeListener;
 
 package ANTLR.Runtime.Recognizers.Parsers is
 
    --
    -- This is all the parsing support code essentially; most of it is error recovery stuff.
    --
+
    -- public static
-   EOF : constant := -1
-   -- public static
-   ConsoleError := True;
+   ConsoleError : Boolean := True;
 
    -- public static
    INSTANCE : TrimToSizeListener; -- constant
 
+   package Integer_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => Integer,
+      "=" => "=");
+   subtype Integer_Stack is Integer_Container.Vector;
    -------------------
    -- TraceListener --
    -------------------
@@ -26,9 +37,6 @@ package ANTLR.Runtime.Recognizers.Parsers is
    end record;
 
    procedure Initialize (Self : in out TraceListener; host : Parser);
-
-      self.host := host;
-   end Initialize;
 
    -- public
    procedure enterEveryRule (This : TraceListener; ctx : ParserRuleContext);
@@ -80,7 +88,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- * SeeAlso: #setErrorHandler
       --
       -- public
-      _errHandler : ANTLRErrorStrategy := DefaultErrorStrategy.Init;
+      errHandler : ANTLRErrorStrategy := DefaultErrorStrategy.Init;
 
       --
       -- The input stream.
@@ -89,10 +97,10 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- * SeeAlso: #setInputStream
       --
       -- public
-      _input : TokenStream!;
+      input : TokenStream; -- !
 
       -- internal
-      _precedenceStack : Stack<Int>;
+      precedenceStack : Integer_Stack;
 
 
       --
@@ -100,7 +108,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- This is always non-null during the parsing process.
       --
       -- public
-      _ctx : Optional_ParserRuleContext := (Valid => False);
+      ctx : Optional_ParserRuleContext := (Valid => False);
 
       --
       -- Specifies whether or not the parser should construct a parse tree during
@@ -110,7 +118,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- * SeeAlso: #setBuildParseTree
       --
       -- internal
-      _buildParseTrees : Boolean := True;
+      buildParseTrees : Boolean := True;
 
       --
       -- When _#setTrace_`(True)` is called, a reference to the
@@ -120,7 +128,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- other parser methods.
       --
       -- private
-      _tracer : Optional_TraceListener;
+      tracer : Optional_TraceListener;
 
       --
       -- The list of _org.antlr.v4.runtime.tree.ParseTreeListener_ listeners registered to receive
@@ -129,14 +137,14 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- * SeeAlso: #addParseListener
       --
       -- public
-      _parseListeners : array (<>) of Optional_ParseTreeListener;
+      parseListeners : ParseTreeListener_List;
 
       --
       -- The number of syntax errors reported during parsing. This value is
       -- incremented each time _#notifyErrorListeners_ is called.
       --
       -- internal
-      _syntaxErrors : Integer := 0;
+      syntaxErrors : Integer := 0;
    end record;
 
    subtype Object is Parser;
@@ -144,7 +152,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   function _precedenceStack return Stack<Int>;
+   function precedenceStack return Integer_Stack;
 
    -- public
    procedure Initialize (Self : in out Parser; input : TokenStream);
@@ -225,7 +233,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    --
    -- public
    function getBuildParseTree (This : Parser) return Boolean
-      is (This._buildParseTrees);
+      is (This.buildParseTrees);
 
    --
    -- Trim the internal lists of the parse tree during parsing to conserve memory.
@@ -245,7 +253,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    function getTrimParseTree (This : Parser) return Boolean;
 
    -- public
-   function getParseListeners (This : …) return ParseTreeListener.Container.Vector;
+   function getParseListeners (This : Parser) return ParseTreeListener_List;
 
    --
    -- Registers `listener` to receive events during the parsing process.
@@ -321,12 +329,12 @@ package ANTLR.Runtime.Recognizers.Parsers is
    --
    -- public
    function getNumberOfSyntaxErrors (This : Parser) return Integer
-      is (This._syntaxErrors);
+      is (This.syntaxErrors);
 
    overriding
    -- open
    function getTokenFactory (This : Parser) return TokenFactory
-      is (This._input.getTokenSource ().getTokenFactory ());
+      is (This.input.getTokenSource.getTokenFactory);
 
    -- Tell our token source and error strategy about a new way to create tokens.
    overriding
@@ -355,22 +363,22 @@ package ANTLR.Runtime.Recognizers.Parsers is
    function compileParseTreePattern (This : Parser;
                                      pattern : UString;
                                      patternRuleIndex : Integer)
-                                     return ParseTreePattern is
+                                     return ParseTreePattern;
 
    --
    -- The same as _#compileParseTreePattern (String, int)_ but specify a
    -- _org.antlr.v4.runtime.Lexer_ rather than trying to deduce it from this parser.
    --
    -- public
-   procedure compileParseTreePattern (This : Parser;
+   function compileParseTreePattern (This : Parser;
                                       pattern : UString;
                                       patternRuleIndex : Integer;
                                       lexer : Lexer)
-                                      return ParseTreePattern is
+                                      return ParseTreePattern;
 
    -- public
    function getErrorHandler (This : Parser) return ANTLRErrorStrategy
-      is This._errHandler;
+      is (This.errHandler);
 
    -- public
    procedure setErrorHandler (This : Parser; handler : ANTLRErrorStrategy);
@@ -378,7 +386,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    overriding
    -- open
    function getInputStream (This : Parser) return Optional_IntStream
-      is (getTokenStream ());
+      is (This.getTokenStream);
 
    overriding
    -- public final
@@ -386,7 +394,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
 
    -- public
    function getTokenStream (This : Parser) return Optional_TokenStream
-      is (This._input);
+      is (This.input);
 
    -- Set the token stream and reset the parser.
    -- public
@@ -398,7 +406,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
 
    -- public
    function getCurrentToken (This : Parser) return Token
-      is (_input.LT (1)!);
+      is (Value (input.LT (1)));
 
    -- public final
    procedure notifyErrorListeners (This : Parser; msg : UString);
@@ -407,7 +415,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    procedure notifyErrorListeners (This : Parser;
                                    offendingToken : Optional_Token;
                                    msg : UString;
-                                   e : Optional_AnyObject) is
+                                   e : Optional_AnyObject);
 
    --
    -- Consume and return the |: #getCurrentToken current symbol:|.
@@ -438,14 +446,14 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -- Typically, the terminal node to create is not a function of the parent.
    --
    -- public
-   function createTerminalNode (This : Parser; parent: ParserRuleContext, t: Token) return TerminalNode
+   function createTerminalNode (This : Parser; parent: ParserRuleContext; t: Token) return TerminalNode
       is (TerminalNodeImpl (t));
 
    -- How to create an error node, given a token, associated with a parent.
    -- Typically, the error node to create is not a function of the parent.
    --
    -- public
-   function createErrorNode (This : Parser; parent: ParserRuleContext, t: Token) return ErrorNode
+   function createErrorNode (This : Parser; parent: ParserRuleContext; t: Token) return ErrorNode
       is (ErrorNode (t));
 
 
@@ -457,11 +465,11 @@ package ANTLR.Runtime.Recognizers.Parsers is
    procedure enterRule (This : Parser;
                         localctx : ParserRuleContext;
                         state : Integer;
-                        ruleIndex : Integer) is
+                        ruleIndex : Integer);
 
    -- public
    procedure exitRule (This : Parser);
-      ctx : ParserRuleContext := This._ctx;
+      ctx : ParserRuleContext := This.ctx;
 
    -- public
    procedure enterOuterAlt (This : Parser; localctx : ParserRuleContext; altNum : Integer);
@@ -493,17 +501,17 @@ package ANTLR.Runtime.Recognizers.Parsers is
    procedure pushNewRecursionContext (This : Parser;
                                       localctx : ParserRuleContext;
                                       state : Integer;
-                                      ruleIndex : Integer) is
+                                      ruleIndex : Integer);
 
    -- public
-   procedure unrollRecursionContexts (This : Parser; _parentctx : Optional_ParserRuleContext);
+   procedure unrollRecursionContexts (This : Parser; parentctx : Optional_ParserRuleContext);
 
    -- public
    function getInvokingContext (This : Parser; ruleIndex : Integer) return Optional_ParserRuleContext;
 
    -- public
    function getContext (This : Parser) return Optional_ParserRuleContext
-      is (This._ctx);
+      is (This.ctx);
 
    -- public
    procedure setContext (This : Parser; ctx : ParserRuleContext);
@@ -511,7 +519,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    overriding
    -- open
    function precpred (This : Parser; localctx : Optional_RuleContext; precedence : Integer) return Boolean
-      is (precedence >= This._precedenceStack.peek ()!);
+      is (precedence >= Value (This.precedenceStack.peek));
 
    -- public
    function inContext (This : Parser; context : UString) return Boolean
@@ -587,7 +595,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
 --            parser := ParserInterpreter ( ParserInterpreter (originalParser));
 --         }
 --         else {
---            serializedAtn : Character.Container.Vector := ATNSerializer.getSerializedAsChars (originalParser.getATN ());
+--            serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN ());
 --            deserialized : ATN := ATNDeserializer ().deserialize (serializedAtn);
 --            parser := ParserInterpreter (originalParser.getGrammarFileName (),
 --                                    originalParser.getVocabulary (),
@@ -652,21 +660,19 @@ package ANTLR.Runtime.Recognizers.Parsers is
    --
    -- public
    function getExpectedTokens (This : Parser) return IntervalSet
-      is (getATN ().getExpectedTokens (getState (), getContext ()!));
+      is (This.getATN.getExpectedTokens (This.getState, Value (This.getContext)));
 
    -- public
    function getExpectedTokensWithinCurrentRule (This : Parser) return IntervalSet;
-      atn : constant := getInterpreter ().atn;
-      s : constant := atn.states[getState ()]!;
 
    -- Get a rule's index (i.e., `RULE_ruleName` field) or -1 if not found.
    -- public
    function getRuleIndex (This : Parser; ruleName : UString) return Integer
-      is (getRuleIndexMap ()[ruleName], Default => -1);
+      is (Value (This.getRuleIndexMap.Element (ruleName), Default => -1));
 
    -- public
-   function getRuleContext (This : …) return Optional_ParserRuleContext
-      is This._ctx;
+   function getRuleContext (This : Parser) return Optional_ParserRuleContext
+      is (This.ctx);
 
    -- Return List<UString> of the rule names in your parser instance
    -- leading up to a call to the current rule.  You could override if
@@ -676,15 +682,15 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -- This is very useful for error messages.
    --
    -- public
-   function getRuleInvocationStack (This : Parser) return UString.Container.Vector
-      is (getRuleInvocationStack (This._ctx));
+   function getRuleInvocationStack (This : Parser) return UString_List
+      is (getRuleInvocationStack (This.ctx));
 
    -- public
-   function getRuleInvocationStack (This : Parser; p : Optional_RuleContext) return UString.Container.Vector;
+   function getRuleInvocationStack (This : Parser; p : Optional_RuleContext) return UString_List;
 
    -- For debugging and other purposes.
    -- public
-   function getDFAStrings (This : Parser) return UString.Container.Vector;
+   function getDFAStrings (This : Parser) return UString_List;
 
    -- For debugging and other purposes.
    -- public
@@ -692,7 +698,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
 
    -- public
    function getSourceName (This : Parser) return UString
-      is (This._input.getSourceName ());
+      is (This.input.getSourceName);
 
    overriding
    -- open
@@ -715,7 +721,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    --
    -- public
    function isTrace (This : Parser) return Boolean
-      is (Is_Valid (_tracer));
+      is (Is_Valid (tracer));
 
 private
    --
@@ -731,6 +737,6 @@ private
    -- mutex for bypassAltsAtnCache updates
    --
    -- private
-   bypassAltsAtnCacheMutex : constant := Mutex.Synchronized;
+   bypassAltsAtnCacheMutex : constant := Mutex.Synchronised;
 
 end ANTLR.Runtime.Recognizers.Parsers;

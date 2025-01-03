@@ -4,7 +4,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
 
    function hasSLLConflictTerminatingPrediction (mode : PredictionMode; configs : ATNConfigSet) return Boolean is
       --TOFIX configs := configs;
-      altsets : BitSet.Container.Vector;
+      altsets : BitSet_List;
       heuristic : Boolean;
    begin
       --
@@ -37,7 +37,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       return heuristic;
    end hasSLLConflictTerminatingPrediction;
 
-   function hasNonConflictingAltSet (altsets : BitSet.Container.Vector) return Boolean is
+   function hasNonConflictingAltSet (altsets : BitSet_List) return Boolean is
    begin
       for alts of altsets loop
          if alts.cardinality () = 1 then
@@ -47,7 +47,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       return False;
    end hasNonConflictingAltSet;
 
-   function hasConflictingAltSet (altsets : BitSet.Container.Vector) return Boolean is
+   function hasConflictingAltSet (altsets : BitSet_List) return Boolean is
    begin
       for alts of altsets loop
          if alts.cardinality () > 1 then
@@ -57,7 +57,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       return False;
    end hasConflictingAltSet;
 
-   function allSubsetsEqual (altsets : BitSet.Container.Vector) return Boolean is
+   function allSubsetsEqual (altsets : BitSet_List) return Boolean is
       first : constant BitSet := altsets.Element (0);
    begin
       for it of altsets loop
@@ -68,7 +68,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       return True;
    end allSubsetsEqual;
 
-   function getUniqueAlt (altsets : BitSet.Container.Vector) return Integer is
+   function getUniqueAlt (altsets : BitSet_List) return Integer is
       All_BitSet : constant BitSet := getAlts (altsets);
    begin
       if All_BitSet.cardinality () = 1 then
@@ -77,7 +77,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       return ATN.INVALID_ALT_NUMBER;
    end getUniqueAlt;
 
-   function getAlts (altsets : array (<>) of BitSet) return BitSet is
+   function getAlts (altsets : BitSet_List) return BitSet is
       All_BitSet : constant BitSet := BitSet ();
    begin
       for alts of altsets loop
@@ -87,17 +87,17 @@ package body ANTLR.Runtime.ATN.PredictionModes is
    end getAlts;
 
    function hasStateAssociatedWithOneAlt (configs : ATNConfigSet) return Boolean is
-      x : constant BitSet_Map := configs.getStateToAltMap ();
+      x : constant BitSet_Map := configs.getStateToAltMap;
    begin
       for alts of x.values loop
-         if alts.cardinality () == 1 then
+         if alts.cardinality () = 1 then
             return True;
          end if;
       end loop;
       return False;
    end hasStateAssociatedWithOneAlt;
 
-   function getSingleViableAlt (altsets : BitSet.Container.Vector) return Integer is
+   function getSingleViableAlt (altsets : BitSet_List) return Integer is
       viableAlts : constant BitSet := BitSet ();
       minAlt : Integer;
    begin

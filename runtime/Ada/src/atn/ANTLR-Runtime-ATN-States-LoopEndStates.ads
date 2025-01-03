@@ -1,11 +1,10 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.States.LoopEndStates is
 
@@ -28,10 +27,10 @@ package ANTLR.Runtime.ATN.States.LoopEndStates is
    function Hash (Key : LoopEndState) return Ada.Containers.Hash_Type;
 
    function Equivalent_Keys (Left, Right : LoopEndState) return Boolean
-      is Hash (Left) = Hash (Right); --TOFIX
+      is (Hash (Left) = Hash (Right)); --TOFIX
 
    function "=" (Left, Right : Integer) return Boolean
-      is Left = Right; --TOFIX
+      is (Left = Right); --TOFIX
 
    package LoopEndState_Maps is new Ada.Containers.Hashed_Maps (
       Key_Type => LoopEndState,

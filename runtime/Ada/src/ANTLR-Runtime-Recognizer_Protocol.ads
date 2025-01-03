@@ -1,8 +1,11 @@
 -- €
 
+with ANTLR.Runtime.ATN.ParseInfos;
 with UString;
 
-package ANTLR.Runtime.RecognizerProtocol is
+use ANTLR.Runtime.ATN.ParseInfos;
+
+package ANTLR.Runtime.Recognizer_Protocol is
 
 -- public
    type RecognizerProtocol is interface;
@@ -27,7 +30,7 @@ package ANTLR.Runtime.RecognizerProtocol is
    function getParseInfo (This : RecognizerProtocol) return Optional_ParseInfo is abstract;
 
    -- open
-   function getRuleNames (This : RecognizerProtocol) return UString.Container.Vector is abstract;
+   function getRuleNames (This : RecognizerProtocol) return UString_List is abstract;
 
    --
    -- If this recognizer was generated, it will have a serialized ATN
@@ -59,4 +62,4 @@ package ANTLR.Runtime.RecognizerProtocol is
    -- open
    function getVocabulary (This : RecognizerProtocol) return Vocabulary is abstract;
 
-end ANTLR.Runtime.RecognizerProtocol;
+end ANTLR.Runtime.Recognizer_Protocol;

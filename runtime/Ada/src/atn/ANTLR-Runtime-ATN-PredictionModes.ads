@@ -1,6 +1,6 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNConfigSet;
+with ANTLR.Runtime.ATN.ConfigSets;
 
 use ANTLR.Runtime.ATN;
 
@@ -333,7 +333,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- `A={{1,2`end if;end if; or `{{1,2`,{1,2}}}, etc ..
    --
    -- public static
-   function resolvesToJustOneViableAlt (altsets : BitSet.Container.Vector) return Integer
+   function resolvesToJustOneViableAlt (altsets : BitSet_List) return Integer
       is (getSingleViableAlt (altsets));
 
    --
@@ -345,7 +345,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- _java.util.BitSet#cardinality cardinality_ > 1, otherwise `False`
    --
    -- public static
-   function allSubsetsConflict (altsets : BitSet.Container.Vector) return Boolean
+   function allSubsetsConflict (altsets : BitSet_List) return Boolean
       is (not hasNonConflictingAltSet (altsets));
 
    --
@@ -357,7 +357,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- _java.util.BitSet#cardinality cardinality_ 1, otherwise `False`
    --
    -- public static
-   function hasNonConflictingAltSet (altsets : BitSet.Container.Vector) return Boolean;
+   function hasNonConflictingAltSet (altsets : BitSet_List) return Boolean;
 
    --
    -- Determines if any single alternative subset in `altsets` contains
@@ -368,7 +368,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- _java.util.BitSet#cardinality cardinality_ > 1, otherwise `False`
    --
    -- public static
-   function hasConflictingAltSet (altsets : BitSet.Container.Vector) return Boolean;
+   function hasConflictingAltSet (altsets : BitSet_List) return Boolean;
 
    --
    -- Determines if every alternative subset in `altsets` is equivalent.
@@ -378,7 +378,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- others, otherwise `False`
    --
    -- public static
-   function allSubsetsEqual (altsets : BitSet.Container.Vector) return Boolean;
+   function allSubsetsEqual (altsets : BitSet_List) return Boolean;
 
    --
    -- Returns the unique alternative predicted by all alternative subsets in
@@ -388,7 +388,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- * parameter altsets: a collection of alternative subsets
    --
    -- public static
-   function getUniqueAlt (altsets : BitSet.Container.Vector) return Integer;
+   function getUniqueAlt (altsets : BitSet_List) return Integer;
 
    --
    -- Gets the complete set of represented alternatives for a collection of
@@ -399,14 +399,14 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- * returns: the set of represented alternatives in `altsets`
    --
    -- public static
-   function getAlts (altsets : array (<>) of BitSet) return BitSet;
+   function getAlts (altsets : BitSet_List) return BitSet;
 
    --
    -- Get union of all alts from configs. - Since: 4.5.1
    --
    -- public static
    function getAlts (configs : ATNConfigSet) return BitSet
-      is (configs.getAltBitSet ());
+      is (configs.getAltBitSet);
 
    --
    -- This function gets the conflicting alt subsets from a configuration set.
@@ -419,13 +419,13 @@ package ANTLR.Runtime.ATN.PredictionModes is
    --
 
    -- public static
-   function getConflictingAltSubsets (configs : ATNConfigSet) return BitSet.Container.Vector
-      is (configs.getConflictingAltSubsets ());
+   function getConflictingAltSubsets (configs : ATNConfigSet) return BitSet_List
+      is (configs.getConflictingAltSubsets);
 
    -- public static
    function hasStateAssociatedWithOneAlt (configs : ATNConfigSet) return Boolean;
 
    -- public static
-   function getSingleViableAlt (altsets : BitSet.Container.Vector) return Integer;
+   function getSingleViableAlt (altsets : BitSet_List) return Integer;
 
 end ANTLR.Runtime.ATN.PredictionModes;

@@ -7,9 +7,9 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
       self.atn := atn;
    end Initialize;
 
-   function getDecisionLookahead (This : LL1Analyzer; s : Optional_ATNState) return Optional_IntervalSet.Container.Vector is --?]? 
+   function getDecisionLookahead (This : LL1Analyzer; s : Optional_ATNState) return Optional_IntervalSet_List is --?]? 
       length : Natural; -- constant
-      look : Optional_IntervalSet.Container.Vector;
+      look : Optional_IntervalSet_List;
       lookBusy : Set_of_ATNConfigs;
    begin
       if not Is_Valid (s) then

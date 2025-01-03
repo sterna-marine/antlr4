@@ -86,7 +86,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- private
    procedure initWords (nbits : Integer) is
    begin
-      -- words := Integer_64.Container.Vector(Length => BitSet.wordIndex (BitSet.BITS_PER_WORD-1) + 1, repeatedValue => Integer_64 (0));
+      -- words := Integer_64_List(Length => BitSet.wordIndex (BitSet.BITS_PER_WORD-1) + 1, repeatedValue => Integer_64 (0));
       -- words := [BitSet.wordIndex (nbits-1) + 1];
       null;
    end initWords;
@@ -96,7 +96,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- The last word (if there is one) must be non-zero.
    --
    -- private
-   procedure Initialize (Self : in out BitSet; words : Integer_64.Container.Vector) is
+   procedure Initialize (Self : in out BitSet; words : Integer_64_List) is
    begin
       self.words := words;
       self.wordsInUse := words.Length;
@@ -117,12 +117,12 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- of all the bits in this bit set
    --
    -- public
-   function toLongArray (This : BitSet) return Integer_64.Container.Vector
+   function toLongArray (This : BitSet) return Integer_64_List
       is (copyOf (This.words, This.wordsInUse));
 
    -- private
-   function copyOf (words : Integer_64.Container.Vector; newLength : Natural) return Integer_64.Container.Vector is
-      newWords : Integer_64.Container.Vector := Integer_64.Container.To_Vector (New_Item => Integer_64 (0), Length => newLength);
+   function copyOf (words : Integer_64_List; newLength : Natural) return Integer_64_List is
+      newWords : Integer_64_List := Integer_64.Container.To_Vector (New_Item => Integer_64 (0), Length => newLength);
       length : constant := min (words.Length, newLength);
    begin
       for i in 0 .. length - 1 loop

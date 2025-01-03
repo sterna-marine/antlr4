@@ -1,6 +1,6 @@
 -- €
 
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.DecisionState;
 
 package ANTLR.Runtime.ATN.States.DecisionStates.StarLoopEntryStates is

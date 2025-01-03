@@ -1,23 +1,22 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.ATNSimulator;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.ATN.Simulators;
 with ANTLR.Runtime.ATN.Transitions;
-with ANTLR.Runtime.ATN.ParserATNSimulator;
 with ANTLR.Runtime.ATN.DecisionInfo;
-with ANTLR.Runtime.DFA.DFAState;
+with ANTLR.Runtime.DFA.States;
 
-use ANTLR.Runtime.ATN.ParserATNSimulator;
+use ANTLR.Runtime.ATN.Simulators.Parsers;
 use ANTLR.Runtime.ATN.DecisionInfo;
-use ANTLR.Runtime.DFA.DFAState;
+use ANTLR.Runtime.DFA.States;
 
-package body ANTLR.Runtime.ATN.ProfilingATNSimulator is
+package body ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
 
    -- public
    type ProfilingATNSimulator is new ParserATNSimulator with
    record
       -- private (set);
-      decisions: DecisionInfo.Container.Vector; -- := DecisionInfo.Container.Empty_Vector;
+      decisions: DecisionInfo_List; -- := DecisionInfo.Container.Empty_Vector;
       -- internal
       numDecisions : Integer := 0;
       -- internal
@@ -257,4 +256,4 @@ package body ANTLR.Runtime.ATN.ProfilingATNSimulator is
    function getDecisionInfo (This : ProfilingATNSimulator) return DecisionInfo_Container.Vector
       is (This.decisions);
 
-end ANTLR.Runtime.ATN.ProfilingATNSimulator;
+end ANTLR.Runtime.ATN.Simulators.Parsers.Profilings;

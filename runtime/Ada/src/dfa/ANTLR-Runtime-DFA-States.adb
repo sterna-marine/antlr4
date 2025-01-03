@@ -1,13 +1,5 @@
 -- €
 
-with Ada.Containers.Vectors;
-with ANTLR.Runtime.ATN.ATNConfigSet;
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.SemanticContext;
-with ANTLR.Runtime.ATN.LexerAction;
-
-use ANTLR.Runtime.ATN;
-
 package body ANTLR.Runtime.DFA.States is
 
    function Equal (Left, Right : PredPrediction) return Boolean is

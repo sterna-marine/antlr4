@@ -28,7 +28,7 @@ type ParserInterpreter is new Parser with null record;
     statesNeedingLeftRecursionContext : constant BitSet;
 
     -- internal final
-    decisionToDFA : DFA.Container.Vector;
+    decisionToDFA : DFA_List;
     -- not shared like it is for generated parsers
     internal sharedContextCache : constant := PredictionContextCache ();
 

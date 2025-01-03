@@ -1,6 +1,6 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.SemanticContext;
 
 use ANTLR.Runtime.ATN;

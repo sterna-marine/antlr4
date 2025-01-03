@@ -12,10 +12,10 @@
 type ProxyErrorListener is new ANTLRErrorListener with null record;
 {
     -- private final
-    delegates : ANTLRErrorListener.Container.Vector;
+    delegates : ANTLRErrorListener_List;
 
     -- public
-    procedure Initialize (Self : in out …; delegates : ANTLRErrorListener.Container.Vector) {
+    procedure Initialize (Self : in out …; delegates : ANTLRErrorListener_List) {
         self.delegates := delegates
     end if;
 

@@ -1,6 +1,6 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.States;
 with Option;
 with Interfaces;
 with Ada.Containers.Hashed_Maps;
@@ -130,7 +130,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    function calculateHashCode (parent : Optional_PredictionContext; returnState : ATStates.State) return Hash_Code;
 
    -- static
-   function calculateHashCode (parents : Optional_PredictionContext.Container.Vector, returnStates : Integer_List) return Hash_Code;
+   function calculateHashCode (parents : Optional_PredictionContext_List, returnStates : Integer_List) return Hash_Code;
 
    -- dispatch
    -- public static

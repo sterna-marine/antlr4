@@ -50,7 +50,7 @@ package ANTLR.Runtime.ATN.Deserializers is
                           arg1 : Integer;
                           arg2 : Integer;
                           arg3 : Integer;
-                          sets : IntervalSet.Container.Vector)
+                          sets : IntervalSet_List)
                           return Transition;
 
    -- internal

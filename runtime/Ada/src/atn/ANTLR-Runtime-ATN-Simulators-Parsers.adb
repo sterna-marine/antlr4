@@ -1,17 +1,24 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.ATNSimulator;
-with ANTLR.Runtime.ATN.Transitions;
+with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Environment_Variables;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.ATN.States.PredictionContexts;
+with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.DFA;
+with ANTLR.Runtime.Recognizers.Parsers;
 
 use Ada;
-use ANTLR.Runtime;
+--  use ANTLR.Runtime;
 use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.Simulators;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.States.PredictionContexts;
+use ANTLR.Runtime.DFA;
+use ANTLR.Runtime.Recognizers.Parsers;
 
-package body ANTLR.Runtime.ATN.ParserATNSimulator is
+package body ANTLR.Runtime.ATN.Simulators.Parsers is
 
    --
    -- The embodiment of the adaptive LL (*), ALL (*), parsing strategy.
@@ -170,7 +177,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
    -- The _org.antlr.v4.runtime.atn.ParserATNSimulator_ locks on the _#decisionToDFA_ field when
    -- it adds a new DFA object to that array. _#addDFAEdge_
    -- locks on the DFA for the current decision when setting the
-   -- _org.antlr.v4.runtime.dfa.DFAState#edges_ field. _#addDFAState_ locks on
+   -- _org.antlr.v4.runtime.DFA.States#edges_ field. _#addDFAState_ locks on
    -- the DFA for the current decision when looking up a DFA state to see if it
    -- already exists. We must make sure that all requests to add DFA states that
    -- are equivalent result in the same shared DFA object. This is because lots of
@@ -180,10 +187,10 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
    -- configurations' _org.antlr.v4.runtime.atn.PredictionContext_ objects using cached
    -- subgraphs/nodes. No other locking occurs, even during DFA simulation. This is
    -- safe as long as we can guarantee that all threads referencing
-   -- `s.edge.Element (t)` get the same physical target _org.antlr.v4.runtime.dfa.DFAState_, or
+   -- `s.edge.Element (t)` get the same physical target _org.antlr.v4.runtime.DFA.States_, or
    -- ` (Valid => False)`. Once into the DFA, the DFA simulation does not reference the
-   -- _org.antlr.v4.runtime.dfa.DFA#states_ map. It follows the _org.antlr.v4.runtime.dfa.DFAState#edges_ field to new
-   -- targets. The DFA simulator will either find _org.antlr.v4.runtime.dfa.DFAState#edges_ to be
+   -- _org.antlr.v4.runtime.dfa.DFA#states_ map. It follows the _org.antlr.v4.runtime.DFA.States#edges_ field to new
+   -- targets. The DFA simulator will either find _org.antlr.v4.runtime.DFA.States#edges_ to be
    -- ` (Valid => False)`, to be non-` (Valid => False)` and `DFAState.Container.Element (dfa.edges, t)`  (Valid => False), or
    -- `DFAState.Container.Element (dfa.edges, t)` to be non- (Valid => False). The
    -- _#addDFAEdge_ method could be racing to set the field
@@ -247,7 +254,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
 
    subtype hash_Type is Ada.Containers.Hash_Type; --TOFIX
 
-   function MurMur3_Hash (Key : DoubleKey) return Hash_Type is
+   function MurMur3_Hash (Key : DoubleKey) return Ada.Containers.Hash_Type is
    begin
       return 0; --TOFIX
    end MurMur3_Hash;
@@ -257,7 +264,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       or else MurMur3_Hash ((Left.B, Left.B)) = MurMur3_Hash (Right)); --TOFIX
 
    function "=" (Left, Right : Element_Type) return Boolean
-      is Left = Right; --TOFIX
+      is (Left = Right); --TOFIX
 
    -- PredictionContext.Optional_DoubleKeyMap;
    package body DoubleKeyMap is new Ada.Containers.Hashed_Maps (
@@ -280,17 +287,17 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
       retry_debug : Boolean := False; -- constant
 
       -- internal final unowned
-      parser : Parser.Parser; -- constant
+      parser : Parser; -- constant
 
       -- public private (set) final
-      decisionToDFA : DFA.Container.Vector;
+      decisionToDFA : DFA_List;
 
       --
       -- SLL, LL, or LL + exact ambig detection?
       --
 
       -- private
-      mode : PredictionMode := PredictionModes.LL;
+      mode : PredictionMode := LL;
 
       --
       -- Each prediction operation uses a cache for merge of prediction contexts.
@@ -306,13 +313,13 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
 
       -- LAME globals to avoid parameters!!!!! I need these down deep in predTransition
       -- internal
-      _input : TokenStream; -- !
+      input : TokenStream; -- !
       -- internal
-      _startIndex : Integer := 0;
+      startIndex : Integer := 0;
       -- internal
-      _outerContext : ParserRuleContext; -- !
+      outerContext : ParserRuleContext; -- !
       -- internal
-      _dfa : Optional_DFA;
+      dfa : Optional_DFA;
    end record;
 
    --
@@ -325,8 +332,8 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
          return False;
       else
          return Boolean'Value (Environment_Variables.Value (
-            Name => "TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT",
-            Default => "TRUE"));
+                                 Name => "TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT",
+                                 Default => "TRUE"));
       end if;
    exception
       when CONSTRAINT_ERROR =>
@@ -337,7 +344,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
    --  public convenience
    --  procedure Initialize (Self : ParserATNSimulator;
    --                 atn : ATN;
-   --                 decisionToDFA : DFA.Container.Vector;
+   --                 decisionToDFA : DFA_List;
    --                 sharedContextCache : PredictionContextCache) is
    --  begin
    --     Self.Initialize ( (Valid => False), atn, decisionToDFA, sharedContextCache);
@@ -345,10 +352,10 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
 
    -- public
    procedure Initialize (Self : in out ParserATNSimulator;
-                     parser : Parser;
-                     atn : ATN;
-                     decisionToDFA : DFA.Container.Vector;
-                     sharedContextCache : PredictionContextCache) is
+                         parser : Parser;
+                         atn : ATN;
+                         decisionToDFA : DFA_List;
+                         sharedContextCache : PredictionContextCache) is
    begin
       self.parser := parser;
       self.decisionToDFA := decisionToDFA;
@@ -390,11 +397,11 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
             Text_IO.Put_Line (debugInfo);
       end if;
 
-      _input := input;
-      _startIndex := input.index ();
-      _outerContext := outerContext;
+      This.input := input;
+      This.startIndex := input.index ();
+      This.outerContext := outerContext;
       dfa : constant := decisionToDFA.Element (decision);
-      _dfa := dfa;
+      This.dfa := dfa;
 
       m : constant := input.mark ();
       index : constant := _startIndex;
@@ -453,7 +460,7 @@ package body ANTLR.Runtime.ATN.ParserATNSimulator is
                Text_IO.Put_Line ("DFA after predictATN: " & dfa.toString (parser.getVocabulary ()));
             end if;
             mergeCache := DoubleKeyMap.Empty_Vector; -- wack cache after each prediction
-            _dfa :=  (Valid => False);
+            This.dfa :=  (Valid => False);
             input.seek (index); -- try!
             input.release (m); -- try!
             return alt
@@ -862,7 +869,7 @@ begin
       -- ensure that the alternative matching the longest overall sequence is
       -- chosen when multiple such configurations can match the input.
       --
-      skippedStopStates : ATNConfig.Container.Vector :=  (Valid => False);
+      skippedStopStates : ATNConfig_List :=  (Valid => False);
 
       -- First figure out where we can reach on input t
       configs : constant := closureConfigSet.configs
@@ -1204,7 +1211,7 @@ begin
    -- final internal
    function getPredsForAmbigAlts (This : ParserATNSimulator; ambigAlts : BitSet;
       configs : ATNConfigSet;
-      nalts : Integer) return SemanticContext.Container.Vector is
+      nalts : Integer) return SemanticContext_List is
             -- REACH=[1|1|[]|0:0, 1|2|[]|0:1]
             --
             -- altToPred starts as an array of all  (Valid => False) contexts. The enat index i;
@@ -1227,7 +1234,7 @@ begin
 
    -- final internal
    function getPredicatePredictions (This : ParserATNSimulator; ambigAlts : Optional_BitSet;
-      altToPred : SemanticContext.Container.Vector) return DFAState.PredPrediction.Vector is
+      altToPred : SemanticContext_List) return DFAState.PredPrediction.Vector is
             pairs := DFAState.PredPrediction.Vector;
             containsPredicate := False;
             for (i, pred) in altToPred.enumerated ().dropFirst () loop
@@ -1534,7 +1541,7 @@ begin
                         -- track how far we dip into outer context.  Might
                         -- come in handy and we avoid evaluating context dependent
                         -- preds if this is > 0.
-                        if _dfa : constant := _dfa , _dfa.isPrecedenceDfa () then
+                        if This.dfa : constant := This.dfa , _dfa.isPrecedenceDfa () then
                            outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn ();
                            if outermostPrecedenceReturn = _dfa.atnStartState.ruleIndex then
                               c.setPrecedenceFilterSuppressed (True);
@@ -1845,7 +1852,7 @@ begin
                -- the config sets. It also obviates the need to test predicates
                -- later during conflict resolution.
                currentPosition : constant := _input.index ();
-               _input.seek (_startIndex);
+               _input.seek (This.startIndex );
                predSucceeds : constant := evalSemanticContext (pt.getPredicate (), _outerContext, config.alt, fullCtx);
                _input.seek (currentPosition);
                if predSucceeds then
@@ -1889,7 +1896,7 @@ begin
                -- the config sets. It also obviates the need to test predicates
                -- later during conflict resolution.
                currentPosition : constant := _input.index ();
-               _input.seek (_startIndex);
+               _input.seek (This.startIndex );
                predSucceeds : constant := evalSemanticContext (pt.getPredicate (), _outerContext, config.alt, fullCtx);
                _input.seek (currentPosition);
                if predSucceeds then
@@ -2073,7 +2080,7 @@ begin
    -- returns without adding the edge to the DFA.
    --
    -- If `to` is ` (Valid => False)`, this method returns ` (Valid => False)`.
-   -- Otherwise, this method returns the _org.antlr.v4.runtime.dfa.DFAState_ returned by calling
+   -- Otherwise, this method returns the _org.antlr.v4.runtime.DFA.States_ returned by calling
    -- _#addDFAState_ for the `to` state.
    --
    -- * parameter dfa: The DFA
@@ -2243,4 +2250,4 @@ begin
       return parser
    end if;
 
-end ANTLR.Runtime.ATN.ParserATNSimulator;
+end ANTLR.Runtime.ATN.Simulators.Parsers;

@@ -16,7 +16,7 @@ package ANTLR.Runtime.ATN.CommonUtil is
 
    -- public
    function "&" (Lhs : UString; Rhs : Token) return UString
-      is (Lhs & Image (Rhs);
+      is (Lhs & Image (Rhs));
 
    -- public
    function "&" (lhs : Token; rhs: UString) return UString
@@ -42,11 +42,11 @@ package ANTLR.Runtime.ATN.CommonUtil is
    function toInt (c : Character) return Integer
       is (c'Pos);  --TOFIX
 
-   function toInteger_32 (data : Character.Container.Vector; offset : Integer) return Integer
+   function toInteger_32 (data : Character_List; offset : Integer) return Integer
       is  (data.Element (offset).unicodeValue or Shift_Left (data.Element (offset + 1).unicodeValue, 16));  --TOFIX
 
-   function toLong (data : Character.Container.Vector; offset : Integer) return Integer_64;
+   function toLong (data : Character_List; offset : Integer) return Integer_64;
 
-   function toUUID (data : Character.Container.Vector; offset : Integer) return UUID;
+   function toUUID (data : Character_List; offset : Integer) return UUID;
 
 end ANTLR.Runtime.ATN.CommonUtil;

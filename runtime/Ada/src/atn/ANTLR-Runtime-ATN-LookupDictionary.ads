@@ -1,9 +1,9 @@
 -- €
 
 with Ada.Containers.Vectors;
-with ANTLR.Runtime.ATN.ATNConfig;
+with ANTLR.Runtime.ATN.Configs;
 
-use ANTLR.Runtime.ATN.ATNConfig;
+use ANTLR.Runtime.ATN.Configs;
 
 package ANTLR.Runtime.LookupDictionary is
 

@@ -3,13 +3,12 @@
 with Ada.Containers;
 with Ada.Containers.Vectors;
 with Ada.Containers.Hashed_Sets;
-with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
-with ANTLR.Runtime.Misc.IntervalSet;
+with ANTLR.Runtime.Misc.IntervalSets;
 with Option;
 
-use ANTLR.Runtime.Misc;
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.Transitions;
+use ANTLR.Runtime.Misc.IntervalSets;
 
 package ANTLR.Runtime.ATN.States is
 
@@ -140,7 +139,7 @@ package ANTLR.Runtime.ATN.States is
       -- Track the transitions emanating from this ATN state.
       --
       -- internal private (set) final
-      transitions : Transitions.Container.Vector := Transitions.Container.Empty_Vector;
+      transitions : Transitions_List := Transitions.Container.Empty_Vector;
 
       --
       -- Used to cache lookahead during parsing, not used during construction

@@ -15,8 +15,6 @@ package ANTLR.Runtime.Recognizers.Lexers is
    DEFAULT_MODE : constant Lexer_Mode := 0;
 
    -- public static
-   EOF : constant Integer := -1
-   -- public static
    MORE : constant Integer := -2
    -- public static
    SKIP : constant Integer := -3
@@ -33,15 +31,15 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- open
    type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
       -- public
-      _input : Optional_CharStream;
+      input : Optional_CharStream;
       -- internal
-      _tokenFactorySourcePair : TokenSourceAndStream;
+      tokenFactorySourcePair : TokenSourceAndStream;
 
       --
       -- How to create token objects
       --
       -- internal
-      _factory := CommonTokenFactory.DEFAULT;
+      factory := CommonTokenFactory.DEFAULT;
 
       --
       -- The goal of all lexer rules/methods is to create a token object.
@@ -53,7 +51,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
       -- emit another token.
       --
       -- public
-      _token : Optional_Token;
+      token : Optional_Token;
 
       --
       -- What character index in the stream did the current token start at?
@@ -61,50 +59,50 @@ package ANTLR.Runtime.Recognizers.Lexers is
       -- the start of nextToken.
       --
       -- public
-      _tokenStartCharIndex : Integer := -1;
+      tokenStartCharIndex : Integer := -1;
 
       --
       -- The line on which the first character of the token resides
       --
       -- public
-      _tokenStartLine : Integer := 0;
+      tokenStartLine : Integer := 0;
 
       --
       -- The character position of first character within the line
       --
       -- public
-      _tokenStartCharPositionInLine : Integer := 0;
+      tokenStartCharPositionInLine : Integer := 0;
 
       --
       -- Once we see EOF on char stream, next token will be EOF.
       -- If you have DONE : EOF ; then you see DONE EOF.
       --
       -- public
-      _hitEOF : Boolean := False;
+      hitEOF : Boolean := False;
 
       --
       -- The channel number for the current token
       --
       -- public
-      _Channel : Channel_Number := DEFAULT_CHANNEL;
+      Channel : Channel_Number := DEFAULT_CHANNEL;
 
       --
       -- The token type for the current token
       --
       -- public
-      _Token_Type : Token_Kind := CommonToken.INVALID_Type;
+      Token_Type : Token_Kind := CommonToken.INVALID_Type;
 
       -- public final
-      _modeStack := Stack<Lexer_Mode> ();
+      modeStack := Stack<Lexer_Mode> ();
       -- public
-      _mode : Lexer_Mode := DEFAULT_MODE;
+      mode : Lexer_Mode := DEFAULT_MODE;
 
       --
       -- You can set the text for the current token to override what is in
       -- the input char buffer.  Use setText () or can set this instance var.
       --
       -- public
-      _text : Optional_String;
+      text : Optional_String;
    end record;
 
    subtype Object is Lexer;
@@ -159,7 +157,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --open
    overriding
    function getTokenFactory (This : Lexer) return TokenFactory
-      is (This._factory);
+      is (This.factory);
 
    --
    -- Set the char stream and reset the lexer
@@ -174,7 +172,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    -- open
    function getInputStream (This : Lexer) return Optional_CharStream
-      is (This._input);
+      is (This.input);
 
    --
    -- By default does not support multiple emits per nextToken invocation
@@ -240,31 +238,31 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --
    -- open
    function getToken (This : Lexer) return Token
-      is (This._token!);
+      is (This.token!);
 
    -- open
-   procedure setToken (This : Lexer; _token : Token);
+   procedure setToken (This : Lexer; token : Token);
 
    -- open
    procedure setType (This : Lexer; tType : Token_Kind);
 
    -- open
    function getType (This : Lexer) return Token_Kind
-      is (This._Token_Type)
+      is (This.Token_Type)
 
    -- open
    procedure setChannel (This : Lexer; Channel : Channel_Number);
 
    -- open
    function getChannel (This : Lexer) return Channel_Number
-      is (This._channel);
+      is (This.channel);
 
    -- open
-   function getChannelNames (This : Lexer) return Channel.Container.Vector -- [UString]?
+   function getChannelNames (This : Lexer) return Channel_List -- [UString]?
       is (Channel.Container.Empty_Vector);
 
    -- open
-   function getModeNames (This : Lexer) return Channel.Container.Vector -- [UString]?
+   function getModeNames (This : Lexer) return Channel_List -- [UString]?
       is (Channel.Container.Empty_Vector);
 
    --
@@ -272,7 +270,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- Forces load of all tokens. Does not include EOF token.
    --
    -- open
-   function getAllTokens (This : Lexer) return Token.Container.Vector;
+   function getAllTokens (This : Lexer) return Token_List;
 
    -- open
    procedure recover (This : Lexer; e : LexerNoViableAltException);

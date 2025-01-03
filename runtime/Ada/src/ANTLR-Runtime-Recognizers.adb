@@ -4,7 +4,7 @@ with ANTLR.Runtime.Token_Protocol;
 
 package body ANTLR.Runtime.Recognizers is
 
-   function getRuleNames (This : Recognizer) return UString.Container.Vector is
+   function getRuleNames (This : Recognizer) return UString_List is
       raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getRuleNames() must be overridden";
    end getRuleNames;
 
@@ -18,7 +18,7 @@ package body ANTLR.Runtime.Recognizers is
       return TokenTypeMap (This);
    end getTokenTypeMap;
 
-   function TokenTypeMap (This : Recognizer) return TokenID_Map
+   function TokenTypeMap (This : Recognizer) return TokenID_Map --TOFIX
       vocabulary : constant Vocabulary := getVocabulary (This);
       result : TokenID_Map;
       length : constant := getATN ().maxTokenType;
@@ -41,8 +41,8 @@ package body ANTLR.Runtime.Recognizers is
       return result;
    end TokenTypeMap;
 
-   function ruleIndexMap (This : Recognizer) return TokenID_Map is
-      ruleNames : constant UString.Container.Vector := getRuleNames (This);
+   function ruleIndexMap (This : Recognizer) return Rules_Map is --TOFIX
+      ruleNames : constant UString_List := getRuleNames (This);
    begin
       return Utils.toMap (ruleNames);
    end ruleIndexMap;
@@ -94,7 +94,7 @@ package body ANTLR.Runtime.Recognizers is
    end removeErrorListeners;
 
    procedure action (This : Recognizer;
-                     _localctx : Optional_RuleContext;
+                     localctx : Optional_RuleContext;
                      ruleIndex : Integer;
                      actionIndex : Integer) is
    begin

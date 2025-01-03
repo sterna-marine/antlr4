@@ -63,7 +63,7 @@ begin
    -- public static
    function toStringTree (t : Tree; recog : Optional_Parser;) return UString is
 begin
-      ruleNamesList : constant UString.Container.Vector := recog?.getRuleNames ();
+      ruleNamesList : constant UString_List := recog?.getRuleNames ();
       return toStringTree (t, ruleNamesList);
    end if;
 

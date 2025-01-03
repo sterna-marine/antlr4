@@ -11,6 +11,9 @@ package ANTLR.Runtime.Token_Protocol is
    --
    type Token_Kind is new Integer;
 
+   -- public static
+   EOF : constant Token_Kind := -1;
+
    subtype Token_String is UString;
    subtype Token_ID is Integer;
 

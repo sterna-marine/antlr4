@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.ATN.ParseInfos;
+
+use ANTLR.Runtime.ATN.ParseInfos;
+
 package body ANTLR.Runtime.ATN.ParseInfos is
 
    procedure Initialize (Self : in out ParseInfo; atnSimulator : ProfilingATNSimulator) is
@@ -9,7 +13,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
 
    function getLLDecisions (This : ParseInfo) return Integer_List is
       LL : Integer_List;
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       fallBack : Integer_64; -- constant
    begin
       for i in 0 .. decisions.Length - 1 loop
@@ -23,7 +27,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getLLDecisions;
 
    function getTotalTimeInPrediction (This : ParseInfo) return Integer_64 is
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       t : Integer_64 := 0;
    begin
       for d of decisions loop
@@ -33,7 +37,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getTotalTimeInPrediction;
 
    function getTotalSLLLookaheadOps (This : ParseInfo) return Integer_64 is
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       k : Integer_64 := 0;
    begin
       for d of decisions loop
@@ -43,7 +47,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getTotalSLLLookaheadOps;
 
    function getTotalLLLookaheadOps (This : ParseInfo) return Integer_64 is
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       k : Integer_64 := 0;
    begin
       for d of decisions loop
@@ -53,7 +57,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getTotalLLLookaheadOps;
 
    function getTotalSLLATNLookaheadOps (This : ParseInfo) return Integer_64 is
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       k : Integer_64 := 0;
    begin
       for d of decisions loop
@@ -63,7 +67,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getTotalSLLATNLookaheadOps;
 
    function getTotalLLATNLookaheadOps (This : ParseInfo) return Integer_64 is
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       k : Integer_64 := 0;
    begin
       for d of decisions loop
@@ -73,7 +77,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getTotalLLATNLookaheadOps;
 
    function getTotalATNLookaheadOps (This : ParseInfo) return Integer_64 is
-      decisions : constant DecisionInfo.Container.Vector := This.atnSimulator.getDecisionInfo ();
+      decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       k : Integer_64 := 0;
    begin
       for d in decisions loop
@@ -84,7 +88,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    end getTotalATNLookaheadOps;
 
    function getDFASize (This : ParseInfo) return Integer is
-      decisionToDFA : constant DFA.Container.Vector := This.atnSimulator.decisionToDFA;
+      decisionToDFA : constant DFA_List := This.atnSimulator.decisionToDFA;
       n : Integer := 0;
    begin
       for i in 0 .. decisionToDFA.Length - 1 loop

@@ -131,7 +131,7 @@ begin
     -- * Returns: the hash code of the data
     --
     -- public static
-    function hashCode<T:Hashable> (data : T.Container.Vector, seed : Integer) return Ada.Containers.Hash_Type is
+    function hashCode<T:Hashable> (data : T_List, seed : Integer) return Ada.Containers.Hash_Type is
 begin
         hash := initialize (Unsigned_32 (truncatingIfNeeded => seed));
         for value in data loop
@@ -161,7 +161,7 @@ begin
     end if;
 
     -- private static
-    function hashBytesLittleEndian (bytes : Unsigned_8.Container.Vector, seed : Unsigned_32) return Unsigned_32 is
+    function hashBytesLittleEndian (bytes : Unsigned_8_List, seed : Unsigned_32) return Unsigned_32 is
 begin
         byteCount : constant := bytes.count
 

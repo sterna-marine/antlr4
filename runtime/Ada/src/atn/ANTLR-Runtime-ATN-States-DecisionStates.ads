@@ -1,8 +1,6 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.States.DecisionStates is
 
@@ -20,14 +18,14 @@ package ANTLR.Runtime.ATN.States.DecisionStates is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   function Equal (Left, Right : DecisionState)
+   function Equal (Left, Right : DecisionState) return Boolean
       is (Left.decision = Right.decision and Left.nonGreedy = Right.nonGreedy);
    package DecisionState is new Ada.Cantainer.Vectors (
-         Index_Type => Natural;
-         Element_Type => DecisionState
+         Index_Type => Natural,
+         Element_Type => DecisionState,
          "=" => Equal);
 
    package Option_DecisionState is new Option (DecisionState);
    subtype Optional_DecisionState is Option_DecisionState.Optional; -- renames
 
-end ANTLR.Runtime.ATN.DecisionStates;
+end ANTLR.Runtime.ATN.States.DecisionStates;

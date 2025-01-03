@@ -1,11 +1,11 @@
 -- €
 
-with ANTLR.Runtime.DFA.DFAState;
+with ANTLR.Runtime.DFA.States;
 with ANTLR.Runtime.Lexer;
 
 use ANTLR.Runtime;
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.DFA.DFAState;
+use ANTLR.Runtime.DFA.States;
 
 package ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
@@ -72,7 +72,7 @@ package ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       charPositionInLine : Integer := 0;
 
       -- public private (set) final var
-      decisionToDFA : DFA.Container.Vector;
+      decisionToDFA : DFA_List;
 
       -- internal
       mode : Lexer_Mode := Lexer.DEFAULT_MODE;
@@ -94,14 +94,14 @@ package ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    -- public convenience
    procedure Initialize (Self : in out LexerATNSimulator;
                    atn : ATN;
-                   decisionToDFA : DFA.Container.Vector;
+                   decisionToDFA : DFA_List;
                    sharedContextCache : PredictionContextCache);
 
    -- public
    procedure Initialize (Self : in out LexerATNSimulator;
                    recog : Optional_Lexer;
                    atn : ATN;
-                   decisionToDFA : DFA.Container.Vector;
+                   decisionToDFA : DFA_List;
                    sharedContextCache : PredictionContextCache);
 
    -- open

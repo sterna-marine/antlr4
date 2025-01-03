@@ -2,6 +2,11 @@
 
 with Ada.Containers.Vectors;
 with Ada.Finalization;
+with Ada.Wide_Wide_Characters.Handling;
+with ANTLR.Runtime.Token_Protocol;
+
+use Ada.Wide_Wide_Characters.Handling;
+use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.Vocabularies is
 
@@ -14,7 +19,7 @@ package ANTLR.Runtime.Vocabularies is
       Index_Type => Natural,
       Item_Type => UString,
       "=" => "=");
-   subtype Name_List is Names_Container.Vector;
+   subtype Names_List is Names_Container.Vector;
 
    -- private static
    EMPTY_NAMES : constant Vocabulary := Names_Container.To_Vector (New_Item => "", Length => 1);
@@ -51,11 +56,8 @@ package ANTLR.Runtime.Vocabularies is
    --
    -- public convenience
    procedure Initialize (Self : in out Vocabulary;
-                         literalNames : Optional_String.Container.Vector,
-                         symbolicNames : Optional_UString.Container.Vector) is
-   begin
-      Self.Initialize (literalNames, symbolicNames, (Is_Valid => False));
-   end Initialize;
+                         literalNames : Optional_String_List;
+                         symbolicNames : Optional_UString_List);
 
    --
    -- Constructs a new instance of _org.antlr.v4.runtime.Vocabulary_ from the specified
@@ -76,14 +78,9 @@ package ANTLR.Runtime.Vocabularies is
    --
    -- public
    procedure Initialize (Self : in out Vocabulary;
-                         literalNames : Optional_UString.Container.Vector?,
-                         symbolicNames : Optional_UString.Container.Vector?,
-                         displayNames : Optional_UString.Container.Vector?) is
-   begin
-      self.literalNames := literalNames, Default => Vocabulary.EMPTY_NAMES;
-      self.symbolicNames := symbolicNames, Default => Vocabulary.EMPTY_NAMES;
-      self.displayNames := displayNames, Default => Vocabulary.EMPTY_NAMES;
-   end Initialize;
+                         literalNames  : Optional_UString_List := Vocabulary.EMPTY_NAMES;
+                         symbolicNames : Optional_UString_List := Vocabulary.EMPTY_NAMES;
+                         displayNames  : Optional_UString_List := Vocabulary.EMPTY_NAMES);
 
    --
    -- Returns a _org.antlr.v4.runtime.Vocabulary_ instance from the specified set of token
@@ -100,107 +97,33 @@ package ANTLR.Runtime.Vocabularies is
    -- the display names of tokens.
    --
    -- public static
-   function fromTokenNames (tokenNames : Optional_UString.Container.Vector?) return Vocabulary is
-begin
-      if not Is_Valid (tokenNames) or not (tokenNames.count > 0) then
-            return EMPTY_VOCABULARY;
-      end if;
-
-      literalNames := tokenNames
-      symbolicNames := tokenNames
-      length : constant := tokenNames.count
-      for i in 0 .. length - 1 loop
-            if not Is_Valid (tokenNames.Element (i))then
-               goto CONTINUE;
-            end if;
-            if firstChar : constant := tokenName.first then
-               if firstChar == "\'" then
-                  symbolicNames.Insert (Key => i, New_Item => null);
-                  goto CONTINUE;
-               end if;
-               elsif UString (firstChar).uppercased () /= UString (firstChar) then
-                  literalNames.Insert (Key => i, New_Item => null);
-                  goto CONTINUE;
-               end if;
-            end if;
-
-            -- wasn't a literal or symbolic name
-            literalNames.Insert (Key => i, New_Item => null);
-            symbolicNames.Insert (Key => i, New_Item => null);
-            <<CONTINUE>>
-      end loop;
-
-      return Vocabulary (literalNames, symbolicNames, tokenNames);
-   end if;
-
+   function fromTokenNames (tokenNames : Optional_UString_List) return Vocabulary;
 
    -- public
-   function getLiteralName (tokenType : Token_Kind) return Optional_String is
-   begin
-      if tokenType >= 0 and then tokenType < literalNames.count then
-            return literalNames.Element (tokenType);
-      end if;
-
-      return (Valid => False);
-   end if;
-
+   function getLiteralName (This : Vocabulary; tokenType : Token_Kind) return Optional_String;
 
    -- public
-   function getSymbolicName (tokenType : Token_Kind) return Optional_String is
-   begin
-      if tokenType >= 0 and then tokenType < symbolicNames.count then
-            return symbolicNames.Element (tokenType);
-      end if;
-      if tokenType = CommonToken.EOF then
-            return "EOF";
-      end if;
-
-      return (Valid => False);
-   end if;
-
+   function getSymbolicName (This : Vocabulary; tokenType : Token_Kind) return Optional_String;
 
    -- public
-   function getDisplayName (tokenType : Token_Kind) return UString is
-begin
-      if tokenType >= 0 and then tokenType < displayNames.count then
-            if displayName : constant := displayNames.Element (tokenType) then
-               return displayName;
-            end if;
-      end if;
-
-      if literalName : constant := getLiteralName (tokenType) then
-            return literalName;
-      end if;
-
-      if symbolicName : constant := getSymbolicName (tokenType) then
-            return symbolicName;
-      end if;
-
-      return UString (tokenType);
-   end if;
+   function getDisplayName (This : Vocabulary; tokenType : Token_Kind) return UString;
 
    -- public
-   procedure hash (into hasher: in out Hasher) is
-   begin
-      hasher.combine (ObjectIdentifier (self));
-   end if;
+   procedure hash (This : Vocabulary; hasher : in out Hasher);
 
    -- public
-   function "=" (Lhs, Rhs : Vocabulary) return Boolean is
-   begin
-      return lhs === rhs
-   end if;
+   function "=" (Lhs, Rhs : Vocabulary) return Boolean
+      is (lhs.literalNames = rhs.literalNames
+      and  lhs.symbolicName = rhs.symbolicName
+      and  lhs.displayNames = rhs.displayNames);
 
 private
    type Vocabulary is new Ada.Finalization.Controlled with -- and Hashable
    record
-
       -- private
       literalNames : Name_Container; -- constant
-
       -- private
       symbolicNames : Name_Container; -- constant
-
       -- private
       displayNames : Name_Container; -- constant
    end record;

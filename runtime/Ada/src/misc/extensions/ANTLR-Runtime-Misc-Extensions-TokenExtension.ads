@@ -1,6 +1,6 @@
 -- €
 
-with ANTLR.Runtime.Token is
+with ANTLR.Runtime.Token_Protocol;
 
 package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
 
@@ -20,9 +20,6 @@ package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
 
    -- static public
    MIN_USER_TOKEN_TYPE : constant Integer := 1
-
-   -- static public
-   EOF : constant Integer := -1;
 
    -- -------- --
    -- CHANNELS --

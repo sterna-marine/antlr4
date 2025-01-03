@@ -1,11 +1,10 @@
 -- €
 
+with ANTLR.Runtime.Token_Protocol;
 --
 -- This is the default implementation of _org.antlr.v4.runtime.ANTLRErrorStrategy_ used for
 -- error reporting and recovery in ANTLR parsers.
 --
-
-with Foundation;
 
 -- open
 type DefaultErrorStrategy is new ANTLRErrorStrategy with null record;
@@ -303,7 +302,7 @@ begin
     begin
         tokens : constant Token := getTokenStream (recognizer);
         input : UString;
-        if e.getStartToken ().getType () == CommonToken.EOF then
+        if e.getStartToken ().getType () == EOF then
             input := "<EOF>"
         else
             declare

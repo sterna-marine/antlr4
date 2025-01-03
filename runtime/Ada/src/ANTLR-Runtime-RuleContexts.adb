@@ -85,7 +85,7 @@ package body ANTLR.Runtime.RuleContexts is
       -- (root child1 .. childN). Print just a node if this is a leaf.
       --
       -- public
-      function toStringTree (ruleNames : UString.Container.Vector) return UString
+      function toStringTree (ruleNames : UString_List) return UString
          is (Trees.toStringTree (This, ruleNames));
 
       -- open
@@ -113,7 +113,7 @@ package body ANTLR.Runtime.RuleContexts is
          is (toString (recog, ParserRuleContexts.EMPTY));
 
       -- public final
-      function toString (ruleNames : UString.Container.Vector) return UString
+      function toString (ruleNames : UString_List) return UString
          is toString (ruleNames, null);
 
       -- recog null unless ParserRuleContext, in which case we use subclass toString ( .. );
@@ -130,7 +130,7 @@ package body ANTLR.Runtime.RuleContexts is
       end toString_T;
 
       -- open
-      function toString (ruleNames : UString.Container.Vector, stop : Optional_RuleContext;) return UString is
+      function toString (ruleNames : UString_List, stop : Optional_RuleContext;) return UString is
          buf : UString := "";
       begin
          p : Optional_RuleContext := self;

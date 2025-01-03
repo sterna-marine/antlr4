@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+
+use ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+
 package body ANTLR.Runtime.ATN.Deserializers is
 
    procedure Initialize (Self : in out ATNDeserializer;
@@ -613,7 +617,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
                           arg1 : Integer;
                           arg2 : Integer;
                           arg3 : Integer;
-                          sets : IntervalSet.Container.Vector)
+                          sets : IntervalSet_List)
                           return Transition is
       target : constant := atn.states.Element (trg)!;
    begin

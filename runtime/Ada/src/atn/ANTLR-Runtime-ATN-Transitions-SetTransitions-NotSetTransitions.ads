@@ -1,14 +1,14 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.SetTransition;
 with ANTLR.Runtime.ATN.Transitions;
-with ANTLR.Runtime.Misc.IntervalSet;
+with ANTLR.Runtime.Misc.IntervalSets;
 
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.SetTransition;
 use ANTLR.Runtime.ATN.Transitions;
-use ANTLR.Runtime.Misc.IntervalSet;
+use ANTLR.Runtime.Misc.IntervalSets;
 
 package ANTLR.Runtime.ATN.Transitions.SetTransitions.NotSetTransitions is
 

@@ -15,7 +15,7 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
       -- returnState = _#EMPTY_RETURN_STATE_.
       --
       -- public private (set) final var
-      parents : Optional_PredictionContext.Container.Vector;
+      parents : Optional_PredictionContext_List;
 
       --
       -- Sorted for merge, no duplicates; if present,
@@ -36,7 +36,7 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
    -- public
    procedure Initialize (Self : in out ArrayPredictionContext;
-                   parents : Optional_PredictionContext.Container.Vector;
+                   parents : Optional_PredictionContext_List;
                    returnStates : Integer_List);
 
    overriding

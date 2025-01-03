@@ -1,7 +1,7 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNConfig;
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.Configs;
+with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN;
 

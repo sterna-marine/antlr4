@@ -6,7 +6,7 @@ with Foundation;
 extension Array {
    @discardableResult
     -- mutating
-    function concat (addArray : Element.Container.Vector) return Element_Container.Vector is
+    function concat (addArray : Element_List) return Element_Container.Vector is
         return self + addArray
     end if;
 

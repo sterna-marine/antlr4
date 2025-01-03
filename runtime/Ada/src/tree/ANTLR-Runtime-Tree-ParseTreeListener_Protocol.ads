@@ -1,5 +1,8 @@
 -- €
 
+with Option;
+with Ada.Containers.Vectors;
+
 package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
 
    -- This interface describes the minimal core of methods triggered
@@ -17,12 +20,18 @@ package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
    -- public
    type ParseTreeListener is interface;
 
-    procedure visitTerminal (This :ParseTreeListener; node : TerminalNode);
+   package ParseTreeListener_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type => ParseTreeListener,
+      "=" => "=");
+   subtype ParseTreeListener_List is ParseTreeListener_Container.Vector;
 
-    procedure visitErrorNode (This :ParseTreeListener; node : ErrorNode);
+   procedure visitTerminal (This : ParseTreeListener; node : TerminalNode) is abstract;
 
-    procedure enterEveryRule (This :ParseTreeListener; ctx : ParserRuleContext);
+   procedure visitErrorNode (This : ParseTreeListener; node : ErrorNode) is abstract;
 
-    procedure exitEveryRule (This :ParseTreeListener; ctx : ParserRuleContext);
+   procedure enterEveryRule (This : ParseTreeListener; ctx : ParserRuleContext) is abstract;
+
+   procedure exitEveryRule (This : ParseTreeListener; ctx : ParserRuleContext) is abstract;
 
 end ANTLR.Runtime.Tree.ParseTreeListener_Protocol;

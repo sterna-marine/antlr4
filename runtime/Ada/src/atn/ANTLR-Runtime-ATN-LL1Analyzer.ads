@@ -2,10 +2,10 @@
 
 with Ada.Finalization;
 with ANTLR.Runtime.ATN;
-with ANTLR.Runtime.ATN.ATNConfig;
+with ANTLR.Runtime.ATN.Configs;
 
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.ATNConfig;
+use ANTLR.Runtime.ATN.Configs;
 
 package ANTLR.Runtime.ATN.LL1Analyzer is
 
@@ -36,7 +36,7 @@ package ANTLR.Runtime.ATN.LL1Analyzer is
    -- * returns: the expected symbols for each outgoing transition of `s`.
    --
    -- public
-   function getDecisionLookahead (This : LL1Analyzer; s : Optional_ATNState) return Optional_IntervalSet.Container.Vector is --?]? 
+   function getDecisionLookahead (This : LL1Analyzer; s : Optional_ATNState) return Optional_IntervalSet_List is --?]? 
 
    --
    -- Compute set of tokens that can follow `s` in the ATN in the

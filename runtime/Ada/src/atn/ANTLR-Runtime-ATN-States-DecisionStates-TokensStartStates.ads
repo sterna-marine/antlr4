@@ -1,9 +1,6 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.DecisionState;
-
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.DecisionState;
 
 package ANTLR.Runtime.ATN.States.DecisionStates.TokensStartStates is

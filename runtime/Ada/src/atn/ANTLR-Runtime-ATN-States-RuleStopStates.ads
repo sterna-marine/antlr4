@@ -1,6 +1,6 @@
 -- €
 
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.States.RuleStopStates is
 

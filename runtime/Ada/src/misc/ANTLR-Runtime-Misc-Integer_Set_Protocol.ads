@@ -45,7 +45,7 @@ package ANTLR.Runtime.Misc.Integer_Set_Protocol is
    -- current set and `a`. The value `null` may be returned in
    -- place of an empty result set.
    --
-   function and (This : Integer_Set; a : Optional_Integer_Set) return Optional_Integer_Set is abstract;
+   function "and" (This : Integer_Set; a : Optional_Integer_Set) return Optional_Integer_Set is abstract;
 
    --
    -- Return a new _org.antlr.v4.runtime.misc.IntSet_ object containing all elements that are
@@ -78,7 +78,7 @@ package ANTLR.Runtime.Misc.Integer_Set_Protocol is
    -- set and `a`. The value `null` may be returned in place of an
    -- empty result set.
    --
-   function or (This : Integer_Set; a : Integer_Set) return Integer_Set is abstract;
+   function "or" (This : Integer_Set; a : Integer_Set) return Integer_Set is abstract;
 
    --
    -- Return a new _org.antlr.v4.runtime.misc.IntSet_ object containing all elements that are

@@ -71,7 +71,7 @@ begin
     -- Use `init (data : UString, numberOfActualUnicodeScalarsInArray : Integer)` instead.
     --
     -- public
-    procedure Initialize (Self : in out …; data : Character.Container.Vector, numberOfActualUnicodeScalarsInArray : Integer) {
+    procedure Initialize (Self : in out …; data : Character_List, numberOfActualUnicodeScalarsInArray : Integer) {
         string : constant UString := To_String (data);
         self.data := Array (string.unicodeScalars);
         self.n := numberOfActualUnicodeScalarsInArray

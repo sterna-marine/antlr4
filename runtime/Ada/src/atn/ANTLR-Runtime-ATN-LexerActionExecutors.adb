@@ -5,7 +5,7 @@ with ANTLR.Runtime.ATN.LexerAction;
 
 package body ANTLR.Runtime.ATN.LexerActionExecutors is
 
-   procedure Initialize (Self : in out LexerActionExecutor; lexerActions : LexerAction.Container.Vector) is
+   procedure Initialize (Self : in out LexerActionExecutor; lexerActions : LexerAction_List) is
    begin
       self.lexerActions := lexerActions;
       hash := MurmurHash.initialize ();
@@ -25,7 +25,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
             return LexerActionExecutor ([lexerAction]); --TOFIX
       end if;
 
-      --lexerActions : LexerAction.Container.Vector := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
+      --lexerActions : LexerAction_List := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
       lexerActions := lexerActionExecutor.lexerActions;
       LexerActionContainer.Append (lexerActions, lexerAction);
       --lexerActions[lexerActions.length - 1] := lexerAction;
@@ -33,7 +33,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
    end append;
 
    function fixOffsetBeforeMatch (This : LexerActionExecutor; offset : Integer) return LexerActionExecutor is
-      updatedLexerActions : LexerAction.Container.Vector := LexerAction.Container.Empty_Vector;
+      updatedLexerActions : LexerAction_List := LexerAction.Container.Empty_Vector;
       length : constant Ada.Containers.Count_Type := LexerAction.Container.Legnth (This.lexerActions);
    begin
       for i in 0 .. length - 1 loop

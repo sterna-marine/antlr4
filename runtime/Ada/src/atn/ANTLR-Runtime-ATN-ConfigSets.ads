@@ -2,13 +2,13 @@
 
 with Ada.Containers;
 with ANTLR.Runtime.ATN.LookupDictionary;
-with ANTLR.Runtime.ATN.ATNConfig;
+with ANTLR.Runtime.ATN.Configs;
 with ANTLR.Runtime.Misc.DoubleKeyMap;
 with ANTLR.Runtime.Misc.BitSet;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.LookupDictionary;
-use ANTLR.Runtime.ATN.ATNConfig;
+use ANTLR.Runtime.ATN.Configs;
 use ANTLR.Runtime.Misc.DoubleKeyMap;
 use ANTLR.Runtime.Misc.BitSet;
 
@@ -51,7 +51,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
       -- Track the elements as they are added to the set; supports get (i);
       --
       -- public private (set);
-      configs : ATNConfig.Container.Vector := ATNConfig.Container.Empty_Vector;
+      configs : ATNConfig_List := ATNConfig.Container.Empty_Vector;
 
       -- TODO: these fields make me pretty uncomfortable but nice to pack up info together, saves recomputation
       -- TODO: can we track conflicts as they are added to save scanning configs later?
@@ -128,7 +128,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
    -- Return a List holding list of configs
    --
    -- public
-   function elements (This : ATNConfigSet) return ATNConfig.Container.Vector
+   function elements (This : ATNConfigSet) return ATNConfig_List
       is (This.configs);
 
 
@@ -144,7 +144,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
    function getAlts (This : ATNConfigSet) return BitSet;
 
    -- public
-   function getPredicates (This : ATNConfigSet) return SemanticContext.Container.Vector;
+   function getPredicates (This : ATNConfigSet) return SemanticContext_List;
 
    -- public
    function get (This : ATNConfigSet; i : Integer) return ATNConfig
@@ -200,7 +200,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
    -- public
    -- generic
    --    type T is private;
-   -- function toArray (a : T.Container.Vector) return T.Container.Vector
+   -- function toArray (a : T_List) return T_List
    --    is (configLookup.toArray (a));
    --
    -- private

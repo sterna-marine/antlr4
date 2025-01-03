@@ -16,7 +16,7 @@ package body ANTLR.Runtime.ATN.Simulators is
 
    procedure reset (This : ATNSimulator) is
    begin
-      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.ATNSimulator.reset() must be overridden";
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.Simulators.reset() must be overridden";
    end reset;
 
    procedure clearDFA (This : ATNSimulator) is

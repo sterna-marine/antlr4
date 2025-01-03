@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.ATN.ATNConfigSet is
+package body ANTLR.Runtime.ATN.ConfigSets is
 
    procedure Initialize (Self : in out ATNConfigSet;
                    fullCtx  : Boolean := True;
@@ -87,8 +87,8 @@ package body ANTLR.Runtime.ATN.ATNConfigSet is
       return alts;
    end getAlts;
 
-   function getPredicates (This : ATNConfigSet) return SemanticContext.Container.Vector is
-      preds : SemanticContext.Container.Vector;
+   function getPredicates (This : ATNConfigSet) return SemanticContext_List is
+      preds : SemanticContext_List;
    begin
       for config of This.configs loop
          if config.semanticContext /= SemanticContext.Empty.Instance then
@@ -497,4 +497,4 @@ package body ANTLR.Runtime.ATN.ATNConfigSet is
          lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext
    end "=";
 
-end ANTLR.Runtime.ATN.ATNConfigSet;
+end ANTLR.Runtime.ATN.ConfigSets;

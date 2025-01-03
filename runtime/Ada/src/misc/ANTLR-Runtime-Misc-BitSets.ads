@@ -65,7 +65,7 @@ package ANTLR.Runtime.Misc.BitSets is
       -- The internal field corresponding to the serialField "bits".
       --
       -- fileprivate
-      words : Integer_64.Container.Vector;
+      words : Integer_64_List;
 
       --
       -- The number of words in the logical size of this BitSet.

@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+
+use ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+
 package ANTLR.Runtime.ATN.States.BlockEndStates is
 
 --
@@ -8,7 +12,7 @@ package ANTLR.Runtime.ATN.States.BlockEndStates is
 
    -- public final
    type BlockEndState is new ATNState with
-   record;
+   record
       -- public
       startState : Optional_BlockStartState;
    end record;

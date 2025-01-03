@@ -1,6 +1,10 @@
 -- €
 
 with Ada.Containers.Hashed_Maps;
+with ANTLR.Runtime.ATN.States.BlockEndStates;
+
+use ANTLR.Runtime.ATN.States.DecisionStates;
+use ANTLR.Runtime.ATN.States.BlockEndStates;
 
 package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates is
 
@@ -23,10 +27,10 @@ package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates is
    function Hash (Key : BlockStartState) return Ada.Containers.Hash_Type;
 
    function Equivalent_Keys (Left, Right : BlockStartState) return Boolean
-      is Hash (Left) = Hash (Right); --TOFIX
+      is (Hash (Left) = Hash (Right)); --TOFIX
 
    function "=" (Left, Right : Integer) return Boolean
-      is Left = Right; --TOFIX
+      is (Left = Right); --TOFIX
 
    package BlockStartState_Maps is new Ada.Containers.Hashed_Maps (
       Key_Type => BlockStartState,

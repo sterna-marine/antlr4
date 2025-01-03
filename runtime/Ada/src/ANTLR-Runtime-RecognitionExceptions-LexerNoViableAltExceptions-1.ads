@@ -1,10 +1,10 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNConfigSets;
+with ANTLR.Runtime.ATN.ConfigSets;
 with ANTLR.Runtime.RecognitionExceptions;
 with ANTLR.Runtime.ParserRuleContexts;
 
-use ANTLR.Runtime.ATN.ATNConfigSets;
+use ANTLR.Runtime.ATN.ConfigSets;
 use ANTLR.Runtime.RecognitionExceptions;
 use ANTLR.Runtime.ParserRuleContexts;
 

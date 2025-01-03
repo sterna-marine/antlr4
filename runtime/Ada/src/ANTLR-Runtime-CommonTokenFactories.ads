@@ -1,6 +1,6 @@
 -- €
 
-with Ada.Finalize;
+with Ada.Finalization;
 with ANTLR.Runtime.TokenFactory_Protocol,
 with ANTLR.Runtime.Token_Protocol,
 
@@ -14,7 +14,7 @@ package ANTLR.Runtime.CommonTokenFactories is
    -- _org.antlr.v4.runtime.CommonToken_ objects.
    --
 
-   type CommonTokenFactory_Base is new Ada.Finalize.Controlled  with null record;
+   type CommonTokenFactory_Base is new Ada.Finalization.Controlled  with null record;
 
    -- public
    type CommonTokenFactory is new CommonTokenFactory_Base and TokenFactory with

@@ -359,7 +359,7 @@ end if;
       -- private
       stream : constant InputStream;
       -- private
-      buffer : Unsigned_8.Container.Vector := Unsigned_8.Container.To_Vector (repeating => 0, count => Unsigned_8StreamIterator.bufferSize);
+      buffer : Unsigned_8_List := Unsigned_8.Container.To_Vector (repeating => 0, count => Unsigned_8StreamIterator.bufferSize);
       -- private
       buffGen : IndexingIterator<ArraySlice<Unsigned_8>>
 

@@ -1,13 +1,11 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.ATN.DecisionState;
 with Option;
 
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
-package ANTLR.Runtime.ATN.PlusLoopbackState is
+package ANTLR.Runtime.ATN.States.DecisionStates.PlusLoopbackStates is
 
    --
    -- Decision state for `A+` and `(A|B)+`.  It has two transitions:
@@ -25,4 +23,4 @@ package ANTLR.Runtime.ATN.PlusLoopbackState is
    function getStateType (This : PlusLoopbackState) return State
       is (PLUS_LOOP_BACK);
 
-end ANTLR.Runtime.ATN.PlusLoopbackState;
+end ANTLR.Runtime.ATN.States.DecisionStates.PlusLoopbackStates;

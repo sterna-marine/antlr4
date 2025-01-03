@@ -21,7 +21,7 @@ package ANTLR.Runtime.ATN.LexerActionExecutors is
    type LexerActionExecutor is is tagged Ada.Finalization.Controlled with -- and Hashable
    record
       -- fileprivate final
-      lexerActions : LexerAction.Container.Vector;
+      lexerActions : LexerAction_List;
       --
       -- Caches the result of _#hashCode_ since the hash code is an element
       -- of the performance-critical _org.antlr.v4.runtime.atn.LexerATNConfig#hashCode_ operation.
@@ -42,7 +42,7 @@ package ANTLR.Runtime.ATN.LexerActionExecutors is
    -- * parameter lexerActions: The lexer actions to execute.
    --
    -- public
-   procedure Initialize (Self : in out LexerActionExecutor; lexerActions : LexerAction.Container.Vector);
+   procedure Initialize (Self : in out LexerActionExecutor; lexerActions : LexerAction_List);
 
    --
    -- Creates a _org.antlr.v4.runtime.atn.LexerActionExecutor_ which executes the actions for

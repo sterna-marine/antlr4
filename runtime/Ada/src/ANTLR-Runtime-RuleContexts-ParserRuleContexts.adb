@@ -16,7 +16,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    procedure copyFrom (This : ParserRuleContext; ctx : ParserRuleContext) is
       errNode : Optional_ErrorNode;
       -- copy any error nodes to alt label node
-      ctxChildren : constant ParseTree.Container.Vector := ctx.children;
+      ctxChildren : constant ParseTree_List := ctx.children;
    begin
       This.parent := ctx.parent;
       This.invokingState := ctx.invokingState;
@@ -129,7 +129,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       return (Valid => False);
    end getToken;
 
-   function getTokens (This : ParserRuleContext; tType : Token_Kind) return TerminalNode.Container.Vector is
+   function getTokens (This : ParserRuleContext; tType : Token_Kind) return TerminalNode_List is
 
       procedure CompactMap (At_Cursor : TerminalNode.Container.Cursor) is
          tnode : constant TerminalNode := TerminalNode (At_Cursor);
@@ -164,7 +164,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    generic
       type T is ParserRuleContext'Class;
       subtype Optional_T is Option_ParserRuleContext.Optional;
-   function getRuleContexts (This : ParserRuleContext; ctxType : T.Type) return T.Container.Vector is
+   function getRuleContexts (This : ParserRuleContext; ctxType : T.Type) return T_List is
 
       procedure Compact_Map (At_Cursor : T.Container.Cursor) is
       begin

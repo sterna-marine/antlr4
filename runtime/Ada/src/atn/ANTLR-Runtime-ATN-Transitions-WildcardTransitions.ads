@@ -1,9 +1,9 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.Transitions;
 
 package ANTLR.Runtime.ATN.Transitions.WildcardTransitions is

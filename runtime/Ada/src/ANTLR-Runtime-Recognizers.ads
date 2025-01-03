@@ -1,38 +1,41 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.ParseInfo;
-with ANTLR.Runtime.VocabularySingle;
+with ANTLR.Runtime.ATN.ParseInfos;
+with ANTLR.Runtime.Vocabularies;
 with ANTLR.Runtime.ATN;
-with ANTLR.Runtime.ATN.ATNStates;
-with ANTLR.Runtime.RecognizerProtocol;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Recognizer_Protocol;
 with UString;
 
-use ANTLR.Runtime.ParseInfo;
-use ANTLR.Runtime.VocabularySingle;
+use ANTLR.Runtime.ATN.ParseInfos;
+use ANTLR.Runtime.Vocabularies;
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.ATNStates;
-use ANTLR.Runtime.RecognizerProtocol;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Recognizer_Protocol;
 use UString;
 
-generic
-   type ATNInterpreter is ATNSimulator'Class;
+--  generic
+--     type ATNInterpreter is ATNSimulator'Class;
 package ANTLR.Runtime.Recognizers is
 
    --open
    type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
    record
       -- private
-      _listeners : ANTLRErrorListener.Container.Vector := [ConsoleErrorListener.INSTANCE];
+      listeners : ANTLRErrorListener_List := [ConsoleErrorListener.INSTANCE];
 
       -- public
-      _interp : ATNInterpreter!;
+      interp : ATNSimulator'Class; -- !
 
       -- private
-      _stateNumber : ATNStates.State := INVALID_STATE_NUMBER;
+      stateNumber : ATNStates.State := INVALID_STATE_NUMBER;
 
       -- public lazy
       tokenTypeMap : TokenID_Map;
+
+      -- public lazy
+      ruleIndexMap : Rules_Map;
    end record;
 
    subtype Object is Recognizer;
@@ -40,7 +43,7 @@ package ANTLR.Runtime.Recognizers is
    type Class_Wide is access all Object'Class;
 
    -- open
-   function getRuleNames (This : Recognizer) return UString.Container.Vector;
+   function getRuleNames (This : Recognizer) return UString_List;
 
    --
    -- Get the vocabulary used by the recognizer.
@@ -56,10 +59,27 @@ package ANTLR.Runtime.Recognizers is
    --
    -- Used for XPath and tree pattern compilation.
    --
-   -- public lazy
+   -- public lazy var
    function tokenTypeMap (This : Recognizer) return TokenID_Map;
    -- public
    function getTokenTypeMap (This : Recognizer) return TokenID_Map;
+
+
+   function Hash (Key : UString) return Ada.Containers.Hash_Type;
+
+   function Equivalent_Keys (Left, Right : UString) return Boolean
+      is (Hash (Left) = Hash (Right)); --TOFIX
+
+   function "=" (Left, Right : Integer) return Boolean
+      is (Left = Right); --TOFIX
+
+   package Rules_Dictionary is new Ada.Containers.Hashed_Maps (
+      Key_Type => UString,
+      Element_Type => Integer,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => "=");
+   subtype Rules_Map is Rules_Dictionary.Map;
 
    --
    -- Get a map from rule names to rule indexes.
@@ -67,15 +87,15 @@ package ANTLR.Runtime.Recognizers is
    -- Used for XPath and tree pattern compilation.
    --
    -- public
-   function getRuleIndexMap (This : Recognizer) return [String : Int]
+   function getRuleIndexMap (This : Recognizer) return Rules_Map
       is (ruleIndexMap);
 
    -- public lazy
-   function ruleIndexMap return TokenID_Map;
+   function ruleIndexMap (This : Recognizer) return Rules_Map;
 
    -- public
    function getTokenType (This : Recognizer; tokenName : UString) return Integer
-      is getTokenTypeMap ()[tokenName], Default => CommonToken.INVALID_TYPE;
+      is (Value (This.getTokenTypeMap.Element (tokenName), Default => CommonToken.INVALID_TYPE));
 
    --
    -- If this recognizer was generated, it will have a serialized ATN
@@ -108,7 +128,7 @@ package ANTLR.Runtime.Recognizers is
    --
    -- open
    function getInterpreter (This : Recognizer) return ATNInterpreter
-      is (This._interp);
+      is (This.interp);
 
    -- If profiling during the parse/lex, this will return DecisionInfo records
    -- for each decision in recognizer in a ParseInfo object.
@@ -142,18 +162,18 @@ package ANTLR.Runtime.Recognizers is
    procedure removeErrorListeners (This : Recognizer);
 
    -- open
-   function getErrorListeners (This : Recognizer) return ANTLRErrorListener.Container.Vector
-      is (This._listeners);
+   function getErrorListeners (This : Recognizer) return ANTLRErrorListener_List
+      is (This.listeners);
 
    -- open
    function getErrorListenerDispatch (This : Recognizer) return ANTLRErrorListener
-      is (ProxyErrorListener (getErrorListeners ()));
+      is (ProxyErrorListener (This.getErrorListeners));
 
    -- subclass needs to override these if there are sempreds or actions
    -- that the ATN interp needs to execute
    -- open
    function sempred (This : Recognizer;
-                     _localctx : Optional_RuleContext;
+                     localctx : Optional_RuleContext;
                      ruleIndex : Integer;
                      actionIndex : Integer)
                      return Boolean
@@ -168,7 +188,7 @@ package ANTLR.Runtime.Recognizers is
 
    -- open
    procedure action (This : Recognizer;
-                     _localctx : Optional_RuleContext;
+                     localctx : Optional_RuleContext;
                      ruleIndex : Integer;
                      actionIndex : Integer);
 

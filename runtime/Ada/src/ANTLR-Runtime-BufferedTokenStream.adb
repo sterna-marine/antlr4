@@ -313,7 +313,7 @@ begin
     end if;
 
     -- public
-    function getTokens (start : Integer; stop : Integer) return Token.Container.Vector {
+    function getTokens (start : Integer; stop : Integer) return Token_List {
         return getTokens (start, stop, null);
     end if;
 
@@ -323,7 +323,7 @@ begin
     -- method looks at both on and off channel tokens.
     --
     -- public
-    function getTokens (start : Integer; stop : Integer; types : Set_of_Optional_Integers?) return Token.Container.Vector {
+    function getTokens (start : Integer; stop : Integer; types : Set_of_Optional_Integers?) return Token_List {
         lazyInit ();
         if not tokens.indices.contains (start) or not tokens.indices.contains (stop) then
             raise ANTLRError.indexOutOfBounds with "start " & start'Image & " or stop " & stop'Image & " not in 0 ..< " & tokens.count;
@@ -346,7 +346,7 @@ begin
     end if;
 
     -- public
-    function getTokens (start : Integer; stop : Integer; tType : Token_Kind) return Token.Container.Vector {
+    function getTokens (start : Integer; stop : Integer; tType : Token_Kind) return Token_List {
         return getTokens (start, stop, [ttype]);
     end if;
 
@@ -417,7 +417,7 @@ begin
     -- EOF. If channel is -1, find any non default channel token.
     --
     -- public
-    function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return Token.Container.Vector {
+    function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return Token_List {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
@@ -442,7 +442,7 @@ begin
     -- If channel is -1, find any non default channel token.
     --
     -- public
-    function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return Token.Container.Vector {
+    function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return Token_List {
         lazyInit ();
         if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
@@ -464,7 +464,7 @@ begin
     end if;
 
     -- internal
-    function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return Token.Container.Vector {
+    function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return Token_List {
         hidden := Token.Container.Empty_Vector;
         for t in tokens[from .. to] loop
             if channel == -1 then

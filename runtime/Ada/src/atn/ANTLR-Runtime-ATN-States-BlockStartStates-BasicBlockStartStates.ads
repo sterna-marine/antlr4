@@ -1,6 +1,6 @@
 -- €
 
-package ANTLR.Runtime.ATN.BasicBlockStartState is
+package ANTLR.Runtime.ATN.States.BlockStartStates.BasicBlockStartStates is
 
 -- public final
 type BasicBlockStartState is new BlockStartState with null record;
@@ -10,4 +10,4 @@ type BasicBlockStartState is new BlockStartState with null record;
    function getStateType (This : BasicBlockStartState) return Integer
       is This.BlockStartState.BLOCK_START;
 
-end ANTLR.Runtime.ATN.BasicBlockStartState;
+end ANTLR.Runtime.ATN.States.BlockStartStates.BasicBlockStartStates;

@@ -19,7 +19,7 @@ begin
 end if;
 
 -- private
-procedure doSplitTest (input : UString; expected : Chunk.Container.Vector) is
+procedure doSplitTest (input : UString; expected : Chunk_List) is
 begin
     matcher : constant := makeMatcher ();
     UnitTest.Assert_Equal (matcher.split (input), expected);

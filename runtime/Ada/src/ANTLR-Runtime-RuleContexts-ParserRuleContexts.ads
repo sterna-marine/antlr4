@@ -40,7 +40,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       -- how we parse this rule.
       --
       -- public
-      children : ParseTree.Container.Vector;
+      children : ParseTree_List;
 
       -- For debugging/tracing purposes, we want to track all of the nodes in
       -- the ATN traversed by the parser for a particular rule.
@@ -152,7 +152,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    function getToken (This : ParserRuleContext; tType : Token_Kind; i : Integer) return Optional_TerminalNode;
 
    -- open
-   function getTokens (This : ParserRuleContext; tType : Token_Kind) return TerminalNode.Container.Vector;
+   function getTokens (This : ParserRuleContext; tType : Token_Kind) return TerminalNode_List;
 
    -- open
    generic
@@ -164,7 +164,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    generic
       type T is ParserRuleContext'Class;
       subtype Optional_T is Option_ParserRuleContext.Optional;
-   function getRuleContexts (This : ParserRuleContext; ctxType : T.Type) return T.Container.Vector;
+   function getRuleContexts (This : ParserRuleContext; ctxType : T.Type) return T_List;
 
    overriding
    -- open

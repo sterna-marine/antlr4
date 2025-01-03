@@ -20,17 +20,17 @@ package ANTLR.Runtime.Recognizers.Lexers.Interpreters is
       atn : ATN; -- constant
 
       -- internal
-      ruleNames : UString.Container.Vector; -- constant
+      ruleNames : UString_List; -- constant
       -- internal
-      channelNames : UString.Container.Vector; -- constant
+      channelNames : UString_List; -- constant
       -- internal
-      modeNames : UString.Container.Vector; -- constant
+      modeNames : UString_List; -- constant
 
       -- private
       vocabulary : Optional_Vocabulary; -- constant
 
       -- internal final
-      _decisionToDFA : DFA.Container.Vector;
+      _decisionToDFA : DFA_List;
 
       -- internal
       _sharedContextCache : := PredictionContextCache (); -- constant
@@ -67,17 +67,17 @@ package ANTLR.Runtime.Recognizers.Lexers.Interpreters is
 
    overriding
    -- public
-   function getRuleNames (This : LexerInterpreter) return UString.Container.Vector
+   function getRuleNames (This : LexerInterpreter) return UString_List
       is (This.ruleNames);
 
    overriding
    -- public
-   function getChannelNames (This : LexerInterpreter) return UString.Container.Vector
+   function getChannelNames (This : LexerInterpreter) return UString_List
       is (This.channelNames);
 
    overriding
    -- public
-   function getModeNames (This : LexerInterpreter) return UString.Container.Vector
+   function getModeNames (This : LexerInterpreter) return UString_List
       is (This.modeNames);
 
    overriding

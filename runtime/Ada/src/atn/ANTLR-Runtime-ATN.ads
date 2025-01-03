@@ -2,11 +2,19 @@
 
 with Ada.Finalization;
 with Ada.Containers.Vectors;
-with ANTLR.Runtime.ATN.ATNStates;
+-- with ANTLR.Runtime.ATN.States;
 
-use ANTLR.Runtime.ATN.ATNStates;
+-- use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN is
+
+-- Represents the type of recognizer an ATN applies to.
+
+   type ATNType is (lexer, parser);
+   for ATNType use (
+      lexer  => 0,   -- A lexer grammar.
+      parser => 1);  -- A parser grammar.
+   for ATNType'Size use Integer'Size;
 
    -- public
    type ATN is new Ada.Finalization.Controlled with private;
@@ -101,19 +109,19 @@ private
       -- all the rules, subrules, optional blocks, ()+, ()* etc ..
       --
       -- public private (set) final
-      decisionToState : DecisionState.Container.Vector; -- := DecisionState.Container.Empty_Vector;
+      decisionToState : DecisionState_List; -- := DecisionState.Container.Empty_Vector;
 
       --
       -- Maps from rule index to starting state number.
       --
       -- public internal (set) final var
-      ruleToStartState: RuleStartState.Container.Vector; --!
+      ruleToStartState: RuleStartState_List; --!
 
       --
       -- Maps from rule index to stop state number.
       --
       -- public internal (set) final var
-      ruleToStopState: RuleStopState.Container.Vector; --!
+      ruleToStopState: RuleStopState_List; --!
 
       --
       -- The type of the ATN.
@@ -141,10 +149,10 @@ private
       -- be referenced by action transitions in the ATN.
       --
       -- public internal (set) final var
-      lexerActions : LexerAction.Container.Vector; --!
+      lexerActions : LexerAction_List; --!
 
       -- public internal (set) final var
-      modeToStartState : TokensStartState.Container.Vector; -- := TokensStartState.Container.Empty_Vector
+      modeToStartState : TokensStartState_List; -- := TokensStartState.Container.Empty_Vector
 
    end record;
 

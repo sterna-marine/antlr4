@@ -1,9 +1,9 @@
 -- €
 
-with ANTLR.Runtime.ATN.ATNStates;
+with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.Transitions.ActionTransitions is
 

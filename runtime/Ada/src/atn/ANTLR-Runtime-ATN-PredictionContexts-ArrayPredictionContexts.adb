@@ -3,13 +3,13 @@
 package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
    procedure Initialize (Self : in out ArrayPredictionContext; a : SingletonPredictionContext) is
-      parents : constant Option_PredictionContext.Container.Vector := [a.parent];
+      parents : constant Option_PredictionContext_List := [a.parent];
    begin
       Self.Initialize (parents, [a.returnState]);
    end Initialize;
 
    procedure Initialize (Self : in out ArrayPredictionContext;
-                   parents : Optional_PredictionContext.Container.Vector;
+                   parents : Optional_PredictionContext_List;
                    returnStates : Integer_List) is
    begin
       self.parents := parents;

@@ -27,7 +27,7 @@ package body ANTLR.Runtime.Misc.Utils is
    end escapeWhitespace;
 
    -- public static
-   function toMap (Keys : UString.Container.Vector) return TokenID_Map is
+   function toMap (Keys : UString_List) return TokenID_Map is
       M : TokenID_Map;
    begin
       --  for V of Keys loop

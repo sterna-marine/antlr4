@@ -1,6 +1,6 @@
 -- €
 
-use ANTLR.Runtime.ATN.ATNStates;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.States.StarLoopbackStates is
 
@@ -14,7 +14,7 @@ package ANTLR.Runtime.ATN.States.StarLoopbackStates is
 
    -- public
    function getLoopEntryState (This : StarLoopbackState) return StarLoopEntryState
-      is (transition (0)StarLoopEntryState (.target));
+      is (transition (0).StarLoopEntryState (This.target));
 
    -- public
    overriding

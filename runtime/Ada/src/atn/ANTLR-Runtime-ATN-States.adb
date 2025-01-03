@@ -2,9 +2,6 @@
 
 with Ada.Containers;
 
-use ANTLR.Runtime.Misc;
-use ANTLR.Runtime.ATN;
-
 package body ANTLR.Runtime.ATN.States is
 
    function Hash (Element : ATNState) return Ada.Containers.Hash_Type is
@@ -82,7 +79,7 @@ package body ANTLR.Runtime.ATN.States is
     -- public
    function getStateType (This : ATNState) return Integer is
    begin
-      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.ATNStates.getStateType() must be overridden";
+      raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.States.getStateType() must be overridden";
    end getStateType;
 
     -- public final
