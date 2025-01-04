@@ -21,7 +21,7 @@ type UnbufferedCharStream is new CharStream with null record;
 
     --
     -- A moving window buffer of the data being scanned. While there's a marker,
-    -- we keep adding to buffer. Otherwise, {@link #consume consume ()} resets so
+    -- we keep adding to buffer. Otherwise, {@link #consume This.consume} resets so
     -- we start filling at index 0 again.
     --
     -- internal
@@ -45,8 +45,8 @@ type UnbufferedCharStream is new CharStream with null record;
     p := 0
 
     --
-    -- Count up with {@link #mark mark ()} and down with
-    -- {@link #release release ()}. When we {@code release ()} the last mark,
+    -- Count up with {@link #mark This.mark} and down with
+    -- {@link #release This.release}. When we {@code This.release} the last mark,
     -- {@code numMarkers} reaches 0 and we reset the buffer. Copy
     -- {@code data.Element (p)..data[n - 1]} to {@code data.Element (0)..data[(n - 1)-p]}.
     --
@@ -97,7 +97,7 @@ type UnbufferedCharStream is new CharStream with null record;
     -- public
     procedure consume (This : …) is
 begin
-        if LA (1) == CommonToken.EOF then;
+        if LA (1) == CommonToken.EOF then
             raise ANTLRError.illegalState with "cannot consume EOF";
         end if;
 
@@ -142,7 +142,7 @@ begin
                 return i;
             end if;
 
-            c : constant := nextChar ();
+            c : constant := This.nextChar;
             if not Is_Valid (c) then
                 return i;
             end if;
@@ -199,8 +199,8 @@ begin
     -- Return a marker that we can release later.
      *
     -- <p>The specific marker value used for this class allows for some level of
-    -- protection against misuse where {@code seek ()} is called on a mark or
-    -- {@code release ()} is called in the wrong order.</p>
+    -- protection against misuse where {@code This.seek} is called on a mark or
+    -- {@code This.release} is called in the wrong order.</p>
     --
     -- public
     function mark (This : …) return Integer is
@@ -265,15 +265,15 @@ begin
 
         if index > currentCharIndex then
             sync (index - currentCharIndex);
-            index := min (index, getBufferStartIndex () + n - 1);
+            index := min (index, This.getBufferStartIndex + n - 1);
         end if;
 
         -- index = to bufferStartIndex should set p to 0
-        i : constant := index - getBufferStartIndex ();
+        i : constant := index - This.getBufferStartIndex;
         if i < 0 then
             raise ANTLRError.illegalArgument with "cannot seek to negative index " & index'Image & "";
         elsif i >= n then
-            si : constant := getBufferStartIndex ();
+            si : constant := This.getBufferStartIndex;
             ei : constant := si + n
             msg : constant := "seek to index outside buffer: " & index'Image & " not in " & si'Image & ".." & ei'Image & ""
             raise ANTLRError.unsupportedOperation with msg;
@@ -307,7 +307,7 @@ begin
             raise ANTLRError.illegalArgument with "invalid interval";
         end if;
 
-        bufferStartIndex : constant := getBufferStartIndex ();
+        bufferStartIndex : constant := This.getBufferStartIndex;
         if n > 0 and
             data[n - 1] == CommonToken.EOF and
             interval.a + interval.length () > bufferStartIndex + n {
@@ -385,7 +385,7 @@ end if;
 
         case stream.streamStatus is
             when .notOpen, .writing, .closed =>
-                preconditionFailure ();
+                This.preconditionFailure;
             when .atEnd =>
                 return (Valid => False);
             when .error =>

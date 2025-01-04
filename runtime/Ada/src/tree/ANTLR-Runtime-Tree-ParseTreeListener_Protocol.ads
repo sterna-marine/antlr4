@@ -8,7 +8,7 @@ package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
    -- This interface describes the minimal core of methods triggered
    -- by _org.antlr.v4.runtime.tree.ParseTreeWalker_. E.g.,
    --
-   -- ParseTreeWalker walker := new ParseTreeWalker ();
+   -- ParseTreeWalker walker := new This.ParseTreeWalker;
    -- walker.walk (myParseTreeListener, myParseTree); <-- triggers events in your listener
    --
    -- If you want to trigger events in multiple listeners during a single

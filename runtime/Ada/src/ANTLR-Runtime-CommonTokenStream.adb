@@ -1,6 +1,8 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
 
+use Ada;
 
 --
 -- This class extends _org.antlr.v4.runtime.BufferedTokenStream_ with functionality to filter
@@ -101,8 +103,8 @@ begin
     -- public
     function LT (k : Integer) return Optional_Token is
    begin
-        --Ada.Wide_Wide_Text_IO.Put_Line ("enter LT ("+k+")");
-        lazyInit ();
+        -- Ada.Wide_Wide_Text_IO.Put_Line ("enter LT (" & k'Image & ')');
+        This.lazyInit;
         if k = 0 then
             return (Valid => False);
         end if;
@@ -114,7 +116,7 @@ begin
         -- find k good tokens
         while n < k loop
             -- skip off-channel tokens, but make sure to not look past EOF
-            if sync (i + 1) then;
+            if sync (i + 1) then
                 i := nextTokenOnChannel (i + 1, channel);
             end if;
             n := @ + 1;
@@ -130,8 +132,8 @@ begin
     function getNumberOfOnChannelTokens (This : …) return Integer is
 begin
         n := 0
-        fill ();
-        for t in tokens loop
+        This.fill;
+        for t of tokens loop
             if t.getChannel () == channel then
                 n := @ + 1;
             end if;

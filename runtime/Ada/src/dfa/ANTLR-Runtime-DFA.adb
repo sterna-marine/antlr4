@@ -91,7 +91,7 @@ package body ANTLR.Runtime.ATN.DFA is
       return result;
    end getStates;
 
-   function toString (This : DFA, vocabulary : Vocabulary) return UString is
+   function toString (This : DFA; vocabulary : Vocabulary) return UString is
    begin
       if not Is_Valid (This.s0) then
          return "";

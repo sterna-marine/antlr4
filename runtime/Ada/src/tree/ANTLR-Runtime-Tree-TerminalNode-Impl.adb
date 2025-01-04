@@ -71,7 +71,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
 
    -- public
    function toStringTree (This : TerminalNodeImpl; parser : Parser) return UString
-   is (This.description);
+   is (This'Image);
 
    -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
@@ -94,6 +94,6 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
 
    -- public
    function toStringTree (This : TerminalNodeImpl) return UString
-      is (This.description);
+      is (This'Image);
 
 end ANTLR.Runtime.Tree.TerminalNode.Impl;

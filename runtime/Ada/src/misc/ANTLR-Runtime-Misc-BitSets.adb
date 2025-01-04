@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.Misc.BitSets is
 
    function Hash (Key : Integer) return Ada.Containers.Hash_Type is
@@ -27,7 +33,9 @@ package body ANTLR.Runtime.Misc.BitSets is
    begin
       pragma assert ((This.wordsInUse = 0 or else This.words.Element (This.wordsInUse - 1) /= 0), "Expected: (wordsInUse = 0 or words.Element (wordsInUse - 1) /=0)");
       pragma assert ((This.wordsInUse >= 0 and then This.wordsInUse <= This.words.Length), "Expected: (wordsInUse >= 0 and wordsInUse <= words.Length)");
-      -- Text_IO.Put_Line ("" & wordsInUse'Image & "," & This.words.Length)," & words.Element (wordsInUse));
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line (This.wordsInUse'Image & ',' & This.words.Length & ',' & This.words.Element (This.wordsInUse)'Image);
+      end if;
       pragma assert ((This.wordsInUse = This.words.Length or else This.words.Element (This.wordsInUse) == 0), "Expected: (wordsInUse = words.Length or words.Element (wordsInUse) = 0)");
    end checkInvariants;
 
@@ -77,7 +85,7 @@ package body ANTLR.Runtime.Misc.BitSets is
       Self.words  := Integer_64.Container.To_Vector (repeating => Integer_64 (0), Length => BitSet.wordIndex (BitSet.BITS_PER_WORD - 1) + 1);
       Self.sizeIsSticky := True;
       if nbits < 0 then
-         raise ANTLRError.negativeArraySize with "nbits < 0:" & nbits'Image & " ";
+         raise ANTLRError.negativeArraySize with "nbits < 0:" & nbits'Image & ' ';
 
       end if;
       -- initWords (nbits);
@@ -150,7 +158,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- Ensures that the BitSet can accommodate a given wordIndex,
    -- temporarily violating the invariants.  The caller must
    -- restore the invariants before returning to the user,
-   -- possibly using recalculateWordsInUse ().
+   -- possibly using This.recalculateWordsInUse.
    -- * parameter wordIndex: the index to be accommodated.
    --
    -- private
@@ -204,8 +212,8 @@ package body ANTLR.Runtime.Misc.BitSets is
 
       words.Element (index) ^= Shift_Left (Integer_64 (1), Integer_64 (bitIndex % 64));
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -253,8 +261,8 @@ package body ANTLR.Runtime.Misc.BitSets is
          words.Element (endWordIndex) ^= lastWordMask
       end if;
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -273,10 +281,12 @@ package body ANTLR.Runtime.Misc.BitSets is
       index : constant Integer := BitSet.wordIndex (bitIndex);
       expandTo (index);
 
-      -- Text_IO.Put_Line (This.words.Length);
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line (This.words.Length'Image);
+      end if;
       words.Insert (Key => index, New_Item => @ or Shift_Left (Integer_64 (1), Integer_64 (bitIndex % 64))); -- Restores invariants);
 
-      checkInvariants ();
+      This.checkInvariants;
    end if;
 
    --
@@ -341,7 +351,7 @@ package body ANTLR.Runtime.Misc.BitSets is
          words.Insert (Key => endWordIndex, New_Item => @ or lastWordMask);
       end if;
 
-      checkInvariants ();
+      This.checkInvariants;
    end if;
 
    --
@@ -385,8 +395,8 @@ package body ANTLR.Runtime.Misc.BitSets is
       option : constant := Shift_Left (Integer_64 (1), Integer_64 (bitIndex % 64));
       words.Insert (Key => index, New_Item => @ and not option);
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -416,7 +426,7 @@ package body ANTLR.Runtime.Misc.BitSets is
 
       endWordIndex : Integer := BitSet.wordIndex (toIndex - 1);
       if endWordIndex >= wordsInUse then
-         toIndex := length ();
+         toIndex := This.length;
          endWordIndex := wordsInUse - 1
       end if;
 
@@ -441,8 +451,8 @@ package body ANTLR.Runtime.Misc.BitSets is
          words.Insert (Key => endWordIndex, New_Item => @ and not lastWordMask);
       end if;
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -474,7 +484,7 @@ begin
          raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
 
       end if;
-      checkInvariants ();
+      This.checkInvariants;
 
       index : constant Integer := BitSet.wordIndex (bitIndex);
 
@@ -499,9 +509,9 @@ begin
       toIndex := toIndex
       BitSet.checkRange (fromIndex, toIndex);
 
-      checkInvariants ();
+      This.checkInvariants;
 
-      len : constant Integer := length ();
+      len : constant Integer := This.length;
 
       -- If no set bits in range return empty bitset
       if len <= fromIndex or else fromIndex = toIndex then
@@ -589,7 +599,7 @@ begin
          raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
 
       end if;
-      checkInvariants ();
+      This.checkInvariants;
 
       u : Integer := BitSet.wordIndex (fromIndex);
       if u >= wordsInUse then
@@ -628,7 +638,7 @@ begin
          raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
 
       end if;
-      checkInvariants ();
+      This.checkInvariants;
 
       u : Integer := BitSet.wordIndex (fromIndex);
       if u >= wordsInUse then
@@ -682,11 +692,11 @@ begin
 
       end if;
 
-      checkInvariants ();
+      This.checkInvariants;
 
       u : Integer := BitSet.wordIndex (fromIndex);
       if u >= wordsInUse then
-         return length () - 1;
+         return This.length - 1;
       end if;
 
       word : Integer_64 := words.Element (u) & Shift_Right_Arithmetic ( (BitSet.WORD_MASK, Integer_64 (-(fromIndex + 1))));
@@ -726,7 +736,7 @@ begin
 
       end if;
 
-      checkInvariants ();
+      This.checkInvariants;
 
       u : Integer := BitSet.wordIndex (fromIndex);
       if u >= wordsInUse then
@@ -839,8 +849,8 @@ begin
          words.Insert (Key => i, New_Item => @ and set.words.Element (i));
       end loop;
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -877,8 +887,8 @@ begin
 
       end if;
 
-      -- recalculateWordsInUse () is unnecessary
-      checkInvariants ();
+      -- This.recalculateWordsInUse is unnecessary
+      This.checkInvariants;
    end if;
 
    --
@@ -916,8 +926,8 @@ begin
 
       end if;
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -937,8 +947,8 @@ begin
          i := @ - 1;
       end loop;
 
-      recalculateWordsInUse ();
-      checkInvariants ();
+      This.recalculateWordsInUse;
+      This.checkInvariants;
    end if;
 
    --
@@ -948,9 +958,9 @@ begin
    -- The hash code is defined to be the result of the following
    -- calculation:
    -- `
-   -- public Integer hashCode () {
+   -- public Integer This.hashCode {
    -- long h := 1234;
-   -- long[] words := toLongArray ();
+   -- long[] words := This.toLongArray;
    -- for (int i := words.length; --i >= 0; );
    -- h ^= words.Element (i) * (i + 1);
    -- return (int)(Shift_Right (h, 32) ^ h);
@@ -1020,15 +1030,15 @@ begin
    --
    -- Example:
    --
-   -- `BitSet drPepper := new BitSet ();`
-   -- Now `drPepper.description` returns `"{}"`.
+   -- `BitSet drPepper := new This.BitSet;`
+   -- Now `drPepper'Image` returns `"{}"`.
    --
    -- `drPepper.set (2);`
-   -- Now `drPepper.description` returns `"{2}"`.
+   -- Now `drPepper'Image` returns `"{2}"`.
    --
    -- `drPepper.set (4);`
    -- `drPepper.set (10);`
-   -- Now `drPepper.description` returns `"{2, 4, 10}"`.
+   -- Now `drPepper'Image` returns `"{2, 4, 10}"`.
    --
    -- * returns: a string representation of this bit set
    --
@@ -1042,9 +1052,9 @@ begin
       checkInvariants (This);
 
       --let numBits: Integer := (wordsInUse > 128) ?
-      -- cardinality () : wordsInUse * BitSet.BITS_PER_WORD
+      -- This.cardinality : wordsInUse * BitSet.BITS_PER_WORD
       b := "{";
-      i := firstSetBit ();
+      i := This.firstSetBit;
       if i /= -1 then
          b := @ & UString (i);
          i := nextSetBit (i + 1); -- try!
@@ -1058,7 +1068,7 @@ begin
                i := nextSetBit (i + 1); -- try!
          end loop;
       end if;
-      b := @ & "}";
+      b := @ & '}';
       return b;
    end Image;
 

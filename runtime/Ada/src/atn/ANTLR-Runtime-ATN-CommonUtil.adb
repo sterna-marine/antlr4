@@ -1,5 +1,9 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+
+use Ada;
+
 package body ANTLR.Runtime.ATN.CommonUtil is
 
    procedure log (message : UString;
@@ -7,7 +11,7 @@ package body ANTLR.Runtime.ATN.CommonUtil is
                   This_function : UString := "#function";
                   lineNum : Integer := 0) is
       -- #if DEBUG
-      Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last & ", FUNC: " & This_function & ", LINE: " & lineNum'Image & ", MESSAGE: " & message);
+      Wide_Wide_Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last & ", FUNC: " & This_function & ", LINE: " & lineNum'Image & ", MESSAGE: " & message);
       --   #else
       -- do nothing
       --   #endif

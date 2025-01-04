@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.ATN.LL1Analyzer is
 
    procedure Initialize (Self : in out LL1Analyzer; atn : ATN) is
@@ -18,7 +24,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
          length := s.getNumberOfTransitions ();
          look   := Optional_IntervalSet.Container.To_Vector (New_Item => (Valid => False), Length => length);  --TOFIX
          for alt in 0 .. length - 1 loop  --TOFIX
-            look.Update_Element (Key => alt, New_Item => IntervalSet ()); --TOFIX
+            look.Update_Element (Key => alt, New_Item => This.IntervalSet); --TOFIX
             lookBusy := ATNConfigs_Sets.Empty_Set;
             seeThruPreds : constant := False; -- fail to get lookahead upon pred
             This_LOOK (This => This,
@@ -27,7 +33,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
                         ctx => EmptyPredictionContext.Instance,
                         look => Value (look.Element (alt)),
                         lookBusy => lookBusy,
-                        calledRuleStack => BitSet (),
+                        calledRuleStack => This.BitSet,
                         seeThruPreds => seeThruPreds,
                         addEOF  => False);
             -- Wipe out lookahead for this alternative if we found nothing
@@ -47,7 +53,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
                   ctx : Optional_RuleContext)
                   return IntervalSet is
       lookContext : Optional_RuleContext;
-      r : constant := IntervalSet ();
+      r : constant := This.IntervalSet;
       config : Set_of_ATNConfigs;
       seeThruPreds : constant Boolean := True; -- ignore preds; get all lookahead
    begin
@@ -62,7 +68,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
                   ctx => lookContext,
                   look => r,
                   lookBusy => config,
-                  calledRuleStack => BitSet (),
+                  calledRuleStack => This.BitSet,
                   seeThruPreds => seeThruPreds,
                   addEOF  => True);
       return r;
@@ -79,7 +85,10 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
                         addEOF  : Boolean) is
       c : constant ATNConfig := ATNConfig (s, ATN.INVALID_ALT_NUMBER, ctx);
    begin
-      -- Text_IO.Put_Line ("This_LOOK (" & s.stateNumber), ctx=" & ctx'Image);
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line ("This_LOOK (" & s.stateNumber'Image & ", ctx=" & ctx'Image & ')');
+      end if;
+
       if lookBusy.Contains (c) then
          return;
       else

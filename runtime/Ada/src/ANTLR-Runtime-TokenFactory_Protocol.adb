@@ -12,7 +12,7 @@ package body ANTLR.Runtime.TokenFactory_Protocol is
    -- -------------------- --
 
    procedure Initialize (Self : in out TokenSourceAndStream;
-                         tokenSource : Optional_TokenSource := (Valid => False);
+                         tokenSource : Optional_TokenSource;
                          stream : Optional_CharStream := (Valid => False)) is
    begin
       self.tokenSource := tokenSource;

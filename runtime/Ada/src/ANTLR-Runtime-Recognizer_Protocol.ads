@@ -1,6 +1,7 @@
 -- €
 
 with ANTLR.Runtime.ATN.ParseInfos;
+with Option;
 with UString;
 
 use ANTLR.Runtime.ATN.ParseInfos;
@@ -9,6 +10,9 @@ package ANTLR.Runtime.Recognizer_Protocol is
 
 -- public
    type RecognizerProtocol is interface;
+
+   package Option_RecognizerProtocol is new Option (RecognizerProtocol);
+   subtype Optional_RecognizerProtocol is Option_RecognizerProtocol.Optional;
 
    --
    -- Get the _org.antlr.v4.runtime.atn.ATN_ used by the recognizer for prediction.

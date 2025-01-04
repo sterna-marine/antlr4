@@ -128,7 +128,7 @@ package body ANTLR.Runtime.ListTokenSources is
       if Is_Valid (This.sourceName) then
          return This.sourceName;
       else
-         inputStream : constant := getInputStream ()
+         inputStream : constant := This.getInputStream
          if Is_Valid (inputStream) then
             return inputStream.getSourceName;
          else

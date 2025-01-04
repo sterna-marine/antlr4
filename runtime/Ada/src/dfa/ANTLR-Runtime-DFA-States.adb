@@ -28,7 +28,7 @@ package body ANTLR.Runtime.DFA.States is
    procedure Put_Image_DFAState (S : in out Sink'Class; X : DFAState);
    for DFAState'Put_Image use Put_Image_DFAState;
    function Description (This : DFAState) return UString is
-      buf := ATNState.State'Image (This.stateNumber) & ":" & " & configs'Image & ";
+      buf := ATNState.State'Image (This.stateNumber) & ':' & " & configs'Image & ";
    begin
         if This.isAcceptState then
             buf := @ & "=>";

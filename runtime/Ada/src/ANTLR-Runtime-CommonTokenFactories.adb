@@ -15,7 +15,7 @@ package body ANTLR.Runtime.CommonTokenFactories is
 
    function create (source : TokenSourceAndStream;
                     Type : Token_Kind;
-                    text : Optional_String;
+                    text : Optional_UString;
                     Channel : Channel_Number;
                     start : Integer;
                     stop : Integer;

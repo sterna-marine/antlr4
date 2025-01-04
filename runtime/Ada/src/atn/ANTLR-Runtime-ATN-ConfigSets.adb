@@ -163,7 +163,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    function Description (This : ATNConfigSet) return UString is
       buf : UString; -- := "";
    begin
-      buf := @ & UString (describing => elements ());
+      buf := @ & UString (describing => This.elements);
       if This.hasSemanticContext then
          buf := @ & ",hasSemanticContext=True";
       end if;
@@ -202,7 +202,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
          if configToAlt then --TOFIX
             alts := configToAlt;
          else
-            alts := BitSet ();
+            alts := This.BitSet;
             configToAlts.Insert (Key => hash, New_Item => alts);
          end if;
 
@@ -221,7 +221,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
          if mAlts then
             alts := mAlts;
          else
-            alts := BitSet ();
+            alts := This.BitSet;
             m.Insert (Key => cfg.state.stateNumber, New_Item => alts);
          end if;
 
@@ -235,7 +235,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       if This.configs.isEmpty then
          return (Valid => False);
       else
-         alts := Set_of_Optional_Integers ();
+         alts := This.Set_of_Optional_Integers;
          for config of This.configs loop
             alts.insert (config.alt);
          end loop;
@@ -244,7 +244,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    end getAltSet;
 
    function getAltBitSet (This : ATNConfigSet) return BitSet is
-      result : constant := BitSet ();
+      result : constant := This.BitSet;
    begin
       for config of This.configs loop
          result.set (config.alt); -- try!
@@ -376,7 +376,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
          end if;
       end loop;
 
-      --      -- Optimize away p or p and p and p TODO: optimize () was a no-op
+      --      -- Optimize away p or p and p and p TODO: This.optimize was a no-op
       --      for i in 0 .. altToPred.length - 1 loop
       --         altToPred.Insert (Key => i, New_Item => altToPred.Element (i).optimize ());
       --       i := @ + 1;
@@ -389,7 +389,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    end getPredsForAmbigAlts;
 
    function getAltThatFinishedDecisionEntryRule (This : ATNConfigSet) return Integer is
-      alts : constant IntervalSet := IntervalSet ();
+      alts : constant IntervalSet := This.IntervalSet;
    begin
       for config of This.configs loop
          if config.getOuterContextDepth () > 0
@@ -413,27 +413,28 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    procedure splitAccordingToSemanticValidity (This : ATNConfigSet;
                                                outerContext : ParserRuleContext;
                                                evalSemanticContext : evalSemanticContext_Access) --TOFIX
-                                               return (ATNConfigSet, ATNConfigSet) is --TOFIX
-      succeeded : constant ATNConfigSet := ATNConfigSet (fullCtx);
-      failed : constant ATNConfigSet := ATNConfigSet (fullCtx);
+                                               return Splitted_ConfigSets is
+      Pair_of_ConfigSets : Splitted_ConfigSets := (
+         succeeded => ATNConfigSet (fullCtx),
+         failed => ATNConfigSet (fullCtx));
    begin
       for config of This.configs loop
          if config.semanticContext /= SemanticContext.Empty.Instance then
-               predicateEvaluationResult : constant := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
-               if predicateEvaluationResult then
-                  succeeded.add (config); -- try!
-               else
-                  failed.add (config); -- try!
-               end if;
+            predicateEvaluationResult : constant Boolean := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
+            if predicateEvaluationResult then
+               Pair_of_ConfigSets.Succeeded.add (config); -- try!
+            else
+               Pair_of_ConfigSets.Failed.add (config); -- try!
+            end if;
          else
-               succeeded.add (config); -- try!
+            Pair_of_ConfigSets.succeeded.add (config); -- try!
          end if;
       end loop;
-      return (succeeded, failed);
+      return Pair_of_ConfigSets;
    end splitAccordingToSemanticValidity;
 
    function dupConfigsWithoutSemanticPredicates (This : ATNConfigSet) return ATNConfigSet is
-      dup : constant ATNConfigSet := ATNConfigSet ();
+      dup : constant ATNConfigSet := This.ATNConfigSet;
    begin
       for config of This.configs loop
          c : constant := ATNConfig (config, SemanticContext.Empty.Instance);

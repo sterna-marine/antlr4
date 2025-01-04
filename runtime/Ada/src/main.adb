@@ -1,6 +1,8 @@
 with Ada.Text_IO;
 use Ada.Text_IO;
 
+with Aspect;
+with Aspect.Advices;
 with Option;
 -- with ANTLR;
 -- with ANTLR.Runtime;
@@ -164,5 +166,10 @@ begin
    --  Enum_Val (Character'Pos ('R'));
    --  Put_Line (My_Color'Image);
    Put_Line ("===============");
+
+
+    Aspect.Is_Active (Aspect.DEBUG) := False;
+    Aspect.Is_Active (Aspect.TRACE) := False;
+    Aspect.Is_Active (Aspect.PROFILING_TIME) := True;
 
 end Main;

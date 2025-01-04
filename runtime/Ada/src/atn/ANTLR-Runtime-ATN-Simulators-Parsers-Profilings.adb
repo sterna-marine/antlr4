@@ -164,7 +164,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
          if Is_Valid (reachConfigs) then
          else
                -- no reach on current lookahead symbol. ERROR.
-               -- TODO: does not handle delayed errors per getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule ();
+               -- TODO: does not handle delayed errors per This.getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule;
                This.decisions.Element (This.currentDecision).errors.append (
                ErrorInfo (This.currentDecision, closure, _input, This._startIndex, This._llStopIndex, True);
                );

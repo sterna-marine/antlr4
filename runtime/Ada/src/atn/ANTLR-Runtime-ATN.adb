@@ -81,7 +81,7 @@ package body ANTLR.Runtime.ATN is
          return following;
       end if;
 
-      expected : constant := IntervalSet ();
+      expected : constant := This.IntervalSet;
       expected.addAll (following); -- try!
       expected.remove (CommonToken.EPSILON); -- try!
       ctxWrap : constant := ctx;

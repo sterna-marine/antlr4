@@ -122,7 +122,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
       index : Integer;
 
       -- internal
-      text : Optional_String;
+      text : Optional_UString;
 
       -- internal
       lastIndex : Integer := 0;
@@ -155,7 +155,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
 
    procedure Initialize (Self : RewriteOperation; index : Integer; tokens : TokenStream);
 
-   procedure Initialize (Self : RewriteOperation; index : Integer; text : Optional_String; tokens : TokenStream);
+   procedure Initialize (Self : RewriteOperation; index : Integer; text : Optional_UString; tokens : TokenStream);
 
    -- Execute the rewrite operation by possibly adding to the buffer.
    -- Return the index of the next token to operate on.
@@ -226,7 +226,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
    overriding
    procedure Initialize (Self : in out InsertAfterOp;
                          index : Integer;
-                         text : Optional_String;
+                         text : Optional_UString;
                          tokens : TokenStream);
 
    -- I'm going to replacing range from x .. y with (y-x)+1 ReplaceOp;
@@ -242,7 +242,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
    -- public
    procedure Initialize (Self : in out ReplaceOp; 
                          from, to : Integer;
-                         text : Optional_String;
+                         text : Optional_UString;
                          tokens : TokenStream);
 
    -- public

@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.ATN.PredictionContexts is
 
    -- private static
@@ -88,10 +94,10 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       hash : Hash_Code;
    begin
       hash := MurmurHash.initialize (INITIAL_HASH);
-      for parent in parents loop
+      for parent of parents loop
             hash := MurmurHash.update (hash, parent);
       end if;
-      for state in returnStates loop
+      for state of returnStates loop
             hash := MurmurHash.update (hash, state);
       end loop;
 
@@ -218,7 +224,10 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
             parents := [b.parent, a.parent]
          end if;
          if a is EmptyPredictionContext then
-            null;  -- Text_IO.Put_Line ("parent is null");
+            null;  
+            if Is_Active (Aspect.DEBUG) then
+               Wide_Wide_Text_IO.Put_Line ("parent is null");
+            end if;
          end if;
          a_ : constant := ArrayPredictionContext (parents, payloads);
          mergeCache?.put (a, b, a_);
@@ -346,7 +355,9 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
             -- for just one merged element, return singleton top
             a_ : constant := SingletonPredictionContext.create (mergedParents.Element (0), mergedReturnStates.Element (0));
             mergeCache?.put (a, b, a_);
-            --print ("merge array 1 " & a_'Image);
+            if Is_Active (Aspect.DEBUG) then
+               Wide_Wide_Text_IO.Put_Line ("merge array 1 " & a_'Image);
+            end if;
             return a_
          end if;
          mergedParents := Array (mergedParents[0 ..< k]);
@@ -371,7 +382,9 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       M.combineCommonParents ();
 
       mergeCache?.put (a, b, M);
-      -- Text_IO.Put_Line ("merge array 4 " & M'Image);
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line ("merge array 4 " & M'Image);
+      end if;
       return M
    end mergeArrays;
 
@@ -391,36 +404,36 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
             (lhs > rhs);
       nodes.sort { $0.id > $1.id };
 
-      for current in nodes loop
+      for current of nodes loop
          if current is SingletonPredictionContext then
             buf := @ & "  s" & current.id;
             returnState : UString := UString (current.getReturnState (0));
             if current is EmptyPredictionContext then
                returnState := "$";
             end if;
-            buf := @ & " [label=""" & returnState'Image & """];\n";
+            buf := @ & " [label=""" & returnState'Image & '"'];\n";
             goto CONTINUE_NODES_A;
          end if;
          arr : constant ArrayPredictionContext := ArrayPredictionContext (current);
          buf := @ & "  s" & arr.id) [shape=box, label=""[";
          first := True;
          returnStates : constant := arr.returnStates
-         for inv in returnStates loop
+         for inv of returnStates loop
             if not first then
                buf := @ & ", ";
             end if;
             if inv = EMPTY_RETURN_STATE then
-               buf := @ & "$";
+               buf := @ & '$';
             else
                buf := @ + UString (inv);
             end if;
             first := False;
          end loop;
-         buf := @ & "]""];\n";
+         buf := @ & ']'"];\n";
          <<CONTINUE_NODES_A>>
       end loop;
 
-      for current in nodes loop
+      for current of nodes loop
          if current === EmptyPredictionContext.Instance then
             goto CONTINUE_NODES_B;
          end if;
@@ -432,7 +445,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
             end if;
             buf := @ & "  s" & current.id) -> s" & currentParent.id;
             if current.size () > 1 then
-               buf := @ & " [label=""parent[" & i'Image & "]""];\n";
+               buf := @ & " [label=""parent[" & i'Image & ']'"];\n";
             else
                buf := @ & ";\n";
             end if;
@@ -441,7 +454,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
          <<CONTINUE_NODES_B>>
       end loop;
 
-      buf.append ("end if;\n");
+      buf.append ("}\n");
       return buf
    end toDOTString;
 
@@ -513,7 +526,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
 
 
 
-   -- ter's recursive version of Sam's getAllNodes ();
+   -- ter's recursive version of Sam's This.getAllNodes;
    function getAllContextNodes (context : PredictionContext) return PredictionContext_Container.Vector is
       nodes := PredictionContext.Container.Empty_Vector;
       visited := [PredictionContext: PredictionContext]();
@@ -584,7 +597,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
             if recognizer : constant := recognizer then
                if localBuffer.count > 1 then
                   -- first char is '[', if more than that this isn't the first rule
-                  localBuffer := @ & " ";
+                  localBuffer := @ & ' ';
                end if;
 
                atn : constant := recognizer.getATN ();
@@ -595,7 +608,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                if not p.isEmpty () then
                   if localBuffer.count > 1 then
                      -- first char is '[', if more than that this isn't the first rule
-                     localBuffer := @ & " ";
+                     localBuffer := @ & ' ';
                   end if;
 
                   localBuffer := @ + UString (p.getReturnState (index));
@@ -605,7 +618,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
             p := p.getParent (index)!
             <<CONTINUE_OUTER>>
          end loop;
-         localBuffer := @ & "]";
+         localBuffer := @ & ']';
          result.append (localBuffer);
 
          exit when last;
@@ -617,7 +630,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
    end toStrings<T>;
 
    function Description (This : …) return UString
-      is (describing: PredictionContext.self) + "@" + UString (Unmanaged.passUnretained (self).toOpaque ().hashValue);
+      is (describing: PredictionContext.self) & '@' & UString (Unmanaged.passUnretained (self).toOpaque ().hashValue);
 
    function "=" (lhs: RuleContext; rhs: ParserRuleContext) return Boolean is
       lhs : constant Optional_ParserRuleContext := Maybe (lhs);

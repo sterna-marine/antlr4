@@ -108,7 +108,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
       -- This is always non-null during the parsing process.
       --
       -- public
-      ctx : Optional_ParserRuleContext := (Valid => False);
+      ctx : Optional_ParserRuleContext;
 
       --
       -- Specifies whether or not the parser should construct a parse tree during
@@ -540,7 +540,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -- This method resets/seeks within but does not alter originalParser.
    -- The input position is restored upon exit from this method.
    -- Parsers using a _org.antlr.v4.runtime.UnbufferedTokenStream_ may not be able to
-   -- perform the necessary save index () / seek (saved_index) operation.
+   -- perform the necessary save This.index / seek (saved_index) operation.
    --
    -- The trees are rooted at the node whose start .. stop token indices
    -- include the start and stop indices of this ambiguity event. That is,
@@ -596,7 +596,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
 --         }
 --         else {
 --            serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN ());
---            deserialized : ATN := ATNDeserializer ().deserialize (serializedAtn);
+--            deserialized : ATN := This.ATNDeserializer.deserialize (serializedAtn);
 --            parser := ParserInterpreter (originalParser.getGrammarFileName (),
 --                                    originalParser.getVocabulary (),
 --                                     originalParser.getRuleNames () ,
@@ -641,7 +641,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -- need to be explicitly constructed.
    --
    --
-   -- return getExpectedTokens ().contains (symbol);
+   -- return This.getExpectedTokens.contains (symbol);
    --
    --
    -- * Parameter symbol: the symbol type to check
@@ -731,7 +731,7 @@ private
    -- * SeeAlso: `ATNDeserializationOptions.generateRuleBypassTransitions`
    --
    -- private
-   bypassAltsAtnCache : Optional_ATN := (Valid => False);
+   bypassAltsAtnCache : Optional_ATN;
 
    --
    -- mutex for bypassAltsAtnCache updates

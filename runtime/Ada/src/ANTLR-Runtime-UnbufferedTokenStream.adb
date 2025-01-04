@@ -8,7 +8,7 @@ type UnbufferedTokenStream is new TokenStream with null record;
 
     --
     -- A moving window buffer of the data being scanned. While there's a marker,
-    -- we keep adding to buffer. Otherwise, _#consume consume ()_ resets so
+    -- we keep adding to buffer. Otherwise, _#consume This.consume_ resets so
     -- we start filling at index 0 again.
     --
     -- internal
@@ -32,8 +32,8 @@ type UnbufferedTokenStream is new TokenStream with null record;
     p := 0
 
     --
-    -- Count up with _#mark mark ()_ and down with
-    -- _#release release ()_. When we `release ()` the last mark,
+    -- Count up with _#mark This.mark_ and down with
+    -- _#release This.release_. When we `release ()` the last mark,
     -- `numMarkers` reaches 0 and we reset the buffer. Copy
     -- `tokens.Element (p)..tokens[n - 1]` to `tokens.Element (0)..tokens[(n - 1)-p]`.
     --
@@ -76,7 +76,7 @@ type UnbufferedTokenStream is new TokenStream with null record;
     function get (i : Integer) return Token is
 begin
         -- get absolute index
-        bufferStartIndex : constant := getBufferStartIndex ();
+        bufferStartIndex : constant := This.getBufferStartIndex;
         if i < bufferStartIndex or else i >= bufferStartIndex + n then
             raise ANTLRError.indexOutOfBounds with "get (" & i'Image & ") outside buffer: " & bufferStartIndex'Image & ".." & bufferStartIndex + n;
         end if;
@@ -279,10 +279,10 @@ begin
 
         if index > currentTokenIndex then
             sync (index - currentTokenIndex);
-            index := min (index, getBufferStartIndex () + n - 1);
+            index := min (index, This.getBufferStartIndex + n - 1);
         end if;
 
-        bufferStartIndex : constant := getBufferStartIndex ();
+        bufferStartIndex : constant := This.getBufferStartIndex;
         i : constant := index - bufferStartIndex
         if i < 0 then
             raise ANTLRError.illegalState with "cannot seek to negative index " & index'Image & "";
@@ -319,7 +319,7 @@ begin
     -- public
     function getText (interval : Interval) return UString is
 begin
-        bufferStartIndex : constant := getBufferStartIndex ();
+        bufferStartIndex : constant := This.getBufferStartIndex;
         bufferStopIndex : constant := bufferStartIndex + tokens.count - 1
 
         start : constant := interval.a
@@ -332,7 +332,7 @@ begin
         b : constant := stop - bufferStartIndex
 
         buf := ""
-        for t in tokens[a .. b] loop
+        for t of tokens[a .. b] loop
             buf := @ + t.getText ()!;
         end loop;
         return buf

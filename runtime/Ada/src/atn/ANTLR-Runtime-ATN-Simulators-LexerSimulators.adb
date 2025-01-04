@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
    --
@@ -139,7 +145,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    overriding
    procedure clearDFA (This : LexerATNSimulator) is
    begin
-      for d in This.decisionToDFA loop --TOFIX
+      for d of This.decisionToDFA loop --TOFIX
             DFA.Container.Replace (This.decisionToDFA, d) := DFA (atn.getDecisionState (d)!, d);
       end loop;
    end clearDFA;
@@ -152,7 +158,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    begin
 
       if LexerATNSimulator.debug then
-            Text_IO.Put_Line ("matchATN mode " & mode'Image & " start: " & startState'Image & "\n");
+            Wide_Wide_Text_IO.Put_Line ("matchATN mode " & mode'Image & " start: " & startState'Image & "\n");
       end if;
 
       s0_closure.hasSemanticContext := False;
@@ -165,7 +171,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       predict := execATN (input, next); -- constant
 
       if LexerATNSimulator.debug then
-            Text_IO.Put_Line ("DFA after matchATN: " & decisionToDFA.Element (old_mode).toLexerString ());
+            Wide_Wide_Text_IO.Put_Line ("DFA after matchATN: " & decisionToDFA.Element (old_mode).toLexerString ());
       end if;
 
       return predict;
@@ -173,9 +179,11 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
    function execATN (This : LexerATNSimulator; input : CharStream; ds0 : DFAState) return Integer is
    begin
-      --print ("enter exec index "+input.index ()+" from "+ds0.configs);
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line ("enter exec index " & input.index & " from " & ds0.configs);
+      end if;
       if LexerATNSimulator.debug then
-            Text_IO.Put_Line ("start state closure=" & ds0.configs & "\n");
+            Wide_Wide_Text_IO.Put_Line ("start state closure=" & ds0.configs & "\n");
       end if;
 
       if ds0.isAcceptState then
@@ -190,7 +198,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       loop
          -- while more work
          if LexerATNSimulator.debug then
-            Text_IO.Put_Line ("execATN loop starting closure: " & s.configs & "\n");
+            Wide_Wide_Text_IO.Put_Line ("execATN loop starting closure: " & s.configs & "\n");
          end if;
 
          -- As we move src->trg, src->trg, we keep track of the previous trg to
@@ -252,7 +260,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       else
          target := s.edges.Element (t - LexerATNSimulator.MIN_DFA_EDGE); -- constant
          if LexerATNSimulator.debug and then not target.Is_Empty then
-               Text_IO.Put_Line ("reuse state " & s.stateNumber & " edge to " & target!.stateNumber);
+               Wide_Wide_Text_IO.Put_Line ("reuse state " & s.stateNumber & " edge to " & target!.stateNumber);
          end if;
          return target;
       end if;
@@ -314,7 +322,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       -- this is used to skip processing for configs which have a lower priority
       -- than a config that already reached an accept state for the same rule
       skipAlt := ATN.INVALID_ALT_NUMBER
-      for c in closureConfig.configs loop
+      for c of closureConfig.configs loop
             c : constant LexerATNConfig := Optional_LexerATNConfig (c);
             if not Is_Valid (c) then
                goto CONTINUE;
@@ -325,7 +333,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
             end if;
 
             if LexerATNSimulator.debug then
-               Text_IO.Put_Line ("testing " & getTokenName (t) & " at " & c.toString (recog, True) & "\n");
+               Wide_Wide_Text_IO.Put_Line ("testing " & getTokenName (t) & " at " & c.toString (recog, True) & "\n");
 
             end if;
 
@@ -366,7 +374,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                      charPos : Integer) is
    begin
       if LexerATNSimulator.debug then
-         Text_IO.Put_Line ("ACTION " & UString (describing => lexerActionExecutor) & "\n");
+         Wide_Wide_Text_IO.Put_Line ("ACTION " & UString (describing => lexerActionExecutor) & "\n");
       end if;
 
       -- seek to after last char in token
@@ -417,15 +425,15 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       currentAltReachedAcceptState := currentAltReachedAcceptState;
    begin
       if LexerATNSimulator.debug then
-            Text_IO.Put_Line ("closure (" + config.toString (recog, True) + ")");
+            Wide_Wide_Text_IO.Put_Line ("closure (" & config.toString (recog, True) & ')');
       end if;
 
       if config.state is RuleStopState then
          if LexerATNSimulator.debug then
             if recog : constant := recog then
-               Text_IO.Put_Line ("closure at " & recog.getRuleNames ()[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
+               Wide_Wide_Text_IO.Put_Line ("closure at " & recog.getRuleNames ()[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
             else
-               Text_IO.Put_Line ("closure at rule stop " & config'Image & "\n");
+               Wide_Wide_Text_IO.Put_Line ("closure at rule stop " & config'Image & "\n");
             end if;
          end if;
 
@@ -517,7 +525,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
             --
             pt : constant PredicateTransition := PredicateTransition (t);
             if LexerATNSimulator.debug then
-               Text_IO.Put_Line ("EVAL rule " & pt.ruleIndex & ":" & pt.predIndex);
+               Wide_Wide_Text_IO.Put_Line ("EVAL rule " & pt.ruleIndex & ':' & pt.predIndex);
             end if;
             configs.hasSemanticContext := True;
             if evaluatePredicate (input, pt.ruleIndex, pt.predIndex, speculative) then
@@ -531,8 +539,8 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                --
                -- TODO: if the enrule is invoked recursively, some;
                -- actions may be executed during the recursive call. The
-               -- problem can appear when hasEmptyPath () is True but
-               -- isEmpty () is False. In this case, the config needs to be
+               -- problem can appear when This.hasEmptyPath is True but
+               -- This.isEmpty is False. In this case, the config needs to be
                -- split into two contexts - one with just the empty path
                -- and another with everything but the empty path.
                -- Unfortunately, the current algorithm does not allow
@@ -665,7 +673,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       end if;
 
       if LexerATNSimulator.debug then
-            Text_IO.Put_Line ("EDGE " & p'Image & " -> " & q'Image & " upon " & t'Image);
+            Wide_Wide_Text_IO.Put_Line ("EDGE " & p'Image & " -> " & q'Image & " upon " & t'Image);
       end if;
 
       p.Mutex.Run (Synchronized_Closure'Access, Closure_Return_Value);
@@ -753,7 +761,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          return "EOF";
       else
          --if ( Is_Valid (atn.g) ) return atn.g.getTokenDisplayName (t);
-         return "'" + UString (Character (integerLiteral => t)) + "'";
+         return ''' & UString (Character (integerLiteral => t)) & ''';
       end if;
    end getTokenName;
 

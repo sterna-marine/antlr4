@@ -21,7 +21,7 @@ package body ANTLR.Runtime.Tree.ParseTreeWalkers is
          end loop;
          exitRule (listener, r);
       else
-         preconditionFailure ();
+         This.preconditionFailure;
       end if;
    end walk;
 

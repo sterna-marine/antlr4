@@ -276,7 +276,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
       for Some_Dummy_nSet in 0 .. nsets - 1 loop
          nintervals := data.Element (p);
          p := @ + 1;
-         set := IntervalSet ();
+         set := This.IntervalSet;
          sets.append (set);
 
          containsEof := (data.Element (p) /= 0);
@@ -295,7 +295,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
       nrules : constant Ada.Container.Count_Type := atn.ruleToStartState.Length;
       stopState : ATNState;
    begin
-      atn.ruleToStopState := RuleStopState_Container.To_Vector (New_Item => RuleStopState (), Length => nrules);
+      atn.ruleToStopState := RuleStopState_Container.To_Vector (New_Item => This.RuleStopState, Length => nrules);
 
       for state in atn.states loop
          stopState : Optional_RuleStopState := RuleStopState (State);
@@ -454,11 +454,11 @@ package body ANTLR.Runtime.ATN.Deserializers is
       end loop;
 
       for i in 0 .. length - 1 loop
-         bypassStart := BasicBlockStartState ();
+         bypassStart := This.BasicBlockStartState;
          bypassStart.ruleIndex := i;
          atn.addState (bypassStart);
 
-         bypassStop := BlockEndState ();
+         bypassStop := This.BlockEndState;
          bypassStop.ruleIndex := i;
          atn.addState (bypassStop);
 
@@ -526,7 +526,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
          atn.ruleToStartState.Element (i).addTransition (EpsilonTransition (bypassStart));
          bypassStop.addTransition (EpsilonTransition (endState!));
 
-         matchState := BasicState ();
+         matchState := This.BasicState;
          atn.addState (matchState);
          matchState.addTransition (AtomTransition (bypassStop, atn.ruleToTokenType.Element (i)));
          bypassStart.addTransition (EpsilonTransition (matchState));
@@ -603,7 +603,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
       checkCondition (condition, (Valid => False));
    end checkCondition;
 
-   procedure checkCondition (condition : Boolean; message : Optional_String;) is
+   procedure checkCondition (condition : Boolean; message : Optional_UString) is
    begin
       if not condition then
          raise ANTLRError.illegalState with Value (message , Default => "");
@@ -659,18 +659,18 @@ package body ANTLR.Runtime.ATN.Deserializers is
    begin
       case state is
          when ATNState.INVALID_TYPE => return (Valid => False);
-         when ATNState.BASIC => s := BasicState ();
-         when ATNState.RULE_START => s := RuleStartState ();
-         when ATNState.BLOCK_START => s := BasicBlockStartState ();
-         when ATNState.PLUS_BLOCK_START => s := PlusBlockStartState ();
-         when ATNState.STAR_BLOCK_START => s := StarBlockStartState ();
-         when ATNState.TOKEN_START => s := TokensStartState ();
-         when ATNState.RULE_STOP => s := RuleStopState ();
-         when ATNState.BLOCK_END => s := BlockEndState ();
-         when ATNState.STAR_LOOP_BACK => s := StarLoopbackState ();
-         when ATNState.STAR_LOOP_EN=> s := StarLoopEntryState ();
-         when ATNState.PLUS_LOOP_BACK => s := PlusLoopbackState ();
-         when ATNState.LOOP_END => s := LoopEndState ();
+         when ATNState.BASIC => s := This.BasicState;
+         when ATNState.RULE_START => s := This.RuleStartState;
+         when ATNState.BLOCK_START => s := This.BasicBlockStartState;
+         when ATNState.PLUS_BLOCK_START => s := This.PlusBlockStartState;
+         when ATNState.STAR_BLOCK_START => s := This.StarBlockStartState;
+         when ATNState.TOKEN_START => s := This.TokensStartState;
+         when ATNState.RULE_STOP => s := This.RuleStopState;
+         when ATNState.BLOCK_END => s := This.BlockEndState;
+         when ATNState.STAR_LOOP_BACK => s := This.StarLoopbackState;
+         when ATNState.STAR_LOOP_EN=> s := This.StarLoopEntryState;
+         when ATNState.PLUS_LOOP_BACK => s := This.PlusLoopbackState;
+         when ATNState.LOOP_END => s := This.LoopEndState;
          when others =>
                message : constant UString := "The specified state type " & ATNState.State'Image & " is not valid.";
 

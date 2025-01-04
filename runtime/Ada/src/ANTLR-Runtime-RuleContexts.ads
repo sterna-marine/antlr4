@@ -35,11 +35,11 @@ package ANTLR.Runtime.RuleContexts is
    -- SContext) and makes it the root of a parse tree, recorded by field
    -- Parser._ctx.
    --
-   -- public final SContext s () RecognitionException {
-   -- SContext _localctx := new SContext (_ctx, getState ()); <-- create new node
+   -- public final SContext This.s RecognitionException {
+   -- SContext _localctx := new SContext (_ctx, This.getState); <-- create new node
    -- enterRule (_localctx, 0, RULE_s);                     <-- push it
    -- RuleContext
-   -- exitRule ();                                          <-- pop back to _localctx
+   -- This.exitRule;                                          <-- pop back to _localctx
    -- return _localctx;
    -- end;
    --

@@ -29,6 +29,6 @@ package ANTLR.Runtime.CharStream_Protocol is
    -- * throws: _ANTLRError.unsupportedOperation_ if the stream does not support
    -- getting the text of the specified interval
    --
-   function getText (interval : Interval) return UString is abstract;
+   function getText (This : CharStream; interval : Interval) return UString is abstract;
 
 end ANTLR.Runtime.CharStream_Protocol;

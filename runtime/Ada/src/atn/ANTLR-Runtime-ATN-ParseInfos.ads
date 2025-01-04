@@ -1,11 +1,11 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.ATN.ProfilingATNSimulators;
+with ANTLR.Runtime.ATN.Simulators.Parsers.Profilings;
 with ANTLR.Runtime.DFA;
 with Interfaces;
 
-use ANTLR.Runtime.ATN.ProfilingATNSimulators;
+use ANTLR.Runtime.ATN.Simulators.Parsers.Profilings;
 use ANTLR.Runtime.DFA;
 use Interfaces;
 

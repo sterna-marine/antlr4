@@ -37,7 +37,7 @@ extension Array {
     -- mutating
     function pop (This : …) return Element is
 begin
-        return removeLast ();
+        return This.removeLast;
     end if;
     --
     -- Same as append.

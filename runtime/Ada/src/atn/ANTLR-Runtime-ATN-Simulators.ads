@@ -21,12 +21,12 @@ package ANTLR.Runtime.ATN.Simulators is
       atn : ATN; -- constant
 
       --
-      -- The context cache maps all PredictionContext objects that are equals ();
+      -- The context cache maps all PredictionContext objects that are This.equals;
       -- to a single cached copy. This cache is shared across all contexts
       -- in all ATNConfigs in all DFA states.  We rebuild each ATNConfigSet
-      -- to use only cached nodes/graphs in addDFAState (). We don't want to
-      -- fill this during closure () since there are lots of contexts that
-      -- pop up but are not used ever again. It also greatly slows down closure ().
+      -- to use only cached nodes/graphs in This.addDFAState. We don't want to
+      -- fill this during This.closure since there are lots of contexts that
+      -- pop up but are not used ever again. It also greatly slows down This.closure.
       --
       -- This cache makes a huge difference in memory and a little bit in speed.
       -- For the Java grammar on java.*, it dropped the memory requirements
@@ -37,7 +37,7 @@ package ANTLR.Runtime.ATN.Simulators is
       -- by literally rebuilding them with cached subgraphs only.
       --
       -- I tried a cache for use during closure operations, that was
-      -- whacked after each adaptivePredict (). It cost a little bit
+      -- whacked after each This.adaptivePredict. It cost a little bit
       -- more time I think and doesn't save on the overall footprint
       -- so it's not worth the complexity.
       --

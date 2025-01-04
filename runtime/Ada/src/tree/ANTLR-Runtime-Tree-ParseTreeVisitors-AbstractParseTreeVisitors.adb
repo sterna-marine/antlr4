@@ -16,7 +16,7 @@ package body ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
 
    overriding
    function visitChildren (This : AbstractParseTreeVisitor; node : RuleNode) return Optional_T is
-      result : Optional_T := defaultResult ();
+      result : Optional_T := This.defaultResult;
       n : constant := node.getChildCount ();
    begin
       for i in 0 .. n - 1 loop
@@ -33,13 +33,13 @@ package body ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
    overriding
    function visitTerminal (This : AbstractParseTreeVisitor; node : TerminalNode) return Optional_T is
    begin
-      return defaultResult ();
+      return This.defaultResult;
    end visitTerminal;
 
    overriding
    function visitErrorNode (This : AbstractParseTreeVisitor; node : ErrorNode) return Optional_T is
    begin
-      return defaultResult ();
+      return This.defaultResult;
    end visitErrorNode;
 
    function defaultResult (This : AbstractParseTreeVisitor) return Optional_T

@@ -40,7 +40,7 @@ begin
         end loop;
 
         waitForExpectations (timeout => 30.0) { (_) in
-            Text_IO.Put_Line ("Completed");
+            Wide_Wide_Text_IO.Put_Line ("Completed");
         end if;
     end if;
 end if;

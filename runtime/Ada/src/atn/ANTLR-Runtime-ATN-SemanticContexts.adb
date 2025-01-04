@@ -202,8 +202,8 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    overriding
    function eval (This : AND; parser : Recognizer_T; parserCallStack : RuleContext) return Boolean is
    begin
-      for opnd in opnds loop
-            if not opnd.eval (parser, parserCallStack) then;
+      for opnd of opnds loop
+            if not opnd.eval (parser, parserCallStack) then
                return False;
             end if;
       end loop;
@@ -215,7 +215,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    begin
       differs := False;
       operands := SemanticContext_Container.Empty_Vector;
-      for context in opnds loop
+      for context of opnds loop
             evaluated : constant := context.evalPrecedence (parser, parserCallStack);
             --TODO differs := @ or (evaluated /= context);
             --differs := @ or (evaluated /= context);
@@ -301,8 +301,8 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    overriding
    function eval (This : OR; parser : Recognizer_T; parserCallStack : RuleContext) return Boolean is
    begin
-      for opnd in opnds loop
-            if opnd.eval (parser, parserCallStack) then;
+      for opnd of opnds loop
+            if opnd.eval (parser, parserCallStack) then
                return True;
             end if;
       end loop;
@@ -315,7 +315,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    begin
       differs := False;
       operands := SemanticContext_Container.Empty_Vector;
-      for context in opnds loop
+      for context of opnds loop
             evaluated : constant := context.evalPrecedence (parser, parserCallStack);
             differs := differs or else (evaluated /= context);
             if evaluated = SemanticContext.Empty.Instance then

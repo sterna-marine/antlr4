@@ -100,10 +100,10 @@ package ANTLR.Runtime.Vocabularies is
    function fromTokenNames (tokenNames : Optional_UString_List) return Vocabulary;
 
    -- public
-   function getLiteralName (This : Vocabulary; tokenType : Token_Kind) return Optional_String;
+   function getLiteralName (This : Vocabulary; tokenType : Token_Kind) return Optional_UString;
 
    -- public
-   function getSymbolicName (This : Vocabulary; tokenType : Token_Kind) return Optional_String;
+   function getSymbolicName (This : Vocabulary; tokenType : Token_Kind) return Optional_UString;
 
    -- public
    function getDisplayName (This : Vocabulary; tokenType : Token_Kind) return UString;

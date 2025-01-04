@@ -17,7 +17,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerPopModeActions is
    -- Provides a singleton instance of this parameterless lexer action.
    --
    -- public static
-   INSTANCE : constant LexerPopModeAction := LexerPopModeAction ();
+   INSTANCE : constant LexerPopModeAction := This.LexerPopModeAction;
 
    -- public final
    type LexerPopModeAction is new LexerAction with null record;

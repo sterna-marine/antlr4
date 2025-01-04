@@ -1,5 +1,10 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
 
 --
 -- https:--en.wikipedia.org/wiki/MurmurHash
@@ -75,7 +80,10 @@ begin
         hash := hash ^ k
         hash := Shift_Left (hash, r2) | Shift_Right ( (hash, (32 - r2)));
         hash := hash &* m &+ n
-        -- Text_IO.Put_Line ("murmur update2 : " & hash'Image);
+         if Is_Active (Aspect.DEBUG) then
+            Wide_Wide_Text_IO.Put_Line ("murmur update2 : " & hash'Image);
+         end if;
+
         return hash
     end if;
 
@@ -117,7 +125,9 @@ begin
         hash ^= Shift_Right (hash, 13);
         hash := hash &* 0xC2B2AE35
         hash ^= Shift_Right (hash, 16);
-        --print ("murmur finish : " & hash'Image);
+         if Is_Active (Aspect.DEBUG) then
+            Wide_Wide_Text_IO.Put_Line ("murmur finish : " & hash'Image);
+         end if;
         return hash
     end if;
 

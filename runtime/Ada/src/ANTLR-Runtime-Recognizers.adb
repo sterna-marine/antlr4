@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 with ANTLR.Runtime.Token_Protocol;
 
 package body ANTLR.Runtime.Recognizers is
@@ -21,7 +27,7 @@ package body ANTLR.Runtime.Recognizers is
    function TokenTypeMap (This : Recognizer) return TokenID_Map --TOFIX
       vocabulary : constant Vocabulary := getVocabulary (This);
       result : TokenID_Map;
-      length : constant := getATN ().maxTokenType;
+      length : constant := This.getATN.maxTokenType;
    begin
       for i in 0 .. length loop
 
@@ -71,7 +77,7 @@ package body ANTLR.Runtime.Recognizers is
       line : constant := offending.getLine ();
       charPositionInLine : constant := offending.getCharPositionInLine ();
    begin
-      return "line " & line'Image & ":" & charPositionInLine'Image & ""
+      return "line " & line'Image & ':' & charPositionInLine'Image & ""
    end getErrorHeader;
 
    procedure addErrorListener (This : Recognizer; listener : ANTLRErrorListener) is
@@ -103,9 +109,14 @@ package body ANTLR.Runtime.Recognizers is
 
    procedure setState (This : Recognizer; atnState : ATStates.State) is
    begin
-      --   System.err.println ("setState "+atnState);
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line (Standard_Error, "setState " & atnState'Image);
+      end if;
       This._stateNumber := atnState;
-      -- if ( traceATNStates ) _ctx.trace (atnState);
+      if Is_Active (TRACE) and then traceATNStates then
+         This.ctx.trace (atnState);
+      end if;
+
    end setState;
 
    function getInputStream (This : Recognizer) return Optional_IntStream is

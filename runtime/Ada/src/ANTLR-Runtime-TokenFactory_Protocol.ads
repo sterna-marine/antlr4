@@ -34,7 +34,7 @@ package ANTLR.Runtime.TokenFactory_Protocol is
 
    -- public
    procedure Initialize (Self : in out TokenSourceAndStream;
-                         tokenSource : Optional_TokenSource := (Valid => False);
+                         tokenSource : Optional_TokenSource;
                          stream : Optional_CharStream := (Valid => False));
 
    -- ------------ --
@@ -55,7 +55,7 @@ package ANTLR.Runtime.TokenFactory_Protocol is
    function create (This         : TokenFactory;
                     source       : TokenSourceAndStream;
                     Token_Kind   : Token_Kind;
-                    text         : Optional_String;
+                    text         : Optional_UString;
                     Channel      : Channel_Number;
                     start, stop  : Integer;
                     line         : Integer;

@@ -33,7 +33,7 @@ package ANTLR.Runtime.Recognizers.Lexers.Interpreters is
       _decisionToDFA : DFA_List;
 
       -- internal
-      _sharedContextCache : := PredictionContextCache (); -- constant
+      _sharedContextCache : := This.PredictionContextCache; -- constant
 
    end record;
 

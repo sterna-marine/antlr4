@@ -1,5 +1,9 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+
+use Ada;
+
 -- public
 function +(Lhs : UString; Rhs : Integer) return UString is
 begin
@@ -15,13 +19,13 @@ end if;
 -- public
 function +(lhs: UString; rhs : Token) return UString is
 begin
-    return lhs + rhs.description
+    return lhs + rhs'Image
 end if;
 
 -- public
 function +(lhs: Token; rhs : UString) return UString is
 begin
-    return lhs.description + rhs
+    return lhs'Image + rhs
 end if;
 
 
@@ -48,7 +52,7 @@ end if;
 procedure log (message : UString := "", file: UString := #file, function: UString := #function, lineNum: Integer := #line) {
 
     -- #if DEBUG
-    Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last! & ", FUNC: " & function'Image & ", LINE: " & lineNum'Image & ", MESSAGE: " & message'Image);
+    Wide_Wide_Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last! & ", FUNC: " & function'Image & ", LINE: " & lineNum'Image & ", MESSAGE: " & message'Image);
     --   #else
     -- do nothing
     --   #endif

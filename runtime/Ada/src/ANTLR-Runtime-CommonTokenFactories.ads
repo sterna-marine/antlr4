@@ -83,7 +83,7 @@ package ANTLR.Runtime.CommonTokenFactories is
    function create (This : CommonTokenFactory;
                     source : TokenSourceAndStream;
                     Token_Kind : Token_Kind;
-                    text : Optional_String;
+                    text : Optional_UString;
                     Channel : Channel_Number;
                     start : Integer;
                     stop : Integer;

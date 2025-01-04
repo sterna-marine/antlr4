@@ -1,5 +1,7 @@
 -- €
 
+with Option;
+
 package ANTLR.Runtime.IntStream_Protocol is
 
    --
@@ -19,11 +21,14 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- public
    type IntStream is interface;
 
+   package Option_IntStream is new Option (IntStream);
+   subtype Optional_IntStream is Option_IntStream.Optional;
+
    --
    -- Consumes the current symbol in the stream. This method has the following
    -- effects:
    --
-   -- * __Forward movement:__ The value of _#index index ()_
+   -- * __Forward movement:__ The value of _#index This.index_
    -- before calling this method is less than the value of `index ()`
    -- after calling this method.
    -- * __Ordered lookahead:__ The value of `LA (1)` before
@@ -39,7 +44,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- end of the stream (i.e. if `LA (1)==`_#EOF EOF_ before calling
    -- `consume`).
    --
-   procedure consume (This :IntStream) is abstract;
+   procedure consume (This : IntStream) is abstract;
 
    --
    -- Gets the value of the symbol at offset `i` from the current
@@ -53,7 +58,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- This method is guaranteed to succeed if any of the following are True:
    --
    -- * `i>0`
-   -- * `i==-1` and _#index index ()_ returns a value greater
+   -- * `i==-1` and _#index This.index_ returns a value greater
    -- than the value of `index ()` after the stream was constructed
    -- and `LA (1)` was called in that order. Specifying the current
    -- `index ()` relative to the index after the stream was created
@@ -67,23 +72,23 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- this method returns _#EOF_.
    --
    -- The return value is unspecified if `i<0` and fewer than `-i`
-   -- calls to _#consume consume ()_ have occurred from the beginning of
+   -- calls to _#consume This.consume_ have occurred from the beginning of
    -- the stream before calling this method.
    --
    -- * throws: _ANTLRError.unsupportedOperation_ if the stream does not support
    -- retrieving the value of the specified symbol
    --
-   function LA (This :IntStream; i : Integer) return Integer is abstract;
+   function LA (This : IntStream; i : Integer) return Integer is abstract;
 
    --
-   -- A mark provides a guarantee that _#seek seek ()_ operations will be
+   -- A mark provides a guarantee that _#seek This.seek_ operations will be
    -- valid over a "marked range" extending from the index where `mark ()`
-   -- was called to the current _#index index ()_. This allows the use of
+   -- was called to the current _#index This.index_. This allows the use of
    -- streaming input sources by specifying the minimum buffering requirements
    -- to support arbitrary lookahead during prediction.
    --
    -- The returned mark is an opaque handle (type `int`) which is passed
-   -- to _#release release ()_ when the guarantees provided by the marked
+   -- to _#release This.release_ when the guarantees provided by the marked
    -- range are no longer necessary. When calls to
    -- `mark ()`/`release ()` are nested, the marks must be released
    -- in reverse order of which they were obtained. Since marked regions are
@@ -98,8 +103,8 @@ package ANTLR.Runtime.IntStream_Protocol is
    --
    -- This method does not change the current position in the input stream.
    --
-   -- The following example shows the use of _#mark mark ()_,
-   -- _#release release (mark)_, _#index index ()_, and
+   -- The following example shows the use of _#mark This.mark_,
+   -- _#release release (mark)_, _#index This.index_, and
    -- _#seek seek (index)_ as part of an operation to safely work within a
    -- marked region, then restore the stream position to its original value and
    -- release the mark.
@@ -121,13 +126,13 @@ package ANTLR.Runtime.IntStream_Protocol is
    --  ```
    --
    -- * returns: An opaque marker which should be passed to
-   -- _#release release ()_ when the marked range is no longer required.
+   -- _#release This.release_ when the marked range is no longer required.
    --
-   function mark (This :IntStream) return Integer is abstract;
+   function mark (This : IntStream) return Integer is abstract;
 
    --
    -- This method releases a marked range created by a call to
-   -- _#mark mark ()_. Calls to `release ()` must appear in the
+   -- _#mark This.mark_. Calls to `release ()` must appear in the
    -- reverse order of the corresponding calls to `mark ()`. If a mark is
    -- released twice, or if marks are not released in reverse order of the
    -- corresponding calls to `mark ()`, the behavior is unspecified.
@@ -137,7 +142,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- * parameter marker: A marker returned by a call to `mark ()`.
    -- * seealso: #mark
    --
-   procedure release (This :IntStream; marker : Integer) is abstract;
+   procedure release (This : IntStream; marker : Integer) is abstract;
 
    --
    -- Return the index into the stream of the input symbol referred to by
@@ -147,7 +152,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- _org.antlr.v4.runtime.IntStream initializing method_ has occurred after this stream was
    -- constructed.
    --
-   function index (This :IntStream) return Integer is abstract;
+   function index (This : IntStream) return Integer is abstract;
 
    --
    -- Set the input cursor to the position indicated by `index`. If the
@@ -156,7 +161,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- returns without throwing an exception, then at least one of the following
    -- will be True.
    --
-   -- * _#index index ()_ will return the index of the first symbol
+   -- * _#index This.index_ will return the index of the first symbol
    -- appearing at or after the specified `index`. Specifically,
    -- implementations which filter their sources should automatically
    -- adjust `index` forward the minimum amount required for the
@@ -175,7 +180,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- * throws: _ANTLRError.unsupportedOperation_ if the stream does not support
    -- seeking to the specified index
    --
-   procedure seek (This :IntStream; index : Integer) is abstract;
+   procedure seek (This : IntStream; index : Integer) is abstract;
 
    --
    -- Returns the total number of symbols in the stream, including a single EOF
@@ -184,13 +189,13 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- * throws: _ANTLRError.unsupportedOperation_ if the size of the stream is
    -- unknown.
    --
-   function size (This :IntStream) return Integer is abstract;
+   function size (This : IntStream) return Integer is abstract;
 
    --
    -- Gets the name of the underlying symbol source. This method returns a
    -- non-null, non-empty string. If such a name is not known, this method
    -- returns _#UNKNOWN_SOURCE_NAME_.
    --
-   function getSourceName (This :IntStream) return UString is abstract;
+   function getSourceName (This : IntStream) return UString is abstract;
 
 end ANTLR.Runtime.IntStream_Protocol;

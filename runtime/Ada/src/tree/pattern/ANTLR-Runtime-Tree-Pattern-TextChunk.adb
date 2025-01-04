@@ -46,7 +46,7 @@ begin
     procedure Put_Image_… (S : in out Sink'Class; X : …);
     for …'Put_Image use Put_Image_…;
     function Description (This : …) return UString is
-        return "'" & text'Image & "'"
+        return "'" & text'Image & '''
     end if;
 
 

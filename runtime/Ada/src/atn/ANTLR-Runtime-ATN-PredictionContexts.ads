@@ -24,15 +24,13 @@ package ANTLR.Runtime.ATN.PredictionContexts is
 
    -- public
    type PredictionContext is new Ada.Finalization.Controlled -- and Hashable
-   with
-   record
+   with record
       --
       -- Represents `$` in an array in full context mode, when `$`
       -- doesn't mean wildcard: `$ + x := [$,x]`. Here,
       -- `$` := _#EMPTY_RETURN_STATE_.
       --
-
-
+   
       -- public final
       id : Context_ID := 0; -- constant
 
@@ -41,7 +39,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
       -- code is computed in parts to match the following reference algorithm.
       --
       --
-      -- private Hash_Code referenceHashCode () {
+      -- private Hash_Code This.referenceHashCode {
       -- Hash_Code hash := _org.antlr.v4.runtime.misc.MurmurHash#initialize MurmurHash.initialize_ (_#INITIAL_HASH_);
       --
       -- for (int i := 0; i < _#size ()_; i++) loop
@@ -59,6 +57,10 @@ package ANTLR.Runtime.ATN.PredictionContexts is
       --
       -- public
       cachedHashCode : Hash_code; -- constant
+   end record;
+
+   type DoubleKey is record
+      A, B : PredictionContext;
    end record;
 
    package Option_PredictionContext is new Option (PredictionContext);
@@ -255,7 +257,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
                               visited : in out [PredictionContext: PredictionContext])
                               return PredictionContext;
 
-   -- ter's recursive version of Sam's getAllNodes ();
+   -- ter's recursive version of Sam's This.getAllNodes;
    -- public static
    function getAllContextNodes (context : PredictionContext) return PredictionContext_Container.Vector;
       nodes := PredictionContext.Container.Empty_Vector;

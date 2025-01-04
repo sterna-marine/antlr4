@@ -1,6 +1,12 @@
 -- €
 
 with Ada.Finalization;
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 
 --
 -- A tree pattern matching mechanism for ANTLR _org.antlr.v4.runtime.tree.ParseTree_s.
@@ -187,7 +193,7 @@ begin
         tree : constant := parserInterp.parse (patternRuleIndex);
 
         -- Make sure tree pattern compilation checks for a complete parse
-        if tokens.LA (1) /= CommonToken.EOF then;
+        if tokens.LA (1) /= CommonToken.EOF then
             raise ANTLRError.illegalState with "Tree pattern compilation doesn't check for a complete parse";
         end if;
 
@@ -299,7 +305,7 @@ begin
             end if;
 
             for i in 0 ..< r1.getChildCount () loop
-                if childMatch : constant := matchImpl (r1.Element (i), patternTree.Element (i), labels) then;
+                if childMatch : constant := matchImpl (r1.Element (i), patternTree.Element (i), labels) then
                     return childMatch;
                 end if;
             end loop;
@@ -314,17 +320,22 @@ begin
     -- Is `t` `(expr <expr>)` subtree?
     -- internal
     function getRuleTagToken (t : ParseTree) return Optional_RuleTagToken is
-   begin
         ruleNode : constant RuleNode := RuleNode (t);
-        if Is_Valid (ruleNode),
-            ruleNode.getChildCount () == 1,
-            terminalNode : constant := Optional_TerminalNode (ruleNode.Element (0)),
-            ruleTag : constant := Optional_RuleTagToken ( terminalNode.getSymbol ()) {
--- Text_IO.Put_Line ("rule tag subtree "+t.toStringTree (parser));
-            return ruleTag
-        end if;
-        return (Valid => False);
-    end if;
+        terminalNode : constant Optional_TerminalNode := Set (ruleNode.Element (0));
+        ruleTag : constant Optional_RuleTagToken := Set (terminalNode.getSymbol);
+   begin
+        if Is_Valid (ruleNode)
+         and then ruleNode.getChildCount = 1
+         and then Is_Valid (terminalNode)
+         and then Is_Valid (ruleTag) then
+            if Is_Active (Aspect.DEBUG) then            
+                  Wide_Wide_Text_IO.Put_Line ("rule tag subtree " & t.toStringTree (parser)'Image);
+            end if;
+            return ruleTag;
+         else
+            return (Valid => False);
+         end if;
+    end getRuleTagToken;
 
     -- public
     function tokenize (pattern : UString) return Array<Token> {
@@ -341,7 +352,7 @@ begin
                 if firstStr.lowercased () /= firstStr then
                     ttype : constant := parser.getTokenType (tagChunk.getTag ());
                     if ttype = CommonToken.INVALID_TYPE then
-                        raise ANTLRError.illegalArgument with "Unknown token " + tagChunk.getTag () + " in pattern: " + pattern;
+                        raise ANTLRError.illegalArgument with "Unknown token " & tagChunk.getTag () & " in pattern: " & pattern;
                     end if;
                     t : constant Token := TokenTagToken (tagChunk.getTag (), ttype, tagChunk.getLabel ());
                     tokens.append (t);
@@ -349,12 +360,12 @@ begin
                     if firstStr.uppercased () /= firstStr then
                         ruleIndex : constant Integer := parser.getRuleIndex (tagChunk.getTag ());
                         if ruleIndex == -1 then
-                            raise ANTLRError.illegalArgument with "Unknown rule " + tagChunk.getTag () + " in pattern: " + pattern;
+                            raise ANTLRError.illegalArgument with "Unknown rule " & tagChunk.getTag () & " in pattern: " & pattern;
                         end if;
                         ruleImaginaryTokenType : constant Integer := parser.getATNWithBypassAlts ().ruleToTokenType.Element (ruleIndex);
                         tokens.append (RuleTagToken (tagChunk.getTag (), ruleImaginaryTokenType, tagChunk.getLabel ()));
                     else
-                        raise ANTLRError.illegalArgument with "invalid tag: " + tagChunk.getTag () + " in pattern: " + pattern;
+                        raise ANTLRError.illegalArgument with "invalid tag: " & tagChunk.getTag () & " in pattern: " & pattern;
                     end if;
                 end if;
             else
@@ -368,10 +379,11 @@ begin
                 end loop;
             end if;
         end loop;
-
---      print ("tokens="+tokens);
+         if Is_Active (Aspect.DEBUG) then
+            Wide_Wide_Text_IO.Put_Line ("tokens=" & tokens'Image);
+         end if;
         return tokens
-    end if;
+    end itokenizef;
 
     --
     -- Split `<ID> := <e:expr> ;` into 4 chunks for tokenizing by _#tokenize_.
@@ -407,17 +419,17 @@ begin
         end loop;
 
         if starts.count > stops.count then
-            raise ANTLRError.illegalArgument with "unterminated tag in pattern: " + pattern;
+            raise ANTLRError.illegalArgument with "unterminated tag in pattern: " & pattern;
         end if;
 
         if starts.count < stops.count then
-            raise ANTLRError.illegalArgument with "missing start tag in pattern: " + pattern;
+            raise ANTLRError.illegalArgument with "missing start tag in pattern: " & pattern;
         end if;
 
         ntags : constant := starts.count
         for i in 0 .. ntags - 1 loop
             if starts.Element (i).lowerBound >= stops.Element (i).lowerBound then
-                raise ANTLRError.illegalArgument with "tag delimiters out of order in pattern: " + pattern;
+                raise ANTLRError.illegalArgument with "tag delimiters out of order in pattern: " & pattern;
             end if;
         end loop;
 
@@ -437,7 +449,7 @@ begin
             -- copy inside of <tag>
             tag : constant := pattern[starts.Element (i).upperBound ..< stops.Element (i).lowerBound]
             ruleOrToken : constant UString;
-            label : constant Optional_String;
+            label : constant Optional_UString;
             bits : constant := tag.split (separator: ":", maxSplits => 1);
             if bits.count = 2 then
                 label := UString (bits.Element (0));

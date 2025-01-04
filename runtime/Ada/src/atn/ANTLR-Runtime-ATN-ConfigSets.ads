@@ -63,7 +63,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
       -- Currently this is only used when we detect SLL conflict; this does
       -- not necessarily represent the ambiguous alternatives. In fact,
       -- I should also point out that this seems to include predicated alternatives
-      -- that have predicates that evaluate to False. Computed in computeTargetState ().
+      -- that have predicates that evaluate to False. Computed in This.computeTargetState.
       --
       -- internal
       conflictingAlts : Optional_BitSet;
@@ -222,7 +222,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
    --for DiagnosticErrorListener
    -- public
    function getAltBitSet (This : ATNConfigSet) return BitSet;
-      result : constant := BitSet ();
+      result : constant := This.BitSet;
 
    -- LexerATNSimulator
    -- public
@@ -259,12 +259,15 @@ package ANTLR.Runtime.ATN.ConfigSets is
    -- Assumption: the input stream has been restored to the starting point
    -- prediction, which is where predicates need to evaluate.
    --
+   type Splitted_ConfigSets is record
+      Succeeded, Failed : ATNConfigSet;
+   end record;
 
    -- public
    procedure splitAccordingToSemanticValidity (This : ATNConfigSet;
                                                outerContext : ParserRuleContext;
                                                evalSemanticContext : evalSemanticContext_Access) --TOFIX
-                                               return (ATNConfigSet, ATNConfigSet) is --TOFIX
+                                               return Splitted_ConfigSets;
 
    -- public
    function dupConfigsWithoutSemanticPredicates (This : ATNConfigSet) return ATNConfigSet;

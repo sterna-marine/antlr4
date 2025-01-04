@@ -26,7 +26,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       if Is_Valid (ctxChildren) then
             This.children := ParseTree.Container.Empty_Vector;
             -- reset parent pointer for any error nodes
-            for child in ctxChildren loop
+            for child of ctxChildren loop
                errNode := Maybe (child); --TOFIX: let errNode = child as? ErrorNode
                if Is_Valid (errNode) then
                   addChild (errNode);
@@ -92,7 +92,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
             return (Valid => False);
       end if;
       j := -1; -- what element have we found with ctxType?
-      for o in children loop
+      for o of children loop
             o : constant Optional_T := Maybe (o);
             if Is_Valid (o) then
                j := @ + 1;
@@ -113,7 +113,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
             return (Valid => False);
       end if;
       j := -1; -- what token with ttype have we found?
-      for o in children loop
+      for o of children loop
             tnode : constant Optional_TerminalNode := Maybe (o);
             if Is_Valid (tnode) then
                symbol : constant := tnode.getSymbol ()!;
@@ -195,7 +195,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       startStr : constant := Value (This.start.Image, "<unknown>");
       stopStr : constant := Value (This.stop.Image, "<unknown>");
    begin
-      return "ParserRuleContext" & rules'Image & "{start=" & startStr'Image & "), stop=" & stopStr'Image & "}"
+      return "ParserRuleContext" & rules'Image & "{start=" & startStr'Image & "), stop=" & stopStr'Image & '}'
    end toInfoString;
 
 end ANTLR.Runtime.RuleContexts.ParserRuleContexts;

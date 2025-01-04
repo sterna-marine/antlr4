@@ -62,7 +62,7 @@ package body ANTLR.Runtime.ATN.SingletonPredictionContext is
          end if;
          return UString (returnState);
       else
-         return UString (returnState) & " " & up;
+         return UString (returnState) & ' ' & up;
       end if;
    end Image;
 

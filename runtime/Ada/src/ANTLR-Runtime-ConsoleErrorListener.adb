@@ -1,5 +1,8 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+
+use Ada;
 
 --
 --
@@ -13,7 +16,7 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
     -- Provides a default instance of _org.antlr.v4.runtime.ConsoleErrorListener_.
     --
     -- public static
-    INSTANCE : constant ConsoleErrorListener := ConsoleErrorListener ();
+    INSTANCE : constant ConsoleErrorListener := This.ConsoleErrorListener;
 
     --
     --
@@ -34,7 +37,7 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
                                         e : Optional_AnyObject;
     ) {
         if Parser.ConsoleError then
-            Text_IO.Put_Line (Standard_Error, "line " & line'Image & ":" & charPositionInLine'Image & " " & msg'Image);
+            Wide_Wide_Text_IO.Put_Line (Standard_Error, "line " & line'Image & ':' & charPositionInLine'Image & ' ' & msg'Image);
         end if;
     end if;
 

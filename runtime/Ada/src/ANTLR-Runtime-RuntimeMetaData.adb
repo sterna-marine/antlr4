@@ -1,7 +1,9 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
 with Ada.Finalization;
 
+use Ada;
 --
 -- This class provides access to the current version of the ANTLR 4 runtime
 -- library as compile-time and runtime constants, along with methods for
@@ -26,7 +28,7 @@ with Ada.Finalization;
 --
 --
 -- To trap any error messages issued by this code, use System.setErr ();
--- in your main () startup code.
+-- in your This.main startup code.
 --
 --
 -- * Since: 4.3
@@ -149,10 +151,10 @@ begin
                 not (getMajorMinorVersion (runtimeVersion) == (getMajorMinorVersion (compileTimeVersion)));
 
         if runtimeConflictsWithGeneratingTool then
-            Text_IO.Put_Line ("ANTLR Tool version " & generatingToolVersion'Image & " used for code generation does not match the current runtime version " & runtimeVersion'Image);
+            Wide_Wide_Text_IO.Put_Line ("ANTLR Tool version " & generatingToolVersion'Image & " used for code generation does not match the current runtime version " & runtimeVersion'Image);
         end if;
         if runtimeConflictsWithCompileTimeTool then
-            Text_IO.Put_Line ("ANTLR Runtime version " & compileTimeVersion'Image & "used for parser compilation does not match the current runtime version " & runtimeVersion'Image);
+            Wide_Wide_Text_IO.Put_Line ("ANTLR Runtime version " & compileTimeVersion'Image & "used for parser compilation does not match the current runtime version " & runtimeVersion'Image);
         end if;
     end if;
 

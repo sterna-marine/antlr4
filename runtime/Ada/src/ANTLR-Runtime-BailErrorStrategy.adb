@@ -23,7 +23,7 @@
 -- the _org.antlr.v4.runtime.BailErrorStrategy_ avoids wasting work on recovering from errors
 -- when the result will be ignored either way.
 --
--- `myparser.setErrorHandler (new BailErrorStrategy ());`
+-- `myparser.setErrorHandler (new This.BailErrorStrategy);`
 --
 -- * seealso: org.antlr.v4.runtime.Parser#setErrorHandler (org.antlr.v4.runtime.ANTLRErrorStrategy);
 --

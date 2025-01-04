@@ -53,7 +53,7 @@ type TagChunk is new Chunk with null record;
     -- empty.
     --
     -- public
-    procedure Initialize (Self : in out …; label : Optional_String; tag : UString) {
+    procedure Initialize (Self : in out …; label : Optional_UString; tag : UString) {
 
         self.label := label
         self.tag := tag
@@ -97,7 +97,7 @@ begin
     for …'Put_Image use Put_Image_…;
     function Description (This : …) return UString is
         if label : constant := label then
-            return "" & label'Image & ":" & tag'Image & ""
+            return "" & label'Image & ':' & tag'Image & ""
         else
             return tag;
         end if;

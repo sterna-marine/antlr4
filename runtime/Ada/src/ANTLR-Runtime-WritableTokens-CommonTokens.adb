@@ -63,7 +63,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
       if Is_Valid (text) then
          return text;
       else
-         input : constant := getInputStream ();
+         input : constant := This.getInputStream;
          if Is_Valid (input) then
             n : constant := input.size ();
             if This.start < n and then This.stop < n then
@@ -120,7 +120,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
       txt : UString;
       typeString : constant UString;
    begin
-      tokenText : constant := getText ();
+      tokenText : constant := This.getText;
       if Is_Valid (tokenText) then
          txt := tokenText.replacingOccurrences (of: "\n", with: "\\n");
          txt := txt.replacingOccurrences (of: "\r", with: "\\r");
@@ -136,7 +136,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
          typeString := "" & Token_Type'Image & "";
       end if;
 
-      return "[@" & getTokenIndex () & "," & This.start'Image & ":" & This.stop'Image & "='" & txt'Image & "',<" & typeString'Image & ">" & channelStr'Image & "," & This.line'Image & ":" & getCharPositionInLine () & "]"
+      return "[@" & This.getTokenIndex & ',' & This.start'Image & ':' & This.stop'Image & "='" & txt'Image & "',<" & typeString'Image & '>' & channelStr'Image & ',' & This.line'Image & ':' & This.getCharPositionInLine & ']'
    end toString;
 
    function get (This : CommonToken) return Boolean is

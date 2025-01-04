@@ -21,7 +21,7 @@ end if;
 -- private
 procedure doSplitTest (input : UString; expected : Chunk_List) is
 begin
-    matcher : constant := makeMatcher ();
+    matcher : constant := This.makeMatcher;
     UnitTest.Assert_Equal (matcher.split (input), expected);
 end if;
 
@@ -31,7 +31,7 @@ begin
     -- The lexer and parser here aren't actually used.  They're just here
     -- so that ParseTreePatternMatcher can be constructed, but in this file
     -- we're currently only testing methods that don't depend on them.
-    lexer : constant := Lexer ();
+    lexer : constant := This.Lexer;
     ts : constant Token := BufferedTokenStream (lexer);
     parser : constant := Parser (ts);
     return ParseTreePatternMatcher (lexer, parser);

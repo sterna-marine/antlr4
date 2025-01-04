@@ -5,7 +5,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --
    -- A lexer is recognizer that draws input symbols from a character stream.
    -- lexer grammars result in a subclass of this object. A Lexer object
-   -- uses simplified match () and error recovery mechanisms in the interest
+   -- uses simplified This.match and error recovery mechanisms in the interest
    -- of speed.
    --
 
@@ -99,10 +99,10 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
       --
       -- You can set the text for the current token to override what is in
-      -- the input char buffer.  Use setText () or can set this instance var.
+      -- the input char buffer.  Use This.setText or can set this instance var.
       --
       -- public
-      text : Optional_String;
+      text : Optional_UString;
    end record;
 
    subtype Object is Lexer;
@@ -129,7 +129,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    --
    -- Instruct the lexer to skip creating a token for current lexer rule
-   -- and look for another token.  nextToken () knows to keep looking when
+   -- and look for another token.  This.nextToken knows to keep looking when
    -- a lexer rule finishes with token set to SKIP_TOKEN.  Recall that
    -- if token = (Valid => False) at end of any token rule, it creates one for you
    -- and emits it.

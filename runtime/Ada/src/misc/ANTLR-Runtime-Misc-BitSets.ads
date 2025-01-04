@@ -119,15 +119,15 @@ package ANTLR.Runtime.Misc.BitSets is
    --
    -- Example:
    --
-   -- `BitSet drPepper := new BitSet ();`
-   -- Now `drPepper.description` returns `"{}"`.
+   -- `BitSet drPepper := new This.BitSet;`
+   -- Now `drPepper'Image` returns `"{}"`.
    --
    -- `drPepper.set (2);`
-   -- Now `drPepper.description` returns `"{2}"`.
+   -- Now `drPepper'Image` returns `"{2}"`.
    --
    -- `drPepper.set (4);`
    -- `drPepper.set (10);`
-   -- Now `drPepper.description` returns `"{2, 4, 10}"`.
+   -- Now `drPepper'Image` returns `"{2, 4, 10}"`.
    --
    -- * returns: a string representation of this bit set
    --

@@ -123,7 +123,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       -- a predicate of the form `{True?}.
       --
       -- public static
-      Instance : constant Empty := Empty ();
+      Instance : constant Empty := This.Empty;
    end record;
 
    -- public

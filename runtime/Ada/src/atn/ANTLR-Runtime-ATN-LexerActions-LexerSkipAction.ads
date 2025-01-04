@@ -20,7 +20,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
       -- Provides a singleton instance of this parameterless lexer action.
       --
       -- public static
-      INSTANCE : LexerSkipAction := LexerSkipAction (); --  constant
+      INSTANCE : LexerSkipAction := This.LexerSkipAction; --  constant
    end record;
 
    subtype Object is LexerSkipAction;

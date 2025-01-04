@@ -78,7 +78,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
    end getUniqueAlt;
 
    function getAlts (altsets : BitSet_List) return BitSet is
-      All_BitSet : constant BitSet := BitSet ();
+      All_BitSet : constant BitSet := This.BitSet;
    begin
       for alts of altsets loop
          All_BitSet.or (alts);
@@ -98,10 +98,10 @@ package body ANTLR.Runtime.ATN.PredictionModes is
    end hasStateAssociatedWithOneAlt;
 
    function getSingleViableAlt (altsets : BitSet_List) return Integer is
-      viableAlts : constant BitSet := BitSet ();
+      viableAlts : constant BitSet := This.BitSet;
       minAlt : Integer;
    begin
-      for alts in altsets loop
+      for alts of altsets loop
          minAlt := alts.firstSetBit ();
          viableAlts.set (minAlt); -- try!
          if viableAlts.cardinality () > 1 then

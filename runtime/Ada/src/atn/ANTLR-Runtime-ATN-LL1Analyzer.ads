@@ -105,7 +105,7 @@ package ANTLR.Runtime.ATN.LL1Analyzer is
    -- `new HashSet<ATNConfig>` for this argument.
    -- * parameter calledRuleStack: A set used for preventing left recursion in the
    -- ATN from causing a stack overflow. Outside code should pass
-   -- `new BitSet ()` for this argument.
+   -- `new This.BitSet` for this argument.
    -- * parameter seeThruPreds: `True` to True semantic predicates as
    -- implicitly `True` and "see through them", otherwise `False`
    -- to treat semantic predicates as opaque and add _#HIT_PRED_ to the

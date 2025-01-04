@@ -1,44 +1,69 @@
 -- €
 
--- The root of the ANTLR exception hierarchy. In general, ANTLR tracks just
--- 3 kinds of errors: prediction errors, failed predicate errors, and
--- mismatched input errors. In each case, the parser knows where it is
--- in the input, where it is in the ATN, the rule invocation stack,
--- and what kind of problem occurred.
---
+with Ada.Finalization;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.IntStream_Protocol;
+with ANTLR.Runtime.Recognizer_Protocol;
+with ANTLR.Runtime.Recognizers;
+with ANTLR.Runtime.RuleContexts;
+with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+with ANTLR.Runtime.Token_Protocol;
 
--- public
-type RecognitionException is tagged record
-    --
-    -- The _org.antlr.v4.runtime.Recognizer_ where this exception originated.
-    --
-    -- private final
-    recognizer : Optional_RecognizerProtocol;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.IntStream_Protocol;
+use ANTLR.Runtime.Recognizer_Protocol;
+use ANTLR.Runtime.Recognizers;
+use ANTLR.Runtime.RuleContexts;
+use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+use ANTLR.Runtime.Token_Protocol;
 
-    private final weak ctx: Optional_RuleContext;
+package ANTLR.Runtime.RecognitionExceptions is
 
-    -- private final
-    input : Optional_IntStream;
+   -- The root of the ANTLR exception hierarchy. In general, ANTLR tracks just
+   -- 3 kinds of errors: prediction errors, failed predicate errors, and
+   -- mismatched input errors. In each case, the parser knows where it is
+   -- in the input, where it is in the ATN, the rule invocation stack,
+   -- and what kind of problem occurred.
+   --
 
-    --
-    -- The current _org.antlr.v4.runtime.Token_ when an error occurred. Since not all streams
-    -- support accessing symbols by index, we have to track the _org.antlr.v4.runtime.Token_
-    -- instance itself.
-    --
-    -- private
-    offendingToken : Token!
+   -- public
+   type RecognitionException is new Ada.Finalization.Controlled with
+   record
+      --
+      -- The _org.antlr.v4.runtime.Recognizer_ where this exception originated.
+      --
+      -- private final
+      recognizer : Optional_RecognizerProtocol;
 
-    -- private
-    offendingState : ATStates.State := ATNState.INVALID_STATE_NUMBER
+      -- private final weak 
+      ctx : Optional_RuleContext;
+
+      -- private final
+      input : Optional_IntStream;
+
+      --
+      -- The current _org.antlr.v4.runtime.Token_ when an error occurred. Since not all streams
+      -- support accessing symbols by index, we have to track the _org.antlr.v4.runtime.Token_
+      -- instance itself.
+      --
+      -- private
+      offendingToken : Token;
+
+      -- private
+      offendingState : State := INVALID_STATE_NUMBER;
+
+      -- public
+      message : Optional_UString;
+
+   end record;
+
 
     -- public
-    message : Optional_String;
-
-    -- public
-    procedure Initialize (Self : in out …; recognizer : Optional_RecognizerProtocol;
-                input : IntStream;
-                ctx : Optional_ParserRuleContext; := (Valid => False),
-                message : Optional_String; := (Valid => False)) {
+    procedure Initialize (Self : in out RecognitionException;
+                          recognizer : Optional_RecognizerProtocol;
+                          input : IntStream;
+                          ctx : Optional_ParserRuleContext;
+                          message : Optional_UString := (Valid => False)) {
         self.recognizer := recognizer
         self.input := input
         self.ctx := ctx
@@ -58,7 +83,7 @@ type RecognitionException is tagged record
     -- If the state number is not known, this method returns -1.
     --
     -- public
-    function getOffendingState (This : …) return Integer is
+    function getOffendingState (This : RecognitionException) return Integer is
 begin
         return offendingState
     end if;
@@ -80,7 +105,7 @@ begin
     -- state in the ATN, or `null` if the information is not available.
     --
     -- public
-    function getExpectedTokens (This : …) return Optional_IntervalSet is
+    function getExpectedTokens (This : RecognitionException) return Optional_IntervalSet is
    begin
         if recognizer : constant := recognizer then
             return recognizer.getATN ().getExpectedTokens (offendingState, ctx!); -- try?
@@ -97,7 +122,7 @@ begin
     -- If the context is not available, this method returns `null`.
     --
     -- public
-    function getCtx (This : …) return Optional_RuleContext is
+    function getCtx (This : RecognitionException) return Optional_RuleContext is
    begin
         return ctx
     end if;
@@ -113,19 +138,19 @@ begin
     -- available.
     --
     -- public
-    function getInputStream (This : …) return Optional_IntStream is
+    function getInputStream (This : RecognitionException) return Optional_IntStream is
    begin
         return input
     end if;
 
     -- public
-    procedure clearInputStream (This : …) is
+    procedure clearInputStream (This : RecognitionException) is
 begin
         input := (Valid => False);
     end if;
 
     -- public
-    function getOffendingToken (This : …) return Token is
+    function getOffendingToken (This : RecognitionException) return Token is
 begin
         return offendingToken
     end if;
@@ -145,13 +170,13 @@ begin
     -- the recognizer is not available.
     --
     -- public
-    function getRecognizer (This : …) return Optional_RecognizerProtocol is
+    function getRecognizer (This : RecognitionException) return Optional_RecognizerProtocol is
    begin
         return recognizer
     end if;
 
     -- public
-    procedure clearRecognizer (This : …) is
+    procedure clearRecognizer (This : RecognitionException) is
 begin
         self.recognizer := (Valid => False);
     end if;

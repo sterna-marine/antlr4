@@ -41,13 +41,13 @@ begin
             end if;
 
             overriding
-            function aggregateResult (aggregate : Optional_String; nextResult : Optional_String;) return Optional_String is
+            function aggregateResult (aggregate : Optional_UString; nextResult : Optional_UString) return Optional_String is
    begin
                 return aggregate! + nextResult!
             end if;
         end if;
 
-        visitor : constant := Visitor ();
+        visitor : constant := This.Visitor;
         result : constant := visitor.visit (context);
         expected : constant =
         "[@0,0:0='A',<1>,1:0]\n" +
@@ -84,7 +84,7 @@ begin
         end if;
 
         parser.removeErrorListeners ();
-        errorListener : constant := ErrorListener ();
+        errorListener : constant := This.ErrorListener;
         parser.addErrorListener (errorListener);
 
         context : constant := parser.s ();
@@ -108,13 +108,13 @@ begin
             end if;
 
             overriding
-            function aggregateResult (aggregate : Optional_String; nextResult : Optional_String;) return Optional_String is
+            function aggregateResult (aggregate : Optional_UString; nextResult : Optional_UString) return Optional_String is
    begin
                 return aggregate! + nextResult!
             end if;
         end if;
 
-        visitor : constant := Visitor ();
+        visitor : constant := This.Visitor;
         result : constant := visitor.visit (context);
         expected : constant := "Error encountered: [@-1,-1:-1='<missing 'A'>',<1>,1:0]"
         UnitTest.Assert_Equal (expected, result);
@@ -143,13 +143,13 @@ begin
             end if;
 
             overriding
-            function shouldVisitNextChild (node : RuleNode; currentResult : Optional_String;) return Boolean is
+            function shouldVisitNextChild (node : RuleNode; currentResult : Optional_UString) return Boolean is
 begin
                 return not Is_Valid (currentResult) or else currentResult!.isEmpty
             end if;
         end if;
 
-        visitor : constant := Visitor ();
+        visitor : constant := This.Visitor;
         result : constant := visitor.visit (context);
         expected : constant := "[@0,0:0='A',<1>,1:0]\n"
         UnitTest.Assert_Equal (expected, result);
@@ -185,13 +185,13 @@ begin
             end if;
 
             overriding
-            function shouldVisitNextChild (node : RuleNode; currentResult : Optional_String;) return Boolean is
+            function shouldVisitNextChild (node : RuleNode; currentResult : Optional_UString) return Boolean is
 begin
                 return False;
             end if;
         end if;
 
-        visitor : constant := Visitor ();
+        visitor : constant := This.Visitor;
         result : constant := visitor.visit (context);
         expected : constant := "default result"
         UnitTest.Assert_Equal (expected, result);
@@ -248,7 +248,7 @@ begin
             end if;
         end if;
 
-        visitor : constant := Visitor ();
+        visitor : constant := This.Visitor;
         result : constant := visitor.visit (context);
         expected : constant := 6
         UnitTest.Assert_Equal (expected, result!);

@@ -1,11 +1,17 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.Recognizers.Lexers is
 
    overriding
    procedure Initialize (Self : Lexer) is
    begin
-      self.tokenFactorySourcePair := TokenSourceAndStream ();
+      self.tokenFactorySourcePair := This.TokenSourceAndStream;
       Super (Self).Initialize;; -- Super
       self.tokenFactorySourcePair.tokenSource := self;
    end Initialize;
@@ -13,7 +19,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure Initialize (input : CharStream) is
    begin
       self.input := input;
-      self.tokenFactorySourcePair := TokenSourceAndStream ();
+      self.tokenFactorySourcePair := This.TokenSourceAndStream;
       super.Initialize (Self);
       self.tokenFactorySourcePair.tokenSource := self;
       self.tokenFactorySourcePair.stream := input;
@@ -38,7 +44,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       _mode := DEFAULT_MODE
       _modeStack.clear ();
 
-      getInterpreter ().reset ();
+      This.getInterpreter.reset ();
    end reset;
 
    function nextToken (This : Lexer) return Token is
@@ -56,15 +62,15 @@ package body ANTLR.Runtime.Recognizers.Lexers is
          OUTER:
             loop
                if _hitEOF then
-                  emitEOF ();
+                  This.emitEOF;
                   return This.token!
                end if;
 
                This.token := (Valid => False);
                This.channel := CommonToken.DEFAULT_CHANNEL
                This.tokenStartCharIndex := This.input.index ();
-               This.tokenStartCharPositionInLine := getInterpreter ().getCharPositionInLine ();
-               This.tokenStartLine := getInterpreter ().getLine ();
+               This.tokenStartCharPositionInLine := This.getInterpreter.getCharPositionInLine ();
+               This.tokenStartLine := This.getInterpreter.getLine ();
                This.text := (Valid => False);
                loop
                   This.Token_Type := CommonToken.INVALID_Token_Type
@@ -72,7 +78,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
                   declare
                   begin
-                     ttype := getInterpreter ().match (This.input, This.mode);
+                     ttype := This.getInterpreter.match (This.input, This.mode);
                   exception
                      when ANTLRException.recognition => (let e)
                         notifyListeners (LexerNoViableAltException (e), recognizer => This);
@@ -80,7 +86,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
                         ttype := Lexer.SKIP
                   end;
 
-                  if This.input.LA (1) = BufferedTokenStream.EOF then;
+                  if This.input.LA (1) = BufferedTokenStream.EOF then
                      This.hitEOF := True;
                   end if;
                   if This.Token_Type = CommonToken.INVALID_Token_Type then
@@ -93,7 +99,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
                end loop;
 
                if This.token = (Valid => False) then
-                  emit ();
+                  This.emit;
                end if;
 
                return _token!;
@@ -127,7 +133,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure pushMode (This : Lexer; m : Lexer_Mode) is
    begin
       if LexerATNSimulator.debug then
-         Text_IO.Put_Line ("pushMode " & m'Image);
+         Wide_Wide_Text_IO.Put_Line ("pushMode " & m'Image);
       end if;
       This.modeStack.push (This.mode);
       mode (m);
@@ -140,7 +146,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       end if;
 
       if LexerATNSimulator.debug then
-         Text_IO.Put_Line ("popMode back to " & UString (describing => This.modeStack.peek ()));
+         Wide_Wide_Text_IO.Put_Line ("popMode back to " & UString (describing => This.modeStack.peek ()));
       end if;
       mode (This.modeStack.pop ());
       return This.mode;
@@ -156,28 +162,30 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure setInputStream (This : Lexer; input : IntStream) is
    begin
       This.input := (Valid => False);
-      This.tokenFactorySourcePair := makeTokenSourceAndStream ();
-      reset ();
+      This.tokenFactorySourcePair := This.makeTokenSourceAndStream;
+      This.reset;
       This.input := Is_Valid (input); -- as CharStream
-      This.tokenFactorySourcePair := makeTokenSourceAndStream ();
+      This.tokenFactorySourcePair := This.makeTokenSourceAndStream;
    end setInputStream;
 
    procedure emit (This : Lexer; token : Token) is
    begin
-      --System.err.println ("emit "+token);
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line (Standard_Error, "emit " & token'Image);
+      end if;
       This.token := token;
    end emit;
 
    function emit (This : Lexer) return Token is
-      t : Token constant := This.factory.create (_tokenFactorySourcePair, _Token_Type, _text, _channel, _tokenStartCharIndex, getCharIndex () - 1, _tokenStartLine, _tokenStartCharPositionInLine);
+      t : Token constant := This.factory.create (_tokenFactorySourcePair, _Token_Type, _text, _channel, _tokenStartCharIndex, This.getCharIndex - 1, _tokenStartLine, _tokenStartCharPositionInLine);
    begin
       emit (t);
       return t;
    end emit;
 
    function emitEOF (This : Lexer) return Token is
-      cpos : constant := getCharPositionInLine ();
-      line : constant := getLine ();
+      cpos : constant := This.getCharPositionInLine;
+      line : constant := This.getLine;
       idx : constant := This.input!.index ();
       eof : constant := This.factory.create (
          This.tokenFactorySourcePair,
@@ -195,12 +203,12 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
    procedure setLine (This : Lexer; line : Integer) is
    begin
-      getInterpreter ().setLine (line);
+      This.getInterpreter.setLine (line);
    end setLine;
 
    procedure setCharPositionInLine (This : Lexer; charPositionInLine : Integer) is
    begin
-      getInterpreter ().setCharPositionInLine (charPositionInLine);
+      This.getInterpreter.setCharPositionInLine (charPositionInLine);
    end setCharPositionInLine;
 
    function getText (This : Lexer) return UString is
@@ -208,7 +216,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       if This.text /= (Valid => False) then
          return This.text!;
       else
-         return getInterpreter ().getText (This.input!);
+         return This.getInterpreter.getText (This.input!);
       end if;
    end getText;
 
@@ -234,19 +242,19 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
    function getAllTokens (This : Lexer) return Token_List is
       tokens : Token_List := Token.Container.Empty_Vector;
-      t := nextToken ();
+      t := This.nextToken;
       while t.getType () /= CommonToken.EOF loop
          Token.Container.append (tokens, t);
-         t := nextToken ();
+         t := This.nextToken;
       end loop;
       return tokens
    end getAllTokens;
 
    procedure recover (This : Lexer; e : LexerNoViableAltException) is
    begin
-      if This.input!.LA (1) /= BufferedTokenStream.EOF then;
+      if This.input!.LA (1) /= BufferedTokenStream.EOF then
          -- skip a char and again;
-         getInterpreter ().consume (This.input!);
+         This.getInterpreter.consume (This.input!);
       end if;
    end recover;
 
@@ -265,16 +273,16 @@ package body ANTLR.Runtime.Recognizers.Lexers is
             text := "<unknown>";
       end;
 
-      msg := "token recognition error at: '" & getErrorDisplay (text))& "'";
+      msg := "token recognition error at: '" & getErrorDisplay (text)) & ''';
 
-      listener : constant := getErrorListenerDispatch ();
+      listener : constant := This.getErrorListenerDispatch;
       listener.syntaxError (recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e);
    end notifyListeners;
 
    function getErrorDisplay (This : Lexer; s : UString) return UString is
       buf := "";
    begin
-      for c in s loop
+      for c of s loop
          buf := @ & getErrorDisplay (c);
       end loop;
       return buf;

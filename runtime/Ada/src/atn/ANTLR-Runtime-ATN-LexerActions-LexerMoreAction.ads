@@ -21,7 +21,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
       -- Provides a singleton instance of this parameterless lexer action.
       --
       -- public static
-      INSTANCE : constant LexerMoreAction := LexerMoreAction ();
+      INSTANCE : constant LexerMoreAction := This.LexerMoreAction;
    end record;
 
    subtype Object is LexerMoreAction;

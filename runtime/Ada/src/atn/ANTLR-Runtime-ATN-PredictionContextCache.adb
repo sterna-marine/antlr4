@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.ATN.PredictionContextCache is
 
    procedure Initialize (Self : PredictionContextCache) is
@@ -14,7 +20,9 @@ package body ANTLR.Runtime.ATN.PredictionContextCache is
       end if;
       existing : constant := This.cache.Element (ctx)
       if Is_Valid (existing) then
-         -- Text_IO.Put_Line (name & " reuses " & existing);
+         if Is_Active (Aspect.DEBUG) then
+            Wide_Wide_Text_IO.Put_Line (name'Image & " reuses " & existing'Image);
+         end if;
          return existing;
       else
          This.cache.Insert (Key => ctx, New_Item => ctx);

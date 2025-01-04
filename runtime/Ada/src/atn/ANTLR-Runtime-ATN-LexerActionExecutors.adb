@@ -9,7 +9,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
    begin
       self.lexerActions := lexerActions;
       hash := MurmurHash.initialize ();
-      for Some_lexerAction in Self.LexerActions loop --TOFIX
+      for Some_lexerAction of Self.LexerActions loop --TOFIX
             hash := MurmurHash.update (hash, Some_lexerAction); --TOFIX
       end loop;
       self.hashCode := MurmurHash.finish (hash, lexerActions.count); --TOFIX

@@ -78,15 +78,15 @@ begin
       if t.getChildCount () == 0 then
             return s;
       end if;
-      buf := "(" & s'Image & " "
+      buf := '(' & s'Image & ' '
       length : constant := t.getChildCount ();
       for i in 0 .. length - 1 loop
             if i > 0 then
-               buf := @ & " ";
+               buf := @ & ' ';
             end if;
             buf := @ + toStringTree (t.getChild (i)!, ruleNames);
       end loop;
-      buf := @ & ")";
+      buf := @ & ')';
       return buf
    end if;
 
@@ -106,13 +106,13 @@ begin
                ruleName : constant UString := ruleNames.Element (ruleIndex);
                altNumber : constant RuleContext := RuleContext ((t);).getAltNumber ();
                if altNumber /= ATN.INVALID_ALT_NUMBER  then
-                  return "" & ruleName'Image & ":" & altNumber'Image & "";
+                  return "" & ruleName'Image & ':' & altNumber'Image & "";
                end if;
                return ruleName
             else
                errorNode : constant Optional_ErrorNode := Maybe (t);
                if Is_Valid (errorNode) then
-                  return errorNode.description;
+                  return errorNode'Image;
                end if; else -- elseif
    terminalNode : constant TerminalNode := TerminalNode (t);
    if Is_Valid (terminalNode) then

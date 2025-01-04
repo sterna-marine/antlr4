@@ -61,7 +61,7 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
       -- * seealso: #getText ();
       --
       -- internal
-      text : Optional_String;
+      text : Optional_UString;
 
       --
       -- This is the backing field for _#getTokenIndex_ and
@@ -140,7 +140,7 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
 
 
    -- public
-   function getText (This : CommonToken) return Optional_String;
+   function getText (This : CommonToken) return Optional_UString;
 
    --
    -- Explicitly set the text for this token. if thencode text} is not

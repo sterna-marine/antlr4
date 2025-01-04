@@ -1,5 +1,11 @@
 -- €
 
+with Aspect;
+with Ada.Wide_Wide_Text_IO;
+
+use Ada;
+use Aspect;
+
 package ANTLR.Runtime.Tree.TerminalNode_Protocol is
 
 --
@@ -104,7 +110,7 @@ begin
     -- public
     procedure seek (index : Integer) is
     begin
-        lazyInit ();
+        This.lazyInit;
         p := adjustSeekIndex (index);
     end if;
 
@@ -134,11 +140,11 @@ begin
             skipEofCheck := False;
         end if;
 
-        if not skipEofCheck and then LA (1) == BufferedTokenStream.EOF then;
+        if not skipEofCheck and then LA (1) == BufferedTokenStream.EOF then
             raise ANTLRError.illegalState with "cannot consume EOF";
         end if;
 
-        if sync (p + 1) then;
+        if sync (p + 1) then
             p := adjustSeekIndex (p + 1);
         end if;
     end if;
@@ -156,7 +162,9 @@ begin
 begin
         pragma assert (i >= 0, "Expected: i>=0");
         n : constant := i - tokens.count + 1 -- how many more elements we need?
-        --print ("sync ("+i+") needs "+n);
+         if Is_Active (Aspect.DEBUG) then
+            Wide_Wide_Text_IO.Put_Line ("sync (" & i & ") needs " & n);
+         end if;
         if n > 0 then
             fetched : constant := fetch (n);
             return fetched >= n
@@ -212,7 +220,7 @@ begin
         if start < 0 or else stop < 0 then
             return (Valid => False);
         end if;
-        lazyInit ();
+        This.lazyInit;
         subset := Token.Container.Empty_Vector;
         if stop >= tokens.count then
             stop := tokens.count - 1;
@@ -244,7 +252,7 @@ begin
     -- public
     function LT (k : Integer) return Optional_Token is
    begin
-        lazyInit ();
+        This.lazyInit;
         if k = 0 then
             return (Valid => False);
         end if;
@@ -284,7 +292,7 @@ begin
     internal final procedure lazyInit (Self : …) is
 begin
         if p == -1 then
-            setup ();
+            This.setup;
         end if;
     end if;
 
@@ -324,7 +332,7 @@ begin
     --
     -- public
     function getTokens (start : Integer; stop : Integer; types : Set_of_Optional_Integers?) return Token_List {
-        lazyInit ();
+        This.lazyInit;
         if not tokens.indices.contains (start) or not tokens.indices.contains (stop) then
             raise ANTLRError.indexOutOfBounds with "start " & start'Image & " or stop " & stop'Image & " not in 0 ..< " & tokens.count;
         end if;
@@ -361,8 +369,8 @@ begin
 begin
         i := i
         sync (i);
-        if i >= size () then
-            return size () - 1;
+        if i >= This.size then
+            return This.size - 1;
         end if;
 
         token := tokens.Element (i);
@@ -394,9 +402,9 @@ begin
 begin
         i := i
         sync (i);
-        if i >= size () then
+        if i >= This.size then
             -- the EOF token is on every channel
-            return size () - 1
+            return This.size - 1
         end if;
 
         while i >= 0 loop
@@ -418,7 +426,7 @@ begin
     --
     -- public
     function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return Token_List {
-        lazyInit ();
+        This.lazyInit;
         if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
         end if;
@@ -428,7 +436,7 @@ begin
         let to : Integer;
         -- if none onchannel to right, nextOnChannel=-1 so set to := last token
         if nextOnChannel == -1 then
-            to := size () - 1
+            to := This.size - 1
         else
             to := nextOnChannel;
         end if;
@@ -443,7 +451,7 @@ begin
     --
     -- public
     function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return Token_List {
-        lazyInit ();
+        This.lazyInit;
         if not tokens.indices.contains (tokenIndex) then
             raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
         end if;
@@ -466,7 +474,7 @@ begin
     -- internal
     function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return Token_List {
         hidden := Token.Container.Empty_Vector;
-        for t in tokens[from .. to] loop
+        for t of tokens[from .. to] loop
             if channel == -1 then
                 if t.getChannel () /= Lexer.DEFAULT_TOKEN_CHANNEL then
                     hidden.append (t);
@@ -496,7 +504,7 @@ begin
     -- public
     function getText (This : …) return UString is
 begin
-        return getText (Interval.of (0, size () - 1));
+        return getText (Interval.of (0, This.size - 1));
     end if;
 
     -- public
@@ -506,10 +514,10 @@ begin
         if start < 0 then
             return "";
         end if;
-        fill ();
+        This.fill;
         stop : constant := min (tokens.count, interval.b + 1);
         buf := ""
-        for t in tokens[start ..< stop] loop
+        for t of tokens[start ..< stop] loop
             exit when t.getType () = BufferedTokenStream.EOF;
             buf := @ + t.getText ()!;
         end loop;
@@ -540,7 +548,7 @@ begin
     -- public
     procedure fill (This : …) is
 begin
-        lazyInit ();
+        This.lazyInit;
         blockSize : constant := 1000
         loop
             fetched : constant := fetch (blockSize);

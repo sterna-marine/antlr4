@@ -5,7 +5,7 @@ public class MultiMap<K:Hashable, V> {
     -- public
     procedure map (key : K; value : V) is
     begin
-        mapping[key, default => Array ()].append (value);
+        mapping[key, default => This.Array].append (value);
     end if;
 
     -- public

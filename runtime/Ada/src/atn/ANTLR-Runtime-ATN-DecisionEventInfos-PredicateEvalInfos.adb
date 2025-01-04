@@ -14,7 +14,7 @@ package body ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfos is
       self.semctx := semctx;
       self.evalResult := evalResult;
       self.predictedAlt := predictedAlt;
-      DecisionEventInfo.init (decision, ATNConfigSet (), input, startIndex, stopIndex, fullCtx); -- Super
+      DecisionEventInfo.init (decision, This.ATNConfigSet, input, startIndex, stopIndex, fullCtx); -- Super
    end Initialize;
 
 end package body ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfos;

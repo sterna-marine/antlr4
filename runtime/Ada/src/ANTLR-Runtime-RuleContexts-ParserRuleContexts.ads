@@ -15,7 +15,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    -- are the objects that are returned from rules.
    --
    -- Note text is not an actual field of a rule return value; it is computed
-   -- from start and stop using the input stream's toString () method.  I
+   -- from start and stop using the input stream's This.toString method.  I
    -- could add a ctor to this so that we can pass in and store the input
    -- stream, but I'm not sure we want to do that.  It would seem to be undefined
    -- to get the .text property anyway if the rule matches tokens from multiple
@@ -55,7 +55,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       -- for each element in the children list. For example, for a rule
       -- invocation there is the invoking state and the following state.
       --
-      -- The parser setState () method updates field s and adds it to this list
+      -- The parser This.setState method updates field s and adds it to this list
       -- if we are debugging/tracing.
       --
       -- This does not trace states visited during prediction.
@@ -77,7 +77,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    type Class_Wide is access all Object'Class;
 
    -- public static
-   EMPTY : constant ParserRuleContext := ParserRuleContext ();
+   EMPTY : constant ParserRuleContext := This.ParserRuleContext;
 
    -- public
    overriding
@@ -93,7 +93,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    -- node for rule X to a YContext for alt label Y. In that sense, it;
    -- not really a generic copy function.
    --
-   -- If we do an error sync () at start of a rule, we might add error nodes
+   -- If we do an error This.sync at start of a rule, we might add error nodes
    -- to the generic XContext so this function must copy those nodes to
    -- the YContext as well else they are lost!
    --
@@ -114,7 +114,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    -- call this.
    --
    -- We cannot set the parent pointer of the incoming node
-   -- because the existing interfaces do not have a setParent ();
+   -- because the existing interfaces do not have a This.setParent;
    -- method and I don't want to break backward compatibility for this.
    --
    -- open

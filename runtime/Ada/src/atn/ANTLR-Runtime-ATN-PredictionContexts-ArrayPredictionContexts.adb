@@ -20,7 +20,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    overriding
    function Description (This : …) return UString is
    begin
-      if isEmpty () then
+      if This.isEmpty then
             return "[]";
       end if;
       buf := "[";
@@ -31,20 +31,20 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
          end if;
 
          if returnState = PredictionContext.EMPTY_RETURN_STATE then
-            buf := @ & "$";
+            buf := @ & '$';
             goto CONTINUE;
          end if;
 
          buf := @ & "" & returnState'Image & "";
          if parent : constant := parents.Element (i) then
-            buf := @ & " " & parent'Image & "";
+            buf := @ & ' ' & parent'Image & "";
          else
             buf := @ & "null";
          end if;
 
          <<CONTINUE>>
       end loop;
-      buf := @ & "]";
+      buf := @ & ']';
       return buf;
    end Image;
 
@@ -53,7 +53,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    begin
       uniqueParents : Dictionary<PredictionContext, PredictionContext> :=
          Dictionary<PredictionContext, PredictionContext> ();
-      for p in This.parents loop
+      for p of This.parents loop
          parent : constant PredictionContext := p;
          if Is_Valid (parent) then
             -- if not uniqueParents.keys.contains (parent) then

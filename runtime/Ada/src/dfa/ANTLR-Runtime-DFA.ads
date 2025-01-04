@@ -120,10 +120,10 @@ package ANTLR.Runtime.ATN.DFA is
    procedure Put_Image_DFA (S : in out Sink'Class; X : DFA);
    for DFA'Put_Image use Put_Image_DFA;
    function Description (This : DFA) return UString
-      is toString (Vocabularies.EMPTY_VOCABULARY);
+      is (toString (Vocabularies.EMPTY_VOCABULARY));
 
    -- public
-   function toString (This : DFA, vocabulary : Vocabulary) return UString;
+   function toString (This : DFA; vocabulary : Vocabulary) return UString;
 
    -- public
    function toLexerString (This : DFA) return UString;

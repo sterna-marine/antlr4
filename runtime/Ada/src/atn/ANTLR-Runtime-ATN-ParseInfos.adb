@@ -80,7 +80,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
       k : Integer_64 := 0;
    begin
-      for d in decisions loop
+      for d of decisions loop
          k := @ + d.SLL_ATNTransitions;
          k := @ + d.LL_ATNTransitions;
       end loop;

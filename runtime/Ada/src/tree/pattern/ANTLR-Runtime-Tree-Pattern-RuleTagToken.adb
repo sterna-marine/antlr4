@@ -57,7 +57,7 @@ type RuleTagToken is new Token with null record;
     -- or empty.
     --
     -- public
-    procedure Initialize (Self : in out …; ruleName : UString; bypassTokenType : Token_Kind; label : Optional_String;) {
+    procedure Initialize (Self : in out …; ruleName : UString; bypassTokenType : Token_Kind; label : Optional_UString) {
         self.ruleName := ruleName
         self.bypassTokenType := bypassTokenType
         self.label := label
@@ -103,9 +103,9 @@ begin
     function getText (This : …) return Optional_String is
    begin
         if label : constant := label then
-            return "<" & label'Image & ":" & ruleName'Image & ">";
+            return "<" & label'Image & ':' & ruleName'Image & '>';
         end if;
-        return "<" & ruleName'Image & ">"
+        return "<" & ruleName'Image & '>'
     end if;
 
     --
@@ -198,7 +198,7 @@ begin
     procedure Put_Image_… (S : in out Sink'Class; X : …);
     for …'Put_Image use Put_Image_…;
     function Description (This : …) return UString is
-        return ruleName + ":" + UString (bypassTokenType);
+        return ruleName & ':' & UString (bypassTokenType);
     end if;
 
 

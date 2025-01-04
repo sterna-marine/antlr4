@@ -23,7 +23,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       self.tokens := tokens;
    end Initialize;
 
-   procedure Initialize (Self : RewriteOperation; index : Integer; text : Optional_String; tokens : TokenStream) is
+   procedure Initialize (Self : RewriteOperation; index : Integer; text : Optional_UString; tokens : TokenStream) is
    begin
       self.index := index;
       self.text := text;
@@ -38,7 +38,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    function Description (This : RewriteOperation) return UString is
          opName : constant UString := To_UString (This'External_Tag);
    begin
-         return "<" & opName'Image & "@" & This.tokens.get (This.index) & """" & Value (This.text) & """>"; -- try!
+         return '<' & opName'Image & '@' & This.tokens.get (This.index) & '"' & Value (This.text) & '"'>"; -- try!
    end Description;
 
    -- ------------------- --
@@ -70,7 +70,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    overriding
    procedure Initialize (Self : in out InsertAfterOp;
                          index : Integer;
-                         text : Optional_String;
+                         text : Optional_UString;
                          tokens : TokenStream) is
    begin
       InsertBeforeOp (Self).Initialize (index + 1, text, tokens);
@@ -82,7 +82,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
 
    procedure Initialize (Self : in out ReplaceOp; 
                          from, to : Integer;
-                         text : Optional_String;
+                         text : Optional_UString;
                          tokens : TokenStream) is
    begin
       RewriteOperation (Self).Initialize (from, text, tokens); -- Super
@@ -111,9 +111,9 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    begin
       text : constant Optional_Text := Maybe (This.text);
       if Is_Valid (text) then
-         return "<ReplaceOp@" & token'Image & ".." & lastToken'Image & ":""" & text'Image & """>";
+         return "<ReplaceOp@" & token'Image & ".." & lastToken'Image & ':'"" & text'Image & '"'>";
       else
-         return "<DeleteOp@" & token'Image & ".." & lastToken'Image & ">"
+         return "<DeleteOp@" & token'Image & ".." & lastToken'Image & '>'
       end if;
    end Description;
 
@@ -462,7 +462,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
 
    function initializeProgram (This : TokenStreamRewriter; name : UString) return RewriteOperationArray is
    begin
-      program : constant := RewriteOperationArray ();
+      program : constant := This.RewriteOperationArray;
       programs.Insert (Key => name, New_Item => program);
       return program
    end initializeProgram;

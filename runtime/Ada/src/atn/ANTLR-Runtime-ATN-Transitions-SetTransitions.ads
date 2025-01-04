@@ -45,6 +45,6 @@ package ANTLR.Runtime.ATN.Transitions.SetTransitions is
    procedure Put_Image_SetTransition (S : in out Sink'Class; X : SetTransition);
    for SetTransition'Put_Image use Put_Image_SetTransition;
    function Description (This : SetTransition) return UString
-      is (This.set.description);
+      is (This.set'Image);
 
 end ANTLR.Runtime.ATN.Transitions.SetTransitions;

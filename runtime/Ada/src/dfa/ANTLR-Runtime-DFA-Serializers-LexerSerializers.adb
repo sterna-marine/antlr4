@@ -10,6 +10,6 @@ package ANTLR.Runtime.DFA.Serializers.LexerSerializers is
 
    overriding
    function getEdgeLabel (i : Integer) return UString
-      is ("'" & Character (integerLiteral => i) & "'"); --TOFIX
+      is ("'" & Character (integerLiteral => i) & '''); --TOFIX
 
 end ANTLR.Runtime.DFA.Serializers.LexerSerializers;

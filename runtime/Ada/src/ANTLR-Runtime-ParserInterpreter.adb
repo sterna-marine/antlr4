@@ -30,7 +30,7 @@ type ParserInterpreter is new Parser with null record;
     -- internal final
     decisionToDFA : DFA_List;
     -- not shared like it is for generated parsers
-    internal sharedContextCache : constant := PredictionContextCache ();
+    internal sharedContextCache : constant := This.PredictionContextCache;
 
     -- internal
     ruleNames : constant [UString];
@@ -92,7 +92,7 @@ type ParserInterpreter is new Parser with null record;
             decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
         end loop;
 
-        -- identify the ATN states where pushNewRecursionContext () must be called
+        -- identify the ATN states where This.pushNewRecursionContext must be called
         self.statesNeedingLeftRecursionContext := BitSet (atn.states.count); -- try!
         for  state in atn.states loop
             state : constant Optional_StarLoopEntryState := Maybe (state);
@@ -151,7 +151,7 @@ begin
         end if;
 
         loop
-            p : constant := getATNState ()!
+            p : constant := This.getATNState!
             case p.getStateType () is
                when ATNState.RULE_STOP =>
                   -- pop; return from rule
@@ -162,7 +162,7 @@ begin
                            unrollRecursionContexts (parentContext.0!);
                            return result
                      else
-                           exitRule ();
+                           This.exitRule;
                            return rootContext
                      end if;
                   end if;
@@ -179,9 +179,9 @@ begin
                      when ANTLRException.recognition =>
                         (let e)
                      setState (self.atn.ruleToStopState[p.ruleIndex!].stateNumber);
-                     getContext ()!.exception := e
-                     getErrorHandler ().reportError (self, e);
-                     getErrorHandler ().recover (self, e);
+                     This.getContext!.exception := e
+                     This.getErrorHandler.reportError (self, e);
+                     This.getErrorHandler.recover (self, e);
                   end if;
             end case;
         end loop;
@@ -207,12 +207,12 @@ begin
     begin
         altNum : Integer;
         if p.getNumberOfTransitions () > 1 then
-            getErrorHandler ().sync (self);
+            This.getErrorHandler.sync (self);
             decision : constant DecisionState := DecisionState ((p);).decision
             if decision = overrideDecision and then _input.index () == overrideDecisionInputIndex then
                 altNum := overrideDecisionAlt
             else
-                altNum := getInterpreter ().adaptivePredict (_input, decision, _ctx);
+                altNum := This.getInterpreter.adaptivePredict (_input, decision, _ctx);
             end if;
         else
             altNum := 1;
@@ -239,13 +239,13 @@ begin
         when TRANSITION_RANGE => fallthrough;
         when Transition.SET => fallthrough;
         when Transition.NOT_SET =>
-            if not transition.matches (_input.LA (1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then;
+            if not transition.matches (_input.LA (1), CommonToken.MIN_USER_TOKEN_TYPE, 65535) then
                 _errHandler.recoverInline (self);
             end if;
-            matchWildcard ();
+            This.matchWildcard;
 
         when Transition.WILDCARD =>
-            matchWildcard ();
+            This.matchWildcard;
 
         when Transition.RULE =>
             ruleStartState : constant RuleStartState := RuleStartState (transition.target);
@@ -259,7 +259,7 @@ begin
 
         when Transition.PREDICATE =>
             predicateTransition : constant PredicateTransition := PredicateTransition (transition);
-            if not sempred (_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then;
+            if not sempred (_ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then
                 raise ANTLRException.recognition with FailedPredicateException (self);
             end if;
 
@@ -289,7 +289,7 @@ begin
             unrollRecursionContexts (parentContext!);
             setState (parentState);
         else
-            exitRule ();
+            This.exitRule;
         end if;
 
         ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState ()]!.transition (0));

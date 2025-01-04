@@ -44,7 +44,7 @@ type TokenTagToken is new CommonToken with null record;
     -- the token tag is unlabeled.
     --
     -- public
-    procedure Initialize (Self : in out …; tokenName : UString; Type : Token_Kind; label : Optional_String;) {
+    procedure Initialize (Self : in out …; tokenName : UString; Type : Token_Kind; label : Optional_UString) {
 
         self.tokenName := tokenName
         self.label := label
@@ -86,10 +86,10 @@ begin
     function getText (This : …) return UString is
 begin
         if label : constant := label then
-            return "<" + label + ":" + tokenName + ">";
+            return "<" & label & ':' & tokenName & '>';
         end if;
 
-        return "<" + tokenName + ">"
+        return "<" & tokenName & '>'
     end if;
 
     --
@@ -105,6 +105,6 @@ begin
     procedure Put_Image_… (S : in out Sink'Class; X : …);
     for …'Put_Image use Put_Image_…;
     function Description (This : …) return UString is
-        return tokenName + ":" + UString (type);
+        return tokenName & ':' & UString (type);
     end if;
 end if;

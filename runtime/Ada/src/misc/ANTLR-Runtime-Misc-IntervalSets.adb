@@ -154,7 +154,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       if Is_Valid (vocabulary) then
          vocabularyIS := vocabulary;
       else
-         vocabularyIS := IntervalSet ();
+         vocabularyIS := This.IntervalSet;
          vocabularyIS.addAll (vocabulary); -- try!
       end if;
 
@@ -171,7 +171,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
          return subtract (self, a);
       end if;
 
-      other : constant := IntervalSet ();
+      other : constant := This.IntervalSet;
       other.addAll (a); -- try!
       return subtract (self, other);
    end subtract;
@@ -179,7 +179,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
    function subtract (This : in out IntervalSet; left, right : Optional_IntervalSet) return IntervalSet is
    begin
       if not Is_Valid (left) or left.isnull () then
-         return IntervalSet ();
+         return This.IntervalSet;
       end if;
 
       result : constant := IntervalSet (left);
@@ -288,7 +288,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
                if mine.properlyContains (theirs) then
                   -- overlap, add intersection, get next theirs
                   if not Is_Valid (intersection) then
-                     intersection := IntervalSet ();
+                     intersection := This.IntervalSet;
                   end if;
 
                   intersection!.add (mine.intersection (theirs)); -- try!
@@ -297,7 +297,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
                   if theirs.properlyContains (mine) then
                      -- overlap, add intersection, get next mine
                      if not Is_Valid (intersection) then
-                        intersection := IntervalSet ();
+                        intersection := This.IntervalSet;
                      end if;
                      intersection!.add (mine.intersection (theirs)); -- try!
                      i := @ + 1;
@@ -305,7 +305,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
                      if not mine.disjoint (theirs) then
                         -- overlap, add intersection
                         if not Is_Valid (intersection) then
-                           intersection := IntervalSet ();
+                           intersection := This.IntervalSet;
                         end if;
                         intersection!.add (mine.intersection (theirs)); -- try!
                         -- Move the iterator of lower range [a .. b], but not
@@ -329,7 +329,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
          end if;
       end loop;
       if not Is_Valid (intersection) then
-         return IntervalSet ();
+         return This.IntervalSet;
       else
          return intersection;
       end if;
@@ -406,7 +406,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       buf : UString := "";
 
       if selfSize > 1 then
-         buf := @ & "{";
+         buf := @ & '{';
       end if;
       first := True;
       for interval in intervals loop
@@ -419,20 +419,20 @@ package body ANTLR.Runtime.Misc.IntervalSets is
             if interval.A = EOF then
                buf := @ & "<EOF>";
             elsif elemAreChar then
-               buf := @ & "'" & interval.A'Image & "'";
+               buf := @ & ''' & interval.A'Image & ''';
             else
                buf := @ & "" & interval.A'Image & "";
             end if;
          end if;
          elsif elemAreChar then
-            buf := @ & "'" & interval.A'Image & "'..'" & interval.B'Image & "'";
+            buf := @ & ''' & interval.A'Image & "'..'" & interval.B'Image & ''';
          else
             buf := @ & interval.A'Image & ".." & interval.B'Image;
          end if;
       end loop;
 
       if selfSize > 1 then
-         buf := @ & "}";
+         buf := @ & '}';
       end if;
 
       return buf;
@@ -448,7 +448,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end if;
 
       if selfSize > 1 then
-         buf := @ & "{";
+         buf := @ & '{';
       end if;
 
       for interval of This.intervals loop
@@ -470,7 +470,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end loop;
 
       if selfSize > 1 then
-         buf := @ & "}";
+         buf := @ & '}';
       end if;
 
       return buf;
@@ -507,7 +507,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
    function toSet (This : IntervalSet) return Set_of_Optional_Integers is
    begin
-      s := Set_of_Optional_Integers ();
+      s := This.Set_of_Optional_Integers;
       for interval in This.intervals loop
          for v in interval.a .. interval.b  loop
             s.insert (v);

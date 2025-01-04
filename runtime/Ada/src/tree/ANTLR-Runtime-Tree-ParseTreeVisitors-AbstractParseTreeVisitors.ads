@@ -24,7 +24,7 @@ package ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
 
    --
    -- The default implementation initializes the aggregate result to
-   -- _#defaultResult defaultResult ()_. Before visiting each child, it
+   -- _#defaultResult This.defaultResult_. Before visiting each child, it
    -- calls _#shouldVisitNextChild shouldVisitNextChild_; if the result
    -- is `False` no more children are visited and the current aggregate
    -- result is returned. After visiting a child, the aggregate result is

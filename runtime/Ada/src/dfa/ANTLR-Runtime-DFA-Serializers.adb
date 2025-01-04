@@ -15,7 +15,7 @@ package body ANTLR.Runtime.DFA.Serializer is
       else
          buf := "";
          states : constant := This.dfa.getStates ();
-         for s in states loop
+         for s of states loop
                edges : constant := s.edges;
                if not Is_Valid (edges) then
                   goto CONTINUE_STATES_A;
@@ -27,7 +27,7 @@ package body ANTLR.Runtime.DFA.Serializer is
                   end if;
                   edgeLabel : constant := getEdgeLabel (i);
                   buf := @ + ATNStates.State'Image (s);
-                  buf := @ & "-" & edgeLabel'Image & "->";
+                  buf := @ & '-' & edgeLabel'Image & "->";
                   buf := @ + getStateString (t);
                   buf := @ & "\n";
                   <<CONTINUE_STATES_B>>
@@ -58,7 +58,7 @@ package body ANTLR.Runtime.DFA.Serializer is
       else
          s2 := "";
       end if;
-      baseStateStr : constant UString := s1 & "s" & UString (n) & s2;
+      baseStateStr : constant UString := s1 & 's' & UString (n) & s2;
       if s.isAcceptState then
          predicates := s.predicates;
          if Is_Valid (predicates)  then

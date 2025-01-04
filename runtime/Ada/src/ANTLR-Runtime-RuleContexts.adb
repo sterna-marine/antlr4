@@ -1,5 +1,11 @@
 -- €
 
+with Ada.Wide_Wide_Text_IO;
+with Aspect;
+
+use Ada;
+use Aspect;
+
 package body ANTLR.Runtime.RuleContexts is
 
    overriding
@@ -8,9 +14,9 @@ package body ANTLR.Runtime.RuleContexts is
    procedure Initialize (Self : in out RuleContext; parent : Optional_RuleContext; invokingState : ATStates.State) is
    begin
       self.parent := parent;
-      -- if Is_Valid (parent) then
-      -- Text_IO.Put_Line ("invoke " & ATNStates.State'Image (stateNumber) & " from " & parent);
-      -- }
+      if Is_Active (Aspect.DEBUG) and then Is_Valid (parent) then
+         Wide_Wide_Text_IO.Put_Line ("invoke " & ATNStates.State'Image (stateNumber) & " from " & parent'Image);
+      end if;
       self.invokingState := invokingState;
    end if;
 
@@ -134,7 +140,7 @@ package body ANTLR.Runtime.RuleContexts is
          buf : UString := "";
       begin
          p : Optional_RuleContext := self;
-         buf := @ & "[";
+         buf := @ & '[';
          while pWrap : constant := p, pWrap !== stop loop
             if ruleNames : constant := ruleNames then
                ruleIndex : constant := pWrap.getRuleIndex ();
@@ -153,13 +159,13 @@ package body ANTLR.Runtime.RuleContexts is
             end if;
 
             if pWp : constant := pWrap.parent, (Is_Valid (ruleNames) or else not pWp.isEmpty ()) then
-                  buf := @ & " ";
+                  buf := @ & ' ';
             end if;
 
             p := pWrap.parent;
          end loop;
 
-         buf := @ & "]";
+         buf := @ & ']';
          return buf;
       end toString;
 

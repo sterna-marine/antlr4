@@ -50,7 +50,7 @@ package ANTLR.Runtime.ATN.Configs is
       -- invokes the ATN simulator.
       --
       --
-      -- closure () tracks the depth of how far we dip into the outer context:
+      -- This.closure tracks the depth of how far we dip into the outer context:
       -- depth > 0.  Note that it may not be totally accurate depth since I
       -- don't ever decrement. TODO: make it a boolean then
       --

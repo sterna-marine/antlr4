@@ -88,7 +88,7 @@ package body ANTLR.Runtime.ATN.Configs is
       buf : UString;
       outerDepth : constant Integer := getOuterContextDepth (This);
    begin
-      UString.Append (buf, "(" & This.State'Image);
+      UString.Append (buf, '(' & This.State'Image);
       if showAlt then
          UString.Append (buf, ',' & This.alt'Image);
       end if;
@@ -101,7 +101,7 @@ package body ANTLR.Runtime.ATN.Configs is
       if outerDepth > 0 then
          UString.Append (buf, ",up=" & outerDepth'Image);
       end if;
-         UString.Append (buf, ")");
+         UString.Append (buf, ')');
       return UString.To_String (buf);
    end toString;
 

@@ -83,7 +83,7 @@ type InterpreterDataReader is new Ada.Finalization.Controlled record
                      when "" =>
                         null;
                      when others =>
-                        fail := Error.dataError ("Unrecognized interpreter data part at "+line);
+                        fail := Error.dataError ("Unrecognized interpreter data part at " & line);
                   end case;
                when .tokenLiteralNames =>
                   literalNames.append ((line == "null") ? "" : line);
@@ -99,7 +99,7 @@ type InterpreterDataReader is new Ada.Finalization.Controlled record
                   if line.prefix (1) == "[" and then line.suffix (1) == "]" then
                      atnText := line.dropFirst ().dropLast ().split (separator:",");
                   else
-                     fail := Error.dataError ("Missing bracket (s) at "+line);
+                     fail := Error.dataError ("Missing bracket (s) at " & line);
                   end if;
                   part := .partName
             end case;
@@ -118,7 +118,7 @@ type InterpreterDataReader is new Ada.Finalization.Controlled record
          begin
             atnText.Iterate (Map'Access);
          end;
-        atn := ATNDeserializer ().deserialize (atnSerialized);
+        atn := This.ATNDeserializer.deserialize (atnSerialized);
     end if;
 
     -- public

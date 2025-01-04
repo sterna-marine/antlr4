@@ -175,7 +175,7 @@ begin
     procedure Put_Image_… (S : in out Sink'Class; X : …);
     for …'Put_Image use Put_Image_…;
     function Description (This : …) return UString is
-        info : constant := succeeded () ? "succeeded" : "failed"
-        return "Match " & info'Image & "; found " & getLabels ().size ()) labels"
+        info : constant := This.succeeded ? "succeeded" : "failed"
+        return "Match " & info'Image & "; found " & This.getLabels.size ()) labels"
     end if;
 end if;
