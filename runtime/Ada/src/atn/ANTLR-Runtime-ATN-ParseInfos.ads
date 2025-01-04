@@ -57,7 +57,7 @@ package ANTLR.Runtime.ATN.ParseInfos is
    -- _org.antlr.v4.runtime.atn.DecisionInfo#timeInPrediction_ for all decisions.
    --
    -- public
-   function getTotalTimeInPrediction (This : ParseInfo) return Integer_64;
+   function getTotalTimeInPrediction (This : ParseInfo) return Real_Time.Time_Span;
 
    --
    -- Gets the total number of SLL lookahead operations across all decisions
@@ -65,7 +65,7 @@ package ANTLR.Runtime.ATN.ParseInfos is
    -- _org.antlr.v4.runtime.atn.DecisionInfo#SLL_TotalLook_ for all decisions.
    --
    -- public
-   function getTotalSLLLookaheadOps (This : ParseInfo) return Integer_64;
+   function getTotalSLLLookaheadOps (This : ParseInfo) return Long_Long_Integer;
 
    --
    -- Gets the total number of LL lookahead operations across all decisions
@@ -73,21 +73,21 @@ package ANTLR.Runtime.ATN.ParseInfos is
    -- _org.antlr.v4.runtime.atn.DecisionInfo#LL_TotalLook_ for all decisions.
    --
    -- public
-   function getTotalLLLookaheadOps (This : ParseInfo) return Integer_64;
+   function getTotalLLLookaheadOps (This : ParseInfo) return Long_Long_Integer;
 
    --
    -- Gets the total number of ATN lookahead operations for SLL prediction
    -- across all decisions made during parsing.
    --
    -- public
-   function getTotalSLLATNLookaheadOps (This : ParseInfo) return Integer_64;
+   function getTotalSLLATNLookaheadOps (This : ParseInfo) return Long_Long_Integer;
 
    --
    -- Gets the total number of ATN lookahead operations for LL prediction
    -- across all decisions made during parsing.
    --
    -- public
-   function getTotalLLATNLookaheadOps (This : ParseInfo) return Integer_64;
+   function getTotalLLATNLookaheadOps (This : ParseInfo) return Long_Long_Integer;
 
    --
    -- Gets the total number of ATN lookahead operations for SLL and LL
@@ -98,7 +98,7 @@ package ANTLR.Runtime.ATN.ParseInfos is
    -- _#getTotalLLATNLookaheadOps_.
    --
    -- public
-   function getTotalATNLookaheadOps (This : ParseInfo) return Integer_64;
+   function getTotalATNLookaheadOps (This : ParseInfo) return Long_Long_Integer;
 
    --
    -- Gets the total number of DFA states stored in the DFA cache for all

@@ -14,7 +14,7 @@ package body ANTLR.Runtime.ATN.ParseInfos is
    function getLLDecisions (This : ParseInfo) return Integer_List is
       LL : Integer_List;
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      fallBack : Integer_64; -- constant
+      fallBack : Long_Long_Integer; -- constant
    begin
       for i in 0 .. decisions.Length - 1 loop
          fallBack := decisions.Element (i).LL_Fallback;
@@ -26,9 +26,9 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       return LL;
    end getLLDecisions;
 
-   function getTotalTimeInPrediction (This : ParseInfo) return Integer_64 is
+   function getTotalTimeInPrediction (This : ParseInfo) return Real_Time.Time_Span is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      t : Integer_64 := 0;
+      t : Real_Time.Time_Span := Real_Time.Time_Span_Zero;
    begin
       for d of decisions loop
          t := @ + d.timeInPrediction;
@@ -36,9 +36,9 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       return t;
    end getTotalTimeInPrediction;
 
-   function getTotalSLLLookaheadOps (This : ParseInfo) return Integer_64 is
+   function getTotalSLLLookaheadOps (This : ParseInfo) return Long_Long_Integer is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      k : Integer_64 := 0;
+      k : Long_Long_Integer := 0;
    begin
       for d of decisions loop
          k := @ + d.SLL_TotalLook;
@@ -46,9 +46,9 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       return k;
    end getTotalSLLLookaheadOps;
 
-   function getTotalLLLookaheadOps (This : ParseInfo) return Integer_64 is
+   function getTotalLLLookaheadOps (This : ParseInfo) return Long_Long_Integer is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      k : Integer_64 := 0;
+      k : Long_Long_Integer := 0;
    begin
       for d of decisions loop
          k := @ + d.LL_TotalLook;
@@ -56,9 +56,9 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       return k;
    end getTotalLLLookaheadOps;
 
-   function getTotalSLLATNLookaheadOps (This : ParseInfo) return Integer_64 is
+   function getTotalSLLATNLookaheadOps (This : ParseInfo) return Long_Long_Integer is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      k : Integer_64 := 0;
+      k : Long_Long_Integer := 0;
    begin
       for d of decisions loop
          k := @ + d.SLL_ATNTransitions;
@@ -66,9 +66,9 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       return k;
    end getTotalSLLATNLookaheadOps;
 
-   function getTotalLLATNLookaheadOps (This : ParseInfo) return Integer_64 is
+   function getTotalLLATNLookaheadOps (This : ParseInfo) return Long_Long_Integer is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      k : Integer_64 := 0;
+      k : Long_Long_Integer := 0;
    begin
       for d of decisions loop
          k := @ + d.LL_ATNTransitions;
@@ -76,9 +76,9 @@ package body ANTLR.Runtime.ATN.ParseInfos is
       return k;
    end getTotalLLATNLookaheadOps;
 
-   function getTotalATNLookaheadOps (This : ParseInfo) return Integer_64 is
+   function getTotalATNLookaheadOps (This : ParseInfo) return Long_Long_Integer is
       decisions : constant DecisionInfo_List := This.atnSimulator.getDecisionInfo ();
-      k : Integer_64 := 0;
+      k : Long_Long_Integer := 0;
    begin
       for d of decisions loop
          k := @ + d.SLL_ATNTransitions;

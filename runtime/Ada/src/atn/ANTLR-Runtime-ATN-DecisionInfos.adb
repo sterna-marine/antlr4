@@ -2,7 +2,7 @@
 
 package body ANTLR.Runtime.ATN.DecisionInfos is
 
-   procedure Initialize (Self : in out DecisionInfo; decision : Integer) is
+   procedure Initialize (Self : in out DecisionInfo; decision : State) is
       self.decision := decision;
    end Initialize;
 

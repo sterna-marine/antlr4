@@ -268,7 +268,13 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                when others =>
                   -- report ambiguity after predicate evaluation to make sure the correct
                   -- set of ambig alts is reported.
-                  reportAmbiguity (dfa, D, startIndex, stopIndex, False, alts, D.configs);
+                  This.reportAmbiguity (dfa => dfa,
+                                        D => D, -- the DFA state from This.execATN that had SLL conflicts
+                                        startIndex => startIndex,
+                                        stopIndex => stopIndex,
+                                        exact => False,
+                                        ambigAlts => alts,
+                                        configs => D.configs);
                   return This.alts.firstSetBit;
             end case;
          end if;
@@ -1408,7 +1414,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
 
       This.parser.getErrorListenerDispatch.reportAmbiguity (parser, dfa, startIndex, stopIndex,
             exact, ambigAlts, configs);
-   end ireportAmbiguityf;
+   end reportAmbiguity;
 
    function getTextInInterval (This : ParserATNSimulator;
                                startIndex, stopIndex : Integer)

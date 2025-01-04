@@ -47,14 +47,15 @@ package ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfos is
    -- * seealso: org.antlr.v4.runtime.atn.SemanticContext#eval (org.antlr.v4.runtime.Recognizer, org.antlr.v4.runtime.RuleContext);
    --
    -- public
-   procedure Initialize (Self : in out PredicateEvalInfo; decision : State;
-                   input : TokenStream;
-                   startIndex : Integer;
-                   stopIndex : Integer;
-                   semctx : SemanticContext;
-                   evalResult : Boolean;
-                   predictedAlt : Integer;
-                   fullCtx  : Boolean);
+   procedure Initialize (Self : in out PredicateEvalInfo;
+                         decision : State;
+                         input : TokenStream;
+                         startIndex : Integer;
+                         stopIndex : Integer;
+                         semctx : SemanticContext;
+                         evalResult : Boolean;
+                         predictedAlt : Integer;
+                         fullCtx  : Boolean);
 
 private
 

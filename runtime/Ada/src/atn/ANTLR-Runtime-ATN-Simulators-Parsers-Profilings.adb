@@ -1,85 +1,46 @@
 -- €
 
-with ANTLR.Runtime.ATN.States;
-with ANTLR.Runtime.ATN.Simulators;
-with ANTLR.Runtime.ATN.Transitions;
-with ANTLR.Runtime.ATN.DecisionInfo;
-with ANTLR.Runtime.DFA.States;
+with Ada.Real_Time;
 
-use ANTLR.Runtime.ATN.Simulators.Parsers;
-use ANTLR.Runtime.ATN.DecisionInfo;
-use ANTLR.Runtime.DFA.States;
+use Ada;
 
 package body ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
 
-   -- public
-   type ProfilingATNSimulator is new ParserATNSimulator with
-   record
-      -- private (set);
-      decisions: DecisionInfo_List; -- := DecisionInfo.Container.Empty_Vector;
-      -- internal
-      numDecisions : Integer := 0;
-      -- internal
-      _sllStopIndex : Integer := 0;
-      -- internal
-      _llStopIndex : Integer := 0;
-      -- internal
-      currentDecision : State := INVALID; --TOFIX
-      -- internal
-      currentState : Optional_DFAState;
-
-      --
-      -- At the point of LL failover, we record how SLL would resolve the conflict so that
-      -- we can determine whether or not a decision / input pair is context-sensitive.
-      -- If LL gives a different result than SLL's predicted alternative, we have a
-      -- context sensitivity for sure. The converse is not necessarily True, however.
-      -- It's possible that after conflict resolution chooses minimum alternatives,
-      -- SLL could get the same answer as LL. Regardless of whether or not the result indicates
-      -- an ambiguity, it is not treated as a context sensitivity because LL prediction
-      -- was not required in order to produce a correct prediction for this decision and input sequence.
-      -- It may in fact still be a context sensitivity but we don't know by looking at the
-      -- minimum alternatives for the current input.
-      --
-      -- internal
-      conflictingAltResolvedBySLL : Integer := 0;
-   end record;
-
-   -- public
    procedure Initialize (Self : in out ProfilingATNSimulator; parser : Parser) is
    begin
       Self.decisions := DecisionInfo.Container.Empty_Vector;
-      Super (Self).Initialize (
-                              parser,
-                              parser.getInterpreter ().atn,
-                              parser.getInterpreter ().decisionToDFA,
-                              parser.getInterpreter ().sharedContextCache); -- super
-
+      Super (Self).Initialize (parser,
+                               parser.getInterpreter.atn,
+                               parser.getInterpreter.decisionToDFA,
+                               parser.getInterpreter.sharedContextCache);
       Self.numDecisions := atn.decisionToState.count;
       for i in 0 .. numDecisions - 1 loop
          Self.decisions.append (DecisionInfo (i));
       end loop;
    end Initialize;
 
-   -- public
    overriding
    function adaptivePredict (This : ProfilingATNSimulator;
                              input : TokenStream;
                              decision : Integer;
                              outerContext : Optional_ParserRuleContext)
                              return Integer is
-      outerContext : constant := outerContext;
-      start : constant := ProcessInfo.processInfo.systemUptime --System.nanoTime (); -- expensive but useful info
-      alt : constant Integer := ParserATNSimulator.adaptivePredict (This, input, decision, outerContext);
-      stop : constant := ProcessInfo.processInfo.systemUptime  --System.nanoTime ();
-      LL_k : Integer_64;
+      outerContext : constant Optional_ParserRuleContext := outerContext;
+      Start, Stop : Real_Time.Time;
+      alt : constant Integer;
+      LL_k, SLL_k : Long_Long_Integer;
    begin
-      This._sllStopIndex := -1;
-      This._llStopIndex := -1;
+      Start := Real_Time.Clock; -- expensive but useful info
+      alt   := Super (This).adaptivePredict (input, decision, outerContext);
+      Stop  := Real_Time.Clock; -- expensive but useful info
+
+      This.sllStopIndex := -1;
+      This.llStopIndex := -1;
       This.currentDecision := decision;
-      This.decisions.Element (decision).timeInPrediction := @ + Integer_64 ((stop - start) * TimeInterval (1_000_000_000)); -- Nanoseconds per 1 Second
+      This.decisions.Element (decision).timeInPrediction := @ + (stop - start); -- seconds
       This.decisions.Element (decision).invocations := @ + 1;
 
-      SLL_k : constant Integer_64 := Integer_64 (This._sllStopIndex - This._startIndex + 1);
+      SLL_k := Long_Long_Integer (This.sllStopIndex - This.startIndex + 1);
       This.decisions.Element (decision).SLL_TotalLook := @ + SLL_k;
       
       if This.decisions.Element (decision).SLL_MinLook = 0 then 
@@ -90,12 +51,17 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
 
       if SLL_k > This.decisions.Element (decision).SLL_MaxLook then
          This.decisions.Element (decision).SLL_MaxLook := SLL_k;
-         This.decisions.Element (decision).SLL_MaxLookEvent :=
-                  LookaheadEventInfo (decision, null, input, This._startIndex, This._sllStopIndex, False);
+         This.decisions.Element (decision).SLL_MaxLookEvent := LookaheadEventInfo (
+                   decision => decision,
+                   configs => (Valid => False),
+                   input => input,
+                   startIndex => This.startIndex,
+                   stopIndex => This.llStopIndex,
+                   fullCtx  => False);
       end if;
 
-      if This._llStopIndex >= 0 then
-         LL_k := Integer_64 (This._llStopIndex - This._startIndex + 1);
+      if This.llStopIndex >= 0 then
+         LL_k := Long_Long_Integer (This.llStopIndex - This.startIndex + 1);
          This.decisions.Element (decision).LL_TotalLook := @ + LL_k;
          
          if This.decisions.Element (decision).LL_MinLook = 0 then
@@ -106,134 +72,193 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
 
          if LL_k > This.decisions.Element (decision).LL_MaxLook then
                This.decisions.Element (decision).LL_MaxLook := LL_k
-               This.decisions.Element (decision).LL_MaxLookEvent =
-                     LookaheadEventInfo (decision, null, input, This._startIndex, This._llStopIndex, True);
+               This.decisions.Element (decision).LL_MaxLookEvent = LookaheadEventInfo (
+                   decision => decision,
+                   configs => (Valid => False),
+                   input => input,
+                   startIndex => This.startIndex,
+                   stopIndex => This.llStopIndex,
+                   fullCtx  => True);
          end if;
       end if;
 
-      defer {
-         This.currentDecision := -1
-      end if;
-      return alt
+      defer :
+         begin
+            This.currentDecision := -1;
+         end defer;
+      return alt;
    end adaptivePredict;
 
-   -- internal
    overriding
-   function getExistingTargetState (This : ProfilingATNSimulator; previousD : DFAState; t : Integer) return Optional_DFAState is
+   function getExistingTargetState (This : ProfilingATNSimulator;
+                                    previousD : DFAState;
+                                    t : Integer)
+                                    return Optional_DFAState is
    begin
       -- this method is called after each time the input position advances
       -- during SLL prediction
-      This._sllStopIndex := _input.index ();
+      This.sllStopIndex := This.input.index;
 
-      existingTargetState : constant Optional_DFAState; := ParserATNSimulator.getExistingTargetState (This, previousD, t);
+      existingTargetState : constant Optional_DFAState := Super (This).getExistingTargetState (previousD, t);
       if Is_Valid (existingTargetState) then
          This.decisions.Element (This.currentDecision).SLL_DFATransitions := @ + 1; -- count only if we transition over a DFA state
          if existingTargetState = ATNSimulator.ERROR then
-               This.decisions.Element (This.currentDecision).errors.append (
-               ErrorInfo (This.currentDecision, previousD.configs, _input, This._startIndex, This._sllStopIndex, False);
-               );
+            This.decisions.Element (This.currentDecision).errors.append (
+               ErrorInfos.Initialize (
+                  decision => This.currentDecision,
+                  configs => previousD.configs,
+                  input => This.input,
+                  startIndex => This.startIndex,
+                  stopIndex => This.sllStopIndex,
+                  fullCtx  => False));
          end if;
       end if;
 
-      This.currentState := existingTargetState
-      return existingTargetState
+      This.currentState := existingTargetState;
+      return existingTargetState;
    end getExistingTargetState;
 
-   -- internal
    overriding
-   function computeTargetState (This : ProfilingATNSimulator; dfa : DFA; previousD : DFAState; t : Integer) return DFAState is
+   function computeTargetState (This : ProfilingATNSimulator;
+                                dfa : DFA;
+                                previousD : DFAState;
+                                t : Integer)
+                                return DFAState is
+      state : constant DFAState := Super (This).computeTargetState (dfa, previousD, t);
    begin
-      state : constant := ParserATNSimulator.computeTargetState (This, dfa, previousD, t);
-      This.currentState := state
-      return state
+      This.currentState := state;
+      return state;
    end computeTargetState;
 
    overriding
-   -- internal
-   function computeReachSet (This : ProfilingATNSimulator; closure : ATNConfigSet; t : Integer; fullCtx  : Boolean) return Optional_ATNConfigSet is
+   function computeReachSet (This : ProfilingATNSimulator;
+                             closure : ATNConfigSet;
+                             t : Integer;
+                             fullCtx  : Boolean)
+                             return Optional_ATNConfigSet is
    begin
       if fullCtx then
          -- this method is called after each time the input position advances
          -- during full context prediction
-         This._llStopIndex := _input.index ();
+         This.llStopIndex := This.input.index;
       end if;
 
-      reachConfigs : constant := ParserATNSimulator.computeReachSet (This, closure, t, fullCtx);
+      reachConfigs : constant ATNConfigSet := Super (This).computeReachSet (closure, t, fullCtx);
       if fullCtx then
          This.decisions.Element (This.currentDecision).LL_ATNTransitions := @ + 1; -- count computation even if error
-         if Is_Valid (reachConfigs) then
-         else
-               -- no reach on current lookahead symbol. ERROR.
-               -- TODO: does not handle delayed errors per This.getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule;
-               This.decisions.Element (This.currentDecision).errors.append (
-               ErrorInfo (This.currentDecision, closure, _input, This._startIndex, This._llStopIndex, True);
-               );
+         if not Is_Valid (reachConfigs) then
+            -- no reach on current lookahead symbol. ERROR.
+            -- TODO: does not handle delayed errors per This.getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule;
+            This.decisions.Element (This.currentDecision).errors.append (
+               ErrorInfos.Initialize (
+                  decision => This.currentDecision,
+                  configs => closure,
+                  input => This.input,
+                  startIndex => This.startIndex,
+                  stopIndex => This.llStopIndex,
+                  fullCtx  => True));
          end if;
       else
          This.decisions.Element (This.currentDecision).SLL_ATNTransitions := @ + 1;
-         if Is_Valid (reachConfigs) then
-         else
-               -- no reach on current lookahead symbol. ERROR.
-               This.decisions.Element (This.currentDecision).errors.append (
-               ErrorInfo (This.currentDecision, closure, _input, This._startIndex, This._sllStopIndex, False);
-               );
+         if not Is_Valid (reachConfigs) then
+            -- no reach on current lookahead symbol. ERROR.
+            This.decisions.Element (This.currentDecision).errors.append (
+               ErrorInfos.Initialize (
+                  decision => This.currentDecision,
+                  configs => closure,
+                  input => This.input,
+                  startIndex => This.startIndex,
+                  stopIndex => This.sllStopIndex,
+                  fullCtx  => False));
          end if;
       end if;
-      return reachConfigs
+      return reachConfigs;
    end computeReachSet;
 
-   -- internal
    overriding
-   function evalSemanticContext (This : ProfilingATNSimulator; pred : SemanticContext; parserCallStack : ParserRuleContext; alt : Integer; fullCtx  : Boolean) return Boolean is
+   function evalSemanticContext (This : ProfilingATNSimulator;
+                                 pred : SemanticContext;
+                                 parserCallStack : ParserRuleContext;
+                                 alt : Integer;
+                                 fullCtx  : Boolean)
+                                 return Boolean is
+      stopIndex : Integer;
+      result : constant Boolean := Super (This).evalSemanticContext (pred, parserCallStack, alt, fullCtx);
    begin
-      result : constant := ParserATNSimulator.evalSemanticContext (This, pred, parserCallStack, alt, fullCtx);
       if not (pred is SemanticContext.PrecedencePredicate) then
-         fullContext : constant := This._llStopIndex >= 0
-         stopIndex : constant := fullContext ? This._llStopIndex : This._sllStopIndex
-         This.decisions.Element (This.currentDecision).predicateEvals.append (
-               PredicateEvalInfo (This.currentDecision, _input, This._startIndex, stopIndex, pred, result, alt, fullCtx);
-         );
-      end if;
 
-      return result
+         if This.llStopIndex >= 0 then -- fullContext
+            stopIndex := This.llStopIndex;
+         else
+            stopIndex := This.sllStopIndex;
+         end if;
+
+         This.decisions.Element (This.currentDecision).predicateEvals.append (
+            PredicateEvalInfos.Initialize (
+               decision => This.currentDecision,
+               input => This.input,
+               startIndex => This.startIndex,
+               stopIndex => stopIndex,
+               semctx => pred,
+               evalResult => result,
+               predictedAlt => alt,
+               fullCtx  => fullCtx));
+      end if;
+      return result;
    end evalSemanticContext;
 
-   -- internal
    overriding
-   procedure reportAttemptingFullContext (This : ProfilingATNSimulator; dfa : DFA; conflictingAlts : Optional_BitSet; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) is
-   begin
-      if conflictingAlts : constant := conflictingAlts then
-         This.conflictingAltResolvedBySLL := conflictingAlts.firstSetBit ();
+   procedure reportAttemptingFullContext (This : ProfilingATNSimulator;
+                                          dfa : DFA;
+                                          conflictingAlts : Optional_BitSet;
+                                          configs : ATNConfigSet;
+                                          startIndex, stopIndex : Integer) is
+         conflictingAlts : constant := conflictingAlts;
+      begin
+      if Is_Valid (conflictingAlts) then
+         This.conflictingAltResolvedBySLL := conflictingAlts.firstSetBit;
       else
-         configAlts : constant := configs.getAlts ();
-         This.conflictingAltResolvedBySLL := configAlts.firstSetBit ();
+         configAlts : constant := configs.getAlts;
+         This.conflictingAltResolvedBySLL := configAlts.firstSetBit;
       end if;
       This.decisions.Element (This.currentDecision).LL_Fallback := @ + 1;
-      ParserATNSimulator.reportAttemptingFullContext (This, dfa, conflictingAlts, configs, startIndex, stopIndex);
+      Super (This).reportAttemptingFullContext (dfa, conflictingAlts, configs, startIndex, stopIndex);
    end reportAttemptingFullContext;
 
-   -- internal
    overriding
-   procedure reportContextSensitivity (This : ProfilingATNSimulator; dfa : DFA; prediction : Integer; configs : ATNConfigSet; startIndex : Integer; stopIndex : Integer) is
+   procedure reportContextSensitivity (This : ProfilingATNSimulator;
+                                       dfa : DFA;
+                                       prediction : Integer;
+                                       configs : ATNConfigSet;
+                                       startIndex, stopIndex : Integer) is
    begin
       if prediction /= This.conflictingAltResolvedBySLL then
          This.decisions.Element (This.currentDecision).contextSensitivities.append (
-         ContextSensitivityInfo (This.currentDecision, configs, _input, startIndex, stopIndex);
-         );
+            ContextSensitivityInfos.Initialize (
+                  decision => This.currentDecision,
+                  configs => configs,
+                  input => This.input,
+                  startIndex => startIndex,
+                  stopIndex => stopIndex));
       end if;
-      ParserATNSimulator.reportContextSensitivity (This, dfa, prediction, configs, startIndex, stopIndex);
+      Super (This).reportContextSensitivity (dfa, prediction, configs, startIndex, stopIndex);
    end reportContextSensitivity;
 
-   -- internal
    overriding
-   procedure reportAmbiguity (This : ProfilingATNSimulator; dfa : DFA; D : DFAState; startIndex : Integer; stopIndex : Integer; exact : Boolean;
-                                 ambigAlts : Optional_BitSet; configs : ATNConfigSet) {
+   procedure reportAmbiguity (This : ProfilingATNSimulator;
+                              dfa : DFA;
+                              D : DFAState;
+                              startIndex, stopIndex : Integer;
+                              exact : Boolean;
+                              ambigAlts : Optional_BitSet;
+                              configs : ATNConfigSet) is
       prediction : Integer;
-      if ambigAlts : constant := ambigAlts then
-         prediction := ambigAlts.firstSetBit ();
+   begin   
+      if Is_Valid (ambigAlts) then
+         prediction := ambigAlts.firstSetBit;
       else
-         configAlts : constant := configs.getAlts ();
-         prediction := configAlts.firstSetBit ();
+         configAlts : constant := configs.getAlts;
+         prediction := configAlts.firstSetBit;
       end if;
       if configs.fullCtx and then prediction /= This.conflictingAltResolvedBySLL then
          -- Even though this is an ambiguity we are reporting, we can
@@ -242,18 +267,11 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
          -- to different minimum alternatives we have also identified a
          -- context sensitivity.
          This.decisions.Element (This.currentDecision).contextSensitivities.append (
-         ContextSensitivityInfo (This.currentDecision, configs, _input, startIndex, stopIndex);
-         );
+            ContextSensitivityInfos.Initialize (This.currentDecision, configs, This.input, startIndex, stopIndex));
       end if;
       This.decisions.Element (This.currentDecision).ambiguities.append (
-      AmbiguityInfo (This.currentDecision, configs, ambigAlts!,
-               _input, startIndex, stopIndex, configs.fullCtx);
-      );
-      ParserATNSimulator.reportAmbiguity (This, dfa, D, startIndex, stopIndex, exact, ambigAlts!, configs);
+         AmbiguityInfos (This.currentDecision, configs, Value (ambigAlts), This.input, startIndex, stopIndex, configs.fullCtx));
+      Super (This).reportAmbiguity (dfa, D, startIndex, stopIndex, exact, Value (ambigAlts), configs);
    end reportAmbiguity;
-
-   -- public
-   function getDecisionInfo (This : ProfilingATNSimulator) return DecisionInfo_Container.Vector
-      is (This.decisions);
 
 end ANTLR.Runtime.ATN.Simulators.Parsers.Profilings;
