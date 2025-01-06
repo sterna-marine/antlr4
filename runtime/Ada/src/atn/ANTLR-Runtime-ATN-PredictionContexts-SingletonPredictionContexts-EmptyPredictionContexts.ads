@@ -1,5 +1,11 @@
 -- €
 
+with ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;
+
+use ANTLR.Runtime.ATN.PredictionContext;
+use ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;
+use ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts;
+
 package ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPredictionContexts is
 
    -- public
@@ -19,12 +25,34 @@ package ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPr
    type Class_Wide is access all Object'Class;
 
    -- public
+   function "=" (Lhs, Rhs : EmptyPredictionContext) return Boolean;
+
+   -- public
+   function "=" (lhs: SingletonPredictionContext; rhs: EmptyPredictionContext) return Boolean
+      is (False);
+
+   -- public
+   function "=" (lhs: EmptyPredictionContext; rhs: SingletonPredictionContext) return Boolean
+      is (lhs === rhs);
+
+   -- public
+   function "=" (lhs: EmptyPredictionContext; rhs: ArrayPredictionContext) return Boolean
+      is (lhs === rhs);
+
+   -- public
    procedure Initialize (Self : EmptyPredictionContext);
 
    overriding
    -- public
    function isEmpty (This : EmptyPredictionContext) return Boolean
       is (EmptyPredictionContext.True);
+
+   --
+   -- This means only the _#EMPTY_ context is in set.
+   --
+   -- public
+   function isEmpty (This : PredictionContext) return Boolean
+      is This === EmptyPredictionContext.Instance;
 
    overriding
    -- public
@@ -48,8 +76,5 @@ package ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPr
    for EmptyPredictionContext'Put_Image use Put_Image_EmptyPredictionContext;
    function Description (This : EmptyPredictionContext) return UString
       is ("$");
-
-   -- public
-   function "=" (Lhs, Rhs : EmptyPredictionContext) return Boolean;
 
 end ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPredictionContexts;

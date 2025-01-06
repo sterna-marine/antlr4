@@ -30,6 +30,12 @@ package ANTLR.Runtime.ATN.LexerActions.LexerCustomActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerCustomAction) return Boolean;
+   -- public
+   overriding
+   procedure hash (This : LexerCustomAction; hasher: in out Hasher);
+
    --
    -- Constructs a custom lexer action with the specified rule and action
    -- indexes.
@@ -95,12 +101,5 @@ package ANTLR.Runtime.ATN.LexerActions.LexerCustomActions is
    overriding
    -- public
    procedure execute (This : LexerCustomAction; lexer : Lexer);
-
-   -- public
-   overriding
-   procedure hash (This : LexerCustomAction; hasher: in out Hasher);
-
-   -- public
-   function "=" (Lhs, Rhs : LexerCustomAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActions.LexerCustomActions;

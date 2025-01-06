@@ -131,10 +131,12 @@ package ANTLR.Runtime.TokenStreamRewriters is
       tokens : TokenStream; --!
    end record;
 
+   function Equal (Left, Right : RewriteOperation) return Boolean;
+
    function Hash_Integer (Key : Integer) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Integer) return Boolean
       is (Hash_Integer (Left) = Hash_Integer (Right));
-   function Equal (Left, Right : RewriteOperation) return Boolean;
+
    package RewriteOperation_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => Integer,
       Element_Type => RewriteOperation,
@@ -145,8 +147,8 @@ package ANTLR.Runtime.TokenStreamRewriters is
 
    package Option_RewriteOperation is new Option (RewriteOperation);
    subtype Optional_RewriteOperation is Option_RewriteOperation.Optional;
-
    function Equal (Left, Right : Optional_RewriteOperation) return Boolean;
+
    package Optional_RewriteOperation_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Element_Type => Optional_RewriteOperation,
@@ -266,10 +268,12 @@ package ANTLR.Runtime.TokenStreamRewriters is
       rewrites : Optional_RewriteOperation_List;
    end record;
 
+   function Equal (Left, Right : RewriteOperationArray) return Boolean;
+
    function Hash_UString (Key : UString) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : UString) return Boolean
       is (Hash (Left) = Hash (Right));
-   function Equal (Left, Right : RewriteOperationArray) return Boolean;
+
    package RewriteOperationArray_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => UString,
       Element_Type => RewriteOperationArray,

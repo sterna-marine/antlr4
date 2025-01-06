@@ -305,7 +305,11 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       end if;
    end removeAllConfigsNotInRuleStopState;
 
-   function applyPrecedenceFilter (mergeCache : in out PredictionContext.Optional_DoubleKeyMap,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet is
+   function applyPrecedenceFilter (This : ATNConfigSet;
+                                   mergeCache : in out PredictionContext.Optional_DoubleKeyMap;
+                                   parser : Parser;
+                                   outerContext : ParserRuleContext)
+                                   return ATNConfigSet is
       configSet : constant := ATNConfigSet (fullCtx);
       statesFromAlt1 : PredictionContext.Map;
    begin
@@ -315,7 +319,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
                goto CONTINUE_CONFIGS;
          end if;
 
-         updatedContext : constant := config.semanticContext.evalPrecedence (parser, _outerContext);
+         updatedContext : constant := config.semanticContext.evalPrecedence (parser, outerContext);
          if not Is_Valid (updatedContext) then
                -- the configuration was eliminated
                goto CONTINUE_CONFIGS;
@@ -410,10 +414,10 @@ package body ANTLR.Runtime.ATN.ConfigSets is
                                  return Boolean;
    type evalSemanticContext_Access is evalSemanticContext'Access;
 
-   procedure splitAccordingToSemanticValidity (This : ATNConfigSet;
-                                               outerContext : ParserRuleContext;
-                                               evalSemanticContext : evalSemanticContext_Access) --TOFIX
-                                               return Splitted_ConfigSets is
+   function splitAccordingToSemanticValidity (This : ATNConfigSet;
+                                              outerContext : ParserRuleContext;
+                                              evalSemanticContext : evalSemanticContext_Access) --TOFIX
+                                              return Splitted_ConfigSets is
       Pair_of_ConfigSets : Splitted_ConfigSets := (
          succeeded => ATNConfigSet (fullCtx),
          failed => ATNConfigSet (fullCtx));

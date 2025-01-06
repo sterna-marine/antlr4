@@ -6,6 +6,16 @@ use ANTLR.Runtime.ATN;
 
 package body ANTLR.Runtime.ATN.Simulators is
 
+   function ERROR return DFAState is
+      Some_ConfigSet : ConfigSet;
+      This_DFAState   : DFAState;
+   begin
+      Initialize (Some_ConfigSet);
+      Initialize (This_DFAState, Some_ConfigSet);
+      This_DFAState.stateNumber := INVALID_STATE_NUMBER; -- Int.max
+      return This_DFAState;
+   end ERROR;
+
    procedure Initialize (Self : in out ATNSimulator;
                    atn : ATN;
                    sharedContextCache : PredictionContextCache) is

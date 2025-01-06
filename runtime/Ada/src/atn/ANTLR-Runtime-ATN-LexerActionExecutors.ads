@@ -34,6 +34,11 @@ package ANTLR.Runtime.ATN.LexerActionExecutors is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (lhs, rhs : LexerActionExecutor) return Boolean;
+   -- public
+   procedure hash (This : LexerActionExecutor; hasher: in out Hasher);
+
    package Option_LexerActionExecutor is new Option (LexerActionExecutor);
    subtype Optional_LexerActionExecutor is Option_ILexerActionExecutor.Optional; -- renames
 
@@ -130,11 +135,5 @@ package ANTLR.Runtime.ATN.LexerActionExecutors is
                       lexer : Lexer;
                       input : CharStream;
                       startIndex : Integer);
-
-   -- public
-   procedure hash (This : LexerActionExecutor; hasher: in out Hasher);
-
-   -- public
-   function "=" (lhs, rhs : LexerActionExecutor) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActionExecutors;

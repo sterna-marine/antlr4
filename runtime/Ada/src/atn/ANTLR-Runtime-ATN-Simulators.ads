@@ -1,9 +1,13 @@
 -- €
 
 with Ada.Finalization;
+with ANTLR.Runtime.ATN.ConfigSets;
 with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.DFA.States;
 
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.ConfigSets;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.DFA.States;
 
 package ANTLR.Runtime.ATN.Simulators is
 
@@ -11,11 +15,10 @@ package ANTLR.Runtime.ATN.Simulators is
    -- Must distinguish between missing edge and edge we know leads nowhere
    --
    -- public static
-   ERROR : constant DFAState := DFAState (ATNConfigSet ())  --TOFIX
-      with error.stateNumber = ATNStates.State.INVALID_STATE_NUMBER; -- Int.max
+   function ERROR return DFAState;
 
    -- open
-   type ATNSimulator is new Ada.Finalization.Controlled record
+   type ATNSimulator is new Ada.Finalization.Controlled with record
 
       -- public
       atn : ATN; -- constant
@@ -76,7 +79,6 @@ package ANTLR.Runtime.ATN.Simulators is
    -- open
    function getCachedContext (This : ATNSimulator; context : PredictionContext) return PredictionContext;
 
-   type IntervalSet_Array is array (<>) of IntervalSet;
    -- public static
    function edgeFactory (atn : ATN;
                          Token_Type : Token_Kind;
@@ -85,7 +87,7 @@ package ANTLR.Runtime.ATN.Simulators is
                          arg1 : Integer;
                          arg2 : Integer;
                          arg3 : Integer;
-                         sets : IntervalSet_Array)
+                         sets : IntervalSet_List)
                          return Transition
       is (ATNDeserializer.edgeFactory (atn, Token_Type, src, trg, arg1, arg2, arg3, sets));
 

@@ -93,12 +93,16 @@ package ANTLR.Runtime.Misc.BitSets is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
    function Hash (Key : Integer) return Ada.Containers.Hash_Type;
+   procedure hash (This : BitSet; hasher : in out Hasher);
 
    function Equivalent_Keys (Left, Right : Integer) return Boolean
       is Hash (Left) = Hash (Right);
 
-   function "=" (Left, Right : BitSet) return Boolean;
+
+   -- public
+   function "=" (Lhs, Rhs : BitSet) return Boolean;
 
    package BitSet_Maps is new Ada.Containers.Hashed_Maps (
       Key_Type => Integer,
@@ -136,11 +140,5 @@ package ANTLR.Runtime.Misc.BitSets is
    procedure Put_Image_BitSet (S : in out Sink'Class; X : BitSet);
    for BitSet'Put_Image use Put_Image_BitSet;
    function Description (This : BitSet) return UString;
-
-   -- public
-   procedure hash (This : BitSet; hasher : in out Hasher);
-
-   -- public
-   function "=" (Lhs, Rhs : BitSet) return Boolean;
 
 end ANTLR.Runtime.Misc.BitSets;

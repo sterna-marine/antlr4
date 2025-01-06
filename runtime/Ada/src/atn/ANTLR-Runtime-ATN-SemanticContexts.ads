@@ -27,7 +27,10 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    subtype Object is SemanticContext;
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
---
+
+   function Equal (Left, Right : SemanticContext) return Boolean;
+
+   --
    -- For context independent predicates, we evaluate them without a local
    -- context (i.e., null context). That way, we can evaluate them without
    -- having to create proper rule-specific context during prediction (as
@@ -40,11 +43,41 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- prediction, so we passed in the outer context here in case of context
    -- dependent predicate evaluation.
    --
-   type SemanticContext_Array is array (<>) of SemanticContext;
 
    function Hash (Element : SemanticContext) return Ada.Containers.Hash_Type;
+
+   -- public
+   procedure hash (This : SemanticContext; hasher : in out Hasher)
+   with No_Return;
+
    function Equivalent_Elements (Left, Right : SemanticContext) return Boolean;
-   function Equal (Left, Right : SemanticContext) return Boolean;
+
+   -- public
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_SemanticContext (S : in out Sink'Class; X : SemanticContext);
+   for SemanticContext'Put_Image use Put_Image_SemanticContext;
+   function Description (This : SemanticContext) return UString
+   with No_Return;
+
+   -- -------------------- --
+   -- SemanticContext_List --
+   -- -------------------- --
+   package SemanticContext_Container is new Ada.Containers.Vectors
+     (Index_Type   => Natural,
+      Element_Type => SemanticContext,
+      "="          => Equal);
+   subtype SemanticContext_List is SemanticContext_Container.Vector;
+
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_SemanticContext_List (S : in out Sink'Class; X : SemanticContext_List);
+   for SemanticContext_List'Put_Image use Put_Image_SemanticContext_List;
+   -- public
+   overriding
+   function Description (This : SemanticContext_List) return UString;
+
+   -- ----------------------- --
+   -- Set_Of_SemanticContexts --
+   -- ----------------------- --
    -- public
    package SemanticContext_Sets is new Ada.Containers.Hashed_Sets (
       Element_Type => SemanticContext,
@@ -53,12 +86,18 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       "=" => Equal);
    subtype Set_Of_SemanticContexts is SemanticContext_Sets.Set;
 
+   -- -------------------- --
+   -- SemanticContext_List --
+   -- -------------------- --
    package SemanticContext_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Element_Type => SemanticContext,
       "=" => Equal);
    subtype SemanticContext_List is SemanticContext_Container.Vector;
 
+   -- ---------------------- --
+   -- Option_SemanticContext --
+   -- ---------------------- --
    package Option_SemanticContext is new Option (SemanticContext);
    subtype Optional_SemanticContext is Option_SemanticContext.Optional;
 
@@ -100,21 +139,9 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- public
    function evalPrecedence (This : SemanticContext; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
 
-   -- public
-   procedure hash (This : SemanticContext; hasher : in out Hasher)
-   with No_Return;
-
-   -- public
-   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_SemanticContext (S : in out Sink'Class; X : SemanticContext);
-   for SemanticContext'Put_Image use Put_Image_SemanticContext;
-   function Description (This : SemanticContext) return UString
-   with No_Return;
-
    -- ----- --
    -- Empty --
    -- ----- --
-
    -- public
    type Empty is new SemanticContext with
    record
@@ -141,7 +168,6 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- --------- --
    -- Predicate --
    -- --------- --
-
    -- public
    type Predicate is new SemanticContext with
    record
@@ -187,7 +213,6 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- ------------------- --
    -- PrecedencePredicate --
    -- ------------------- --
-
    -- public
    type PrecedencePredicate is new SemanticContext with
    record
@@ -256,6 +281,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- public
    function getOperands (This : Operator) return SemanticContext_Array
    with No_Return;
+
    -- ------------ --
    -- AND Operator --
    -- ------------ --
@@ -268,7 +294,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    type AND is new Operator with
    record
       -- public
-      opnds : SemanticContext_Container.Vector; -- constant
+      opnds : SemanticContext_List; -- constant
       --TOFIX opnds : Set_Of_SemanticContexts;
    end record;
 
@@ -299,13 +325,6 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- public
    function evalPrecedence (This : AND; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
 
-   overriding
-   -- public
-   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_AND (S : in out Sink'Class; X : AND);
-   for AND'Put_Image use Put_Image_AND;
-   function Description (This : AND) return UString;
-
    -- ----------- --
    -- OR Operator --
    -- ----------- --
@@ -318,7 +337,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    type OR is new Operator with
    record
       -- public final
-      opnds: SemanticContext_Container.Vector;
+      opnds: SemanticContext_List
       --TOFIX opnds : Set_Of_SemanticContexts;
    end record;
 
@@ -349,26 +368,17 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- public
    function evalPrecedence (This : OR; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
 
-   overriding
-   -- public
-   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_… (S : in out Sink'Class; X : …);
-   for …'Put_Image use Put_Image_…;
-   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_OR (S : in out Sink'Class; X : OR);
-   for OR'Put_Image use Put_Image_OR;
-   function Description (This : OR) return UString;
-
    -- --------- --
+
    -- public static
-   function and (a, b : Optional_SemanticContext) return SemanticContext;
+   function "and" (a, b : Optional_SemanticContext) return SemanticContext;
 
    --
    --
    -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#getPredsForAmbigAlts
    --
    -- public static
-   function or (a, b : Optional_SemanticContext) return SemanticContext;
+   function "or" (a, b : Optional_SemanticContext) return SemanticContext;
    
    -- private static
    function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector;
@@ -384,9 +394,9 @@ package ANTLR.Runtime.ATN.SemanticContexts is
 
 
    -- public
-   function "=" (lhs, rhs : SemanticContext.AND) return Boolean;
+   function "=" (lhs, rhs : SemanticContext_List) return Boolean;
 
    -- public
-   function "=" (lhs, rhs : SemanticContext.OR) return Boolean;
+   function "=" (lhs, rhs : SemanticContext_List) return Boolean;
 
 end ANTLR.Runtime.ATN.SemanticContexts;

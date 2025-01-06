@@ -23,6 +23,13 @@ package ANTLR.Runtime.ATN.LexerActions.LexerTypeActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerTypeAction) return Boolean;
+
+   -- public
+   overriding
+   procedure hash (This : LexerTypeAction; hasher : in out Hasher);
+
    --
    -- Constructs a new `type` action with the specified token type value.
    -- * parameter type: The type to assign to the token using _org.antlr.v4.runtime.Lexer#setType_.
@@ -67,17 +74,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerTypeActions is
    procedure execute (This : LexerTypeAction; lexer : Lexer);
 
    -- public
-   overriding
-   procedure hash (This : LexerTypeAction; hasher : in out Hasher);
-
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerTypeAction (S : in out Sink'Class; X : LexerTypeAction);
    for LexerTypeAction'Put_Image use Put_Image_LexerTypeAction;
    function Description (This : LexerTypeAction) return UString
       is ("type (" & This.Type_of_Action'Image & ")");
-
-   -- public
-   function "=" (Lhs, Rhs : LexerTypeAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActions.LexerTypeActions;

@@ -3,23 +3,32 @@
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Environment_Variables;
+--TOFIX with AdaForge.MurMur3_Hash;
 with ANTLR.Runtime.ATN.ConfigSets;
+with ANTLR.Runtime.ATN.PredictionModes;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.States.PredictionContexts;
+with ANTLR.Runtime.ATN.TokenStream_Protocol;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.DFA;
+with ANTLR.Runtime.Misc.BitSets;
 with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 
 use Ada;
 --  use ANTLR.Runtime;
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.ConfigSets;
 use ANTLR.Runtime.ATN.Simulators;
+use ANTLR.Runtime.ATN.PredictionModes;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.States.PredictionContexts;
 use ANTLR.Runtime.ATN.Transitions;
+use ANTLR.Runtime.ATN.TokenStream_Protocol;
 use ANTLR.Runtime.DFA;
+use ANTLR.Runtime.Misc.BitSets;
 use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 
 package ANTLR.Runtime.ATN.Simulators.Parsers is
 
@@ -251,7 +260,9 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
    -- the input.
    --
 
-   subtype hash_Type is Ada.Containers.Hash_Type; --TOFIX
+   -- ------------- --
+   -- DoubleKey_Map --
+   -- ------------- --
 
    function MurMur3_Hash (Key : DoubleKey) return Ada.Containers.Hash_Type;
 
@@ -259,15 +270,19 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
       is (MurMur3_Hash (Left) = MurMur3_Hash (Right)
       or else MurMur3_Hash ((Left.B, Left.B)) = MurMur3_Hash (Right)); --TOFIX
 
-   function "=" (Left, Right : Element_Type) return Boolean;
+   function "=" (Left, Right : DoubleKey) return Boolean;
    -- PredictionContext.Optional_DoubleKeyMap;
-   package body DoubleKeyMap is new Ada.Containers.Hashed_Maps (
+   package DoubleKey_Dictiorary is new Ada.Containers.Hashed_Maps (
       Key_Type => DoubleKey,
-      Element_Type => PredictionContext;
+      Element_Type => PredictionContext, --TOFIX
       Hash => MurMur3_Hash,
       Equivalent_Keys => Equivalent_DoubleKeys,
       "=" => "=");
+   subtype DoubleKey_Map is DoubleKey_Dictiorary.Map;
 
+   -- ------------------ --
+   -- ParserATNSimulator --
+   -- ------------------ --
    -- open
    type ParserATNSimulator is new ATNSimulator with
    record
@@ -303,7 +318,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
       -- also be examined during cache lookup.
       --
       -- internal final
-      mergeCache : DoubleKeyMap.Vector; -- <PredictionContext, PredictionContext, PredictionContext>?;
+      mergeCache : DoubleKey_Map; -- <PredictionContext, PredictionContext, PredictionContext>?;
 
       -- LAME globals to avoid parameters!!!!! I need these down deep in predTransition
       -- internal

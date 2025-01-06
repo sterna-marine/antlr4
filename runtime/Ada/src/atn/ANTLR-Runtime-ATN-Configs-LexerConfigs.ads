@@ -14,6 +14,14 @@ package ANTLR.Runtime.ATN.Configs.LexerConfigs is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   --useless
+   -- public
+   function "=" (Lhs, Rhs : LexerATNConfig) return Boolean;
+
+   -- public
+   overriding
+   procedure hash (This : LexerATNConfig; hasher : in out Hasher);
+
    -- public
    procedure Initialize (Self : in out LexerATNConfig;
                    state : ATNStates.ATNState;
@@ -55,14 +63,6 @@ package ANTLR.Runtime.ATN.Configs.LexerConfigs is
    -- public final
    function hasPassedThroughNonGreedyDecision (This : LexerATNConfig) return Boolean
       is (passedThroughNonGreedyDecision);
-
-   -- public
-   overriding
-   procedure hash (This : LexerATNConfig; hasher : in out Hasher);
-
-   --useless
-   -- public
-   function "=" (Lhs, Rhs : LexerATNConfig) return Boolean;
 
 private
 

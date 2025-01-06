@@ -8,9 +8,9 @@ use ANTLR.Runtime.ATN.States.BlockEndStates;
 
 package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates is
 
---
--- The start of a regular `( .. )` block.
---
+   --
+   -- The start of a regular `( .. )` block.
+   --
 
    -- public
    type BlockStartState is new DecisionState with
@@ -29,15 +29,12 @@ package ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates is
    function Equivalent_Keys (Left, Right : BlockStartState) return Boolean
       is (Hash (Left) = Hash (Right)); --TOFIX
 
-   function "=" (Left, Right : Integer) return Boolean
-      is (Left = Right); --TOFIX
-
-   package BlockStartState_Maps is new Ada.Containers.Hashed_Maps (
+   package BlockStartState_Dictionary is new Ada.Containers.Hashed_Maps (
       Key_Type => BlockStartState,
       Element_Type => Integer,
       Hash => Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
-   subtype BlockStartState_Map is BlockStartState_Maps.Map;
+   subtype BlockStartState_Map is BlockStartState_Dictionary.Map;
 
 end ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;

@@ -50,10 +50,11 @@ package ANTLR.Runtime.DFA.States is
       alt : constant Integer;
    end record;
 
+   function Equal (Left, Right : PredPrediction) return Boolean;
+
    package PredPrediction_Container is Ada.Containers.Vectors;
    subtype PredPrediction_List is PredPrediction_Container.Vector;
 
-   function Equal (Left, Right : PredPrediction) return Boolean;
    package PredPrediction_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Item_Type  => PredPrediction,
@@ -75,7 +76,7 @@ package ANTLR.Runtime.DFA.States is
    with
    record
       -- public internal (set);
-      stateNumber : ATNStates.State := ATNStates.INVALID_STATE_NUMBER;
+      stateNumber : State := INVALID_STATE_NUMBER;
 
       -- public internal (set)
       configs : ATNConfigSet;

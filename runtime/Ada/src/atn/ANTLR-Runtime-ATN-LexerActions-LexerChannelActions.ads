@@ -19,6 +19,9 @@ package ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerChannelAction) return Boolean;
+
    --
    -- Constructs a new `channel` action with the specified channel value.
    -- * parameter channel: The channel value to pass to _org.antlr.v4.runtime.Lexer#setChannel_.
@@ -73,8 +76,5 @@ package ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
    for LexerChannelAction'Put_Image use Put_Image_LexerChannelAction;
    function Description (This : LexerChannelAction) return UString
       is ("channel" & This.channel'Image);
-
-   -- public
-   function "=" (Lhs, Rhs : LexerChannelAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActions.LexerChannelActions;

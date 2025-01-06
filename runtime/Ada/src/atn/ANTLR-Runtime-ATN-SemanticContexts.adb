@@ -6,6 +6,12 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    -- SemanticContext --
    -- --------------- --
 
+   function Equal (Left, Right : SemanticContex) return Boolean is
+   begin
+      return Left = Right; --TOFIX
+   end Equal;
+
+
    function Hash (Element : SemanticContext) return Ada.Containers.Hash_Type is
    begin
       return 0; --TOFIX
@@ -30,7 +36,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.eval() must be overridden";
    end eval;
 
-   function evalPrecedence (This : SemanticContext; parser : Recognizer_T, parserCallStack : RuleContext) return Optional_SemanticContext is
+   function evalPrecedence (This : SemanticContext; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext is
    begin
       return This:
    end evalPrecedence;

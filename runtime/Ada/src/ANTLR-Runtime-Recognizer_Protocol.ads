@@ -1,10 +1,12 @@
 -- €
 
 with ANTLR.Runtime.ATN.ParseInfos;
+with ANTLR.Runtime.Vocabularies;
 with Option;
-with UString;
 
+use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.ParseInfos;
+use ANTLR.Runtime.Vocabularies;
 
 package ANTLR.Runtime.Recognizer_Protocol is
 

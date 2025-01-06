@@ -1,8 +1,9 @@
 -- €
 
-with ANTLR.Runtime.ATN.PredictionContext;
+with ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContext;
 
 use ANTLR.Runtime.ATN.PredictionContext;
+use ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContext;
 
 package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
@@ -30,6 +31,8 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : ArrayPredictionContext) return Boolean;
 
    -- public convenience
    procedure Initialize (Self : in out ArrayPredictionContext; a : SingletonPredictionContext);
@@ -62,12 +65,9 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
    overriding
    -- public
-   function Description (This : …) return UString;
+   function Description (This : ArrayPredictionContext) return UString;
 
    --internal final
    procedure combineCommonParents (This : ArrayPredictionContext);
-
-   -- public
-   function "=" (Lhs, Rhs : ArrayPredictionContext) return Boolean;
 
 end ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;

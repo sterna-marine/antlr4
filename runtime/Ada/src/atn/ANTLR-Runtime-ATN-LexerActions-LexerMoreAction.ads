@@ -29,6 +29,12 @@ package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerMoreAction) return Boolean;
+   -- public
+   overriding
+   procedure hash (This : LexerMoreAction; hasher : in out Hasher);
+
    --
    -- Constructs the singleton instance of the lexer `more` command.
    --
@@ -64,17 +70,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
    procedure execute (This : LexerMoreAction; lexer : Lexer);
 
    -- public
-   overriding
-   procedure hash (This : LexerMoreAction; hasher : in out Hasher);
-
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerMoreAction (S : in out Sink'Class; X : LexerMoreAction);
    for LexerMoreAction'Put_Image use Put_Image_LexerMoreAction;
    function Description (This : LexerMoreAction) return UString
       is ("more");
-
-   -- public
-   function "=" (Lhs, Rhs : LexerMoreAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActions.LexerMoreActions;

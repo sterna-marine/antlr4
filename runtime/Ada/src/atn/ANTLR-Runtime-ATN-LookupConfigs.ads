@@ -19,12 +19,12 @@ package ANTLR.Runtime.ATN.LookupConfigs is
    type Class_Wide is access all Object'Class;
 
    -- public
-   procedure Initialize (Self : in out LookupATNConfig; old : ATNConfig);
+   function "=" (Lhs, Rhs : LookupATNConfig) return Boolean;
 
    -- public
    procedure hash (This : LookupATNConfig; hasher : in out Hasher);
 
    -- public
-   function "=" (Lhs, Rhs : LookupATNConfig) return Boolean;
+   procedure Initialize (Self : in out LookupATNConfig; old : ATNConfig);
 
 end ANTLR.Runtime.ATN.LookupConfigs;

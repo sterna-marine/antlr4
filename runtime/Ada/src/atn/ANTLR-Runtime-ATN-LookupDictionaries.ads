@@ -5,7 +5,7 @@ with ANTLR.Runtime.ATN.Configs;
 
 use ANTLR.Runtime.ATN.Configs;
 
-package ANTLR.Runtime.LookupDictionary is
+package ANTLR.Runtime.ATN.LookupDictionaries is
 
    -- public
    type LookupDictionaryType is (lookup, ordered);
@@ -14,7 +14,7 @@ package ANTLR.Runtime.LookupDictionary is
       ordered => 1);
 
    -- public struct
-   type LookupDictionary is record with private;
+   type LookupDictionary is private;
 
    -- public
    procedure Initialize (Self : in out LookupDictionary;
@@ -40,7 +40,7 @@ private
       -- private let
       Type_of_LookupDictionary : LookupDictionaryType;
       -- private
-      Cache := Hashed_ATNConfig.Map; -- [Int: ATNConfig](); --TOFIX
+      Cache : ATNConfig_Map; -- [Int: ATNConfig](); --TOFIX
    end record;
 
-end ANTLR.Runtime.LookupDictionary;
+end ANTLR.Runtime.ATN.LookupDictionaries;

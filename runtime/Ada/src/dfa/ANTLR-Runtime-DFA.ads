@@ -14,7 +14,7 @@ use ANTLR.Runtime.ATN.DecisionState;
 use ANTLR.Runtime.Misc;
 use ANTLR.Runtime.Misc.Utils;
 
-package ANTLR.Runtime.ATN.DFA is
+package ANTLR.Runtime.DFA is
 
    -- public
    type DFA is new Ada.Finalization.Controlled with
@@ -128,4 +128,4 @@ package ANTLR.Runtime.ATN.DFA is
    -- public
    function toLexerString (This : DFA) return UString;
 
-end ANTLR.Runtime.ATN.DFA;
+end ANTLR.Runtime.DFA;

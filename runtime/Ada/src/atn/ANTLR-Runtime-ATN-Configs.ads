@@ -1,14 +1,21 @@
 -- €
 
-with Ada.Finalization;
-with ANTLR.Runtime.ATN.States;
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Hashed_Sets;
-with AdaForge.MurMur3_Hash;
+with Ada.Finalization;
 with Ada.Strings.Unbounded;
+--TOFIX with AdaForge.MurMur3_Hash;
+with ANTLR.Runtime.ATN.PredictionContexts;
+with ANTLR.Runtime.ATN.SemanticContexts;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Recognizer_Protocol;
 
+use Ada;
+use ANTLR.Runtime.ATN.PredictionContexts;
+use ANTLR.Runtime.ATN.SemanticContexts;
 use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Recognizer_Protocol;
 
 package ANTLR.Runtime.ATN.Configs is
    --
@@ -27,7 +34,7 @@ package ANTLR.Runtime.ATN.Configs is
    -- existing _#reachesIntoOuterContext_ field.
 
    -- public
-   type ATNConfig is new Ada.Finalization.Controlled -- and Hashable
+   type ATNConfig is new Ada.Finalization.Controlled with -- and Hashable
    record
       -- public final let
       state : ATNState;
@@ -76,27 +83,40 @@ package ANTLR.Runtime.ATN.Configs is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   subtype hash_Type is Ada.Containers.Hash_Type; --TOFIX
-   function MurMur3_Hash (Key : Integer) return Hash_Type;
+   --
+   -- An ATN configuration is equal to another if both have
+   -- the same state, they predict the same alternative, and
+   -- syntactic/semantic contexts are the same.
+   --
+   -- public
+   function "=" (Lhs, Rhs : ATNConfig) return Boolean;
+
+   -- ------------- --
+   -- ATNConfig_Map --
+   -- ------------- --
+   function MurMur3_Hash (Key : Integer) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Integer) return Boolean
-      is MurMur3_Hash (Left) = MurMur3_Hash (Right); --TOFIX
-   function "=" (Left, Right : ATNConfig) return Boolean
-      is Left = Right; --TOFIX
-   package ATNConfig_Container is new Ada.Containers.Hashed_Maps (
-      Key_Type => Key_Type,
-      Element_Type =>
+      is (MurMur3_Hash (Left) = MurMur3_Hash (Right)); --TOFIX
+
+   package ATNConfig_Dictionary is new Ada.Containers.Hashed_Maps (
+      Key_Type => Integer,
+      Element_Type => ATNConfig,
       Hash => MurMur3_Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
-   subtype ATNConfig_Map is ATNConfig_Container.Map;
+   subtype ATNConfig_Map is ATNConfig_Dictionary.Map;
 
+   -- ----------------- --
+   -- Set_of_ATNConfigs --
+   -- ----------------- --
+   -- public
+   procedure hash (This : ATNConfig;
+                   The_hasher : in out Hasher);
    function Hash (Key : ATNConfig) return Ada.Container.Hash_Type;
    function Equivalent_Elements (Left, Right : ATNConfig) return Boolean
-      is Hash (Left) = Hash (Right); --TOFIX
-   function "=" (Left, Right : ATNConfig) return Boolean
-      is Left = Right; --TOFIX
+      is (Hash (Left) = Hash (Right)); --TOFIX
    package ATNConfig_Sets is new Ada.Containers.Hashed_Sets (
-      Element_Type => ATNConfig
+      Element_Type => ATNConfig,
       Hash => Hash,
       Equivalent_Elements => Equivalent_Elements,
       "=" => "=");
@@ -105,39 +125,39 @@ package ANTLR.Runtime.ATN.Configs is
 
    -- public
    procedure Initialize (Self : in out ATNConfig;
-                   state : ATNState;
-                   alt : Integer;
-                   context : Optional_PredictionContext;
-                   semanticContext : SemanticContext := SemanticContext.Empty.Instance);
+                        state : ATNState;
+                        alt : Integer;
+                        context : Optional_PredictionContext;
+                        semanticContext : SemanticContext := SemanticContext.Empty.Instance);
 
 -- public convenience
    procedure Initialize (Self : in out ATNConfig;
-                   c : ATNConfig;
-                   state : ATNState);
+                        c : ATNConfig;
+                        state : ATNState);
 
 -- public convenience
    procedure Initialize (Self : in out ATNConfig;
-                   c : ATNConfig;
-                   state : ATNState;
-                   semanticContext : SemanticContext);
+                        c : ATNConfig;
+                        state : ATNState;
+                        semanticContext : SemanticContext);
 
 -- public convenience
    procedure Initialize (Self : in out ATNConfig;
-                   c : ATNConfig;
-                   semanticContext : SemanticContext);
+                        c : ATNConfig;
+                        semanticContext : SemanticContext);
 
 -- public convenience
    procedure Initialize (Self : in out ATNConfig;
-                   c : ATNConfig;
-                   state : ATNState;
-                   context : Optional_PredictionContext);
+                        c : ATNConfig;
+                        state : ATNState;
+                        context : Optional_PredictionContext);
 
 -- public
    procedure Initialize (Self : in out ATNConfig;
-                   c : ATNConfig;
-                   state : ATNState;
-                   context : Optional_PredictionContext;
-                   semanticContext : SemanticContext);
+                        c : ATNConfig;
+                        state : ATNState;
+                        context : Optional_PredictionContext;
+                        semanticContext : SemanticContext);
 
     --
     -- This method gets the value of the _#reachesIntoOuterContext_ field
@@ -155,28 +175,23 @@ package ANTLR.Runtime.ATN.Configs is
    -- public final
    procedure setPrecedenceFilterSuppressed (This : in out ATNConfig; value : Boolean);
 
-   -- public
-   procedure hash (This : ATNConfig;
-                   The_hasher : in out Hasher);
-
 -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_ATNConfig (S : in out Sink'Class; X : ATNConfig);
    for ATNConfig'Put_Image use Put_Image_ATNConfig;
    function Description (This : ATNConfig) return UString
-      is toString (null, True);
+      is (toString ((Valid => False), True));
 
--- public
-   generic
-      T :
-   function toString (This : ATNConfig; recog : Recognizer<T>?; showAlt : Boolean) return UString;
-
-   --
-   -- An ATN configuration is equal to another if both have
-   -- the same state, they predict the same alternative, and
-   -- syntactic/semantic contexts are the same.
-   --
+   -- Optional_Recognizer_T --
    -- public
-   function "=" (Lhs, Rhs : ATNConfig) return Boolean;
+   generic
+      type T is private; --TOFIX
+      package Option_T is new Option (T);  --TOFIX
+   package Option_Recognizer is new Option (T);  --TOFIX
+   type Optional_Recognizer is Option_Recognizer_T.Optional;  --TOFIX
+
+   generic
+      type T is private; --TOFIX
+   function toString (This : ATNConfig; recog : Optional_Recognizer_T; showAlt : Boolean) return UString;
 
 end ANTLR.Runtime.ATN.Configs;

@@ -2,6 +2,7 @@
 
 with Ada.Finalization;
 with ANTLR.Runtime.ATN.ParseInfos;
+with ANTLR.Runtime.ATN.Simulators;
 with ANTLR.Runtime.Vocabularies;
 with ANTLR.Runtime.ATN;
 with ANTLR.Runtime.ATN.States;
@@ -9,14 +10,49 @@ with ANTLR.Runtime.Recognizer_Protocol;
 with UString;
 
 use ANTLR.Runtime.ATN.ParseInfos;
+use ANTLR.Runtime.ATN.Simulators;
 use ANTLR.Runtime.Vocabularies;
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Recognizer_Protocol;
 use UString;
 
---  generic
---     type ATNInterpreter is ATNSimulator'Class;
+-- open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
+
+-- `ATNSimulator` subclasses are:
+-- * `LexerATNSimulator`
+-- * `ParserATNSimulator`
+
+-- `Recognizer` subclasses are:
+-- * `Lexer: Recognizer<LexerATNSimulator>`
+-- * `Parser: Recognizer<ParserATNSimulator>`
+
+-- generic `Recognizer<T>` is used by:
+-- * in SemanticContext : 
+--`func syntaxError` in `ANTLRErrorListener`, `BaseErrorListener`, `ConsoleErrorListener`, `ProxyErrorListener`
+
+
+-- * `func toString` in  classes : `CommonToken`. RuleContext, ATNConfig, PredictionContext
+-- * `func toStrings` in  classes : PredictionContext
+
+-- generic `func eval<T>` / `evalPrecedence<T>` is used by
+-- * SemanticContext
+-- * PrecedencePredicate
+-- * Predicate
+-- * AND
+-- * OR
+
+-- generic func syntaxError<T>
+-- * VisitorTests
+
+
+   subtype ATNInterpreter is new ATNSimulator with null record;
+   type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
+      with Type_Invariant'Class => Recognizer'Class'Tag = ATNSimulator'Tag;
+
+   type ATNInterpreter is private
+
+generic
 package ANTLR.Runtime.Recognizers is
 
    --open
@@ -69,9 +105,6 @@ package ANTLR.Runtime.Recognizers is
 
    function Equivalent_Keys (Left, Right : UString) return Boolean
       is (Hash (Left) = Hash (Right)); --TOFIX
-
-   function "=" (Left, Right : Integer) return Boolean
-      is (Left = Right); --TOFIX
 
    package Rules_Dictionary is new Ada.Containers.Hashed_Maps (
       Key_Type => UString,

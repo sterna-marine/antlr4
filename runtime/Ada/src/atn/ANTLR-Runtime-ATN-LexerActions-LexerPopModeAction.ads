@@ -27,6 +27,12 @@ package ANTLR.Runtime.ATN.LexerActions.LexerPopModeActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerPopModeAction) return Boolean;
+   -- public
+   overriding
+   procedure hash (This : LexerPopModeAction; hasher : in out Hasher);
+
    --
    -- Constructs the singleton instance of the lexer `popMode` command.
    --
@@ -62,17 +68,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerPopModeActions is
    procedure execute (This : LexerPopModeAction; lexer : Lexer);
 
    -- public
-   overriding
-   procedure hash (This : LexerPopModeAction; hasher : in out Hasher);
-
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerPopModeAction (S : in out Sink'Class; X : LexerPopModeAction);
    for LexerPopModeAction'Put_Image use Put_Image_LexerPopModeAction;
    function Description (This : LexerPopModeAction) return UString
       is ("popMode");
    
-   -- public
-   function "=" (Lhs, Rhs : LexerPopModeAction) return Boolean;
-
 end ANTLR.Runtime.ATN.LexerActions.LexerPopModeActions;

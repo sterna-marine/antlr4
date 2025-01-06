@@ -22,9 +22,10 @@ package ANTLR.Runtime.Token_Protocol is
       ID    : Token_ID;
    end record;
 
+   function Equal (Left, Right : Token_ID) return Boolean;
+
    function Hash (Key : Token_String) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Token_String) return Boolean;
-   function Equal (Left, Right : Token_ID) return Boolean;
 
    package TokenID_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => Token_String,

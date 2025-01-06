@@ -171,7 +171,6 @@ package ANTLR.Runtime.ATN.States is
 
    function Hash (Element : ATNState) return Ada.Containers.Hash_Type;
    function Equivalent_Elements (Left, Right : ATNState) return Boolean;
-   function Equal (Left, Right : ATNState) return Boolean;
    -- public
    package Set_Container is new Ada.Containers.Hashed_Sets (
       Element_Type => ATNState,

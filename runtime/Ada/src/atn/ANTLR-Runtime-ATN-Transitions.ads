@@ -21,6 +21,8 @@ package ANTLR.Runtime.ATN.Transitions is
       target : ATNState;
    end record;
 
+   function Equal (Left, Right : ATNTransition) return Boolean;
+
    -- public
    type Transition is (
       INVALID,
@@ -51,7 +53,6 @@ package ANTLR.Runtime.ATN.Transitions is
       PRECEDENCE        => 10);
 
    subtype Container_Index is Natural;
-   function Equal (Left, Right : ATNTransition) return Boolean;
    package ATNTransition_Container is new Ada.Cantainers.Vectors (
       Index_Type => Container_Index,
       Element_Type => ATNTransition,

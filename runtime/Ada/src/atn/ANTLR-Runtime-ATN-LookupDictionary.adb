@@ -3,7 +3,7 @@
 with Ada.Containers.Vectors;
 with Murmur3;
 
-package body LookupDictionary is
+package body ANTLR.Runtime.ATN.LookupDictionaries is
 
    -- Hashed_Map
    subtype hash_Type is Ada.Containers.Hash_Type;
@@ -98,4 +98,4 @@ package body LookupDictionary is
       Hashed_ATNConfig.Clear (This.Cache); --  does not affect the capacity of Container
    end removeAll;
 
-end LookupDictionary;
+end ANTLR.Runtime.ATN.LookupDictionaries;

@@ -17,6 +17,12 @@ package ANTLR.Runtime.ATN.LexerActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerAction) return Boolean with No_Return;
+
+   -- public
+   procedure hash (This : LexerAction; hasher : in out Hasher) with No_Return;
+
    package LexerAction_Container is new Ada.Containers.Vectors (
       Index_Type : Natural;
       Element_Type : LexerAction;
@@ -58,11 +64,5 @@ package ANTLR.Runtime.ATN.LexerActions is
    --
    -- public
    procedure execute (This : LexerAction; lexer : Lexer) with No_Return;
-
-   -- public
-   procedure hash (This : LexerAction; hasher : in out Hasher) with No_Return;
-
-   -- public
-   function "=" (Lhs, Rhs : LexerAction) return Boolean with No_Return;
 
 end ANTLR.Runtime.ATN.LexerActions;

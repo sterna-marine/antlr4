@@ -4,6 +4,9 @@ use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.States.DecisionStates is
 
+   -- ------------- --
+   -- DecisionState --
+   -- ------------- --
    -- public
    type DecisionState is new ATNState with
    record
@@ -18,13 +21,21 @@ package ANTLR.Runtime.ATN.States.DecisionStates is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- ------------------ --
+   -- DecisionState_List --
+   -- ------------------ --
    function Equal (Left, Right : DecisionState) return Boolean
       is (Left.decision = Right.decision and Left.nonGreedy = Right.nonGreedy);
+
    package DecisionState is new Ada.Cantainer.Vectors (
          Index_Type => Natural,
          Element_Type => DecisionState,
          "=" => Equal);
+   subtype DecisionState_List is DecisionState.Vector;
 
+   -- ---------------------- --
+   -- Optional_DecisionState --
+   -- ---------------------- --
    package Option_DecisionState is new Option (DecisionState);
    subtype Optional_DecisionState is Option_DecisionState.Optional; -- renames
 

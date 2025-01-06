@@ -23,6 +23,12 @@ package ANTLR.Runtime.ATN.LexerActions.LexerModeActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerModeAction) return Boolean;
+   -- public
+   overriding
+   procedure hash (This : LexerModeAction; hasher : in out Hasher);
+
    --
    -- Constructs a new `mode` action with the specified mode value.
    -- * parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#mode_.
@@ -68,17 +74,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerModeActions is
    procedure execute (This : LexerModeAction; lexer : Lexer);
 
    -- public
-   overriding
-   procedure hash (This : LexerModeAction; hasher : in out Hasher);
-
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerModeAction (S : in out Sink'Class; X : LexerModeAction);
    for LexerModeAction'Put_Image use Put_Image_LexerModeAction;
    function Description (This : LexerModeAction) return UString
       is ("mode (" & This.mode'Image & ")");
-
-   -- public
-   function "=" (Lhs, Rhs : LexerModeAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActions.LexerModeActions;

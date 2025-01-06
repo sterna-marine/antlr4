@@ -1,16 +1,16 @@
 -- €
 
 with Ada.Containers;
-with ANTLR.Runtime.ATN.LookupDictionary;
+with ANTLR.Runtime.ATN.LookupDictionaries;
 with ANTLR.Runtime.ATN.Configs;
 with ANTLR.Runtime.Misc.DoubleKeyMap;
-with ANTLR.Runtime.Misc.BitSet;
+with ANTLR.Runtime.Misc.BitSets;
 
 use ANTLR.Runtime.ATN;
-use ANTLR.Runtime.ATN.LookupDictionary;
+use ANTLR.Runtime.ATN.LookupDictionaries;
 use ANTLR.Runtime.ATN.Configs;
 use ANTLR.Runtime.Misc.DoubleKeyMap;
-use ANTLR.Runtime.Misc.BitSet;
+use ANTLR.Runtime.Misc.BitSets;
 
 package ANTLR.Runtime.ATN.ConfigSets is
 
@@ -92,6 +92,9 @@ package ANTLR.Runtime.ATN.ConfigSets is
    subtype Object is ATNConfigSet;
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
+
+   -- public
+   function "=" (Lhs, Rhs : ATNConfigSet) return Boolean;
 
    -- public
    procedure Initialize (Self : in out ATNConfigSet;
@@ -241,10 +244,14 @@ package ANTLR.Runtime.ATN.ConfigSets is
                                                 return ATNConfigSet;
 
    -- public
-   function applyPrecedenceFilter (mergeCache : in out PredictionContext.Optional_DoubleKeyMap,parser : Parser;_outerContext : ParserRuleContext!) return ATNConfigSet;
+   function applyPrecedenceFilter (This : ATNConfigSet;
+                                   mergeCache : in out PredictionContext.Optional_DoubleKeyMap;
+                                   parser : Parser;
+                                   outerContext : ParserRuleContext)
+                                   return ATNConfigSet;
 
    -- internal
-   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_Container.Vector is -- ]?
+   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_Container.Vector; -- ]?
 
    -- public
    function getAltThatFinishedDecisionEntryRule (This : ATNConfigSet) return Integer;
@@ -264,10 +271,10 @@ package ANTLR.Runtime.ATN.ConfigSets is
    end record;
 
    -- public
-   procedure splitAccordingToSemanticValidity (This : ATNConfigSet;
-                                               outerContext : ParserRuleContext;
-                                               evalSemanticContext : evalSemanticContext_Access) --TOFIX
-                                               return Splitted_ConfigSets;
+   function splitAccordingToSemanticValidity (This : ATNConfigSet;
+                                              outerContext : ParserRuleContext;
+                                              evalSemanticContext : evalSemanticContext_Access) --TOFIX
+                                              return Splitted_ConfigSets;
 
    -- public
    function dupConfigsWithoutSemanticPredicates (This : ATNConfigSet) return ATNConfigSet;
@@ -277,8 +284,5 @@ package ANTLR.Runtime.ATN.ConfigSets is
 
    -- public
    function allConfigsInRuleStopStates return Boolean;
-
-   -- public
-   function "=" (Lhs, Rhs : ATNConfigSet) return Boolean;
 
 end ANTLR.Runtime.ATN.ConfigSets;

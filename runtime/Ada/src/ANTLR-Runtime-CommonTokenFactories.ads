@@ -1,11 +1,11 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.TokenFactory_Protocol,
-with ANTLR.Runtime.Token_Protocol,
+with ANTLR.Runtime.TokenFactory_Protocol;
+with ANTLR.Runtime.Token_Protocol;
 
 use ANTLR.Runtime.TokenFactory_Protocol;
-use ANTLR.Runtime.Token_Protocol,
+use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.CommonTokenFactories is
 

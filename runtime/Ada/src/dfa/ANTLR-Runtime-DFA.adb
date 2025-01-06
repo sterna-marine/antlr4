@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.ATN.DFA is
+package body ANTLR.Runtime.DFA is
 
    procedure Initialize (Self : in out DFA; atnStartState : DecisionState) is
    begin
@@ -117,4 +117,4 @@ package body ANTLR.Runtime.ATN.DFA is
       end if;
    end toLexerString;
 
-end ANTLR.Runtime.ATN.DFA;
+end ANTLR.Runtime.DFA;

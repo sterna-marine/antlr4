@@ -31,6 +31,15 @@ package ANTLR.Runtime.Vocabularies is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : Vocabulary) return Boolean
+      is (lhs.literalNames = rhs.literalNames
+      and  lhs.symbolicName = rhs.symbolicName
+      and  lhs.displayNames = rhs.displayNames);
+
+   -- public
+   procedure hash (This : Vocabulary; hasher : in out Hasher);
+
    --
    -- Gets an empty _org.antlr.v4.runtime.Vocabulary_ instance.
    --
@@ -107,15 +116,6 @@ package ANTLR.Runtime.Vocabularies is
 
    -- public
    function getDisplayName (This : Vocabulary; tokenType : Token_Kind) return UString;
-
-   -- public
-   procedure hash (This : Vocabulary; hasher : in out Hasher);
-
-   -- public
-   function "=" (Lhs, Rhs : Vocabulary) return Boolean
-      is (lhs.literalNames = rhs.literalNames
-      and  lhs.symbolicName = rhs.symbolicName
-      and  lhs.displayNames = rhs.displayNames);
 
 private
    type Vocabulary is new Ada.Finalization.Controlled with -- and Hashable

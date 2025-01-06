@@ -28,6 +28,13 @@ package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
+   -- public
+   function "=" (Lhs, Rhs : LexerSkipAction) return Boolean;
+
+   -- public
+   overriding
+   procedure hash (This : LexerSkipAction; hasher : in out Hasher);
+
    --
    -- Constructs the singleton instance of the lexer `skip` command.
    --
@@ -63,14 +70,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
    procedure execute (This : LexerSkipAction; lexer : Lexer);
 
    -- public
-   overriding
-   procedure hash (This : LexerSkipAction; hasher : in out Hasher);
-
-   -- public
    function Description (This : …) return UString
       is ("skip");
-
-   -- public
-   function "=" (Lhs, Rhs : LexerSkipAction) return Boolean;
 
 end ANTLR.Runtime.ATN.LexerActions.LexerSkipActions;
