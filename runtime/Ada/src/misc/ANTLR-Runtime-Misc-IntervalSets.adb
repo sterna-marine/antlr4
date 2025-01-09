@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
+
 package body ANTLR.Runtime.Misc.IntervalSets is
 
    function Equal (Left, Right : IntervalSet) return Boolean is
@@ -87,10 +91,10 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
                -- if we bump up against or overlap next, merge
                --
-               -- iter.remove ();   -- remove this one
-               -- iter.previous (); -- move backwards to what we just set
+               -- iter.remove;   -- remove this one
+               -- iter.previous; -- move backwards to what we just set
                -- iter.set (bigger.union (next)); -- set to 3 merged ones
-               -- iter.next (); -- first call to next after previous duplicates the resul
+               -- iter.next; -- first call to next after previous duplicates the resul
                --
                This.intervals.delete (Index => i);
                i := @ - 1;
@@ -146,7 +150,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
    function complement (This : in out IntervalSet; vocabulary : Optional_Integer_Set) return Optional_Integer_Set is
    begin
-      if not Is_Valid (vocabulary) or vocabulary.isnull () then
+      if not Is_Valid (vocabulary) or vocabulary.isnull then
          return (Valid => False);  -- nothing in common with null set
       end if;
       vocabularyIS : IntervalSet;
@@ -163,7 +167,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
    function subtract (This : in out IntervalSet; a : Optional_Integer_Set) return Integer_Set is
    begin
-      if not Is_Valid (a) or a.isnull () then
+      if not Is_Valid (a) or a.isnull then
          return IntervalSet (self);
       end if;
       a : constant Optional_IntervalSet := Maybe (a);
@@ -178,13 +182,13 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
    function subtract (This : in out IntervalSet; left, right : Optional_IntervalSet) return IntervalSet is
    begin
-      if not Is_Valid (left) or left.isnull () then
+      if not Is_Valid (left) or left.isnull then
          return This.IntervalSet;
       end if;
 
       result : constant := IntervalSet (left);
 
-      if not Is_Valid (right) or right.isnull () then
+      if not Is_Valid (right) or right.isnull then
          -- right set has no elements; just return the copy of the current set
          return result;
       end if;
@@ -245,8 +249,8 @@ package body ANTLR.Runtime.Misc.IntervalSets is
          end if;
          <<CONTINUE>>
       end loop;
-      -- If rightI reached right.intervals.size (), no more intervals to subtract from result.
-      -- If resultI reached result.intervals.size (), we would be subtracting from an empty set.
+      -- If rightI reached right.intervals.size, no more intervals to subtract from result.
+      -- If resultI reached result.intervals.size, we would be subtracting from an empty set.
       -- Either way, we are done.
       return result
    end subtract;

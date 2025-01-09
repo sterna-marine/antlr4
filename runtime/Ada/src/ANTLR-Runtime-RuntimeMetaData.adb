@@ -12,7 +12,7 @@ use Ada;
 --
 --
 -- The runtime version information is provided by _#VERSION_ and
--- _#getRuntimeVersion ()_. Detailed information about these values is
+-- _#getRuntimeVersion_. Detailed information about these values is
 -- provided in the documentation for each member.
 --
 --
@@ -27,7 +27,7 @@ use Ada;
 -- are the same in each.
 --
 --
--- To trap any error messages issued by this code, use System.setErr ();
+-- To trap any error messages issued by this code, use System.setErr;
 -- in your This.main startup code.
 --
 --

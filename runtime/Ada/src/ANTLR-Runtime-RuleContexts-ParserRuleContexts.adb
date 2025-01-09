@@ -66,7 +66,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
 
    procedure removeLastChild (This : ParserRuleContext) is
    begin
-      set (This.children).removeLast ();
+      set (This.children).removeLast;
    end removeLastChild;
 
    overriding
@@ -116,8 +116,8 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       for o of children loop
             tnode : constant Optional_TerminalNode := Maybe (o);
             if Is_Valid (tnode) then
-               symbol : constant := tnode.getSymbol ()!;
-               if symbol.getType () = ttype then
+               symbol : constant := tnode.getSymbol!;
+               if symbol.getType = ttype then
                   j := @ + 1;
                   if j = i then
                         return tnode;
@@ -133,11 +133,11 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
 
       procedure CompactMap (At_Cursor : TerminalNode.Container.Cursor) is
          tnode : constant TerminalNode := TerminalNode (At_Cursor);
-         symbol : constant := tnode.getSymbol ();
+         symbol : constant := tnode.getSymbol;
       begin
             if Is_Valid (tnode)
                and then Is_Valid (symbol)
-               and then symbol.getType () = ttype then
+               and then symbol.getType = ttype then
                return tnode; --TOFIX
             else
                return (Valid => False); --TOFIX
@@ -187,11 +187,11 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
          or else not Is_Valid (This.stop) then
             return Interval.INVALID;
       end if;
-      return Interval.of (This.start.getTokenIndex (), This.stop.getTokenIndex ());
+      return Interval.of (This.start.getTokenIndex, This.stop.getTokenIndex);
    end getSourceInterval;
 
    function toInfoString (This : ParserRuleContext; recognizer : Parser) return UString is
-      rules : constant := Array (recognizer.getRuleInvocationStack (This).reversed ());
+      rules : constant := Array (recognizer.getRuleInvocationStack (This).reversed);
       startStr : constant := Value (This.start.Image, "<unknown>");
       stopStr : constant := Value (This.stop.Image, "<unknown>");
    begin

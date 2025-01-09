@@ -20,7 +20,7 @@ package body ANTLR.Runtime.ATN.LookupDictionaries is
          -- call the AND empty constructor
          -- NOT call AND.hash (into);
          -- Could it be a Swift compiler bug ?
-         -- All tests pass when using Hasher.combine ();
+         -- All tests pass when using Hasher.combine;
          -- Keeping the old code for reference:
 
          hashCode := 31 * hashCode + Key.state.stateNumber;

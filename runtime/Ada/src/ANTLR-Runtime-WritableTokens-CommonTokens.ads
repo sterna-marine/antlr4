@@ -58,7 +58,7 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
       -- This is the backing field for _#getText_ when the token text is
       -- explicitly set in the constructor or via _#setText_.
       --
-      -- * seealso: #getText ();
+      -- * seealso: #getText;
       --
       -- internal
       text : Optional_UString;

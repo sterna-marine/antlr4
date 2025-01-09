@@ -106,7 +106,7 @@ private
       --
       -- Each subrule/rule is a decision point and we must track them so we
       -- can go back later and build DFA predictors for them.  This includes
-      -- all the rules, subrules, optional blocks, ()+, ()* etc ..
+      -- all the rules, subrules, optional blocks,+,* etc ..
       --
       -- public private (set) final
       decisionToState : DecisionState_List; -- := DecisionState.Container.Empty_Vector;

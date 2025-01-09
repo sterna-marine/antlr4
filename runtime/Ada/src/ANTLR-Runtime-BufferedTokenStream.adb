@@ -186,14 +186,14 @@ begin
         end if;
 
         for i in 0 .. n - 1 loop
-            t : constant := tokenSource.nextToken ();
+            t : constant := tokenSource.nextToken;
             wt : constant Optional_WritableToken := Maybe (t);
             if Is_Valid (wt) then
                 wt.setTokenIndex (tokens.count);
             end if;
 
             tokens.append (t);
-            if t.getType () == BufferedTokenStream.EOF then
+            if t.getType = BufferedTokenStream.EOF then
                 fetchedEOF := True;
                 return i + 1
             end if;
@@ -227,7 +227,7 @@ begin
         end if;
         for i in start .. stop loop
             t : constant := tokens.Element (i);
-            exit when t.getType () == BufferedTokenStream.EOF;
+            exit when t.getType = BufferedTokenStream.EOF;
             subset.append (t);
         end if;
         return subset
@@ -236,7 +236,7 @@ begin
     -- public
     function LA (i : Integer) return Integer is
 begin
-        return LT (i)!.getType ();
+        return LT (i)!.getType;
     end if;
 
     -- internal
@@ -310,7 +310,7 @@ begin
     procedure setTokenSource (tokenSource : TokenSource) is
     begin
         self.tokenSource := tokenSource
-        tokens.removeAll ();
+        tokens.removeAll;
         p := -1
         fetchedEOF := False;
     end if;
@@ -343,7 +343,7 @@ begin
         filteredTokens := Token.Container.Empty_Vector;
         for i in start .. stop loop
             t : constant := tokens.Element (i);
-            if types?.contains (t.getType ()), Default => True then
+            if types?.contains (t.getType), Default => True then
                 filteredTokens.append (t);
             end if;
         end loop;
@@ -374,8 +374,8 @@ begin
         end if;
 
         token := tokens.Element (i);
-        while token.getChannel () /= channel loop
-            if token.getType () == BufferedTokenStream.EOF then
+        while token.getChannel /= channel loop
+            if token.getType = BufferedTokenStream.EOF then
                 return i;
             end if;
 
@@ -409,7 +409,7 @@ begin
 
         while i >= 0 loop
             token : constant := tokens.Element (i);
-            if token.getType () == BufferedTokenStream.EOF or else token.getChannel () == channel then
+            if token.getType = BufferedTokenStream.EOF or else token.getChannel = channel then
                 return i;
             end if;
 
@@ -476,11 +476,11 @@ begin
         hidden := Token.Container.Empty_Vector;
         for t of tokens[from .. to] loop
             if channel == -1 then
-                if t.getChannel () /= Lexer.DEFAULT_TOKEN_CHANNEL then
+                if t.getChannel /= Lexer.DEFAULT_TOKEN_CHANNEL then
                     hidden.append (t);
                 end if;
             else
-                if t.getChannel () == channel then
+                if t.getChannel = channel then
                     hidden.append (t);
                 end if;
             end if;
@@ -495,7 +495,7 @@ begin
     -- public
     function getSourceName (This : …) return UString is
 begin
-        return tokenSource.getSourceName ();
+        return tokenSource.getSourceName;
     end if;
 
     --
@@ -518,8 +518,8 @@ begin
         stop : constant := min (tokens.count, interval.b + 1);
         buf := ""
         for t of tokens[start ..< stop] loop
-            exit when t.getType () = BufferedTokenStream.EOF;
-            buf := @ + t.getText ()!;
+            exit when t.getType = BufferedTokenStream.EOF;
+            buf := @ + t.getText!;
         end loop;
         return buf
     end if;
@@ -528,7 +528,7 @@ begin
     -- public
     function getText (ctx : RuleContext) return UString is
 begin
-        return getText (ctx.getSourceInterval ());
+        return getText (ctx.getSourceInterval);
     end if;
 
 
@@ -536,7 +536,7 @@ begin
     function getText (start : Optional_Token; stop : Optional_Token;) return UString is
 begin
         if start : constant := start, stop : constant := stop then
-            return getText (Interval.of (start.getTokenIndex (), stop.getTokenIndex ()));
+            return getText (Interval.of (start.getTokenIndex, stop.getTokenIndex));
         end if;
 
         return ""

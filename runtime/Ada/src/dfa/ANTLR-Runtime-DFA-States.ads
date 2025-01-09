@@ -154,7 +154,7 @@ package ANTLR.Runtime.DFA.States is
    --
    -- public
    function getAltSet (This : DFAState) return Set_of_Optional_Integers?
-      is (This.configs.getAltSet ());
+      is (This.configs.getAltSet);
 
    -- public
    procedure Hash (This : DFAState; hasher : in out Hasher);

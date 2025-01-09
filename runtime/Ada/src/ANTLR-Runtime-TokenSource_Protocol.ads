@@ -11,7 +11,7 @@ use ANTLR.Runtime.TokenFactories;
 package ANTLR.Runtime.TokenSource_Protocol is
 
    --
-   -- A source of tokens must provide a sequence of tokens via _#nextToken ()_
+   -- A source of tokens must provide a sequence of tokens via _#nextToken_
    -- and also must reveal it's source of characters; _org.antlr.v4.runtime.CommonToken_'s text is
    -- computed from a _org.antlr.v4.runtime.CharStream_; it only store indices into the char
    -- stream.

@@ -3,11 +3,14 @@
 with Ada.Containers.Vectors;
 with ANTLR.Runtime.ATN.ParseInfos;
 with ANTLR.Runtime.ATN.PredictionModes;
+with ANTLR.Runtime.ATN.Simulators.ParserSimulators;
 with ANTLR.Runtime.Misc.Utils.Mutex;
+-- with ANTLR.Runtime.Recognizers;
 with ANTLR.Runtime.Tree.ParseTreeListener;
 
 use ANTLR.Runtime.ATN.ParseInfos;
 use ANTLR.Runtime.ATN.PredictionModes;
+use ANTLR.Runtime.ATN.Simulators.LexerSimulators;
 use ANTLR.Runtime.Misc.Utils.Mutex;
 use ANTLR.Runtime.Tree.ParseTreeListener;
 
@@ -72,9 +75,10 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -------------------
    --     Parser    --
    -------------------
-   package This_Parser is new Recognizer (ParserATNSimulator);
+   package Parser_Recognizers is new ANTLR.Runtime.Recognizers.Recognizer (ParserATNSimulator);
+   
    -- open
-   type Parser is new This_Parser.Recognizer with record
+   type Parser is new Parser_Recognizers.Recognizer with record
 
       TraceListener : TraceListener;
 
@@ -148,7 +152,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    end record;
 
    subtype Object is Parser;
-   subtype Super is This_Parser.Recognizer;
+   subtype Super is Parser_Recognizers.Recognizer;
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
@@ -353,7 +357,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -- sample use:
    --
    --
-   -- ParseTree t := parser.expr ();
+   -- ParseTree t := parser.expr;
    -- ParseTreePattern p := parser.compileParseTreePattern ("<ID>+0", MyParser.RULE_expr);
    -- ParseTreeMatch m := p.match (t);
    -- UString id := m.get ("ID");
@@ -564,7 +568,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
    -- * Parameter originalParser: The parser used to create ambiguityInfo; it
    -- is not modified by this routine and can be either
    -- a generated or interpreted parser. It's token
-   -- stream *is* reset/seek ()'d.
+   -- stream *is* reset/seek'd.
    -- * Parameter ambiguityInfo:  The information about an ambiguous decision event
    -- for which you want ambiguous parse trees.
    -- * Parameter startRuleIndex: The start rule for the entire grammar, not
@@ -586,8 +590,8 @@ package ANTLR.Runtime.Recognizers.Parsers is
 --                                                 _ ambiguityInfo : AmbiguityInfo;
 --                                                 _ startRuleIndex : Integer) return Array<ParserRuleContext>  --; RecognitionException
 --   {
---      trees : array (<>) of ParserRuleContext := Array<ParserRuleContext> ();
---      saveTokenInputPosition : Integer := originalParser.getTokenStream ().index ();
+--      trees : array (<>) of ParserRuleContext := Array<ParserRuleContext>;
+--      saveTokenInputPosition : Integer := originalParser.getTokenStream.index;
 --      --{;
 --         -- Create a new parser interpreter to parse the ambiguous subphrase
 --         parser : ParserInterpreter;
@@ -595,28 +599,28 @@ package ANTLR.Runtime.Recognizers.Parsers is
 --            parser := ParserInterpreter ( ParserInterpreter (originalParser));
 --         }
 --         else {
---            serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN ());
+--            serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN);
 --            deserialized : ATN := This.ATNDeserializer.deserialize (serializedAtn);
---            parser := ParserInterpreter (originalParser.getGrammarFileName (),
---                                    originalParser.getVocabulary (),
---                                     originalParser.getRuleNames () ,
+--            parser := ParserInterpreter (originalParser.getGrammarFileName,
+--                                    originalParser.getVocabulary,
+--                                     originalParser.getRuleNames ,
 --                                    deserialized,
---                                    originalParser.getTokenStream ());
+--                                    originalParser.getTokenStream);
 --         }
 --
 --         -- Make sure that we don't get any error messages from using this temporary parser
---         parser.removeErrorListeners ();
---         parser.removeParseListeners ();
---         parser.getInterpreter ()!.setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
+--         parser.removeErrorListeners;
+--         parser.removeParseListeners;
+--         parser.getInterpreter!.setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
 --
 --         -- get ambig trees
---         alt : Integer := ambiguityInfo.ambigAlts.firstSetBit ();
+--         alt : Integer := ambiguityInfo.ambigAlts.firstSetBit;
 --         while  alt>=0  loop
 --            -- re-parse entire input for all ambiguous alternatives
 --            -- (don't have to do first as it's been parsed, but do again for simplicity
 --            --  using this temp parser.);
---            parser.reset ();
---            parser.getTokenStream ().seek (0); -- rewind the input all the way for re-parsing
+--            parser.reset;
+--            parser.getTokenStream.seek (0); -- rewind the input all the way for re-parsing
 --            parser.overrideDecision := ambiguityInfo.decision;
 --            parser.overrideDecisionInputIndex := ambiguityInfo.startIndex;
 --            parser.overrideDecisionAlt := alt;
@@ -628,7 +632,7 @@ package ANTLR.Runtime.Recognizers.Parsers is
 --         end loop;
 --      --}
 --      defer {
---         originalParser.getTokenStream ().seek (saveTokenInputPosition);
+--         originalParser.getTokenStream.seek (saveTokenInputPosition);
 --      }
 --
 --      return trees;

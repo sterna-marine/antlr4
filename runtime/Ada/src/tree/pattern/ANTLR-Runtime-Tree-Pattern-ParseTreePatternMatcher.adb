@@ -2,9 +2,11 @@
 
 with Ada.Finalization;
 with Ada.Wide_Wide_Text_IO;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 with Aspect;
 
 use Ada;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
 
@@ -70,12 +72,12 @@ use Aspect;
 type ParseTreePatternMatcher is new Ada.Finalization.Controlled record
 
     --
-    -- This is the backing field for _#getLexer ()_.
+    -- This is the backing field for _#getLexer_.
     --
     private final let lexer: Lexer
 
     --
-    -- This is the backing field for _#getParser ()_.
+    -- This is the backing field for _#getParser_.
     --
     private final let parser: Parser
 
@@ -141,8 +143,8 @@ begin
     -- public
     function matches (tree : ParseTree; pattern : ParseTreePattern) return Boolean is
 begin
-        labels : constant MultiMap<UString, ParseTree> := MultiMap<UString, ParseTree> ();
-        mismatchedNode : constant Optional_ParseTree; := matchImpl (tree, pattern.getPatternTree (), labels);
+        labels : constant MultiMap<UString, ParseTree> := MultiMap<UString, ParseTree>;
+        mismatchedNode : constant Optional_ParseTree; := matchImpl (tree, pattern.getPatternTree, labels);
         return not Is_Valid (mismatchedNode);
     end if;
 
@@ -167,8 +169,8 @@ begin
     -- public
     function match (tree : ParseTree; pattern : ParseTreePattern) return ParseTreeMatch is
 begin
-        labels : constant MultiMap<UString, ParseTree> := MultiMap<UString, ParseTree> ();
-        mismatchedNode : constant Optional_ParseTree; := matchImpl (tree, pattern.getPatternTree (), labels);
+        labels : constant MultiMap<UString, ParseTree> := MultiMap<UString, ParseTree>;
+        mismatchedNode : constant Optional_ParseTree; := matchImpl (tree, pattern.getPatternTree, labels);
         return ParseTreeMatch (tree, pattern, labels, mismatchedNode);
     end if;
 
@@ -183,13 +185,13 @@ begin
         tokenSrc : constant Token := ListTokenSource (tokenList);
         tokens : constant Token := CommonTokenStream (tokenSrc);
 
-        parserInterp : constant := ParserInterpreter (parser.getGrammarFileName (),;
-                parser.getVocabulary (),
-                parser.getRuleNames (),
-                parser.getATNWithBypassAlts (),
+        parserInterp : constant := ParserInterpreter (parser.getGrammarFileName,;
+                parser.getVocabulary,
+                parser.getRuleNames,
+                parser.getATNWithBypassAlts,
                 tokens);
 
-        parserInterp.setErrorHandler (BailErrorStrategy ());
+        parserInterp.setErrorHandler (BailErrorStrategy);
         tree : constant := parserInterp.parse (patternRuleIndex);
 
         -- Make sure tree pattern compilation checks for a complete parse
@@ -243,18 +245,18 @@ begin
             t2 : constant TerminalNode := TerminalNode (patternTree);
             mismatchedNode : Optional_ParseTree; := (Valid => False);
             -- both are tokens and they have same type
-            if t1.getSymbol ()!.getType () == t2.getSymbol ()!.getType () then
-                if t2.getSymbol () is TokenTagToken then
+            if t1.getSymbol!.getType = t2.getSymbol!.getType then
+                if t2.getSymbol is TokenTagToken then
                     -- x and <ID>
-                    tokenTagToken : constant TokenTagToken := TokenTagToken (t2.getSymbol ());
+                    tokenTagToken : constant TokenTagToken := TokenTagToken (t2.getSymbol);
                     -- track label->list-of-nodes for both token name and label (if any);
-                    labels.map (tokenTagToken.getTokenName (), tree);
-                    label : constant Optional_Token := Maybe (tokenTagToken.getLabel ());
+                    labels.map (tokenTagToken.getTokenName, tree);
+                    label : constant Optional_Token := Maybe (tokenTagToken.getLabel);
                      if Is_Valid (label) then
                         labels.map (label, tree);
                     end if;
                 else
-                    if t1.getText () == t2.getText () then
+                    if t1.getText = t2.getText then
                         -- x and x
                     else
                         -- x and y
@@ -279,10 +281,10 @@ begin
             -- (expr  .. ) and <expr>
             ruleTagToken : constant Optional_Token := Maybe (getRuleTagToken (r2));
              if Is_Valid (ruleTagToken) then
-                if r1.getRuleContext ().getRuleIndex () == r2.getRuleContext ().getRuleIndex () then
+                if r1.getRuleContext.getRuleIndex = r2.getRuleContext.getRuleIndex then
                     -- track label->list-of-nodes for both rule name and label (if any);
-                    labels.map (ruleTagToken.getRuleName (), tree);
-                    label : constant Optional_Token := Maybe (ruleTagToken.getLabel ());
+                    labels.map (ruleTagToken.getRuleName, tree);
+                    label : constant Optional_Token := Maybe (ruleTagToken.getLabel);
                      if Is_Valid (label) then
                         labels.map (label, tree);
                     end if;
@@ -296,7 +298,7 @@ begin
             end if;
 
             -- (expr  .. ) and (expr  .. );
-            if r1.getChildCount () /= r2.getChildCount () then
+            if r1.getChildCount /= r2.getChildCount then
                 if not Is_Valid (mismatchedNode) then
                     mismatchedNode := r1;
                 end if;
@@ -304,7 +306,7 @@ begin
                 return mismatchedNode
             end if;
 
-            for i in 0 ..< r1.getChildCount () loop
+            for i in 0 ..< r1.getChildCount loop
                 if childMatch : constant := matchImpl (r1.Element (i), patternTree.Element (i), labels) then
                     return childMatch;
                 end if;
@@ -348,34 +350,34 @@ begin
             tagChunk : constant Optional_TagChunk := Maybe (chunk);
             if Is_Valid (tagChunk) then
                 -- add special rule token or conjure up new token from name
-                firstStr : constant UString := To_String (tagChunk.getTag ().first!);
-                if firstStr.lowercased () /= firstStr then
-                    ttype : constant := parser.getTokenType (tagChunk.getTag ());
+                firstStr : constant UString := To_String (tagChunk.getTag.first!);
+                if firstStr.lowercased /= firstStr then
+                    ttype : constant := parser.getTokenType (tagChunk.getTag);
                     if ttype = CommonToken.INVALID_TYPE then
-                        raise ANTLRError.illegalArgument with "Unknown token " & tagChunk.getTag () & " in pattern: " & pattern;
+                        raise ANTLRError.illegalArgument with "Unknown token " & tagChunk.getTag & " in pattern: " & pattern;
                     end if;
-                    t : constant Token := TokenTagToken (tagChunk.getTag (), ttype, tagChunk.getLabel ());
+                    t : constant Token := TokenTagToken (tagChunk.getTag, ttype, tagChunk.getLabel);
                     tokens.append (t);
                 else
-                    if firstStr.uppercased () /= firstStr then
-                        ruleIndex : constant Integer := parser.getRuleIndex (tagChunk.getTag ());
+                    if firstStr.uppercased /= firstStr then
+                        ruleIndex : constant Integer := parser.getRuleIndex (tagChunk.getTag);
                         if ruleIndex == -1 then
-                            raise ANTLRError.illegalArgument with "Unknown rule " & tagChunk.getTag () & " in pattern: " & pattern;
+                            raise ANTLRError.illegalArgument with "Unknown rule " & tagChunk.getTag & " in pattern: " & pattern;
                         end if;
-                        ruleImaginaryTokenType : constant Integer := parser.getATNWithBypassAlts ().ruleToTokenType.Element (ruleIndex);
-                        tokens.append (RuleTagToken (tagChunk.getTag (), ruleImaginaryTokenType, tagChunk.getLabel ()));
+                        ruleImaginaryTokenType : constant Integer := parser.getATNWithBypassAlts.ruleToTokenType.Element (ruleIndex);
+                        tokens.append (RuleTagToken (tagChunk.getTag, ruleImaginaryTokenType, tagChunk.getLabel));
                     else
-                        raise ANTLRError.illegalArgument with "invalid tag: " & tagChunk.getTag () & " in pattern: " & pattern;
+                        raise ANTLRError.illegalArgument with "invalid tag: " & tagChunk.getTag & " in pattern: " & pattern;
                     end if;
                 end if;
             else
                 textChunk : constant TextChunk := TextChunk (chunk);
-                inputStream : constant := ANTLRInputStream (textChunk.getText ());
+                inputStream : constant := ANTLRInputStream (textChunk.getText);
                 lexer.setInputStream (inputStream);
-                t := lexer.nextToken ();
-                while t.getType () /= CommonToken.EOF loop
+                t := lexer.nextToken;
+                while t.getType /= CommonToken.EOF loop
                     tokens.append (t);
-                    t := lexer.nextToken ();
+                    t := lexer.nextToken;
                 end loop;
             end if;
         end loop;
@@ -479,8 +481,8 @@ begin
             c : constant := chunks.Element (i);
             tc : constant Optional_TextChunk := Maybe (c);
             if Is_Valid (tc) then
-                unescaped : constant := tc.getText ().replacingOccurrences (of => escape, with: "");
-                if unescaped.count < tc.getText ().count then
+                unescaped : constant := tc.getText.replacingOccurrences (of => escape, with: "");
+                if unescaped.count < tc.getText.count then
                     chunks.Insert (Key => i, New_Item => TextChunk (unescaped));
                 end if;
             end if;

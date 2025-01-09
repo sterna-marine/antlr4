@@ -82,11 +82,11 @@ package body ANTLR.Runtime.ATN.Configs.LexerConfigs is
          return False;
       end if;
 
-      if lhs.isPrecedenceFilterSuppressed () /= rhs.isPrecedenceFilterSuppressed () then
+      if lhs.isPrecedenceFilterSuppressed /= rhs.isPrecedenceFilterSuppressed then
          return False;
       end if;
 
-      if lhs.getLexerActionExecutor () /= rhs.getLexerActionExecutor () then
+      if lhs.getLexerActionExecutor /= rhs.getLexerActionExecutor then
          return False;
       end if;
 

@@ -14,13 +14,13 @@ package body ANTLR.Runtime.DFA.Serializer is
          return "";
       else
          buf := "";
-         states : constant := This.dfa.getStates ();
+         states : constant := This.dfa.getStates;
          for s of states loop
                edges : constant := s.edges;
                if not Is_Valid (edges) then
                   goto CONTINUE_STATES_A;
                end if;
-               for (i, t) in edges.enumerated () loop
+               for (i, t) in edges.enumerated loop
                   t : constant ATNStates.State := t
                   if not Is_Valid (t) or not t.stateNumber /= ATNStates.INVALID_STATE_NUMBER then
                      goto CONTINUE_STATES_B;

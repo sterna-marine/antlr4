@@ -17,7 +17,7 @@ use ANTLR.Runtime.Misc.IntervalSets;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Token_Protocol;
 
-package ANTLR.Runtime.DefaultErrorStrategy is
+package ANTLR.Runtime.DefaultErrorStrategies is
 
    --
    -- This is the default implementation of _org.antlr.v4.runtime.ANTLRErrorStrategy_ used for
@@ -76,10 +76,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- ensure that the handler is not in error recovery mode.
    --
    -- open
-   procedure reset (This : ANTLRErrorStrategy; recognizer : Parser) is
-   begin
-      This.endErrorCondition (recognizer);
-   end reset;
+   procedure reset (This : ANTLRErrorStrategy; recognizer : Parser);
 
    --
    -- This method is called to enter error recovery mode when a recognition
@@ -88,10 +85,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter recognizer: the parser instance
    --
    -- open
-   procedure beginErrorCondition (This : ANTLRErrorStrategy; recognizer : Parser) is
-   begin
-      This.errorRecoveryMode := True;
-   end beginErrorCondition;
+   procedure beginErrorCondition (This : ANTLRErrorStrategy; recognizer : Parser);
 
    -- open
    function inErrorRecoveryMode (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean
@@ -104,21 +98,13 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter recognizer:
    --
    -- open
-   procedure endErrorCondition (This : ANTLRErrorStrategy; recognizer : Parser) is
-   begin
-      This.errorRecoveryMode := False;
-      This.lastErrorStates := (Valid => False);
-      This.lastErrorIndex := -1
-   end endErrorCondition;
+   procedure endErrorCondition (This : ANTLRErrorStrategy; recognizer : Parser);
 
    --
    -- The default implementation simply calls _#endErrorCondition_.
    --
    -- open
-   procedure reportMatch (This : ANTLRErrorStrategy; recognizer : Parser) is
-   begin
-      This.endErrorCondition (recognizer);
-   end reportMatch;
+   procedure reportMatch (This : ANTLRErrorStrategy; recognizer : Parser);
 
    --
    --
@@ -137,32 +123,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- the exception
    --
    -- open
-   procedure reportError (This : ANTLRErrorStrategy; recognizer : Parser; e : RecognitionException) is
-   begin
-      -- if we've already reported an error and have not matched a token
-      -- yet successfully, don't report any errors.
-      if This.inErrorRecoveryMode (recognizer) then
-         return; -- don't report spurious errors
-      else Report :
-         declare 
-            nvae : constant Optional_NoViableAltException := Maybe (e);
-            ime : constant InputMismatchException := InputMismatchException (e);
-            fpe : constant FailedPredicateException := FailedPredicateException (e);
-         begin
-            beginErrorCondition (recognizer);
-            if Is_Valid (nvae) then
-               This.reportNoViableAlternative (recognizer, nvae);
-            elsif Is_Valid (ime) then
-               reportInputMismatch (recognizer, ime);
-            elsif Is_Valid (fpe) then
-               reportFailedPredicate (recognizer, fpe);
-            else
-               Wide_Wide_Text_IO.Put_Line (Standard_Error, "unknown recognition error type: " & e'External_Tag); -- UString (describing => type (of => e));
-               recognizer.notifyErrorListeners (e.getOffendingToken, e.message, Default => "", e);
-            end if;
-         end Report;
-      end if;
-   end reportError;
+   procedure reportError (This : ANTLRErrorStrategy; recognizer : Parser; e : RecognitionException);
 
    --
    -- The default implementation resynchronizes the parser by consuming tokens
@@ -170,34 +131,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- that can follow the current rule.
    --
    -- open
-   procedure recover (This : ANTLRErrorStrategy; recognizer : Parser; e : RecognitionException) is
-   begin
-      Wide_Wide_Text_IO.Put_Line ("recover in " & recognizer.getRuleInvocationStack
-                                 & " index=" & getTokenStream (recognizer).index
-                                 & ", lastErrorIndex=" & lastErrorIndex
-                                 & ", states=" & lastErrorStates);
-      if lastErrorStates : constant := lastErrorStates ,
-         lastErrorIndex = getTokenStream (recognizer).index () and
-         lastErrorStates.contains (recognizer.getState ()) {
-         -- uh oh, another error at same token index and previously-visited
-         -- state in ATN; must be a case where LT (1) is in the recovery
-         -- token set so nothing got consumed. Consume a single token
-         -- at least to prevent an infinite loop; this is a failsafe.
-         if Is_Active (Aspect.DEBUG) then
-            Wide_Wide_Text_IO.Put_Line (Standard_Error, "seen error condition before index=" & lastErrorIndex
-                                       & ", states=" & lastErrorStates);
-            Wide_Wide_Text_IO.Put_Line (Standard_Error, "FAILSAFE consumes " & recognizer.getTokenNames.Element (getTokenStream (recognizer).LA (1)));
-         end if;
-         recognizer.consume ();
-      end if;
-      lastErrorIndex := getTokenStream (recognizer).index ();
-      if lastErrorStates = (Valid => False) then
-         lastErrorStates := This.IntervalSet;
-      end if;
-      lastErrorStates!.add (recognizer.getState ());
-      followSet : constant := getErrorRecoverySet (recognizer);
-      consumeUntil (recognizer, followSet);
-   end if;
+   procedure recover (This : ANTLRErrorStrategy; recognizer : Parser; e : RecognitionException);
 
    --
    -- The default implementation of _org.antlr.v4.runtime.ANTLRErrorStrategy#sync_ makes sure
@@ -247,65 +181,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    --
 
    -- open
-   procedure sync (This : ANTLRErrorStrategy; recognizer : Parser) is
-      s : constant := recognizer.getInterpreter ().atn.states[recognizer.getState ()]!;
-   begin
-      if Is_Active (Aspect.DEBUG) then
-        Wide_Wide_Text_IO.Put_Line (Standard_Error, "sync @ " & s.stateNumber & '=' & s.getClass.getSimpleName);
-      end if;
-      -- If already recovering, don't to sync;
-      if inErrorRecoveryMode (recognizer) then
-         return;
-      end if;
-
-      tokens : constant Token := getTokenStream (recognizer);
-      la : constant := tokens.LA (1);
-
-      -- cheaper subset first; might get lucky. seems to shave a wee bit off;
-      nextToks : constant := recognizer.getATN ().nextTokens (s);
-      if nextToks.contains (la) then
-         -- We are sure the token matches
-         nextTokensContext := (Valid => False);
-         nextTokensState : ATStates.State := ATNState.INVALID_STATE_NUMBER
-         return
-      end if;
-
-      if nextToks.contains (CommonToken.EPSILON) then
-         if nextTokensContext = (Valid => False) then
-                  -- It's possible the next token won't match; information tracked
-                  -- by sync is restricted for performance.
-                  nextTokensContext := recognizer.getContext ();
-                  nextTokensState : ATStates.State := recognizer.getState ();
-         end if;
-         return
-      end if;
-
-      case s.getStateType () is
-         when ATNState.BLOCK_START => fallthrough;
-         when ATNState.STAR_BLOCK_START => fallthrough;
-         when ATNState.PLUS_BLOCK_START => fallthrough;
-         when ATNState.STAR_LOOP_EN =>;
-            -- report error and recover if possible
-            if singleTokenDeletion (recognizer) /= (Valid => False) then
-               return;
-            end if;
-            raise ANTLRException.recognition with InputMismatchException (recognizer);
-
-         when ATNState.PLUS_LOOP_BACK => fallthrough;
-         when ATNState.STAR_LOOP_BACK =>
-               if Is_Active (Aspect.DEBUG) then
-                  Wide_Wide_Text_IO.Put_Line (Standard_Error, "at loop back: " & s.getClass ().getSimpleName ());
-               end if;
-            reportUnwantedToken (recognizer);
-            expecting : constant := recognizer.getExpectedTokens ();
-            whatFollowsLoopIterationOrRule : constant IntervalSet := IntervalSet (expecting.or (getErrorRecoverySet (recognizer)));
-            consumeUntil (recognizer, whatFollowsLoopIterationOrRule);
-
-         when others =>
-               -- do nothing if we can't identify the exact kind of ATN state
-               null;
-      end case;
-   end if;
+   procedure sync (This : ANTLRErrorStrategy; recognizer : Parser);
 
    --
    -- This is called by _#reportError_ when the exception is a
@@ -317,25 +193,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter e: the recognition exception
    --
    -- open
-   procedure reportNoViableAlternative (This : ANTLRErrorStrategy; recognizer : Parser; e : NoViableAltException) is
-   begin
-      tokens : constant Token := getTokenStream (recognizer);
-      input : UString;
-      if e.getStartToken ().getType () == EOF then
-         input := "<EOF>"
-      else
-         declare
-         begin
-               input := tokens.getText (e.getStartToken (), e.getOffendingToken ());
-         end if;
-         exception
-            when others =>
-               input := "<unknown>"
-         end if;
-      end if;
-      msg : constant := "no viable alternative at input " & escapeWSAndQuote (input);
-      recognizer.notifyErrorListeners (e.getOffendingToken (), msg, e);
-   end if;
+   procedure reportNoViableAlternative (This : ANTLRErrorStrategy; recognizer : Parser; e : NoViableAltException);
 
    --
    -- This is called by _#reportError_ when the exception is an
@@ -347,13 +205,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter e: the recognition exception
    --
    -- open
-   procedure reportInputMismatch (This : ANTLRErrorStrategy; recognizer : Parser; e : InputMismatchException) is
-   begin
-      tok : constant UString := getTokenErrorDisplay (e.getOffendingToken ());
-      expected : constant := e.getExpectedTokens ()?.toString (recognizer.getVocabulary ()), Default => "<missing>"
-      msg : constant := "mismatched input " & tok'Image & " expecting " & expected'Image & ""
-      recognizer.notifyErrorListeners (e.getOffendingToken (), msg, e);
-   end if;
+   procedure reportInputMismatch (This : ANTLRErrorStrategy; recognizer : Parser; e : InputMismatchException);
 
    --
    -- This is called by _#reportError_ when the exception is a
@@ -365,12 +217,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter e: the recognition exception
    --
    -- open
-   procedure reportFailedPredicate (This : ANTLRErrorStrategy; recognizer : Parser; e : FailedPredicateException) is
-   begin
-      ruleName : constant := recognizer.getRuleNames ()[recognizer._ctx!.getRuleIndex ()]
-      msg : constant := "rule " & ruleName'Image & ' ' & e.message!)"
-      recognizer.notifyErrorListeners (e.getOffendingToken (), msg, e);
-   end if;
+   procedure reportFailedPredicate (This : ANTLRErrorStrategy; recognizer : Parser; e : FailedPredicateException);
 
    --
    -- This method is called to report a syntax error which requires the removal
@@ -391,20 +238,8 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter recognizer: the parser instance
    --
    -- open
-   procedure reportUnwantedToken (This : ANTLRErrorStrategy; recognizer : Parser) is
-   begin
-      if inErrorRecoveryMode (recognizer) then
-         return;
-      end if;
 
-      beginErrorCondition (recognizer);
-
-      t : constant := recognizer.getCurrentToken (); -- try?
-      tokenName : constant UString := getTokenErrorDisplay (t);
-      expecting : constant := (try? getExpectedTokens (recognizer)), Default => IntervalSet.EMPTY_SET
-      msg : constant := "extraneous input " & tokenName'Image & " expecting " & expecting.toString (recognizer.getVocabulary ()))"
-      recognizer.notifyErrorListeners (t, msg, null);
-   end if;
+   procedure reportUnwantedToken (This : ANTLRErrorStrategy; recognizer : Parser);
 
    --
    -- This method is called to report a syntax error which requires the
@@ -424,20 +259,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    -- * parameter recognizer: the parser instance
    --
    -- open
-   procedure reportMissingToken (This : ANTLRErrorStrategy; recognizer : Parser) is
-   begin
-      if inErrorRecoveryMode (recognizer) then
-         return;
-      end if;
-
-      beginErrorCondition (recognizer);
-
-      t : constant := recognizer.getCurrentToken (); -- try?
-      expecting : constant := (try? getExpectedTokens (recognizer)), Default => IntervalSet.EMPTY_SET
-      msg : constant := "missing " & expecting.toString (recognizer.getVocabulary ())) at " & getTokenErrorDisplay (t))"
-
-      recognizer.notifyErrorListeners (t, msg, null);
-   end if;
+   procedure reportMissingToken (This : ANTLRErrorStrategy; recognizer : Parser);
 
    --
    --
@@ -491,25 +313,7 @@ package ANTLR.Runtime.DefaultErrorStrategy is
    --
 
    -- open
-   function recoverInline (This : ANTLRErrorStrategy; recognizer : Parser) return Token is
-begin
-      -- SINGLE TOKEN DELETION
-      matchedSymbol : constant Token := singleTokenDeletion (recognizer);
-      if matchedSymbol : constant := matchedSymbol then
-         -- we have deleted the extra token.
-         -- now, move past ttype token as if all were ok
-         recognizer.consume ();
-         return matchedSymbol
-      end if;
-
-      -- SINGLE TOKEN INSERTION
-      if singleTokenInsertion (recognizer) then
-         return getMissingSymbol (recognizer);
-      end if;
-      -- even that didn't work; must raise the exception
-      exn : constant := InputMismatchException (recognizer, state => nextTokensState, ctx => nextTokensContext);
-      raise ANTLRException.recognition with exn;
-   end if;
+   function recoverInline (This : ANTLRErrorStrategy; recognizer : Parser) return Token;
 
    --
    -- This method implements the single-token insertion inline error recovery
@@ -529,25 +333,7 @@ begin
    -- strategy for the current mismatched input, otherwise `False`
    --
    -- open
-   function singleTokenInsertion (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean is
-begin
-      currentSymbolType : constant Token := getTokenStream (recognizer).LA (1);
-      -- if current token is consistent with what could come after current
-      -- ATN state, then we know we're missing a token; error recovery
-      -- is free to conjure up and insert the missing token
-      currentState : constant := recognizer.getInterpreter ().atn.states[recognizer.getState ()]!
-      next : constant := currentState.transition (0).target
-      atn : constant := recognizer.getInterpreter ().atn
-      expectingAtLL2 : constant := atn.nextTokens (next, recognizer._ctx);
-      if Is_Active (Aspect.DEBUG) then
-         Wide_Wide_Text_IO.Put_Line ("LT (2) set=" & expectingAtLL2.toString (recognizer.getTokenNames));
-      end if;
-      if expectingAtLL2.contains (currentSymbolType) then
-         reportMissingToken (recognizer);
-         return True;
-      end if;
-      return False;
-   end if;
+   function singleTokenInsertion (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean;
 
    --
    -- This method implements the single-token deletion inline error recovery
@@ -569,26 +355,7 @@ begin
    -- `null`
    --
    -- open
-   function singleTokenDeletion (This : ANTLRErrorStrategy; recognizer : Parser) return Optional_Token is
-begin
-      nextTokenType : constant Token := getTokenStream (recognizer).LA (2);
-      expecting : constant Token := getExpectedTokens (recognizer);
-      if expecting.contains (nextTokenType) then
-         reportUnwantedToken (recognizer);
-         if Is_Active (Aspect.DEBUG) then
-            Wide_Wide_Text_IO.Put_Line (Standard_Error, "recoverFromMismatchedToken deleting "
-            & ((TokenStream)getTokenStream (recognizer)).LT (1)
-            & " since " & ((TokenStream)getTokenStream (recognizer)).LT (2)
-            & " is what we want");
-         end if;
-         recognizer.consume; -- simply delete extra token
-         -- we want to return the token we're actually matching
-         matchedSymbol : constant := recognizer.getCurrentToken ();
-         reportMatch (recognizer)  -- we know current token is correct
-         return matchedSymbol
-      end if;
-      return (Valid => False);
-   end if;
+   function singleTokenDeletion (This : ANTLRErrorStrategy; recognizer : Parser) return Optional_Token;
 
    --
    -- Conjure up a missing token during error recovery.
@@ -611,101 +378,44 @@ begin
    -- override this method to create the appropriate tokens.
    --
    -- open
-   function getTokenStream (This : ANTLRErrorStrategy; recognizer : Parser) return TokenStream is
-begin
-      return recognizer.getInputStream () as! TokenStream
-   end if;
+   function getTokenStream (This : ANTLRErrorStrategy; recognizer : Parser) return TokenStream;
 
    -- open
-   function getMissingSymbol (This : ANTLRErrorStrategy; recognizer : Parser) return Token is
-begin
-      currentSymbol : constant := recognizer.getCurrentToken ();
-      expecting : constant Token := getExpectedTokens (recognizer);
-      expectedTokenType : constant := expecting.getMinElement () -- get any element
-      tokenText : UString;
-      if expectedTokenType = CommonToken.EOF then
-         tokenText := "<missing EOF>"
-      else
-         tokenText := "<missing " & recognizer.getVocabulary ().getDisplayName (expectedTokenType) & '>';
-      end if;
-      current := currentSymbol
-      lookback : constant Token := getTokenStream (recognizer).LT (-1);
-      if current.getType () == CommonToken.EOF and then lookback /= (Valid => False) then
-         current := lookback!;
-      end if;
-
-      token : constant := recognizer.getTokenFactory ().create (
-         current.getTokenSourceAndStream (),
-         expectedTokenType, tokenText,
-         CommonToken.DEFAULT_CHANNEL,
-         -1, -1,
-         current.getLine (), current.getCharPositionInLine ());
-
-      return token
-   end if;
-
+   function getMissingSymbol (This : ANTLRErrorStrategy; recognizer : Parser) return Token;
 
    -- open
-   function getExpectedTokens (This : ANTLRErrorStrategy; recognizer : Parser) return IntervalSet is
-begin
-      return recognizer.getExpectedTokens ();
-   end if;
+   function getExpectedTokens (This : ANTLRErrorStrategy; recognizer : Parser) return IntervalSet
+      is (recognizer.getExpectedTokensUnbufferedTokenStream);
 
    --
    -- How should a token be displayed in an error message? The default
    -- is to display just the text, but during development you might
    -- want to have a lot of information spit out.  Override in that case
-   -- to use t.toString () (which, for CommonToken, dumps everything about
+   -- to use t.toStringUnbufferedTokenStream (which, for CommonToken, dumps everything about
    -- the token). This is better than forcing you to override a method in
    -- your token objects because you don't have to go modify your lexer
    -- so that it creates a new Java type.
    --
    -- open
-   function getTokenErrorDisplay (t : Optional_Token;) return UString is
-begin
-      if not Is_Valid (t) then
-         return "<no token>"
-      end if;
-      s := getSymbolText (t);
-      if s = (Valid => False) then
-         if getSymbolType (t) == CommonToken.EOF then
-               s := "<EOF>"
-         else
-               s := '<' & getSymbolType (t) & '>';
-         end if;
-      end if;
-      return escapeWSAndQuote (s!);
-   end if;
+   function getTokenErrorDisplay (This : ANTLRErrorStrategy; t : Optional_Token) return UString;
 
    -- open
-   function getSymbolText (symbol : Token) return Optional_String is
-begin
-      return symbol.getText ();
-   end if;
+   function getSymbolText (symbol : Token) return Optional_String
+      is (symbol.getTextUnbufferedTokenStream);
 
    -- open
-   function getSymbolType (symbol : Token) return Integer is
-begin
-      return symbol.getType ();
-   end if;
-
+   function getSymbolType (symbol : Token) return Integer
+      is (symbol.getType);
 
    -- open
-   function escapeWSAndQuote (s : UString) return UString is
-begin
-      s := s
-      s := s.replacingOccurrences (of: "\n", with: "\\n");
-      s := s.replacingOccurrences (of: "\r", with: "\\r");
-      s := s.replacingOccurrences (of: "\t", with: "\\t");
-      return ''' + s & '''
-   end if;
+   function escapeWSAndQuote (s : UString) return UString;
 
    --
    -- Compute the error recovery set for the current rule.  During
    -- rule invocation, the parser pushes the set of tokens that can
    -- follow that rule reference on the stack; this amounts to
    -- computing FIRST of what follows the rule reference in the
-   -- enclosing rule. See LinearApproximator.FIRST ().
+   -- enclosing rule. See LinearApproximator.FIRSTUnbufferedTokenStream.
    -- This local follow set only includes tokens
    -- from within the rule; i.e., the FIRST computation done by
    -- ANTLR stops at the end of a rule.
@@ -738,7 +448,7 @@ begin
    -- FOLLOW (b2_in_a) := FIRST (')') := ')'
    -- FOLLOW (c_in_b) := FIRST ('^') := '^'
    --
-   -- Upon erroneous input "[]", the call chain is
+   -- Upon erroneous input "[]", the call chain;
    --
    -- a -> b -> c
    --
@@ -794,42 +504,12 @@ begin
    -- at run-time upon error to avoid overhead during parsing.
    --
    -- open
-   function getErrorRecoverySet (This : ANTLRErrorStrategy; recognizer : Parser) return IntervalSet is
-begin
-      atn : constant := recognizer.getInterpreter ().atn
-      ctx : Optional_RuleContext; := recognizer._ctx;
-      recoverSet : constant := This.IntervalSet;
-      while ctxWrap : constant := ctx, ctxWrap.invokingState >= 0 loop
-         -- compute what follows who invoked us
-         invokingState : constant := atn.states.Element (ctxWrap.invokingState)!
-         rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
-         follow : constant := atn.nextTokens (rt.followState);
-         recoverSet.addAll (follow); -- try!
-         ctx := ctxWrap.parent
-      end loop;
-      recoverSet.remove (CommonToken.EPSILON); -- try!
-      if Is_Active (Aspect.DEBUG) then
-         Wide_Wide_Text_IO.Put_Line ("recover set " & recoverSet.toString (recognizer.getTokenNames));
-      end if;
-      return recoverSet
-   end if;
+   function getErrorRecoverySet (This : ANTLRErrorStrategy; recognizer : Parser) return IntervalSet;
 
    --
    -- Consume tokens until one matches the given token set.
    --
    -- open
-   procedure consumeUntil (This : ANTLRErrorStrategy; recognizer : Parser; set : IntervalSet) is
-   begin
-      if Is_Active (Aspect.DEBUG) then
-         Wide_Wide_Text_IO.Put_Line (Standard_Error, "consumeUntil (" & set.toString (recognizer.getTokenNames ()) & ')');
-      end if;
-      ttype := getTokenStream (recognizer).LA (1);
-      while ttype /= CommonToken.EOF and then not set.contains (ttype) loop
-         if Is_Active (Aspect.DEBUG) then
-            Wide_Wide_Text_IO.Put_Line ("consume during recover LA (1)=" & This.getTokenNames.Element (input.LA (1)));
-         end if;
-         recognizer.consume ();
-         ttype := getTokenStream (recognizer).LA (1);
-      end loop;
-   end if;
-end ANTLR.Runtime.DefaultErrorStrategy;
+   procedure consumeUntil (This : ANTLRErrorStrategy; recognizer : Parser; set : IntervalSet);
+
+end ANTLR.Runtime.DefaultErrorStrategies;

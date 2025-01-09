@@ -14,10 +14,10 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
          procedure Map (At_Cursor : parent.Cursor) is
          begin
             XX := PredictionContext.calculateHashCode (Element (At_Cursor), returnState);
-            YY.Append ( Value (XX, Default => PredictionContext.calculateEmptyHashCode ()));
+            YY.Append ( Value (XX, Default => PredictionContext.calculateEmptyHashCode));
          end Map;
       begin
-         -- super.Initialize (Self, parent.map { PredictionContext.calculateHashCode ($0, returnState) }, Default => PredictionContext.calculateEmptyHashCode ());
+         -- super.Initialize (Self, parent.map { PredictionContext.calculateHashCode ($0, returnState) }, Default => PredictionContext.calculateEmptyHashCode);
          parent.Iterate (Map'Access);
          PredictionContext.init (parent); -- Super
       end;

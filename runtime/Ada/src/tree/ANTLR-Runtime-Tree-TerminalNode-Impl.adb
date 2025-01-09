@@ -50,7 +50,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    function getSourceInterval (This : TerminalNodeImpl) return Interval is
    begin
       --if   not Is_Valid (symbol)   { return Interval.INVALID; }
-      tokenIndex : constant Integer := symbol.getTokenIndex ();
+      tokenIndex : constant Integer := symbol.getTokenIndex;
       return Interval (tokenIndex, tokenIndex);
    end getSourceInterval;
 
@@ -67,7 +67,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
 
    -- public
    function getText (This : TerminalNodeImpl) return UString
-   is (symbol.getText ())!;
+   is (symbol.getText)!;
 
    -- public
    function toStringTree (This : TerminalNodeImpl; parser : Parser) return UString
@@ -81,10 +81,10 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    begin
       --TODO: not Is_Valid (symbol)?
       --if    not Is_Valid (symbol)   {return "<null>"; }
-      if symbol.getType () == CommonToken.EOF then
+      if symbol.getType = CommonToken.EOF then
          return "<EOF>";
       else
-         return symbol.getText ()!;
+         return symbol.getText!;
       end if;
    end Description;
 

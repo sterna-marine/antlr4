@@ -23,7 +23,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- _#LA LA (k)_. This method has the same pre- and post-conditions as
    -- _org.antlr.v4.runtime.IntStream#LA_. In addition, when the preconditions of this method
    -- are met, the return value is non-null and the value of
-   -- `LT (k).getType ()==LA (k)`.
+   -- `LT (k).getType==LA (k)`.
    --
    -- * SeeAlso: org.antlr.v4.runtime.IntStream#LA
    --
@@ -38,9 +38,9 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- unspecified for the current state and given `index`, then the
    -- behavior of this method is also unspecified.
    --
-   -- The symbol referred to by `index` differs from `seek ()` only
+   -- The symbol referred to by `index` differs from `seek` only
    -- in the case of filtering streams where `index` lies before the end
-   -- of the stream. Unlike `seek ()`, this method does not adjust
+   -- of the stream. Unlike `seek`, this method does not adjust
    -- `index` to point to a non-ignored symbol.
    --
    -- * Throws: ANTLRError.illegalArgumentif {code index} is less than 0
@@ -65,7 +65,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- TokenStream stream :=  .. ;
    -- UString text := "";
    -- for (int i := interval.a; i <= interval.b; i++) loop
-   -- text := @ + stream.get (i).getText ();
+   -- text := @ + stream.get (i).getText;
    -- end loop;
    --
    --
@@ -85,7 +85,7 @@ package ANTLR.Runtime.TokenStream_Protocol is
    --
    --
    -- TokenStream stream :=  .. ;
-   -- UString text := stream.getText (new Interval (0, stream.size ()));
+   -- UString text := stream.getText (new Interval (0, stream.size));
    --
    --
    -- * Returns: The text of all tokens in the stream.
@@ -98,12 +98,12 @@ package ANTLR.Runtime.TokenStream_Protocol is
    -- exceptions from the call to _#getText (org.antlr.v4.runtime.misc.Interval)_, but may be
    -- optimized by the specific implementation.
    --
-   -- If `ctx.getSourceInterval ()` does not return a valid interval of
+   -- If `ctx.getSourceInterval` does not return a valid interval of
    -- tokens provided by this stream, the behavior is unspecified.
    --
    --
    -- TokenStream stream :=  .. ;
-   -- UString text := stream.getText (ctx.getSourceInterval ());
+   -- UString text := stream.getText (ctx.getSourceInterval);
    --
    --
    -- * Parameter ctx: The context providing the source interval of tokens to get
@@ -128,8 +128,8 @@ package ANTLR.Runtime.TokenStream_Protocol is
    --
    -- TokenStream stream :=  .. ;
    -- UString text := "";
-   -- for (int i := start.getTokenIndex (); i <= stop.getTokenIndex (); i++) loop
-   -- text := @ + stream.get (i).getText ();
+   -- for (int i := start.getTokenIndex; i <= stop.getTokenIndex; i++) loop
+   -- text := @ + stream.get (i).getText;
    -- end loop;
    --
    --

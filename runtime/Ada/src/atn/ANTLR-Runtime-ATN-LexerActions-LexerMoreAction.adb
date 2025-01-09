@@ -5,7 +5,7 @@ package body ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
    overriding
    procedure execute (This : LexerMoreAction; lexer : Lexer) is
    begin
-      This.lexer.more ();
+      This.lexer.more;
    end execute;
 
    overriding

@@ -28,7 +28,7 @@ package ANTLR.Runtime.ATN.Transitions.EpsilonTransitions is
    -- * returns: the rule index of a precedence rule for which this transition is
    -- returning from, where the precedence value is 0; otherwise, -1.
    --
-   -- * seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed ();
+   -- * seealso: org.antlr.v4.runtime.atn.ATNConfig#isPrecedenceFilterSuppressed;
    -- * seealso: org.antlr.v4.runtime.atn.ParserATNSimulator#applyPrecedenceFilter (org.antlr.v4.runtime.atn.ATNConfigSet);
    --
 

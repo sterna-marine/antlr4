@@ -20,7 +20,7 @@ package ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions is
       startIndex : Integer; -- constant
 
       --
-      -- Which configurations did we at input.index () that couldn't match input.LA (1)?;
+      -- Which configurations did we at input.index that couldn't match input.LA (1)?;
       --
       -- private
       deadEndConfigs : ATNConfigSet; -- constant

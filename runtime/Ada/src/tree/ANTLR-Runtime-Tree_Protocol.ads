@@ -1,5 +1,7 @@
 -- €
 
+with Ada.Containers.Vectors;
+
 package ANTLR.Runtime.Tree_Protocol is
 
    -- The basic notion of a tree has a parent, a payload, and a list of children.
@@ -12,10 +14,18 @@ package ANTLR.Runtime.Tree_Protocol is
    package Option_Tree is new Option (Tree);
    subtype Optional_Tree is Option_Tree.Optional;
 
+   function "=" (Left, Right : Tree) return Boolean;
+
+   package Tree_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type  => Tree,
+      "=" => "=");
+   subtype Tree_List is Tree_Container.Vector;
+
    -- The parent of this node. If the return value is null, then this
    -- node is the root of the tree.
    --
-   function getParent (This :Tree) return Optional_Tree;
+   function getParent (This :Tree) return Optional_Tree is abstract;
 
    --
    -- This method returns whatever object represents the data at this note. For
@@ -24,19 +34,19 @@ package ANTLR.Runtime.Tree_Protocol is
    -- invocation. For abstract syntax trees (ASTs), this is a _org.antlr.v4.runtime.Token_
    -- object.
    --
-   function getPayload (This :Tree) return AnyObject;
+   function getPayload (This :Tree) return AnyObject is abstract;
 
    -- If there are children, get the `i`th value indexed from 0.
-   function getChild (This :Tree; i : Integer) return Optional_Tree
+   function getChild (This :Tree; i : Integer) return Optional_Tree is abstract;
 
    -- How many children are there? If there is none, then this
    -- node represents a leaf node.
    --
-   function getChildCount (This :Tree) return Natural;
+   function getChildCount (This :Tree) return Natural is abstract;
 
    -- Print out a whole tree, not just a node, in LISP format
    -- `(root child1 .. childN)`. Print just a node if this is a leaf.
    --
-   function toStringTree (This :Tree) return UString;
+   function toStringTree (This :Tree) return UString is abstract;
 
 end ANTLR.Runtime.Tree_Protocol;

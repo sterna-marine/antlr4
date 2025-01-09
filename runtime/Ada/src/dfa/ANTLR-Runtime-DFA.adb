@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
+
 package body ANTLR.Runtime.DFA is
 
    procedure Initialize (Self : in out DFA; atnStartState : DecisionState) is

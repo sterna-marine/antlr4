@@ -19,7 +19,7 @@ package body ANTLR.Runtime.Recognizers.Lexers.Interpreters.LexerInterpreters is
       self.vocabulary := vocabulary;
       self._decisionToDFA := DFA.Container.Empty_Vector;
 
-      for i in 0 ..< atn.getNumberOfDecisions () loop
+      for i in 0 ..< atn.getNumberOfDecisions loop
          _decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
       end loop;
 

@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
+
 package body ANTLR.Runtime.ATN.ConfigSets is
 
    procedure Initialize (Self : in out ATNConfigSet;
@@ -9,7 +13,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       if isOrdered then
          Self.configLookup :=  LookupDictionary.Init (Type_of_LookupDictionary => LookupDictionaryType.ordered);
       else
-         Self.configLookup :=  LookupDictionary.Init ();
+         Self.configLookup :=  LookupDictionary.Init;
       end if;
       self.fullCtx := fullCtx;
    end Initialize;
@@ -34,7 +38,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       if config.semanticContext /= This.SemanticContext.Empty.Instance then
             This.hasSemanticContext := True;
       end if;
-      if config.getOuterContextDepth () > 0 then
+      if config.getOuterContextDepth > 0 then
             This.dipsIntoOuterContext := True;
       end if;
 
@@ -61,7 +65,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
             max (existing.reachesIntoOuterContext, config.reachesIntoOuterContext);
 
       -- make sure to preserve the precedence filter suppression during the merge
-      if config.isPrecedenceFilterSuppressed () then
+      if config.isPrecedenceFilterSuppressed then
             existing.setPrecedenceFilterSuppressed (True);
       end if;
 
@@ -121,7 +125,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
    procedure hash (This : ATNConfigSet; hasher : in out Hasher) is
    begin
-      if This.isReadonly () then
+      if This.isReadonly then
          if This.cachedHashCode = -1 then
                This.cachedHashCode := configsHashValue;
          end if;
@@ -292,7 +296,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
                goto CONTINUE_CONFIGS;
             end if;
 
-            if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions () then
+            if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions then
                nextTokens : constant := atn.nextTokens (config.state);
                if nextTokens.contains (CommonToken.EPSILON) then
                   endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
@@ -340,7 +344,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
                goto CONTINUE;
          end if;
 
-         if not config.isPrecedenceFilterSuppressed () then
+         if not config.isPrecedenceFilterSuppressed then
                --
                -- In the future, this elimination step could be updated to also
                -- filter the prediction context for alternatives predicting alt>1
@@ -382,7 +386,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
       --      -- Optimize away p or p and p and p TODO: This.optimize was a no-op
       --      for i in 0 .. altToPred.length - 1 loop
-      --         altToPred.Insert (Key => i, New_Item => altToPred.Element (i).optimize ());
+      --         altToPred.Insert (Key => i, New_Item => altToPred.Element (i).optimize);
       --       i := @ + 1;
       --      end loop;
 
@@ -396,15 +400,15 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       alts : constant IntervalSet := This.IntervalSet;
    begin
       for config of This.configs loop
-         if config.getOuterContextDepth () > 0
-         or else (config.state is RuleStopState and config.context!.hasEmptyPath ()) then
+         if config.getOuterContextDepth > 0
+         or else (config.state is RuleStopState and config.context!.hasEmptyPath) then
             alts.add (config.alt); -- try!
          end if;
       end loop;
-      if alts.size () = 0 then
+      if alts.size = 0 then
          return ATN.INVALID_ALT_NUMBER;
       end if;
-      return alts.getMinElement ();
+      return alts.getMinElement;
    end getAltThatFinishedDecisionEntryRule;
 
    function evalSemanticContext (P1 : SemanticContext;

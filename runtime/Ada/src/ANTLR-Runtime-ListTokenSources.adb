@@ -32,9 +32,9 @@ package body ANTLR.Runtime.ListTokenSources is
                   return tokenText.distance (from => lastNewLine, to => tokenText.endIndex) - 1;
                end if;
          end if;
-         return (lastToken.getCharPositionInLine () +
-                  lastToken.getStopIndex () -
-                  lastToken.getStartIndex () + 1);
+         return (lastToken.getCharPositionInLine +
+                  lastToken.getStopIndex -
+                  lastToken.getStartIndex + 1);
       else
          -- only reach this if tokens is empty, meaning EOF occurs at the first
          -- position in the input

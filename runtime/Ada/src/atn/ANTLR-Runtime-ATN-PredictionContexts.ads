@@ -47,15 +47,15 @@ package ANTLR.Runtime.ATN.PredictionContexts is
       -- private Hash_Code This.referenceHashCode {
       -- Hash_Code hash := _org.antlr.v4.runtime.misc.MurmurHash#initialize MurmurHash.initialize_ (_#INITIAL_HASH_);
       --
-      -- for (int i := 0; i < _#size ()_; i++) loop
+      -- for (int i := 0; i < _#size_; i++) loop
       -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_ (hash, _#getParent getParent_ (i));
       -- }
       --
-      -- for (int i := 0; i < _#size ()_; i++) loop
+      -- for (int i := 0; i < _#size_; i++) loop
       -- hash := _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_ (hash, _#getReturnState getReturnState_ (i));
       -- }
       --
-      -- hash := _org.antlr.v4.runtime.misc.MurmurHash#finish MurmurHash.finish_ (hash, 2 * _#size ()_);
+      -- hash := _org.antlr.v4.runtime.misc.MurmurHash#finish MurmurHash.finish_ (hash, 2 * _#size_);
       -- return hash;
       -- }
       --
@@ -173,7 +173,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
 
    -- public
    function Description (This : …) return UString
-      is (describing: PredictionContext.self) + "@" + UString (Unmanaged.passUnretained (self).toOpaque ().hashValue);
+      is (describing: PredictionContext.self) + "@" + UString (Unmanaged.passUnretained (self).toOpaque.hashValue);
 
    function Equal (Left, Right : PredictionContext) return Boolean;
 

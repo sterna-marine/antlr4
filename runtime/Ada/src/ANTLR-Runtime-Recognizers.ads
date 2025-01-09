@@ -46,15 +46,16 @@ use UString;
 -- * VisitorTests
 
 
-   subtype ATNInterpreter is new ATNSimulator with null record;
-   type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
-      with Type_Invariant'Class => Recognizer'Class'Tag = ATNSimulator'Tag;
+   --  type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
+   --     with Type_Invariant'Class => Recognizer'Class'Tag = ATNSimulator'Tag;
 
-   type ATNInterpreter is private
+   --  type ATNInterpreter is private
 
 generic
+   type ATNSimulator is private;
 package ANTLR.Runtime.Recognizers is
 
+   subtype ATNInterpreter is new ATNSimulator with null record;
    --open
    type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
    record

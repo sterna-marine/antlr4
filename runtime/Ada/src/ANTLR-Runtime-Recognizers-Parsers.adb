@@ -2,11 +2,13 @@
 
 with Ada.Wide_Wide_Text_IO;
 with ANTLR.Runtime.ATN.ParseInfos;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 with ANTLR.Runtime.Simulators.Parsers.Profilings;
 with Aspect;
 
 use Ada;
 use ANTLR.Runtime.ATN.ParseInfos;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 use ANTLR.Runtime.Simulators.Parsers.Profilings;
 use Aspect;
 
@@ -22,15 +24,15 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    end Initialize;
 
    procedure enterEveryRule (This : TraceListener; ctx : ParserRuleContext) is
-      ruleName : constant := host.getRuleNames ()[ctx.getRuleIndex ()];
-      lt1 : constant := host.input.LT (1)!.getText ()!;
+      ruleName : constant := host.getRuleNames[ctx.getRuleIndex];
+      lt1 : constant := host.input.LT (1)!.getText!;
    begin
       Wide_Wide_Text_IO.Put_Line ("enter   " & ruleName'Image & ", LT (1)=" & lt1'Image);
    end enterEveryRule;
 
    procedure visitTerminal (This : TraceListener; node : TerminalNode) is
    begin
-      Wide_Wide_Text_IO.Put_Line ("consume " & UString (describing => node.getSymbol ()) & " rule " & host.getRuleNames ()[host.ctx!.getRuleIndex ()]);
+      Wide_Wide_Text_IO.Put_Line ("consume " & UString (describing => node.getSymbol) & " rule " & host.getRuleNames[host.ctx!.getRuleIndex]);
    end visitTerminal;
 
    procedure visitErrorNode (This : TraceListener; node : ErrorNode) is
@@ -39,8 +41,8 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    end visitErrorNode;
 
    procedure exitEveryRule (This : TraceListener; ctx : ParserRuleContext) is
-      ruleName : constant := host.getRuleNames ()[ctx.getRuleIndex ()];
-      lt1 : constant := host.input.LT (1)!.getText ()!;
+      ruleName : constant := host.getRuleNames[ctx.getRuleIndex];
+      lt1 : constant := host.input.LT (1)!.getText!;
    begin
       Wide_Wide_Text_IO.Put_Line ("exit    " & ruleName'Image & ", LT (1)=" & lt1'Image);
    end exitEveryRule;
@@ -63,7 +65,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
 
    function precedenceStack return Stack<Int> is
    begin
-      precedenceStack := Stack<Int> ();
+      precedenceStack := Stack<Int>;
       precedenceStack.push (0);
       return precedenceStack;
    end precedenceStack;
@@ -82,7 +84,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       This.ctx := (Valid => False);
       This.syntaxErrors := 0;
       setTrace (False);
-      This.precedenceStack.clear ();
+      This.precedenceStack.clear;
       This.precedenceStack.push (0);
 
       --  This.getInterpreter;
@@ -95,12 +97,12 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    function match (This : Parser; tType : Token_Kind) return Token is
       t : Token := This.getCurrentToken;
    begin
-      if t.getType () = ttype then
+      if t.getType = ttype then
          This.errHandler.reportMatch (self);
          This.consume;
       else
          t := This.errHandler.recoverInline (self);
-         if This.buildParseTrees and then t.getTokenIndex () = -1 then
+         if This.buildParseTrees and then t.getTokenIndex = -1 then
                -- we must have conjured up a new token during single token insertion
                -- if it's not the current symbol
                This.ctx!.addErrorNode (createErrorNode (parent => This.ctx!, t => t));
@@ -112,12 +114,12 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    function matchWildcard (This : Parser) return Token is
       t := This.getCurrentToken;
    begin
-      if t.getType () > 0 then
+      if t.getType > 0 then
          This.errHandler.reportMatch (self);
          This.consume;
       else
          t := This.errHandler.recoverInline (self);
-         if This.buildParseTrees and then t.getTokenIndex () = -1 then
+         if This.buildParseTrees and then t.getTokenIndex = -1 then
                -- we must have conjured up a new token during single token insertion
                -- if it's not the current symbol
                This.ctx!.addErrorNode (createErrorNode (parent => This.ctx!, t => t));
@@ -208,7 +210,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    begin
       -- reverse order walk of listeners
       if Is_Valid (This.parseListeners) or Is_Valid (This.ctx) then
-         for listener of This.parseListeners.reversed () loop
+         for listener of This.parseListeners.reversed loop
                This.ctx.exitRule (listener);
                listener.exitEveryRule (This.ctx);
          end loop;
@@ -218,7 +220,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    overriding
    procedure setTokenFactory (This : Parser; factory : TokenFactory) is
    begin
-      This.input.getTokenSource ().setTokenFactory (factory);
+      This.input.getTokenSource.setTokenFactory (factory);
    end setTokenFactory;
 
    function getATNWithBypassAlts (This : Parser) return ATN is
@@ -256,10 +258,10 @@ package body ANTLR.Runtime.Recognizers.Parsers is
                                      pattern : UString;
                                      patternRuleIndex : Integer)
                                      return ParseTreePattern is
-      tokenStream : constant Optional_Token := Maybe (getTokenStream ());
+      tokenStream : constant Optional_Token := Maybe (getTokenStream);
    begin
       if Is_Valid (tokenStream) then
-         tokenSource : constant := tokenStream.getTokenSource ();
+         tokenSource : constant := tokenStream.getTokenSource;
          lexer : constant Optional_Lexer := Maybe (tokenSource);
          if Is_Valid (lexer) then
                return compileParseTreePattern (pattern, patternRuleIndex, lexer);
@@ -314,8 +316,8 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       This.charPositionInLine := -1;
       offendingToken : Optional_Token := Maybe (offendingToken); -- constant
       if Is_Valid (offendingToken) then
-         line := offendingToken.getLine ();
-         charPositionInLine := offendingToken.getCharPositionInLine ();
+         line := offendingToken.getLine;
+         charPositionInLine := offendingToken.getCharPositionInLine;
       end if;
 
       listener.syntaxError (self, offendingToken, line, charPositionInLine, msg, e);
@@ -325,8 +327,8 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       o : constant Token := This.getCurrentToken;
       hasListener : Boolean;
    begin
-      if o.getType () /= Parser.EOF then
-         This.getInputStream!.consume ();
+      if o.getType /= Parser.EOF then
+         This.getInputStream!.consume;
       end if;
       if not Is_Valid (This.ctx) then
          return o;
@@ -404,7 +406,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       if This.buildParseTrees and then This.ctx! !== localctx then
          parent : constant ParserRuleContext := ParserRuleContext (ctx?.parent);
          if Is_Valid (parent) then
-               parent.removeLastChild ();
+               parent.removeLastChild;
                parent.addChild (localctx);
          end if;
       end if;
@@ -419,8 +421,8 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       if This.precedenceStack.isEmpty then
          return -1;
       else
-         if Is_Valid (precedenceStack.peek ()) then
-            return This.precedenceStack.peek ()
+         if Is_Valid (precedenceStack.peek) then
+            return This.precedenceStack.peek
          else
             return -1;
       end if;
@@ -466,16 +468,17 @@ package body ANTLR.Runtime.Recognizers.Parsers is
 
    procedure unrollRecursionContexts (This : Parser; parentctx : Optional_ParserRuleContext) is
    begin
-      This.precedenceStack.pop ();
+      This.precedenceStack.pop;
       This.ctx!.stop := This.input.LT (-1);
-      retctx : constant := This.ctx!; -- save current ctx (return value);
+      retctx : constant := Value (This.ctx); -- save current ctx (return value);
 
       -- unroll so This.ctx is as it was before call to recursive method
       if Is_Valid (parseListeners) then
-         ctxWrap : constant := This_ctx;
-         while Is_Valid (ctxWrap) and ctxWrap !== parentctx loop
-               This.triggerExitRuleEvent;
-               This.ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
+         ctxWrap : constant Optional_ParserRuleContext := Set (This.ctx);
+         while Is_Valid (ctxWrap) and then ctxWrap /= parentctx loop
+            This.triggerExitRuleEvent;
+            This.ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
+            ctxWrap := This.ctx; --TOFIX
          end loop;
       else
          This.ctx := parentctx;
@@ -491,11 +494,11 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    end unrollRecursionContexts;
 
    function getInvokingContext (This : Parser; ruleIndex : Integer) return Optional_ParserRuleContext is
-   begin
       p := This.ctx;
       pWrap : constant := p;
+   begin
       while Is_Valid (pWrap) loop
-         if pWrap.getRuleIndex () = ruleIndex then
+         if pWrap.getRuleIndex = ruleIndex then
             return pWrap;
          end if;
          p := Is_Valid (pWrap.parent); -- as ParserRuleContext
@@ -516,36 +519,36 @@ package body ANTLR.Runtime.Recognizers.Parsers is
 --                                   startRuleIndex : Integer)
 --                                   return Array<ParserRuleContext>  
 --    -- RecognitionException
---    trees : array (<>) of ParserRuleContext := Array<ParserRuleContext> ();
---    saveTokenInputPosition : Integer := originalParser.getTokenStream ().index ();
+--    trees : array (<>) of ParserRuleContext := Array<ParserRuleContext>;
+--    saveTokenInputPosition : Integer := originalParser.getTokenStream.index;
 -- begin
 --    -- Create a new parser interpreter to parse the ambiguous subphrase
 --    parser : ParserInterpreter;
 --    if ( originalParser is ParserInterpreter ) then
 --       parser := ParserInterpreter ( ParserInterpreter (originalParser));
 --    else {
---       serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN ());
+--       serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN);
 --       deserialized : ATN := This.ATNDeserializer.deserialize (serializedAtn);
---       parser := ParserInterpreter (originalParser.getGrammarFileName (),
---                                    originalParser.getVocabulary (),
---                                     originalParser.getRuleNames () ,
+--       parser := ParserInterpreter (originalParser.getGrammarFileName,
+--                                    originalParser.getVocabulary,
+--                                     originalParser.getRuleNames ,
 --                                    deserialized,
---                                    originalParser.getTokenStream ());
+--                                    originalParser.getTokenStream);
 --     end if;
 --
 --     -- Make sure that we don't get any error messages from using this temporary parser
---     parser.removeErrorListeners ();
---     parser.removeParseListeners ();
---     parser.getInterpreter ()!.setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
+--     parser.removeErrorListeners;
+--     parser.removeParseListeners;
+--     parser.getInterpreter!.setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
 --
 --     -- get ambig trees
---     alt : Integer := ambiguityInfo.ambigAlts.firstSetBit ();
+--     alt : Integer := ambiguityInfo.ambigAlts.firstSetBit;
 --     while  alt>=0  loop
 --        -- re-parse entire input for all ambiguous alternatives
 --        -- (don't have to do first as it's been parsed, but do again for simplicity
 --        --  using this temp parser.);
---        parser.reset ();
---        parser.getTokenStream ().seek (0); -- rewind the input all the way for re-parsing
+--        parser.reset;
+--        parser.getTokenStream.seek (0); -- rewind the input all the way for re-parsing
 --        parser.overrideDecision := ambiguityInfo.decision;
 --        parser.overrideDecisionInputIndex := ambiguityInfo.startIndex;
 --        parser.overrideDecisionAlt := alt;
@@ -558,7 +561,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
 --
 --     DEFER:
 --        begin
---           originalParser.getTokenStream ().seek (saveTokenInputPosition);
+--           originalParser.getTokenStream.seek (saveTokenInputPosition);
 --        end DEFER;
 --
 --     return trees;
@@ -567,44 +570,45 @@ package body ANTLR.Runtime.Recognizers.Parsers is
    function isExpectedToken (This : Parser; symbol : Integer) return Boolean is
       atn : constant := This.getInterpreter.atn;
       ctx : Optional_ParserRuleContext := This.ctx;
-      s : constant := atn.states[getState ()]!;
-   begin
+      s : constant := atn.states[getState]!;
       following := atn.nextTokens (s);
+   begin
       if following.contains (symbol) then
          return True;
-      end if;
-      if Is_Active (Aspect.DEBUG) then
-         Wide_Wide_Text_IO.Put_Line ("following " & s & '=' & following);
-      end if;
-      if not following.contains (CommonToken.EPSILON) then
-         return False;
-      end if;
-
-      ctxWrap : constant Optional_ParserRuleContext := ctx;
-      while Is_Valid (ctxWrap)
-         and then ctxWrap.invokingState >= 0
-         and then following.contains (CommonToken.EPSILON) loop
-         invokingState : constant := atn.states.Element (ctxWrap.invokingState)!;
-         rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
-         following := atn.nextTokens (rt.followState);
-         if following.contains (symbol) then
-            return True;
+      else
+         if Is_Active (Aspect.DEBUG) then
+            Wide_Wide_Text_IO.Put_Line ("following " & s & '=' & following);
+         end if;
+         if not following.contains (CommonToken.EPSILON) then
+            return False;
          end if;
 
-         ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
-         ctxWrap := ctx; --TOFIX
-      end loop;
+         ctxWrap : constant Optional_ParserRuleContext := ctx;
+         while Is_Valid (ctxWrap)
+            and then ctxWrap.invokingState >= 0
+            and then following.contains (CommonToken.EPSILON) loop
+            invokingState : constant := atn.states.Element (ctxWrap.invokingState)!;
+            rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
+            following := atn.nextTokens (rt.followState);
+            if following.contains (symbol) then
+               return True;
+            end if;
 
-      if following.contains (CommonToken.EPSILON) and then symbol = CommonToken.EOF then
-         return True;
-      else
-         return False;
+            ctx := Is_Valid (ctxWrap.parent); -- as ParserRuleContext
+            ctxWrap := ctx; --TOFIX
+         end loop;
+
+         if following.contains (CommonToken.EPSILON) and then symbol = CommonToken.EOF then
+            return True;
+         else
+            return False;
+         end if;
       end if;
    end isExpectedToken;
 
    function getExpectedTokensWithinCurrentRule (This : Parser) return IntervalSet is
       atn : constant := This.getInterpreter.atn;
-      s : constant := atn.states[getState ()]!;
+      s : constant := atn.states[getState]!;
    begin
       return atn.nextTokens (s);
    end getExpectedTokensWithinCurrentRule;
@@ -617,7 +621,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       pWrap : constant := p;
       while Is_Valid (pWrap) loop
          -- compute what follows who invoked us
-         ruleIndex : constant := pWrap.getRuleIndex ();
+         ruleIndex : constant := pWrap.getRuleIndex;
          if ruleIndex < 0 then
                stack.append ("n/a");
          else
@@ -677,13 +681,13 @@ package body ANTLR.Runtime.Recognizers.Parsers is
 
    procedure setProfile (This : Parser; profile : Boolean) is
       interp : constant := This.getInterpreter;
-      saveMode : constant PredictionMode := interp.getPredictionMode ();
+      saveMode : constant PredictionMode := interp.getPredictionMode;
    begin
       if profile then
          if not (interp is ProfilingATNSimulator) then
             setInterpreter (ProfilingATNSimulator (self));
       elsif interp is ProfilingATNSimulator then
-         sim : constant := ParserATNSimulator (self, This.getATN, interp.decisionToDFA, interp.getSharedContextCache ());
+         sim : constant := ParserATNSimulator (self, This.getATN, interp.decisionToDFA, interp.getSharedContextCache);
          setInterpreter (sim);
       end if;
       This.getInterpreter.setPredictionMode (saveMode);

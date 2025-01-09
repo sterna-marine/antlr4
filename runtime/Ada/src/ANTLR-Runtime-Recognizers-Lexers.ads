@@ -1,5 +1,11 @@
 -- €
 
+with ANTLR.Runtime.ATN.Simulators.LexerSimulators;
+with ANTLR.Runtime.TokenSource_Protocol;
+
+use ANTLR.Runtime.ATN.Simulators.LexerSimulators;
+use ANTLR.Runtime.TokenSource_Protocol;
+
 package ANTLR.Runtime.Recognizers.Lexers is
 
    --
@@ -28,8 +34,10 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- public static
    MAX_CHAR_VALUE : constant := Character.MAX_VALUE; --FIXME
 
+   package Lexer_Recognizers is new ANTLR.Runtime.Recognizers.Recognizer (LexerATNSimulator);
+
    -- open
-   type Lexer is new Recognizer<LexerATNSimulator> and TokenSource with record
+   type Lexer is new Lexer_Recognizers.Recognizer and TokenSource with record
       -- public
       input : Optional_CharStream;
       -- internal
@@ -93,7 +101,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
       Token_Type : Token_Kind := CommonToken.INVALID_Type;
 
       -- public final
-      modeStack := Stack<Lexer_Mode> ();
+      modeStack := Stack<Lexer_Mode>;
       -- public
       mode : Lexer_Mode := DEFAULT_MODE;
 
@@ -168,7 +176,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    -- open
    function getSourceName (This : Lexer) return UString
-      is (_input!.getSourceName ());
+      is (_input!.getSourceName);
 
    -- open
    function getInputStream (This : Lexer) return Optional_CharStream
@@ -200,11 +208,11 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    -- open
    function getLine (This : Lexer) return Integer
-      is (getInterpreter ().getLine ());
+      is (getInterpreter.getLine);
 
    -- open
    function getCharPositionInLine (This : Lexer) return Integer
-      is (getInterpreter ().getCharPositionInLine ());
+      is (getInterpreter.getCharPositionInLine);
 
    -- open
    procedure setLine (This : Lexer; line : Integer);
@@ -217,7 +225,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --
    -- open
    function getCharIndex (This : Lexer) return Integer
-      is (_input!.index ());
+      is (_input!.index);
 
    --
    -- Return the text matched so far for the current token or any
@@ -275,10 +283,12 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- open
    procedure recover (This : Lexer; e : LexerNoViableAltException);
 
+
    -- open
    generic
       type T is private;
-   procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: Recognizer<T>);
+      package T_Recognizers is new ANTLR.Runtime.Recognizers.Recognizer (T);
+   procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: T_Recognizer);
 
    -- open
    function getErrorDisplay (This : Lexer; s : UString) return UString;

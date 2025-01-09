@@ -12,7 +12,7 @@ extension Array {
 
     mutating func removeObject<T:Equatable> (object : T) {
         index : Optional_Integer;
-        for (idx, objectToCompare) in self.enumerated () loop
+        for (idx, objectToCompare) in self.enumerated loop
 
             to : constant Optional_T := Maybe (objectToCompare);
             if Is_Valid (to) then

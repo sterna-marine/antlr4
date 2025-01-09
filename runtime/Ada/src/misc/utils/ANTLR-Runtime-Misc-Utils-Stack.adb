@@ -16,12 +16,12 @@ public struct Stack<T> {
     -- public mutating
     function pop (This : …) return T is
 begin
-        return items.removeLast ();
+        return items.removeLast;
     end if;
 
     public mutating procedure clear (This : …) is
 begin
-        return items.removeAll ();
+        return items.removeAll;
     end if;
 
     -- public

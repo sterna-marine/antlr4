@@ -189,8 +189,8 @@ package ANTLR.Runtime.Misc.IntervalSets is
    --
    -- Are two IntervalSets equal?  Because all intervals are sorted
    -- and disjoint, equals is a simple linear walk over both lists
-   -- to make sure they are the same.  Interval.equals () is used
-   -- by the List.equals () method to check the ranges.
+   -- to make sure they are the same.  Interval.equals is used
+   -- by the List.equals method to check the ranges.
    --
 
    --

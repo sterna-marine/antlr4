@@ -119,7 +119,7 @@ package body ANTLR.Runtime.ATN.Configs is
          return False;
       elsif lhs.alt /= rhs.alt then
          return False;
-      elsif lhs.isPrecedenceFilterSuppressed () /= rhs.isPrecedenceFilterSuppressed () then
+      elsif lhs.isPrecedenceFilterSuppressed /= rhs.isPrecedenceFilterSuppressed then
          return False;
       elsif lhs.context /= rhs.context then
          return False;

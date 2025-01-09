@@ -38,6 +38,18 @@ package ANTLR.Runtime.Token_Protocol is
    -- public
    type Token is interface;
 
+   -- public
+   function "=" (Left, Right : Token) return Boolean;
+
+   -- public
+   procedure hash (This : Token; hasher : in out Hasher);;
+
+   package Token_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => Token,
+      "=" => "=");
+   subtype Token_list is Token_Container.Vector;
+
    --INVALID_TYPE : constant : Token_Kind := 0;
 
    -- During lookahead operations, this "token" signifies we hit rule end ATN state
@@ -69,7 +81,7 @@ package ANTLR.Runtime.Token_Protocol is
    -- assigned to the predefined channels _#DEFAULT_CHANNEL_ and
    -- _#HIDDEN_CHANNEL_.
    --
-   -- * SeeAlso: org.antlr.v4.runtime.Token#getChannel ();
+   -- * SeeAlso: org.antlr.v4.runtime.Token#getChannel;
    --
    --MIN_USER_CHANNEL_VALUE : constant : Channel_Number := 2;
 

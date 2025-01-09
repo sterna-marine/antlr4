@@ -1,9 +1,11 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 with Aspect;
 
 use Ada;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
 package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
@@ -116,10 +118,10 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
    begin
       This.mode := mode;
-      mark : constant := input.mark ();
+      mark : constant := input.mark;
 
-      This.startIndex := input.index ();
-      This.prevAccept.reset ();
+      This.startIndex := input.index;
+      This.prevAccept.reset;
       s0 : constant := dfa.s0;
       if Is_Valid (s0) then
          Result := execATN (input, s0);
@@ -135,7 +137,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    overriding
    procedure reset (This : LexerATNSimulator) is
    begin
-      This.prevAccept.reset ();
+      This.prevAccept.reset;
       This.startIndex := -1;
       This.line := 1;
       This.charPositionInLine := 0;
@@ -171,7 +173,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       predict := execATN (input, next); -- constant
 
       if LexerATNSimulator.debug then
-            Wide_Wide_Text_IO.Put_Line ("DFA after matchATN: " & decisionToDFA.Element (old_mode).toLexerString ());
+            Wide_Wide_Text_IO.Put_Line ("DFA after matchATN: " & decisionToDFA.Element (old_mode).toLexerString);
       end if;
 
       return predict;
@@ -279,7 +281,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
       getReachableConfigSet (input, s.configs, reach, t);
 
-      if reach.isEmpty () then
+      if reach.isEmpty then
          -- we got nowhere on t from s
          if not reach.hasSemanticContext then
             -- we got nowhere on t, don't raise out this knowledge; it'd
@@ -309,7 +311,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          return dfaState.prediction
       else
          -- if no accept and EOF is first char, return EOF
-         if t = BufferedTokenStream.EOF and then input.index () == startIndex then
+         if t = BufferedTokenStream.EOF and then input.index = startIndex then
             return CommonToken.EOF;
          else
             raise ANTLRException.recognition with LexerNoViableAltException (recog, input, startIndex, reach);
@@ -328,7 +330,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                goto CONTINUE;
             end if;
             currentAltReachedAcceptState : constant := (c.alt = skipAlt);
-            if currentAltReachedAcceptState and then c.hasPassedThroughNonGreedyDecision () then
+            if currentAltReachedAcceptState and then c.hasPassedThroughNonGreedyDecision then
                goto CONTINUE;
             end if;
 
@@ -337,14 +339,14 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
             end if;
 
-            n : constant := c.state.getNumberOfTransitions ();
+            n : constant := c.state.getNumberOfTransitions;
             for ti in 0 .. n - 1 loop
                -- for each transition
                trans : constant := c.state.transition (ti);
                if target : constant := getReachableTarget (trans, t) then
-                  lexerActionExecutor := c.getLexerActionExecutor ();
+                  lexerActionExecutor := c.getLexerActionExecutor;
                   if lex : constant := lexerActionExecutor then
-                        lexerActionExecutor := lex.fixOffsetBeforeMatch (input.index () - startIndex);
+                        lexerActionExecutor := lex.fixOffsetBeforeMatch (input.index - startIndex);
                   end if;
 
                   treatEofAsEpsilon : constant := (t = BufferedTokenStream.EOF);
@@ -404,7 +406,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                                return ATNConfigSet is
       initialContext : constant := EmptyPredictionContext.Instance;
       configs : constant := ATNConfigSet (True, isOrdered => True);
-      length : constant := p.getNumberOfTransitions ();
+      length : constant := p.getNumberOfTransitions;
    begin
       for i in 0 .. length - 1 loop
          target : constant := p.transition (i).target;
@@ -431,14 +433,14 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       if config.state is RuleStopState then
          if LexerATNSimulator.debug then
             if recog : constant := recog then
-               Wide_Wide_Text_IO.Put_Line ("closure at " & recog.getRuleNames ()[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
+               Wide_Wide_Text_IO.Put_Line ("closure at " & recog.getRuleNames[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
             else
                Wide_Wide_Text_IO.Put_Line ("closure at rule stop " & config'Image & "\n");
             end if;
          end if;
 
-         if config.context?.hasEmptyPath (), Default => True then
-            if config.context?.isEmpty (), Default => True then
+         if config.context?.hasEmptyPath, Default => True then
+            if config.context?.isEmpty, Default => True then
                configs.add (config);
                return True;
             else
@@ -447,8 +449,8 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
             end if;
          end if;
 
-         if configContext : constant := config.context , not configContext.isEmpty () then
-            length : constant := configContext.size ();
+         if configContext : constant := config.context , not configContext.isEmpty then
+            length : constant := configContext.size;
             for i in 0 .. length - 1 loop
                if configContext.getReturnState (i) /= PredictionContext.EMPTY_RETURN_STATE then
                      newContext : constant := configContext.getParent (i)!; -- "pop" return state
@@ -463,15 +465,15 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       end if;
 
       -- optimization
-      if not config.state.onlyHasEpsilonTransitions () then
+      if not config.state.onlyHasEpsilonTransitions then
             if not currentAltReachedAcceptState
-               or else not config.hasPassedThroughNonGreedyDecision () then
+               or else not config.hasPassedThroughNonGreedyDecision then
                configs.add (config);
             end if;
       end if;
 
       p : constant := config.state;
-      length : constant := p.getNumberOfTransitions ();
+      length : constant := p.getNumberOfTransitions;
       for i in 0 .. length - 1 loop
             t : constant := p.transition (i);
             if c : constant := getEpsilonTarget (input, config, t, configs, speculative, treatEofAsEpsilon) then
@@ -492,7 +494,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                               return Optional_LexerATNConfig is
       c : Optional_LexerATNConfig; := (Valid => False);
    begin
-      case t.getSerializationType () is
+      case t.getSerializationType is
 
          when Transition.RULE =>
             ruleTransition : constant RuleTransition := RuleTransition (t);
@@ -534,7 +536,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
          when Transition.ACTION =>
             if not Is_Valid (config.context)
-            or else config.context!.hasEmptyPath () then
+            or else config.context!.hasEmptyPath then
                -- execute actions anywhere in the start rule for a token.
                --
                -- TODO: if the enrule is invoked recursively, some;
@@ -547,7 +549,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                -- getEpsilonTarget to return two configurations, so
                -- additional modifications are needed before we can support
                -- the split operation.
-               lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append (config.getLexerActionExecutor (), atn.lexerActions[(t);).actionIndex]);
+               lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append (config.getLexerActionExecutor, atn.lexerActions[(t);).actionIndex]);
                c := LexerATNConfig (config, t.target, lexerActionExecutor);
             else
                -- ignore actions in referenced rules
@@ -601,8 +603,8 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          declare
             savedCharPositionInLine : constant Integer := charPositionInLine;
             savedLine : constant Integer := line;
-            index : constant Integer := input.index ();
-            marker : constant Integer := input.mark ();
+            index : constant Integer := input.index;
+            marker : constant Integer := input.mark;
          begin
             consume (input);
             Result := recog.sempred (null, ruleIndex, predIndex);
@@ -619,7 +621,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                               input : CharStream;
                               dfaState : DFAState) is
    begin
-      settings.index := input.index ();
+      settings.index := input.index;
       settings.line := This.line;
       settings.charPos := This.charPositionInLine;
       settings.dfaState := dfaState;
@@ -714,7 +716,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
       if rss : constant := configs.firstConfigWithRuleStopState then
             proposed.isAcceptState := True;
-            proposed.lexerActionExecutor := (LexerATNConfig (rss)).getLexerActionExecutor ();
+            proposed.lexerActionExecutor := (LexerATNConfig (rss)).getLexerActionExecutor;
             proposed.prediction := atn.ruleToTokenType[rss.state.ruleIndex!];
       end if;
 
@@ -728,7 +730,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    function getText (This : LexerATNSimulator; input : CharStream) return UString is
    begin
       -- index is first lookahead char, don't include.
-      return input.getText (Interval.of (startIndex, input.index () - 1)); --try!
+      return input.getText (Interval.of (startIndex, input.index - 1)); --try!
    exception
       when Others => null;
    end getText;
@@ -752,7 +754,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       else
             charPositionInLine := @ + 1;
       end if;
-      input.consume ();
+      input.consume;
    end consume;
 
    function getTokenName (This : LexerATNSimulator; t : Integer) return UString is

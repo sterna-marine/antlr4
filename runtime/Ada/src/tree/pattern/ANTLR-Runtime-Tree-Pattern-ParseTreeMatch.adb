@@ -8,25 +8,25 @@
 type ParseTreeMatch is new CustomStringConvertible with null record;
 {
     --
-    -- This is the backing field for _#getTree ()_.
+    -- This is the backing field for _#getTree_.
     --
     -- private
     tree : constant ParseTree;
 
     --
-    -- This is the backing field for _#getPattern ()_.
+    -- This is the backing field for _#getPattern_.
     --
     -- private
     pattern : constant ParseTreePattern;
 
     --
-    -- This is the backing field for _#getLabels ()_.
+    -- This is the backing field for _#getLabels_.
     --
     -- private
     labels : constant MultiMap<UString, ParseTree>;
 
     --
-    -- This is the backing field for _#getMismatchedNode ()_.
+    -- This is the backing field for _#getMismatchedNode_.
     --
     -- private
     mismatchedNode : constant Optional_ParseTree;
@@ -105,7 +105,7 @@ type ParseTreeMatch is new CustomStringConvertible with null record;
     -- is returned.
     --
     -- public
-    function getAll (label : UString) return Array<ParseTree> {
+    function getAll (label : UString) return ParseTree_List {
         return labels.get (label), Default => []
     end if;
 
@@ -176,6 +176,6 @@ begin
     for …'Put_Image use Put_Image_…;
     function Description (This : …) return UString is
         info : constant := This.succeeded ? "succeeded" : "failed"
-        return "Match " & info'Image & "; found " & This.getLabels.size ()) labels"
+        return "Match " & info'Image & "; found " & This.getLabels.size) labels"
     end if;
 end if;

@@ -69,7 +69,7 @@ package ANTLR.Runtime.RecognitionExceptions is
         self.ctx := ctx
         self.message := message
         if recognizer : constant := recognizer then
-            self.offendingState := recognizer.getState ();
+            self.offendingState := recognizer.getState;
         end if;
     end if;
 
@@ -108,7 +108,7 @@ begin
     function getExpectedTokens (This : RecognitionException) return Optional_IntervalSet is
    begin
         if recognizer : constant := recognizer then
-            return recognizer.getATN ().getExpectedTokens (offendingState, ctx!); -- try?
+            return recognizer.getATN.getExpectedTokens (offendingState, ctx!); -- try?
         end if;
         return (Valid => False);
     end if;

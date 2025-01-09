@@ -24,7 +24,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
             return "[]";
       end if;
       buf := "[";
-      for (i, returnState) in returnStates.enumerated () loop
+      for (i, returnState) in returnStates.enumerated loop
 
          if i > 0 then
             buf := @ & ", ";
@@ -52,7 +52,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
       length : constant : Ada.Containers.Count_Type := This.parents.Length;
    begin
       uniqueParents : Dictionary<PredictionContext, PredictionContext> :=
-         Dictionary<PredictionContext, PredictionContext> ();
+         Dictionary<PredictionContext, PredictionContext>;
       for p of This.parents loop
          parent : constant PredictionContext := p;
          if Is_Valid (parent) then

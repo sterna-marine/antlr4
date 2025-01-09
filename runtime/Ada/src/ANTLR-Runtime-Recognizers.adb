@@ -73,9 +73,9 @@ package body ANTLR.Runtime.Recognizers is
    end setInterpreter;
 
    function getErrorHeader (This : Recognizer; e : RecognitionException) return UString is
-      offending : constant := e.getOffendingToken ();
-      line : constant := offending.getLine ();
-      charPositionInLine : constant := offending.getCharPositionInLine ();
+      offending : constant := e.getOffendingToken;
+      line : constant := offending.getLine;
+      charPositionInLine : constant := offending.getCharPositionInLine;
    begin
       return "line " & line'Image & ':' & charPositionInLine'Image & ""
    end getErrorHeader;
@@ -91,12 +91,12 @@ package body ANTLR.Runtime.Recognizers is
          Param_0 !== listener;
       end Closure;
    begin
-      This._listeners := This._listeners.filter ()) {Closure'Access};
+      This._listeners := This._listeners.filter) {Closure'Access};
    end removeErrorListener;
 
    procedure removeErrorListeners (This : Recognizer) is
    begin
-      This._listeners.removeAll ();
+      This._listeners.removeAll;
    end removeErrorListeners;
 
    procedure action (This : Recognizer;

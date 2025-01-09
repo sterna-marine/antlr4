@@ -171,7 +171,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                      return Integer is
    begin
       if This.debug or else This.trace_atn_sim then
-         Wide_Wide_Text_IO.Put_Line ("execATN decision " & dfa.decision & " exec LA (1)==" & getLookaheadName (input) & " line " & input.LT (1)!.getLine () & ':' & input.LT (1)!.getCharPositionInLine ());
+         Wide_Wide_Text_IO.Put_Line ("execATN decision " & dfa.decision & " exec LA (1)==" & getLookaheadName (input) & " line " & input.LT (1)!.getLine & ':' & input.LT (1)!.getCharPositionInLine);
       end if;
 
       previousD := s0;
@@ -516,7 +516,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          end if;
 
          if config.state is RuleStopState then
-            pragma assert (config.context!.isEmpty (), "Expected: c.context.isEmpty ()");
+            pragma assert (config.context!.isEmpty, "Expected: c.context.isEmpty");
             if fullCtx or else t = BufferedTokenStream.EOF then
                if not Is_Valid (skippedStopStates) then
                   skippedStopStates := ATNConfig.Container.Empty_Vector;
@@ -613,7 +613,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       if Is_Valid (reach) then
          skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionModes.hasConfigInRuleStopState (reach));
          if  Is_Valid (skippedStopStates) then
-            pragma assert (not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty ()");
+            pragma assert (not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty");
             for c of skippedStopStates loop
                reach.add (c, This.mergeCache); -- try!
             end loop;
@@ -688,7 +688,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       pairs : DFAState.PredPrediction.Vector;
       containsPredicate : Boolean := False;
    begin  
-      for (i, pred) in This.altToPred.enumerated.dropFirst () loop
+      for (i, pred) in This.altToPred.enumerated.dropFirst loop
          -- unpredicated is indicated by SemanticContext.Empty.Instance
          pragma assert (pred /=  (Valid => False), "Expected: pred /=  (Valid => False)");
 
@@ -704,7 +704,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          return (Valid => False);
       end if;
 
-      return pairs;    --pairs.toArray (new, DFAState.PredPrediction[pairs.size ()]);
+      return pairs;    --pairs.toArray (new, DFAState.PredPrediction[pairs.size]);
    end getPredicatePredictions;
 
    function getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule (This : ParserATNSimulator; 
@@ -920,7 +920,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                -- come in handy and we avoid evaluating context dependent
                -- preds if this is > 0.
                if Is_Valid (This.dfa) and then This.$1dfa.isPrecedenceDfa then
-                  outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn ();
+                  outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn;
                   if outermostPrecedenceReturn = This.dfa.atnStartState.ruleIndex then
                      c.setPrecedenceFilterSuppressed (True);
                   end if;
@@ -1137,7 +1137,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       if This.debug then
          Wide_Wide_Text_IO.Put_Line ("PRED (collectPredicates=" & collectPredicates'Image & ") " & pt.precedence & ">=_p, ctx dependent=True");
          -- if parser /= (Valid => False) then
-               Wide_Wide_Text_IO.Put_Line ("context surrounding pred is " & parser.getRuleInvocationStack ());
+               Wide_Wide_Text_IO.Put_Line ("context surrounding pred is " & parser.getRuleInvocationStack);
          -- end if;
       end if;
 
@@ -1258,7 +1258,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
    procedure dumpDeadEndConfigs (This : ParserATNSimulator; nvae : NoViableAltException) is
    begin
       Wide_Wide_Text_IO.Put_Line (Standard_Error, "dead end configs: ");
-      for c of nvae.getDeadEndConfigs ()!.configs loop
+      for c of nvae.getDeadEndConfigs!.configs loop
          trans := "no edges";
          if c.state.getNumberOfTransitions > 0 then
             t : constant Transition := c.state.transition (0);

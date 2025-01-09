@@ -221,8 +221,8 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
    -- mode with the _org.antlr.v4.runtime.BailErrorStrategy_:
    --
    --
-   -- parser._org.antlr.v4.runtime.Parser#getInterpreter () This.getInterpreter_._#setPredictionMode setPredictionMode_`(`_PredictionMode#SLL_`)`;
-   -- parser._org.antlr.v4.runtime.Parser#setErrorHandler setErrorHandler_ (new _org.antlr.v4.runtime.BailErrorStrategy_ ());
+   -- parser._org.antlr.v4.runtime.Parser#getInterpreter This.getInterpreter_._#setPredictionMode setPredictionMode_`(`_PredictionMode#SLL_`)`;
+   -- parser._org.antlr.v4.runtime.Parser#setErrorHandler setErrorHandler_ (new _org.antlr.v4.runtime.BailErrorStrategy_);
    --
    --
    --

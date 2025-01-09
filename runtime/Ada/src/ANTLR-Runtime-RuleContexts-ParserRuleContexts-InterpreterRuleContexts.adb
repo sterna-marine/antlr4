@@ -29,8 +29,8 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts.InterpreterRuleContex
          return dup : InterpreterRuleContext do
             dup := This.InterpreterRuleContext;
             dup.copyFrom (ctx);
-            dup.ruleIndex := ctx.getRuleIndex ();
-            dup.parent := fromParserRuleContext (Optional_ParserRuleContext (ctx.getParent ()));
+            dup.ruleIndex := ctx.getRuleIndex;
+            dup.parent := fromParserRuleContext (Optional_ParserRuleContext (ctx.getParent));
          end return; 
       end if;
    end fromParserRuleContext;

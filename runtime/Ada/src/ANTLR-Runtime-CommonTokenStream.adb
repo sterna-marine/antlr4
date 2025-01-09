@@ -134,10 +134,10 @@ begin
         n := 0
         This.fill;
         for t of tokens loop
-            if t.getChannel () == channel then
+            if t.getChannel = channel then
                 n := @ + 1;
             end if;
-            exit when t.getType () = CommonToken.EOF;
+            exit when t.getType = CommonToken.EOF;
         end loop;
         return n
     end if;

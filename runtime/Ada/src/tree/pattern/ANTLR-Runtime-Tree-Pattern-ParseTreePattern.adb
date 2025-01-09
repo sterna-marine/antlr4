@@ -10,26 +10,26 @@ with Ada.Finalization;
 -- public
 type ParseTreePattern is new Ada.Finalization.Controlled record
     --
-    -- This is the backing field for _#getPatternRuleIndex ()_.
+    -- This is the backing field for _#getPatternRuleIndex_.
     --
     -- private
     patternRuleIndex : constant Integer;
 
     --
-    -- This is the backing field for _#getPattern ()_.
+    -- This is the backing field for _#getPattern_.
     --
 
     private pattern : constant UString;
 
     --
-    -- This is the backing field for _#getPatternTree ()_.
+    -- This is the backing field for _#getPatternTree_.
     --
 
     -- private
     patternTree : constant ParseTree;
 
     --
-    -- This is the backing field for _#getMatcher ()_.
+    -- This is the backing field for _#getMatcher_.
     --
 
     -- private
@@ -59,7 +59,7 @@ type ParseTreePattern is new Ada.Finalization.Controlled record
     --
     -- * Parameter tree: The parse tree to match against this tree pattern.
     -- * Returns: A _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ object describing the result of the
-    -- match operation. The _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch#succeeded ()_ method can be
+    -- match operation. The _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch#succeeded_ method can be
     -- used to determine whether or not the match was successful.
     --
 
@@ -79,7 +79,7 @@ begin
     -- public
     function matches (tree : ParseTree) return Boolean is
 begin
-        return matcher.match (tree, self).succeeded ();
+        return matcher.match (tree, self).succeeded;
     end if;
 
     --
@@ -95,11 +95,11 @@ begin
     --
 
     --public function findAll (tree : ParseTree; _ xpath : UString) return Array<ParseTreeMatch> {
-        subtrees : array (<>) of ParseTree := XPath.findAll (tree, xpath, matcher.getParser ());
-        matches : array (<>) of ParseTreeMatch := Array<ParseTreeMatch> ();
+        subtrees : array (<>) of ParseTree := XPath.findAll (tree, xpath, matcher.getParser);
+        matches : array (<>) of ParseTreeMatch := Array<ParseTreeMatch>;
         for t : ParseTree in subtrees loop
             match : ParseTreeMatch := match (t);
-            if ( match.succeeded () ) then
+            if ( match.succeeded ) then
                 matches.add (match);
             end if;
         end loop;

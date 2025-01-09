@@ -77,7 +77,7 @@ package ANTLR.Runtime.DFA is
    --
    -- * returns: `True` if this is a precedence DFA; otherwise,
    -- `False`.
-   -- * seealso: org.antlr.v4.runtime.Parser#getPrecedence ();
+   -- * seealso: org.antlr.v4.runtime.Parser#getPrecedence;
    --
    -- public final
    function isPrecedenceDfa (This : DFA) return Boolean
@@ -91,7 +91,7 @@ package ANTLR.Runtime.DFA is
    -- `null` if no start state exists for the specified precedence.
    --
    -- * throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
-   -- * seealso: #isPrecedenceDfa ();
+   -- * seealso: #isPrecedenceDfa;
    --
    -- public final
    function getPrecedenceStartState (This : DFA; precedence : Integer) return Optional_DFAState;
@@ -104,7 +104,7 @@ package ANTLR.Runtime.DFA is
    -- precedence.
    --
    -- * throws: _ANTLRError.illegalState_ if this is not a precedence DFA.
-   -- * seealso: #isPrecedenceDfa ();
+   -- * seealso: #isPrecedenceDfa;
    --
    -- public final
    procedure setPrecedenceStartState (This : DFA; precedence : Integer; startState : DFAState);

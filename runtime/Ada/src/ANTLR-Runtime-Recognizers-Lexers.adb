@@ -1,9 +1,11 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 with Aspect;
 
 use Ada;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
 package body ANTLR.Runtime.Recognizers.Lexers is
@@ -42,9 +44,9 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
       _hitEOF := False;
       _mode := DEFAULT_MODE
-      _modeStack.clear ();
+      _modeStack.clear;
 
-      This.getInterpreter.reset ();
+      This.getInterpreter.reset;
    end reset;
 
    function nextToken (This : Lexer) return Token is
@@ -55,7 +57,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
       -- Mark start location in char stream so unbuffered streams are
       -- guaranteed at least have text of current token
-      tokenStartMarker : constant := This.input.mark ();
+      tokenStartMarker : constant := This.input.mark;
 
       declare
       begin
@@ -68,9 +70,9 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
                This.token := (Valid => False);
                This.channel := CommonToken.DEFAULT_CHANNEL
-               This.tokenStartCharIndex := This.input.index ();
-               This.tokenStartCharPositionInLine := This.getInterpreter.getCharPositionInLine ();
-               This.tokenStartLine := This.getInterpreter.getLine ();
+               This.tokenStartCharIndex := This.input.index;
+               This.tokenStartCharPositionInLine := This.getInterpreter.getCharPositionInLine;
+               This.tokenStartLine := This.getInterpreter.getLine;
                This.text := (Valid => False);
                loop
                   This.Token_Type := CommonToken.INVALID_Token_Type
@@ -146,9 +148,9 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       end if;
 
       if LexerATNSimulator.debug then
-         Wide_Wide_Text_IO.Put_Line ("popMode back to " & UString (describing => This.modeStack.peek ()));
+         Wide_Wide_Text_IO.Put_Line ("popMode back to " & UString (describing => This.modeStack.peek));
       end if;
-      mode (This.modeStack.pop ());
+      mode (This.modeStack.pop);
       return This.mode;
    end popMode;
 
@@ -186,7 +188,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    function emitEOF (This : Lexer) return Token is
       cpos : constant := This.getCharPositionInLine;
       line : constant := This.getLine;
-      idx : constant := This.input!.index ();
+      idx : constant := This.input!.index;
       eof : constant := This.factory.create (
          This.tokenFactorySourcePair,
          CommonToken.EOF,
@@ -243,7 +245,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    function getAllTokens (This : Lexer) return Token_List is
       tokens : Token_List := Token.Container.Empty_Vector;
       t := This.nextToken;
-      while t.getType () /= CommonToken.EOF loop
+      while t.getType /= CommonToken.EOF loop
          Token.Container.append (tokens, t);
          t := This.nextToken;
       end loop;
@@ -267,7 +269,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
       declare
       begin
-         text := This.input!.getText (Interval.of (_tokenStartCharIndex, This.input!.index ()));
+         text := This.input!.getText (Interval.of (_tokenStartCharIndex, This.input!.index));
       exception
          when others =>
             text := "<unknown>";
@@ -309,7 +311,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure recover (This : Lexer; re : AnyObject) is
    begin
       -- TODO: Do we lose character or line position information?
-      This.input!.consume ();
+      This.input!.consume;
    end recover;
 
    -- internal

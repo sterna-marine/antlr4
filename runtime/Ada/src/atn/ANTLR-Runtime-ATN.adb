@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
+
 package body ANTLR.Runtime.ATN is
 
    procedure Initialize (Self : in out ATN;
@@ -28,7 +32,7 @@ package body ANTLR.Runtime.ATN is
             --TOFIX S : ATNState;
          begin
             s.nextTokenWithinRule := intervalSet;
-            intervalSet.makeReadonly ();
+            intervalSet.makeReadonly;
             return intervalSet;
          end;
       end if;
@@ -99,6 +103,7 @@ package body ANTLR.Runtime.ATN is
             exception
                when others => null;
             end;
+         ctxWrap : constant := ctx; --TOFIX
       end loop;
 
       if following.contains (CommonToken.EPSILON) then

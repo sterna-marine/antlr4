@@ -17,7 +17,7 @@ package body ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions is
    function Description (This : LexerNoViableAltException) return UString is
    begin
       symbol := "";
-      if charStream : constant := Optional_CharStream ( This.getInputStream), startIndex >= 0 and then startIndex < charStream.size () then
+      if charStream : constant := Optional_CharStream ( This.getInputStream), startIndex >= 0 and then startIndex < charStream.size then
          interval : constant := Interval.of (startIndex, startIndex);
          symbol := charStream.getText (interval); -- try!
          symbol := Utils.escapeWhitespace (symbol, False);

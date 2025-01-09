@@ -28,9 +28,9 @@ package ANTLR.Runtime.TokenStreamRewriters is
    --
    -- You can insert stuff, replace, and delete chunks. Note that the operations
    -- are done lazily--only if you convert the buffer to a _String_ with
-   -- _org.antlr.v4.runtime.TokenStream#getText ()_. This is very efficient because you are not
+   -- _org.antlr.v4.runtime.TokenStream#getText_. This is very efficient because you are not
    -- moving data around all the time. As the buffer of tokens is converted to
-   -- strings, the _#getText ()_ method (s) scan the input token stream and
+   -- strings, the _#getText_ method (s) scan the input token stream and
    -- check to see if there is an operation at the current index. If so, the
    -- operation is done and then normal _String_ rendering continues on the
    -- buffer. This is like having multiple Turing machine instruction streams
@@ -39,13 +39,13 @@ package ANTLR.Runtime.TokenStreamRewriters is
    --
    -- This rewriter makes no modifications to the token stream. It does not ask the
    -- stream to fill itself up nor does it advance the input cursor. The token
-   -- stream _org.antlr.v4.runtime.TokenStream#index ()_ will return the same value before and
-   -- after any _#getText ()_ call.
+   -- stream _org.antlr.v4.runtime.TokenStream#index_ will return the same value before and
+   -- after any _#getText_ call.
    --
    --
    -- The rewriter only works on tokens that you have in the buffer and ignores the
    -- current input cursor. If you are buffering tokens on-demand, calling
-   -- _#getText ()_ halfway through the input will only do rewrites for those
+   -- _#getText_ halfway through the input will only do rewrites for those
    -- tokens in the first half of the file.
    --
    --

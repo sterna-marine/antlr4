@@ -1,0 +1,32 @@
+9 results - 3 files
+
+Sources/Antlr4/misc/MultiMap.swift:
+  5  ///
+  6: public class MultiMap<K:Hashable, V> {
+  7      private var mapping = [K: Array<V>]()
+
+Sources/Antlr4/tree/pattern/ParseTreeMatch.swift:
+   24      /// 
+   25:     private let labels: MultiMap<String, ParseTree>
+   26  
+
+   46      /// 
+   47:     public init(_ tree: ParseTree, _ pattern: ParseTreePattern, _ labels: MultiMap<String, ParseTree>, _ mismatchedNode: ParseTree?) {
+   48  
+
+  115      /// 
+  116:     public func getLabels() -> MultiMap<String, ParseTree> {
+  117          return labels
+
+Sources/Antlr4/tree/pattern/ParseTreePatternMatcher.swift:
+  129      public func matches(_ tree: ParseTree, _ pattern: ParseTreePattern) throws -> Bool {
+  130:         let labels: MultiMap<String, ParseTree> = MultiMap<String, ParseTree>()
+  131          let mismatchedNode: ParseTree? = try matchImpl(tree, pattern.getPatternTree(), labels)
+
+  151      public func match(_ tree: ParseTree, _ pattern: ParseTreePattern) throws -> ParseTreeMatch {
+  152:         let labels: MultiMap<String, ParseTree> = MultiMap<String, ParseTree>()
+  153          let mismatchedNode: ParseTree? = try matchImpl(tree, pattern.getPatternTree(), labels)
+
+  211                              _ patternTree: ParseTree,
+  212:                             _ labels: MultiMap<String, ParseTree>) throws -> ParseTree? {
+  213  

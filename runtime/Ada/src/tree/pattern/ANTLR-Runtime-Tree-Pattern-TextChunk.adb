@@ -39,7 +39,7 @@ begin
 
     --
     -- The implementation for _org.antlr.v4.runtime.tree.pattern.TextChunk_ returns the result of
-    -- _#getText ()_ in single quotes.
+    -- _#getText_ in single quotes.
     --
     -- public
     subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;

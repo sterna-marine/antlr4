@@ -1,5 +1,8 @@
 -- €
 
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 
 -- A parser simulator that mimics what ANTLR's generated
 -- parser code does. A ParserATNSimulator is used to make
@@ -73,7 +76,7 @@ type ParserInterpreter is new Parser with null record;
         self.decisionToDFA := old.decisionToDFA
         self.ruleNames := old.ruleNames
         self.vocabulary := old.vocabulary
-        super.Initialize (Self, old.getTokenStream ()!);
+        super.Initialize (Self, old.getTokenStream!);
         setInterpreter (ParserATNSimulator (self, atn,
                 decisionToDFA,
                 sharedContextCache));
@@ -88,7 +91,7 @@ type ParserInterpreter is new Parser with null record;
         self.ruleNames := ruleNames
         self.vocabulary := vocabulary
         self.decisionToDFA := DFA.Container.Empty_Vector;
-        for i in 0 ..< atn.getNumberOfDecisions () loop
+        for i in 0 ..< atn.getNumberOfDecisions loop
             decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
         end loop;
 
@@ -152,13 +155,13 @@ begin
 
         loop
             p : constant := This.getATNState!
-            case p.getStateType () is
+            case p.getStateType is
                when ATNState.RULE_STOP =>
                   -- pop; return from rule
-                  if _ctx!.isEmpty () then
+                  if _ctx!.isEmpty then
                      if startRuleStartState.isPrecedenceRule then
                            result : constant ParserRuleContext := _ctx!;
-                           parentContext : constant (ParserRuleContext?, Int) := _parentContextStack.pop ();
+                           parentContext : constant (ParserRuleContext?, Int) := _parentContextStack.pop;
                            unrollRecursionContexts (parentContext.0!);
                            return result
                      else
@@ -199,17 +202,17 @@ begin
     -- internal
     function getATNState (This : …) return Optional_ATNState is
    begin
-        return atn.states[getState ()]
+        return atn.states[getState]
     end if;
 
     -- internal
     procedure visitState (p : ATNState) is
     begin
         altNum : Integer;
-        if p.getNumberOfTransitions () > 1 then
+        if p.getNumberOfTransitions > 1 then
             This.getErrorHandler.sync (self);
             decision : constant DecisionState := DecisionState ((p);).decision
-            if decision = overrideDecision and then _input.index () == overrideDecisionInputIndex then
+            if decision = overrideDecision and then _input.index = overrideDecisionInputIndex then
                 altNum := overrideDecisionAlt
             else
                 altNum := This.getInterpreter.adaptivePredict (_input, decision, _ctx);
@@ -219,18 +222,18 @@ begin
         end if;
 
         transition : constant := p.transition (altNum - 1);
-        case transition.getSerializationType () is
+        case transition.getSerializationType is
         when Transition.EPSILON =>
             if statesNeedingLeftRecursionContext.get (p.stateNumber) and;
                     not (transition.target is LoopEndState) {
                 -- We are at the start of a left recursive rule's ( .. )* loop
                 -- but it's not the exit branch of loop.
                 ctx : constant InterpreterRuleContext := InterpreterRuleContext (;
-                _parentContextStack.last!.0, --peek ();
-                        _parentContextStack.last!.1, --peek ();
+                _parentContextStack.last!.0, --peek;
+                        _parentContextStack.last!.1, --peek;
 
-                        _ctx!.getRuleIndex ());
-                  pushNewRecursionContext (ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, _ctx!.getRuleIndex ());
+                        _ctx!.getRuleIndex);
+                  pushNewRecursionContext (ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, _ctx!.getRuleIndex);
             end if;
 
         when Transition.ATOM =>
@@ -269,7 +272,7 @@ begin
 
         when Transition.PRECEDENCE =>
             if not precpred (_ctx!, (PrecedencePredicateTransition (transition)).precedence) then
-                raise ANTLRException.recognition with FailedPredicateException (self, "precpred (_ctx," & (PrecedencePredicateTransition (transition)).precedence))");
+                raise ANTLRException.recognition with FailedPredicateException (self, "precpred (_ctx," & PrecedencePredicateTransition (transition).precedence);
             end if;
 
         when others =>
@@ -285,14 +288,14 @@ begin
     begin
         ruleStartState : constant := atn.ruleToStartState[p.ruleIndex!]
         if ruleStartState.isPrecedenceRule then
-            let (parentContext, parentState) := _parentContextStack.pop ();
+            let (parentContext, parentState) := _parentContextStack.pop;
             unrollRecursionContexts (parentContext!);
             setState (parentState);
         else
             This.exitRule;
         end if;
 
-        ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState ()]!.transition (0));
+        ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState]!.transition (0));
         setState (ruleTransition.followState.stateNumber);
     end if;
 

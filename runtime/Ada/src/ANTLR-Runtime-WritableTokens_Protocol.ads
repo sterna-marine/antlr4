@@ -1,16 +1,19 @@
 -- €
 
--- public
-type WritableToken is interface and Token;
-    procedure setText (text : UString);
+package ANTLR.Runtime.WritableTokens_Protocol is
 
-    procedure setType (tType : Token_Kind);
+   -- public
+   type WritableToken is interface and Token;
 
-    procedure setLine (line : Integer);
+   procedure setText (text : UString) is abstract;
 
-    procedure setCharPositionInLine (pos : Integer);
+   procedure setType (tType : Token_Kind) is abstract;
 
-    procedure setChannel (Channel : Channel_Number);
+   procedure setLine (line : Integer) is abstract;
 
-    procedure setTokenIndex (index : Integer);
-end if;
+   procedure setCharPositionInLine (pos : Integer) is abstract;
+
+   procedure setChannel (Channel : Channel_Number) is abstract;
+
+   procedure setTokenIndex (index : Integer) is abstract;
+end ANTLR.Runtime.WritableTokens_Protocol;

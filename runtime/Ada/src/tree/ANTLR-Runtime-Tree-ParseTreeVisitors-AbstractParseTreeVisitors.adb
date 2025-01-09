@@ -17,7 +17,7 @@ package body ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
    overriding
    function visitChildren (This : AbstractParseTreeVisitor; node : RuleNode) return Optional_T is
       result : Optional_T := This.defaultResult;
-      n : constant := node.getChildCount ();
+      n : constant := node.getChildCount;
    begin
       for i in 0 .. n - 1 loop
          exit when not shouldVisitNextChild (node, result);

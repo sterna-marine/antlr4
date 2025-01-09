@@ -97,7 +97,7 @@ type InterpreterDataReader is new Ada.Finalization.Controlled record
                   modeNames.append (line);
                when .atn =>
                   if line.prefix (1) == "[" and then line.suffix (1) == "]" then
-                     atnText := line.dropFirst ().dropLast ().split (separator:",");
+                     atnText := line.dropFirst.dropLast.split (separator:",");
                   else
                      fail := Error.dataError ("Missing bracket (s) at " & line);
                   end if;

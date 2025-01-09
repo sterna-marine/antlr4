@@ -123,7 +123,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.ContextSensitivityInfo
       --
       -- public final
-      contextSensitivities: array (<>) of ContextSensitivityInfo := Array<ContextSensitivityInfo> ();
+      contextSensitivities: array (<>) of ContextSensitivityInfo := Array<ContextSensitivityInfo>;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.ErrorInfo_ instances describing the parse errors
@@ -133,7 +133,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.ErrorInfo
       --
       -- public final
-      errors: array (<>) of ErrorInfo := Array<ErrorInfo> ();
+      errors: array (<>) of ErrorInfo := Array<ErrorInfo>;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.AmbiguityInfo_ instances describing the
@@ -142,7 +142,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.AmbiguityInfo
       --
       -- public final
-      ambiguities: array (<>) of AmbiguityInfo := Array<AmbiguityInfo> ();
+      ambiguities: array (<>) of AmbiguityInfo := Array<AmbiguityInfo>;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.PredicateEvalInfo_ instances describing the
@@ -152,7 +152,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.PredicateEvalInfo
       --
       -- public final
-      predicateEvals: array (<>) of PredicateEvalInfo := Array<PredicateEvalInfo> ();
+      predicateEvals: array (<>) of PredicateEvalInfo := Array<PredicateEvalInfo>;
 
       --
       -- The total number of ATN transitions required during SLL prediction for

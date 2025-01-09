@@ -21,7 +21,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
       if not Is_Valid (s) then
             return (Valid => False);
       else
-         length := s.getNumberOfTransitions ();
+         length := s.getNumberOfTransitions;
          look   := Optional_IntervalSet.Container.To_Vector (New_Item => (Valid => False), Length => length);  --TOFIX
          for alt in 0 .. length - 1 loop  --TOFIX
             look.Update_Element (Key => alt, New_Item => This.IntervalSet); --TOFIX
@@ -38,7 +38,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
                         addEOF  => False);
             -- Wipe out lookahead for this alternative if we found nothing
             -- or we had a predicate when we not seeThruPreds
-            if look.Element (alt)!.size () = 0
+            if look.Element (alt)!.size = 0
             or else look.Element (alt)!.contains (This.HIT_PRED) then
                look.Update_Element (Key => alt, New_Item => null);
             end if;
@@ -101,7 +101,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             return;
          end if;
 
-         if ctx.isEmpty () and then addEOF then
+         if ctx.isEmpty and then addEOF then
             look.add (CommonToken.EOF); -- try!
             return;
          end if;
@@ -113,7 +113,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             return;
          end if;
 
-         if ctx.isEmpty () and then addEOF then
+         if ctx.isEmpty and then addEOF then
             look.add (CommonToken.EOF); -- try!
             return;
          end if;
@@ -122,7 +122,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             removed : constant := calledRuleStack.get (s.ruleIndex!); -- try!
             calledRuleStack.clear (s.ruleIndex!); -- try!
             -- run thru all possible stack tops in ctx
-            length : constant := ctx.size ();
+            length : constant := ctx.size;
             for i in 0 .. length - 1 loop
                returnState : constant ATNState := Value (This.atn.states.Element (ctx.getReturnState (i)));
                This_LOOK (This => This,
@@ -145,7 +145,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
          end if;
       end if;
 
-      n : constant := s.getNumberOfTransitions ();
+      n : constant := s.getNumberOfTransitions;
       for i in 0 .. n - 1 loop
          t : constant := s.transition (i);
          rt : constant Optional_RuleTransition := Maybe (t);
@@ -180,7 +180,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             else
                look.add (This.HIT_PRED); -- try!
             end if;
-         elsif t.isEpsilon () then
+         elsif t.isEpsilon then
             This_LOOK (This => This,
                         s => t.target,
                         stopState => stopState,
@@ -193,7 +193,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
          elsif t is WildcardTransition then
             look.addAll (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, This.atn.maxTokenType)); -- try!
          else
-            set := t.labelIntervalSet ();
+            set := t.labelIntervalSet;
             if Is_Valid (set) then
                if t is NotSetTransition then
                   set := set!.complement (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, Optional_IntervalSet ( This.atn.maxTokenType)));

@@ -1,0 +1,134 @@
+
+mergeCache = DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>()
+
+
+28 results - 17 files
+
+Sources/Antlr4/Lexer.swift:
+  79  
+  80:     public final var _modeStack = Stack<Int>()
+  81      public var _mode = Lexer.DEFAULT_MODE
+
+Sources/Antlr4/Parser.swift:
+   92      internal var _precedenceStack: Stack<Int> = {
+   93:         var precedenceStack = Stack<Int>()
+   94          precedenceStack.push(0)
+
+  805  //	{
+  806: //		var trees : Array<ParserRuleContext> = Array<ParserRuleContext>();
+  807  //		var saveTokenInputPosition : Int = originalParser.getTokenStream().index();
+
+Sources/Antlr4/ParserInterpreter.swift:
+  39      internal final var _parentContextStack: Array<(ParserRuleContext?, Int)> =
+  40:     Array<(ParserRuleContext?, Int)>()
+  41  
+
+Sources/Antlr4/TokenStreamRewriter.swift:
+  394          programs[DEFAULT_PROGRAM_NAME] = RewriteOperationArray()
+  395:         lastRewriteTokenIndexes = Dictionary<String, Int>()
+  396      }
+
+Sources/Antlr4/atn/ArrayPredictionContext.swift:
+  85          var uniqueParents: Dictionary<PredictionContext, PredictionContext> =
+  86:         Dictionary<PredictionContext, PredictionContext>()
+  87          for p in parents {
+
+Sources/Antlr4/atn/ATNConfigSet.swift:
+  334          }
+  335:         var alts = Set<Int>()
+  336          for config in configs {
+
+Sources/Antlr4/atn/DecisionInfo.swift:
+  114      /// 
+  115:     public final var contextSensitivities: Array<ContextSensitivityInfo> = Array<ContextSensitivityInfo>()
+  116  
+
+  123      /// 
+  124:     public final var errors: Array<ErrorInfo> = Array<ErrorInfo>()
+  125  
+
+  131      /// 
+  132:     public final var ambiguities: Array<AmbiguityInfo> = Array<AmbiguityInfo>()
+  133  
+
+  140      /// 
+  141:     public final var predicateEvals: Array<PredicateEvalInfo> = Array<PredicateEvalInfo>()
+  142  
+
+Sources/Antlr4/atn/LL1Analyzer.swift:
+  39              look[alt] = IntervalSet()
+  40:             var lookBusy = Set<ATNConfig>()
+  41              let seeThruPreds = false // fail to get lookahead upon pred
+
+  95          let lookContext = ctx != nil ? PredictionContext.fromRuleContext(s.atn!, ctx) : nil
+  96:         var config = Set<ATNConfig>()
+  97          _LOOK(s, stopState, lookContext, r, &config, BitSet(), seeThruPreds, true)
+
+Sources/Antlr4/atn/ParseInfo.swift:
+  43          let decisions: [DecisionInfo] = atnSimulator.getDecisionInfo()
+  44:         var LL: Array<Int> = Array<Int>()
+  45          let length = decisions.count
+
+Sources/Antlr4/atn/ParserATNSimulator.swift:
+  761          if mergeCache == nil {
+  762:             mergeCache = DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>()
+  763          }
+
+  844              reach = ATNConfigSet(fullCtx)
+  845:             var closureBusy = Set<ATNConfig>()
+  846              let treatEofAsEpsilon = (t == CommonToken.EOF)
+
+  929                  let c = ATNConfig(target, i + 1, initialContext)
+  930:                 var closureBusy = Set<ATNConfig>()
+  931                  try closure(c, configs, &closureBusy, true, fullCtx, false)
+
+Sources/Antlr4/atn/SemanticContext.swift:
+  188          public init(_ a: SemanticContext, _ b: SemanticContext) {
+  189:             var operands = Set<SemanticContext>()
+  190              if let aAnd = a as? AND {
+
+  283          public init(_ a: SemanticContext, _ b: SemanticContext) {
+  284:             var operands: Set<SemanticContext> = Set<SemanticContext>()
+  285              if let aOr = a as? OR {
+
+Sources/Antlr4/misc/IntervalSet.swift:
+  621      public func toSet() -> Set<Int> {
+  622:         var s = Set<Int>()
+  623          for interval in intervals {
+
+Sources/Antlr4/misc/MultiMap.swift:
+  12      public func getPairs() -> Array<(K, V)> {
+  13:         var pairs: Array<(K, V)> = Array<(K, V)>()
+  14          for key: K in mapping.keys {
+
+Sources/Antlr4/tree/ParseTreeProperty.swift:
+  7  public class ParseTreeProperty<V> {
+  8:   var annotations = Dictionary<ObjectIdentifier, V>()
+  9    
+
+Sources/Antlr4/tree/Trees.swift:
+  117      public static func getChildren(_ t: Tree) -> Array<Tree> {
+  118:         var kids: Array<Tree> = Array<Tree>()
+  119          let length = t.getChildCount()
+
+  130      public static func getAncestors(_ t: Tree) -> Array<Tree> {
+  131:         var ancestors: Array<Tree> = Array<Tree>()
+  132          if t.getParent() == nil {
+
+  155      public static func findAllNodes(_ t: ParseTree, _ index: Int, _ findTokens: Bool) -> Array<ParseTree> {
+  156:         var nodes: Array<ParseTree> = Array<ParseTree>()
+  157          _findAllNodes(t, index, findTokens, &nodes)
+
+Sources/Antlr4/tree/pattern/ParseTreePattern.swift:
+  91          var subtrees : Array<ParseTree> = XPath.findAll(tree, xpath, matcher.getParser());
+  92:         var matches : Array<ParseTreeMatch> = Array<ParseTreeMatch>();
+  93          for t : ParseTree in subtrees {
+
+Sources/Antlr4/tree/pattern/ParseTreePatternMatcher.swift:
+  129      public func matches(_ tree: ParseTree, _ pattern: ParseTreePattern) throws -> Bool {
+  130:         let labels: MultiMap<String, ParseTree> = MultiMap<String, ParseTree>()
+  131          let mismatchedNode: ParseTree? = try matchImpl(tree, pattern.getPatternTree(), labels)
+
+  151      public func match(_ tree: ParseTree, _ pattern: ParseTreePattern) throws -> ParseTreeMatch {
+  152:         let labels: MultiMap<String, ParseTree> = MultiMap<String, ParseTree>()
+  153          let mismatchedNode: ParseTree? = try matchImpl(tree, pattern.getPatternTree(), labels)

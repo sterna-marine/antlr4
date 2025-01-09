@@ -45,7 +45,7 @@ package body ANTLR.Runtime.RuleContexts is
       end if;
 
       for i in 0 .. length - 1 loop
-         builder := @ + This.Element (i).getText ();
+         builder := @ + This.Element (i).getText;
       end loop;
 
       return builder
@@ -130,7 +130,7 @@ package body ANTLR.Runtime.RuleContexts is
          package Option_Recognizer_T is new Option (Recognizers_T.Recognizer);
          subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
       function toString_T (recog : Optional_Recognizer_T, stop : RuleContext) return UString is
-         ruleNames : constant := recog?.getRuleNames ();
+         ruleNames : constant := recog?.getRuleNames;
       begin
          return toString (ruleNames, stop);
       end toString_T;
@@ -138,12 +138,13 @@ package body ANTLR.Runtime.RuleContexts is
       -- open
       function toString (ruleNames : UString_List, stop : Optional_RuleContext;) return UString is
          buf : UString := "";
-      begin
          p : Optional_RuleContext := self;
          buf := @ & '[';
-         while pWrap : constant := p, pWrap !== stop loop
+         pWrap : constant := p;
+      begin
+         while Is_Valid (pWrap) and then pWrap /= stop loop
             if ruleNames : constant := ruleNames then
-               ruleIndex : constant := pWrap.getRuleIndex ();
+               ruleIndex : constant := pWrap.getRuleIndex;
                ruleIndexInRange : constant := (ruleIndex >= 0 and then ruleIndex < ruleNames.count);
                ruleName : constant := (
                   if ruleIndexInRange then
@@ -153,12 +154,12 @@ package body ANTLR.Runtime.RuleContexts is
                   end if);
                buf := @ + ruleName;
             else
-               if not pWrap.isEmpty () then
+               if not pWrap.isEmpty then
                   buf := @ + UString (pWrap.invokingState);
                end if;
             end if;
 
-            if pWp : constant := pWrap.parent, (Is_Valid (ruleNames) or else not pWp.isEmpty ()) then
+            if pWp : constant := pWrap.parent, (Is_Valid (ruleNames) or else not pWp.isEmpty) then
                   buf := @ & ' ';
             end if;
 

@@ -1,8 +1,10 @@
 -- €
 
 with ANTLR.Runtime.ATN.PredictionContext;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 
 use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 
 package body ANTLR.Runtime.ATN.Simulators is
 

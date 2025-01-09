@@ -15,7 +15,7 @@ package body ANTLR.Runtime.Tree.ParseTreeWalkers is
          listener.visitTerminal (termNode);
       elsif Is_Valid (r) then
          enterRule (listener, r);
-         n : constant := r.getChildCount ();
+         n : constant := r.getChildCount;
          for i in 0 .. n - 1 loop
             walk (listener, r.Element (i));
          end loop;
@@ -26,14 +26,14 @@ package body ANTLR.Runtime.Tree.ParseTreeWalkers is
    end walk;
 
    procedure enterRule (listener : ParseTreeListener; r : RuleNode) is
-      ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext ());
+      ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext);
    begin
       listener.enterEveryRule (ctx);
       ctx.enterRule (listener);
    end enterRule;
 
    procedure exitRule (listener : ParseTreeListener; r : RuleNode) is
-      ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext ());
+      ctx : constant ParserRuleContext := ParserRuleContext (r.getRuleContext);
    begin
       ctx.exitRule (listener);
       listener.exitEveryRule (ctx);

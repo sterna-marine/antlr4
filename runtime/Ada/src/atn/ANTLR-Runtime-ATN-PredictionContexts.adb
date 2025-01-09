@@ -214,7 +214,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
 
       --modify by janyou
       --combineCommonParents (mergedParents'Access);
-      M.combineCommonParents ();
+      M.combineCommonParents;
 
       mergeCache?.put (a, b, M);
       if Is_Active (Aspect.DEBUG) then
@@ -272,14 +272,14 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
          if current === EmptyPredictionContext.Instance then
             goto CONTINUE_NODES_B;
          end if;
-         length : constant := current.size ();
+         length : constant := current.size;
          for i in 0 .. length - 1 loop
             currentParent : constant := current.getParent (i);
             if not Is_Valid (currentParent) then
                goto CONTINUE_NODES_C;
             end if;
             buf := @ & "  s" & current.id & " -> s" & currentParent.id;
-            if current.size () > 1 then
+            if current.size > 1 then
                buf := @ & " [label=""parent[" & i'Image & ']'"];\n";
             else
                buf := @ & ";\n";
@@ -298,7 +298,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                               visited : in out [PredictionContext: PredictionContext])
                               return PredictionContext is
    begin
-      if context.isEmpty () then
+      if context.isEmpty then
          return context;
       end if;
 
@@ -312,7 +312,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       end if;
 
       changed := False;
-      parents := [PredictionContext?](repeating => null, count => context.size ());
+      parents := [PredictionContext?](repeating => null, count => context.size);
       length : constant := parents.count
       for i in 0 .. length - 1 loop
          p : constant := context.getParent (i);
@@ -323,9 +323,9 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
          parent : constant := getCachedContext (p, contextCache, visited'Access);
          if changed or else parent !== p then
             if not changed then
-               parents := [PredictionContext?](repeating => null, count => context.size ());
+               parents := [PredictionContext?](repeating => null, count => context.size);
 
-               for j in 0 .. context - 1.size () loop
+               for j in 0 .. context - 1.size loop
                   parents.Insert (Key => j, New_Item => context.getParent (j));
                end loop;
 
@@ -380,7 +380,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       end if;
       visited.Insert (Key => context, New_Item => context);
       nodes.append (context);
-      length : constant := context.size ();
+      length : constant := context.size;
       for i in 0 .. length - 1 loop
          getAllContextNodes_2 (context.getParent (i), nodes'Access, visited'Access);
       end loop;
@@ -408,22 +408,22 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
          p := self
          stateNumber := currentState
          localBuffer := "["
-         while not p.isEmpty () and then p !== stop loop
+         while not p.isEmpty and then p !== stop loop
             index := 0
-            if p.size () > 0 then
+            if p.size > 0 then
                bits := 1
-               while Shift_Left (1, bits) < p.size () loop
+               while Shift_Left (1, bits) < p.size loop
                   bits := @ + 1;
                end loop;
 
                mask : constant := Shift_Left (1, bits) - 1
                index :=  Shift_Right (perm, offset) & mask
 
-               --last := @ and  index >= p.size () - 1;
-               --last := Bool (Int (last) & (index >= p.size () - 1));
-               last := last and then (index >= p.size () - 1);
+               --last := @ and  index >= p.size - 1;
+               --last := Bool (Int (last) & (index >= p.size - 1));
+               last := last and then (index >= p.size - 1);
 
-               if index >= p.size () then
+               if index >= p.size then
                   goto CONTINUE_OUTER;
                end if;
                offset := @ + bits;
@@ -435,12 +435,12 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                   localBuffer := @ & ' ';
                end if;
 
-               atn : constant := recognizer.getATN ();
+               atn : constant := recognizer.getATN;
                s : constant ATNStates.State := atn.states.Element (stateNumber)!
-               ruleName : constant := recognizer.getRuleNames ()[s.ruleIndex!]
+               ruleName : constant := recognizer.getRuleNames[s.ruleIndex!]
                localBuffer.append (ruleName);
             elsif p.getReturnState (index) /= PredictionContext.EMPTY_RETURN_STATE then
-               if not p.isEmpty () then
+               if not p.isEmpty then
                   if localBuffer.count > 1 then
                      -- first char is '[', if more than that this isn't the first rule
                      localBuffer := @ & ' ';
@@ -465,7 +465,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
    end toStrings<T>;
 
    function Description (This : …) return UString
-      is (describing: PredictionContext.self) & '@' & UString (Unmanaged.passUnretained (self).toOpaque ().hashValue);
+      is (describing: PredictionContext.self) & '@' & UString (Unmanaged.passUnretained (self).toOpaque.hashValue);
 
    function "=" (lhs: RuleContext; rhs: ParserRuleContext) return Boolean is
       lhs : constant Optional_ParserRuleContext := Maybe (lhs);

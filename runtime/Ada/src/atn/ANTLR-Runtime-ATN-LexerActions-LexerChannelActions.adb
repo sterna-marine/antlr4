@@ -14,7 +14,7 @@ package body ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
    overriding
    procedure hash (This : LexerChannelAction; hasher : in out Hasher) is
    begin
-      hasher.combine (getActionType ());
+      hasher.combine (getActionType);
       hasher.combine (This.channel);
    end hash;
 

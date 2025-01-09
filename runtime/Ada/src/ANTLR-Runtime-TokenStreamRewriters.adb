@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
+
 package body ANTLR.Runtime.TokenStreamRewriters is
 
    -- ---------------- --
@@ -38,7 +42,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    function Description (This : RewriteOperation) return UString is
          opName : constant UString := To_UString (This'External_Tag);
    begin
-         return '<' & opName'Image & '@' & This.tokens.get (This.index) & '"' & Value (This.text) & '"'>"; -- try!
+         return '<' & opName'Image & '@' & This.tokens.get (This.index) & '"' & Value (This.text) & """>"; -- try!
    end Description;
 
    -- ------------------- --
@@ -335,7 +339,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
 
    procedure insertAfter (This : TokenStreamRewriter; programName : UString; t : Token; text : UString) is
    begin
-      insertAfter (programName, t.getTokenIndex (), text);
+      insertAfter (programName, t.getTokenIndex, text);
    end insertAfter;
 
    procedure insertAfter (This : TokenStreamRewriter; programName : UString; index : Integer; text : UString) is
@@ -358,7 +362,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
 
    procedure insertBefore (This : TokenStreamRewriter; programName : UString; t : Token; text : UString) is
    begin
-      insertBefore (programName, t.getTokenIndex (), text);
+      insertBefore (programName, t.getTokenIndex, text);
    end insertBefore;
 
    procedure insertBefore (This : TokenStreamRewriter; programName : UString; index : Integer; text : UString) is
@@ -390,8 +394,8 @@ package body ANTLR.Runtime.TokenStreamRewriters is
 
    procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Integer; text : Optional_String) is
    begin
-      if from > to or else from < 0 or else to < 0 or else to >= This.tokens.size () then
-            raise ANTLRError.illegalArgument with "replace: range invalid: " & from'Image & ".." & to'Image & "(size=" & tokens.size ());
+      if from > to or else from < 0 or else to < 0 or else to >= This.tokens.size then
+            raise ANTLRError.illegalArgument with "replace: range invalid: " & from'Image & ".." & to'Image & "(size=" & tokens.size);
       end if;
       op : constant := ReplaceOp (from, to, text, tokens);
       rewritesArray : constant := getProgram (programName);
@@ -401,8 +405,8 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Token; text : Optional_String) is
    begin
       replace (programName,;
-            from.getTokenIndex (),
-            to.getTokenIndex (),
+            from.getTokenIndex,
+            to.getTokenIndex,
             text);
    end replace;
 
@@ -487,8 +491,8 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       indexToOp : RewriteOperation_Map;
    begin
       -- ensure start/end are in range
-      if stop > This.tokens.size () - 1 then
-            stop := This.tokens.size () - 1;
+      if stop > This.tokens.size - 1 then
+            stop := This.tokens.size - 1;
       end if;
       if start < 0 then
             start := 0;
@@ -504,7 +508,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
 
       -- Walk buffer, executing instructions and emitting tokens
       i := start;
-      while i <= stop and then i < This.tokens.size () loop
+      while i <= stop and then i < This.tokens.size loop
             op : constant := indexToOp.Element (i);
             indexToOp.removeValue (forKey => i)  -- remove so any left have index size-1
             t : constant := This.tokens.get (i);
@@ -512,8 +516,8 @@ package body ANTLR.Runtime.TokenStreamRewriters is
                i := op.execute (buf'Access); -- execute operation and skip
             else
                -- no operation at that index, just dump token
-               if t.getType () /= CommonToken.EOF then
-                  buf.append (t.getText ()!);
+               if t.getType /= CommonToken.EOF then
+                  buf.append (t.getText!);
                end if;
                i := @ + 1; -- move to next token
             end if;
@@ -522,11 +526,11 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       -- include stuff after end if it's last index in buffer
       -- So, if they did an insertAfter (lastValidIndex, "foo"), include
       -- foo if end = lastValidIndex.
-      if stop = This.tokens.size () - 1 then
+      if stop = This.tokens.size - 1 then
             -- Scan any remaining operations after last token
             -- should be included (they will be inserts).
             for op in indexToOp.values loop
-               if op.index >= This.tokens.size () - 1 then
+               if op.index >= This.tokens.size - 1 then
                   buf := @ + op.text!;
                end if;
             end loop;

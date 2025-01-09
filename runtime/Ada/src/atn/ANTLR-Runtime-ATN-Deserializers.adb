@@ -1,8 +1,10 @@
 -- €
 
 with ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 
 use ANTLR.Runtime.ATN.States.DecisionStates.BlockStartStates;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 
 package body ANTLR.Runtime.ATN.Deserializers is
 
@@ -319,7 +321,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
          if not Is_Valid (state) then
             goto CONTINUE_STATES;
          end if;
-         length := state.getNumberOfTransitions ();
+         length := state.getNumberOfTransitions;
          for i in 0 .. length - 1 loop
                t := state.transition (i);
                ruleTransition := RuleTransition (t);
@@ -371,7 +373,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
          elsif
             loopbackState_1 := PlusLoopbackState (Some_State);
             if Is_Valid (loopbackState_1) then
-               length := loopbackState_1.getNumberOfTransitions ();
+               length := loopbackState_1.getNumberOfTransitions;
                for i in 0 .. length - 1 loop
                   target := loopbackState_1.transition (i).target;
                   startState := Maybe (target);
@@ -382,7 +384,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
          elsif
             loopbackState_2 := StarLoopbackState (Some_State);
             if Is_Valid (loopbackState_2) then
-               length := loopbackState_2.getNumberOfTransitions ();
+               length := loopbackState_2.getNumberOfTransitions;
                for i in 0 .. length - 1 loop
                   target := loopbackState_2.transition (i).target;
                   entryState := Maybe (target);
@@ -428,7 +430,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
             and then atn.ruleToStartState.Element (stateRuleIndex).isPrecedenceRule) then
                goto CONTINUE;
             end if;
-            maybeLoopEndState := state.transition (state.getNumberOfTransitions () - 1).target;
+            maybeLoopEndState := state.transition (state.getNumberOfTransitions - 1).target;
             if maybeLoopEndState is LoopEndState
             and then maybeLoopEndState.epsilonOnlyTransitions
             and then maybeLoopEndState.transition (0).target is RuleStopState then
@@ -477,7 +479,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
                      goto CONTINUE_STATES;
                   end if;
 
-                  maybeLoopEndState := state.transition (state.getNumberOfTransitions () - 1).target;
+                  maybeLoopEndState := state.transition (state.getNumberOfTransitions - 1).target;
                   if not (maybeLoopEndState is LoopEndState) then
                      goto CONTINUE_STATES;
                   end if;
@@ -517,8 +519,8 @@ package body ANTLR.Runtime.ATN.Deserializers is
          end loop;
 
          -- all transitions leaving the rule start state need to leave blockStart instead
-         while atn.ruleToStartState.Element (i).getNumberOfTransitions () > 0 loop
-               transition := atn.ruleToStartState.Element (i).removeTransition (atn.ruleToStartState.Element (i).getNumberOfTransitions () - 1);
+         while atn.ruleToStartState.Element (i).getNumberOfTransitions > 0 loop
+               transition := atn.ruleToStartState.Element (i).removeTransition (atn.ruleToStartState.Element (i).getNumberOfTransitions - 1);
                bypassStart.addTransition (transition);
          end loop;
 
@@ -541,7 +543,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
                goto CONTINUE;
          end if;
 
-         checkCondition (state.onlyHasEpsilonTransitions () or else state.getNumberOfTransitions () <= 1);
+         checkCondition (state.onlyHasEpsilonTransitions or else state.getNumberOfTransitions <= 1);
 
          state : constant Optional_PlusBlockStartState := Maybe (state);
          if Is_Valid (state) then
@@ -551,7 +553,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
          starLoopEntryState : constant Optional_StarLoopEntryState := Maybe (state);
          if Is_Valid (starLoopEntryState) then
                checkCondition (Is_Valid (starLoopEntryState.loopBackState));
-               checkCondition (starLoopEntryState.getNumberOfTransitions () == 2);
+               checkCondition (starLoopEntryState.getNumberOfTransitions = 2);
 
                if starLoopEntryState.transition (0).target is StarBlockStartState then
                   checkCondition (starLoopEntryState.transition (1).target is LoopEndState);
@@ -568,7 +570,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
 
          state : constant Optional_StarLoopbackState := Maybe (state);
          if Is_Valid (state) then
-               checkCondition (state.getNumberOfTransitions () == 1);
+               checkCondition (state.getNumberOfTransitions = 1);
                checkCondition (state.transition (0).target is StarLoopEntryState);
          end if;
 
@@ -590,9 +592,9 @@ package body ANTLR.Runtime.ATN.Deserializers is
 
          decisionState : constant Optional_DecisionState := Maybe (state);
          if Is_Valid (decisionState) then
-               checkCondition (decisionState.getNumberOfTransitions () <= 1 or else decisionState.decision >= 0);
+               checkCondition (decisionState.getNumberOfTransitions <= 1 or else decisionState.decision >= 0);
          else
-               checkCondition (state.getNumberOfTransitions () <= 1 or else state is RuleStopState);
+               checkCondition (state.getNumberOfTransitions <= 1 or else state is RuleStopState);
          end if;
          <<CONTINUE>>
       end loop;

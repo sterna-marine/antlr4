@@ -1,5 +1,8 @@
 -- €
-with Foundation;
+
+with ANTLR.Runtime.Misc.Exceptions.Errors;
+
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 
 
 -- Do not buffer up the entire char stream. It does keep a small buffer
@@ -159,7 +162,7 @@ begin
     -- internal
     function nextChar (This : …) return Optional_Integer is
    begin
-        if next : constant := unicodeIterator.next () then
+        if next : constant := unicodeIterator.next then
             return Integer (next.value);
         elsif unicodeIterator.hasErrorOccurred then
             return (Valid => False);
@@ -222,7 +225,7 @@ begin
     begin
         expectedMark : constant := -numMarkers
         if marker /= expectedMark then
-            preconditionFailure ("release () called with an invalid marker.");
+            preconditionFailure ("release called with an invalid marker.");
         end if;
 
         numMarkers := @ - 1;
@@ -310,7 +313,7 @@ begin
         bufferStartIndex : constant := This.getBufferStartIndex;
         if n > 0 and
             data[n - 1] == CommonToken.EOF and
-            interval.a + interval.length () > bufferStartIndex + n {
+            interval.a + interval.length > bufferStartIndex + n {
             raise ANTLRError.illegalArgument with "the interval extends past the end of the stream";
         end if;
 
@@ -369,13 +372,13 @@ end if;
     procedure Initialize (stream : InputStream) is
     begin
         self.stream := stream
-        self.buffGen := buffer[0 .. 0 - 1].makeIterator ();
+        self.buffGen := buffer[0 .. 0 - 1].makeIterator;
     end if;
 
     -- mutating
     function next (This : …) return Ada.Interface.C.Optional_unsigned_short is
    begin
-        if result : constant := buffGen.next () then
+        if result : constant := buffGen.next then
             return result;
         end if;
 
@@ -404,8 +407,8 @@ end if;
             return (Valid => False);
         end if;
 
-        buffGen := buffer.prefix (count).makeIterator ();
-        return buffGen.next ();
+        buffGen := buffer.prefix (count).makeIterator;
+        return buffGen.next;
     end if;
 end if;
 

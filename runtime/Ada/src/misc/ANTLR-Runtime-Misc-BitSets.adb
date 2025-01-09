@@ -1,9 +1,11 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 with Aspect;
 
 use Ada;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
 package body ANTLR.Runtime.Misc.BitSets is
@@ -116,8 +118,8 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- Returns a new long array containing all the bits in this bit set.
    --
    -- More precisely, if
-   -- `long[] longs := s.toLongArray ();`
-   -- then `longs.length == (s.length ()+63)/64` and
+   -- `long[] longs := s.toLongArray;`
+   -- then `longs.length == (s.length+63)/64` and
    -- `s.get (n) == ((longs[n/64] & (1L<<(n%64))) /= 0)`
    -- for all `n < 64 * longs.length`.
    --
@@ -559,8 +561,8 @@ begin
       -- Set wordsInUse correctly
       result.wordsInUse := targetWords
 
-      result.recalculateWordsInUse ();
-      result.checkInvariants ();
+      result.recalculateWordsInUse;
+      result.checkInvariants;
 
       return result
    end if;
@@ -583,7 +585,7 @@ begin
    -- use the following loop:
    --
    -- `
-   -- for (int i := bs.firstSetBit (); i >= 0; i := bs.nextSetBit (i+1)) loop
+   -- for (int i := bs.firstSetBit; i >= 0; i := bs.nextSetBit (i+1)) loop
    -- -- operate on index i here
    -- `end loop;
    --
@@ -670,7 +672,7 @@ begin
    -- use the following loop:
    --
    -- `
-   -- for (int i := bs.length (); (i := bs.previousSetBit (i-1)) >= 0; ) loop
+   -- for (int i := bs.length; (i := bs.previousSetBit (i-1)) >= 0; ) loop
    -- -- operate on index i here
    -- `end loop;
    --
@@ -1007,7 +1009,7 @@ begin
    --
    -- Attempts to reduce internal storage used for the bits in this bit set.
    -- Calling this method may, but is not required to, affect the value
-   -- returned by a subsequent call to the _#size ()_ method.
+   -- returned by a subsequent call to the _#size_ method.
    --
    -- private
    procedure trimToSize (This : BitSet) is

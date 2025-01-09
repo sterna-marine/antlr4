@@ -4,6 +4,15 @@ package body ANTLR.Runtime.Token_Protocol is
 
    visited : Boolean; --TOFIX Multi-process ?
 
+   -- public
+   function "=" (Left, Right : Token) return Boolean is
+   begin
+      return False; --TOFIX
+   end "=";
+
+   -- public
+   procedure hash (This : Token; hasher : in out Hasher) is null; --TOFIX
+
    function get (is_visited : Boolean) is
    begin
       return visited;

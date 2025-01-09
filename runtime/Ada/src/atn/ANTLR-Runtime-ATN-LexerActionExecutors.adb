@@ -8,7 +8,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
    procedure Initialize (Self : in out LexerActionExecutor; lexerActions : LexerAction_List) is
    begin
       self.lexerActions := lexerActions;
-      hash := MurmurHash.initialize ();
+      hash := MurmurHash.initialize;
       for Some_lexerAction of Self.LexerActions loop --TOFIX
             hash := MurmurHash.update (hash, Some_lexerAction); --TOFIX
       end loop;
@@ -37,9 +37,9 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
       length : constant Ada.Containers.Count_Type := LexerAction.Container.Legnth (This.lexerActions);
    begin
       for i in 0 .. length - 1 loop
-         if lexerActions.Element (i).isPositionDependent () and then not (lexerActions.Element (i) is LexerIndexedCustomAction) then
+         if lexerActions.Element (i).isPositionDependent and then not (lexerActions.Element (i) is LexerIndexedCustomAction) then
             if not Is_Valid (updatedLexerActions) then
-               updatedLexerActions := lexerActions;  --lexerActions.clone ();
+               updatedLexerActions := lexerActions;  --lexerActions.clone;
             end if;
 
             updatedLexerActions!.Replace_Element (Index =>i, New_Item => LexerIndexedCustomAction (offset, lexerActions.Element (i));
@@ -59,17 +59,17 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
                       startIndex : Integer) is
    begin
       requiresSeek : Boolean := False;
-      stopIndex : constant Integer := input.index ();
+      stopIndex : constant Integer := input.index;
 
       for lexerAction : LexerAction in self.lexerActions loop
          runLexerAction : constant Optional_LexerIndexedCustomAction := Maybe (lexerAction);
          if Is_Valid (runLexerAction) then
-            offset : constant Integer := runLexerAction.getOffset ();
+            offset : constant Integer := runLexerAction.getOffset;
             input.seek (startIndex + offset);
-            lexerAction := runLexerAction.getAction ();
+            lexerAction := runLexerAction.getAction;
             requiresSeek := (startIndex + offset) /= stopIndex;
          else
-            if lexerAction.isPositionDependent () then
+            if lexerAction.isPositionDependent then
                input.seek (stopIndex);
                requiresSeek := False;
             end if;

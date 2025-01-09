@@ -24,8 +24,8 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
       self.start := start;
       self.stop := stop;
       if Is_Valid (tsource) then
-         self.line := tsource.getLine ();
-         self.charPositionInLine := tsource.getCharPositionInLine ();
+         self.line := tsource.getLine;
+         self.charPositionInLine := tsource.getCharPositionInLine;
       end if;
    end Initialize;
 
@@ -41,15 +41,15 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
 
    procedure Initialize (Self : in out CommonToken; oldToken : Token) is
    begin
-      Token_Type := oldToken.getType ();
-      line := oldToken.getLine ();
-      index := oldToken.getTokenIndex ();
-      charPositionInLine := oldToken.getCharPositionInLine ();
-      channel := oldToken.getChannel ();
-      start := oldToken.getStartIndex ();
-      stop := oldToken.getStopIndex ();
-      text := oldToken.getText ();
-      source := oldToken.getTokenSourceAndStream ();
+      Token_Type := oldToken.getType;
+      line := oldToken.getLine;
+      index := oldToken.getTokenIndex;
+      charPositionInLine := oldToken.getCharPositionInLine;
+      channel := oldToken.getChannel;
+      start := oldToken.getStartIndex;
+      stop := oldToken.getStopIndex;
+      text := oldToken.getText;
+      source := oldToken.getTokenSourceAndStream;
    end Initialize;
 
    procedure setLine (This : CommonToken; line : Integer) is
@@ -65,7 +65,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
       else
          input : constant := This.getInputStream;
          if Is_Valid (input) then
-            n : constant := input.size ();
+            n : constant := input.size;
             if This.start < n and then This.stop < n then
                   begin
                      return input.getText (Interval.of (This.start, This.stop));
@@ -131,7 +131,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
 
       r : constant := r;
       if Is_Valid (r) then
-         typeString := r.getVocabulary ().getDisplayName (Token_Type);
+         typeString := r.getVocabulary.getDisplayName (Token_Type);
       else
          typeString := "" & Token_Type'Image & "";
       end if;

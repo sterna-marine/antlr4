@@ -24,7 +24,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
          -- since we'll often fail over anyway.
          if configs.hasSemanticContext then
                -- dup configs, tossing out semantic predicates
-               configs := configs.dupConfigsWithoutSemanticPredicates ();
+               configs := configs.dupConfigsWithoutSemanticPredicates;
          end if;
          -- now we have combined contexts for configs with dissimilar preds
       end if;
@@ -40,7 +40,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
    function hasNonConflictingAltSet (altsets : BitSet_List) return Boolean is
    begin
       for alts of altsets loop
-         if alts.cardinality () = 1 then
+         if alts.cardinality = 1 then
             return True;
          end if;
       end loop;
@@ -50,7 +50,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
    function hasConflictingAltSet (altsets : BitSet_List) return Boolean is
    begin
       for alts of altsets loop
-         if alts.cardinality () > 1 then
+         if alts.cardinality > 1 then
             return True;
          end if;
       end loop;
@@ -71,8 +71,8 @@ package body ANTLR.Runtime.ATN.PredictionModes is
    function getUniqueAlt (altsets : BitSet_List) return Integer is
       All_BitSet : constant BitSet := getAlts (altsets);
    begin
-      if All_BitSet.cardinality () = 1 then
-         return All_BitSet.firstSetBit ();
+      if All_BitSet.cardinality = 1 then
+         return All_BitSet.firstSetBit;
       end if;
       return ATN.INVALID_ALT_NUMBER;
    end getUniqueAlt;
@@ -90,7 +90,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       x : constant BitSet_Map := configs.getStateToAltMap;
    begin
       for alts of x.values loop
-         if alts.cardinality () = 1 then
+         if alts.cardinality = 1 then
             return True;
          end if;
       end loop;
@@ -102,14 +102,14 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       minAlt : Integer;
    begin
       for alts of altsets loop
-         minAlt := alts.firstSetBit ();
+         minAlt := alts.firstSetBit;
          viableAlts.set (minAlt); -- try!
-         if viableAlts.cardinality () > 1 then
+         if viableAlts.cardinality > 1 then
             -- more than 1 viable alt
             return ATN.INVALID_ALT_NUMBER;
          end if;
       end loop;
-      return viableAlts.firstSetBit ();
+      return viableAlts.firstSetBit;
    end getSingleViableAlt;
 
 end ANTLR.Runtime.ATN.PredictionModes;

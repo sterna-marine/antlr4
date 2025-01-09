@@ -29,13 +29,13 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- effects:
    --
    -- * __Forward movement:__ The value of _#index This.index_
-   -- before calling this method is less than the value of `index ()`
+   -- before calling this method is less than the value of `index`
    -- after calling this method.
    -- * __Ordered lookahead:__ The value of `LA (1)` before
    -- calling this method becomes the value of `LA (-1)` after calling
    -- this method.
    --
-   -- Note that calling this method does not guarantee that `index ()` is
+   -- Note that calling this method does not guarantee that `index` is
    -- incremented by exactly 1, as that would preclude the ability to implement
    -- filtering streams (e.g. _org.antlr.v4.runtime.CommonTokenStream_ which distinguishes
    -- between "on-channel" and "off-channel" tokens).
@@ -59,9 +59,9 @@ package ANTLR.Runtime.IntStream_Protocol is
    --
    -- * `i>0`
    -- * `i==-1` and _#index This.index_ returns a value greater
-   -- than the value of `index ()` after the stream was constructed
+   -- than the value of `index` after the stream was constructed
    -- and `LA (1)` was called in that order. Specifying the current
-   -- `index ()` relative to the index after the stream was created
+   -- `index` relative to the index after the stream was created
    -- allows for filtering implementations that do not return every symbol
    -- from the underlying source. Specifying the call to `LA (1)`
    -- allows for lazily initialized streams.
@@ -82,7 +82,7 @@ package ANTLR.Runtime.IntStream_Protocol is
 
    --
    -- A mark provides a guarantee that _#seek This.seek_ operations will be
-   -- valid over a "marked range" extending from the index where `mark ()`
+   -- valid over a "marked range" extending from the index where `mark`
    -- was called to the current _#index This.index_. This allows the use of
    -- streaming input sources by specifying the minimum buffering requirements
    -- to support arbitrary lookahead during prediction.
@@ -90,7 +90,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- The returned mark is an opaque handle (type `int`) which is passed
    -- to _#release This.release_ when the guarantees provided by the marked
    -- range are no longer necessary. When calls to
-   -- `mark ()`/`release ()` are nested, the marks must be released
+   -- `mark`/`release` are nested, the marks must be released
    -- in reverse order of which they were obtained. Since marked regions are
    -- used during performance-critical sections of prediction, the specific
    -- behavior of invalid usage is unspecified (i.e. a mark is not released, or
@@ -132,14 +132,14 @@ package ANTLR.Runtime.IntStream_Protocol is
 
    --
    -- This method releases a marked range created by a call to
-   -- _#mark This.mark_. Calls to `release ()` must appear in the
-   -- reverse order of the corresponding calls to `mark ()`. If a mark is
+   -- _#mark This.mark_. Calls to `release` must appear in the
+   -- reverse order of the corresponding calls to `mark`. If a mark is
    -- released twice, or if marks are not released in reverse order of the
-   -- corresponding calls to `mark ()`, the behavior is unspecified.
+   -- corresponding calls to `mark`, the behavior is unspecified.
    --
    -- For more information and an example, see _#mark_.
    --
-   -- * parameter marker: A marker returned by a call to `mark ()`.
+   -- * parameter marker: A marker returned by a call to `mark`.
    -- * seealso: #mark
    --
    procedure release (This : IntStream; marker : Integer) is abstract;

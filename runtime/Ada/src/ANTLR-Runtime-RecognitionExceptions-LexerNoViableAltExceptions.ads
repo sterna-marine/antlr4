@@ -9,7 +9,7 @@
 -- public
 type NoViableAltException is new RecognitionException with null record;
 {
-    -- Which configurations did we at input.index () that couldn't match input.LT (1)?;
+    -- Which configurations did we at input.index that couldn't match input.LT (1)?;
 
     -- private
     deadEndConfigs : constant Optional_ATNConfigSet;
@@ -25,9 +25,9 @@ type NoViableAltException is new RecognitionException with null record;
     -- public convenience
     procedure Initialize (Self : in out …; recognizer : Parser) {
         -- LL (1) error
-        token : constant := recognizer.getCurrentToken (); -- try!
+        token : constant := recognizer.getCurrentToken; -- try!
         Self.Initialize (recognizer,
-                recognizer.getInputStream ()!,
+                recognizer.getInputStream!,
                 token,
                 token,
                 null,

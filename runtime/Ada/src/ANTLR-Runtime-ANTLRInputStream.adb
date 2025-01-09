@@ -3,10 +3,12 @@
 with Ada.Strings.Wide_Wide_Unbounded;
 with Ada.Wide_Wide_Text_IO;
 with ANTLR.Runtime.IntStream_Protocol.Extensions;
+with ANTLR.Runtime.Misc.Exceptions.Errors;
 with Aspect;
 
 use Ada;
 use ANTLR.Runtime.IntStream_Protocol.Extensions;
+use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
 package body ANTLRInputStream is
@@ -205,7 +207,7 @@ begin
       end if;
       stop : constant := min (n, interval.b + 1);
 
-      unicodeScalarView : UString := UString.UnicodeScalarView ();
+      unicodeScalarView : UString := UString.UnicodeScalarView;
       unicodeScalarView.append contentsOf => data)[start ..< stop]);
       return UString (unicodeScalarView);
    end if;
@@ -219,7 +221,7 @@ begin
    -- public
    function toString (This : …) return UString is
 begin
-      unicodeScalarView : UString := UString.UnicodeScalarView ();
+      unicodeScalarView : UString := UString.UnicodeScalarView;
       unicodeScalarView.append (contentsOf => data);
       return UString (unicodeScalarView);
    end if;
