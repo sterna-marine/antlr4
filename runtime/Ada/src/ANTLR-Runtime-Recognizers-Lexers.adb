@@ -14,7 +14,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure Initialize (Self : Lexer) is
    begin
       self.tokenFactorySourcePair := This.TokenSourceAndStream;
-      Super (Self).Initialize;; -- Super
+      Super (Self).Initialize; -- Super
       self.tokenFactorySourcePair.tokenSource := self;
    end Initialize;
 
@@ -30,21 +30,20 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    procedure reset (This : Lexer) is
    begin
       -- wack Lexer state variables
-      _input : constant := This.input
-      if Is_Valid (_input) then
-         _input.seek (0);  -- rewind the input
+      if Is_Valid (This.input) then
+         This.input.seek (0);  -- rewind the input
       end if;
-      _token := (Valid => False);
-      _Token_Type := CommonToken.INVALID_Token_Type;
-      _channel := CommonToken.DEFAULT_CHANNEL;
-      _tokenStartCharIndex := -1;
-      _tokenStartCharPositionInLine := -1;
-      _tokenStartLine := -1;
-      _text := (Valid => False);
+      This.token := (Valid => False);
+      This.Token_Type := CommonToken.INVALID_Token_Type;
+      This.channel := CommonToken.DEFAULT_CHANNEL;
+      This.tokenStartCharIndex := -1;
+      This.tokenStartCharPositionInLine := -1;
+      This.tokenStartLine := -1;
+      This.text := (Valid => False);
 
-      _hitEOF := False;
-      _mode := DEFAULT_MODE
-      _modeStack.clear;
+      This.hitEOF := False;
+      This.mode := DEFAULT_MODE;
+      This.modeStack.clear;
 
       This.getInterpreter.reset;
    end reset;
@@ -63,7 +62,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       begin
          OUTER:
             loop
-               if _hitEOF then
+               if This.hitEOF then
                   This.emitEOF;
                   return This.token!
                end if;
@@ -104,7 +103,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
                   This.emit;
                end if;
 
-               return _token!;
+               return This.token!;
 
                <<CONTINUE_OUTER>>
             end loop OUTER;
@@ -143,7 +142,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
    function popMode (This : Lexer) return Lexer_Mode is
    begin
-      if _modeStack.isEmpty then
+      if This.modeStack.isEmpty then
          raise ANTLRError.unsupportedOperation with " EmptyStackException";
       end if;
 
@@ -155,31 +154,31 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    end popMode;
 
    overriding
-   procedure setTokenFactory (This : Lexer; factory : TokenFactory) is
+   procedure setTokenFactory (This : Lexer; Some_factory : TokenFactory) is
    begin
-      This.factory := factory;
+      This.factory := Some_factory;
    end setTokenFactory;
 
    overriding
-   procedure setInputStream (This : Lexer; input : IntStream) is
+   procedure setInputStream (This : Lexer; Some_input : IntStream) is
    begin
       This.input := (Valid => False);
       This.tokenFactorySourcePair := This.makeTokenSourceAndStream;
       This.reset;
-      This.input := Is_Valid (input); -- as CharStream
+      This.input := Is_Valid (Some_input); -- as CharStream
       This.tokenFactorySourcePair := This.makeTokenSourceAndStream;
    end setInputStream;
 
-   procedure emit (This : Lexer; token : Token) is
+   procedure emit (This : Lexer; Some_token : Token) is
    begin
       if Is_Active (Aspect.DEBUG) then
          Wide_Wide_Text_IO.Put_Line (Standard_Error, "emit " & token'Image);
       end if;
-      This.token := token;
+      This.token := Some_token;
    end emit;
 
    function emit (This : Lexer) return Token is
-      t : Token constant := This.factory.create (_tokenFactorySourcePair, _Token_Type, _text, _channel, _tokenStartCharIndex, This.getCharIndex - 1, _tokenStartLine, _tokenStartCharPositionInLine);
+      t : Token constant := This.factory.create (_tokenFactorySourcePair, This.Token_Type, This.text, This.channel, This.tokenStartCharIndex, This.getCharIndex - 1, This.tokenStartLine, This.tokenStartCharPositionInLine);
    begin
       emit (t);
       return t;
@@ -227,9 +226,9 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       This.text := text;
    end setText;
 
-   procedure setToken (This : Lexer; _token : Token) is
+   procedure setToken (This : Lexer; Some_token : Token) is
    begin
-      This.token := _token;
+      This.token := Some_token;
    end setToken;
 
    procedure setType (This : Lexer; tType : Token_Kind) is
@@ -237,9 +236,9 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       This.Token_Type := ttype;
    end setType;
 
-   procedure setChannel (This : Lexer; Channel : Channel_Number) is
+   procedure setChannel (This : Lexer; Some_Channel : Channel_Number) is
    begin
-      This.channel := channel;
+      This.channel := Some_channel;
    end setChannel;
 
    function getAllTokens (This : Lexer) return Token_List is
@@ -260,16 +259,14 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       end if;
    end recover;
 
-   generic
-      type T is private;
-   procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: Recognizer<T>) is
+   procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: Recognizer_T is
       msg : UString;
    begin
       text : constant UString;
 
       declare
       begin
-         text := This.input!.getText (Interval.of (_tokenStartCharIndex, This.input!.index));
+         text := This.input!.getText (Interval.Set (_tokenStartCharIndex, This.input!.index));
       exception
          when others =>
             text := "<unknown>";
@@ -278,7 +275,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       msg := "token recognition error at: '" & getErrorDisplay (text)) & ''';
 
       listener : constant := This.getErrorListenerDispatch;
-      listener.syntaxError (recognizer, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e);
+      listener.syntaxError (recognizer, null, This.tokenStartLine, This.tokenStartCharPositionInLine, msg, e);
    end notifyListeners;
 
    function getErrorDisplay (This : Lexer; s : UString) return UString is

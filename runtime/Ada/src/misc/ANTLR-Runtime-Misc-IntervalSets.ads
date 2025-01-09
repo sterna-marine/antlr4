@@ -1,12 +1,12 @@
 -- €
 
+with Ada.Containers.Vectors;
+with Ada.Finalization;
+with Ada.Strings;
 with ANTLR.Runtime.Misc.Integer_Set_Protocol;
 with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.Recognizers.Lexers;
 with Option;
-
-with Ada.Containers.Vectors;
-with Ada.Finalization;
 
 use ANTLR.Runtime.Misc;
 use ANTLR.Runtime.Misc.Integer_Set_Protocol;
@@ -47,11 +47,11 @@ package ANTLR.Runtime.Misc.IntervalSets is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   function Equal (Left, Right : IntervalSet) return Boolean;
+   function "=" (Left, Right : IntervalSet) return Boolean;
    package IntervalSet_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Item_Type  => IntervalSet,
-      "=" => Equal);
+      "=" => "=");
    subtype IntervalSet_List is IntervalSet_Container.Vector;
 
    package Option_IntervalSet is new Option (IntervalSet);
@@ -203,10 +203,10 @@ package ANTLR.Runtime.Misc.IntervalSets is
    --    return self.intervals.equals (other.intervals);
    -- end equals;
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_IntervalSet (S : in out Sink'Class; X : IntervalSet);
    for IntervalSet'Put_Image use Put_Image_IntervalSet;
+   -- public
    function Description (This : IntervalSet) return UString;
 
    -- public

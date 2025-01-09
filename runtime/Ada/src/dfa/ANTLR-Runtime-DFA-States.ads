@@ -2,6 +2,7 @@
 
 with Ada.Containers.Vectors;
 with Ada.Finalization;
+with Ada.Strings;
 with ANTLR.Runtime.ATN.ConfigSets;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.SemanticContext;
@@ -44,29 +45,26 @@ package ANTLR.Runtime.DFA.States is
    type PredPrediction is new Ada.Finalization.Controlled with
    record
       -- public
-      pred : constant SemanticContext; -- never null; at least SemanticContext.Empty.Instance
+      pred : SemanticContext; -- constant -- never null; at least SemanticContext.Empty.Instance
 
       -- public
-      alt : constant Integer;
+      alt : Integer; -- constant
    end record;
 
-   function Equal (Left, Right : PredPrediction) return Boolean;
-
-   package PredPrediction_Container is Ada.Containers.Vectors;
-   subtype PredPrediction_List is PredPrediction_Container.Vector;
+   function "=" (Left, Right : PredPrediction) return Boolean;
 
    package PredPrediction_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Item_Type  => PredPrediction,
-      "=" => Equal);
+      "=" => "=");
    subtype PredPrediction_List is PredPrediction_Container.Vector;
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_PredPrediction (S : in out Sink'Class; X : PredPrediction);
    for PredPrediction'Put_Image use Put_Image_PredPrediction;
+   -- public
    function Description (This : PredPrediction) return UString
-      is ("(" & This.pred'Image & "," & This.alt'Image & ")");
+      is ('(' & This.pred'Image & ',' & This.alt'Image & ')');
 
    -- public
    procedure Initialize (Self : in out PredPrediction; pred : SemanticContext; alt : Integer);
@@ -126,13 +124,13 @@ package ANTLR.Runtime.DFA.States is
       --
 
       -- public internal (set)
-      predicates : PredPrediction_Container.Vector;
+      predicates : PredPrediction_List;
 
       --
       -- mutex for states changes.
       --
       -- internal private (set);
-      mutex := Mutex.Synchronised;
+      mutex : TOFIX := Mutex.Synchronised;
 
       --
       -- Map a predicate to a predicted alternative.
@@ -153,16 +151,16 @@ package ANTLR.Runtime.DFA.States is
    -- DFA state.
    --
    -- public
-   function getAltSet (This : DFAState) return Set_of_Optional_Integers?
+   function getAltSet (This : DFAState) return Set_of_Optional_Integers --TOFIX
       is (This.configs.getAltSet);
 
    -- public
    procedure Hash (This : DFAState; hasher : in out Hasher);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_DFAState (S : in out Sink'Class; X : DFAState);
    for DFAState'Put_Image use Put_Image_DFAState;
+   -- public
    function Description (This : DFAState) return UString;
 
    --

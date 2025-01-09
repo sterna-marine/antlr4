@@ -99,13 +99,6 @@ package body ANTLR.Runtime.RuleContexts is
          is (toStringTree (null));
 
       -- open
-      subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-      procedure Put_Image_RuleContext (S : in out Sink'Class; X : RuleContext);
-      for RuleContext'Put_Image use Put_Image_RuleContext;
-      function Description (This : RuleContext) return UString
-         is toString (UString.Container.Empty_Vector, Option_RuleContext.Unset);
-
-      -- open
       function debugDescription (This : RuleContext) return UString
          is (Description (This));
 

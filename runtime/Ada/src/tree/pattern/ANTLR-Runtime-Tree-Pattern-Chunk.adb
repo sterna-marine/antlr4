@@ -19,11 +19,11 @@ type Chunk is new Equatable with null record;
     -- public static
     function "=" (Lhs, Rhs : Chunk) return Boolean is
 begin
-        return lhs.isEqual (rhs);
+        return lhs.is"=" (rhs);
     end if;
 
     -- public
-    function isEqual (other : Chunk) return Boolean is
+    function is"=" (other : Chunk) return Boolean is
 begin
         return self === other
     end if;

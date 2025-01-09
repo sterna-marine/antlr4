@@ -9,6 +9,16 @@ use Ada.Containers;
 
 package ANTLR.Runtime is
 
+   package UStrings renames Ada.Strings.Wide_Wide_Unbounded;
+   subtype UString is UStrings.Unbounded_Wide_Wide_String;
+
+   package Option_UString is new Option (UString);
+   subtype Optional_UString is Option_UString.Optional;
+
+   package UString_Container is new Ada.Containers.Vectors 
+      (Index_Type => Natural, Element_Type => UString, "=" => "=");
+   subtype UString_List is UString_Container.Vector;
+
    package Integer_Container is new Ada.Containers.Vectors 
       (Index_Type => Natural, Element_Type => Integer, "=" => "=");
    subtype Integer_List is Integer_Container.Vector;

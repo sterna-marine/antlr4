@@ -20,7 +20,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
     end if;
 
     -- public
-    procedure syntaxError<T> (recognizer : Recognizer<T>,
+    procedure syntaxError<T> (recognizer : Recognizer_T,
                                offendingSymbol : Optional_AnyObject;
                                line : Integer;
                                charPositionInLine : Integer;

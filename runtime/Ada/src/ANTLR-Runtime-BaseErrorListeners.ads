@@ -31,11 +31,15 @@ package ANTLR.Runtime.BaseErrorListeners is
    overriding
    procedure Initialize (Self : in out BaseErrorListener);
 
+   -- ------------ --
+   -- Recognizer_T --
+   -- ------------ --
+   package Recognizers_T is new Recognizers (T);
+   subtype Recognizer_T is Recognizers_T.Recognizer;
+
    -- open
    generic
       type T is private;
-      package Recognizers_T is new Recognizers (T);  --TOFIX
-      subtype Recognizer_T is Recognizers_T.Recognizer; --TOFIX
    procedure syntaxError (This : BaseErrorListener;
                           recognizer : Recognizer_T,
                           offendingSymbol : Optional_AnyObject;

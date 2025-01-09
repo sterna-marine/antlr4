@@ -15,10 +15,10 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       return Ada.Containers.Hash_Type (Key); --TOFIX
    end Hash_Integer;
 
-   function Equal (Left, Right : RewriteOperation) return Boolean
+   function "=" (Left, Right : RewriteOperation) return Boolean
       is (Left = Right); --TOFIX
 
-   function Equal (Left, Right : Optional_RewriteOperation) return Boolean is
+   function "=" (Left, Right : Optional_RewriteOperation) return Boolean is
       return (Left = Right); --TOFIX
 
    procedure Initialize (Self : RewriteOperation; index : Integer; tokens : TokenStream) is
@@ -42,7 +42,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    function Description (This : RewriteOperation) return UString is
          opName : constant UString := To_UString (This'External_Tag);
    begin
-         return '<' & opName'Image & '@' & This.tokens.get (This.index) & '"' & Value (This.text) & """>"; -- try!
+         return '<' & opName'Image & '@' & This.tokens.get (This.index)'Image & '"' & Value (This.text) & """>"; -- try!
    end Description;
 
    -- ------------------- --
@@ -115,9 +115,9 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    begin
       text : constant Optional_Text := Maybe (This.text);
       if Is_Valid (text) then
-         return "<ReplaceOp@" & token'Image & ".." & lastToken'Image & ':'"" & text'Image & '"'>";
+         return "<ReplaceOp@" & token'Image & " .. " & lastToken'Image & ":""" & This.text & """>";
       else
-         return "<DeleteOp@" & token'Image & ".." & lastToken'Image & '>'
+         return "<DeleteOp@" & token'Image & " .. " & lastToken'Image & '>';
       end if;
    end Description;
 
@@ -130,10 +130,10 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       return 0; --TOFIX
    end Hash_UString;
 
-   function Equal (Left, Right : RewriteOperationArray) return Boolean is
+   function "=" (Left, Right : RewriteOperationArray) return Boolean is
    begin
       is (Left = Right); --TOFIX
-   end Equal;
+   end "=";
 
    overriding
    procedure Initialize (Self : in out RewriteOperationArray) is

@@ -1,5 +1,7 @@
 -- €
 
+with Ada.Strings;
+
 package ANTLR.Runtime.Misc.Intervals is
 
    --
@@ -17,7 +19,7 @@ package ANTLR.Runtime.Misc.Intervals is
    package Option_Interval is new Option (Interval);
    subtype Optional_Interval is Option_Interval.Optional; -- renames
 
-   function Equal (Left, Right : Interval) return Boolean;
+   function "=" (Left, Right : Interval) return Boolean;
    package Interval_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Element_Type => Interval,
@@ -126,12 +128,12 @@ package ANTLR.Runtime.Misc.Intervals is
    -- public
    function differenceNotProperlyContained (This, Other : Interval) return Optional_Interval;
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_Interval (S : in out Sink'Class; X : Interval);
    for Interval'Put_Image use Put_Image_Interval;
+   -- public
    function Description (This : Interval) return UString
-       is (This.A'Image & ".." & This.B'Image);
+       is (This.A'Image & " .. " & This.B'Image);
 
    -- public
    function "=" (Lhs, Rhs : Interval) return Boolean

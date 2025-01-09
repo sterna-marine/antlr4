@@ -84,7 +84,7 @@ package body ANTLR.Runtime.ATN.Configs is
       The_hasher.combine (This.semanticContext);
     end hash;
 
-   function toString (This : ATNConfig; recog : Recognizer<T>?; showAlt : Boolean) return UString is
+   function toString (This : ATNConfig; recog : Recognizer_T?; showAlt : Boolean) return UString is
       buf : UString;
       outerDepth : constant Integer := getOuterContextDepth (This);
    begin

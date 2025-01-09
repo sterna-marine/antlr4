@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.PredictionContext.ArrayPredictionContext;
 
 use ANTLR.Runtime.ATN.PredictionContext;

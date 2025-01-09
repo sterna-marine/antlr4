@@ -1,10 +1,15 @@
 -- €
 
-with ANTLR.Runtime.ATN.LexerAction;
+with Ada.Strings;
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.ATN.LexerAction;
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
+
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Implements the `more` lexer action by calling _org.antlr.v4.runtime.Lexer#more_.
@@ -69,10 +74,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
    -- public
    procedure execute (This : LexerMoreAction; lexer : Lexer);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerMoreAction (S : in out Sink'Class; X : LexerMoreAction);
    for LexerMoreAction'Put_Image use Put_Image_LexerMoreAction;
+   -- public
    function Description (This : LexerMoreAction) return UString
       is ("more");
 

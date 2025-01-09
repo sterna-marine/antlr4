@@ -1,9 +1,12 @@
 -- €
 
-with ANTLR.Runtime.ATN.States;
+with Ada.Strings;
 with ANTLR.Runtime.ATN.SemanticContext;
+with ANTLR.Runtime.ATN.States;
 
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.SemanticContext;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions;
 
 package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PredicateTransitions is
 
@@ -60,8 +63,11 @@ package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PredicateTran
    function getPredicate (This : PredicateTransition) return SemanticContext.Predicate
       is (SemanticContext.Predicate (This.ruleIndex, This.predIndex, This.isCtxDependent));
 
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_PredicateTransition (S : in out Sink'Class; X : PredicateTransition);
+   for PredicateTransition'Put_Image use Put_Image_PredicateTransition;
    -- public
-   function Description (This : …) return UString
-      is ("pred_" & ruleIndex'Image & ":" & predIndex'Image);
+   function Description (This : PredicateTransition) return UString
+      is ("pred_" & This.ruleIndex'Image & ':' & This.predIndex'Image);
 
 end ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PredicateTransitions;

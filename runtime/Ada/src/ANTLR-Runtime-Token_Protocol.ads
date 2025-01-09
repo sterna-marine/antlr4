@@ -22,7 +22,7 @@ package ANTLR.Runtime.Token_Protocol is
       ID    : Token_ID;
    end record;
 
-   function Equal (Left, Right : Token_ID) return Boolean;
+   function "=" (Left, Right : Token_ID) return Boolean;
 
    function Hash (Key : Token_String) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Token_String) return Boolean;
@@ -32,7 +32,7 @@ package ANTLR.Runtime.Token_Protocol is
       Element_Type => Token_ID,
       Hash => Hash,
       Equivalent_Keys => Equivalent_Keys,
-      "=" => Equal);
+      "=" => "=");
    subtype TokenID_Map is TokenID_Container.Map;
 
    -- public
@@ -42,7 +42,7 @@ package ANTLR.Runtime.Token_Protocol is
    function "=" (Left, Right : Token) return Boolean;
 
    -- public
-   procedure hash (This : Token; hasher : in out Hasher);;
+   procedure hash (This : Token; hasher : in out Hasher);
 
    package Token_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,

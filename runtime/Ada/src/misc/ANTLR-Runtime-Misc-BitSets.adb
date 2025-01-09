@@ -1049,21 +1049,20 @@ begin
    procedure Put_Image_BitSet (S : in out Sink'Class; X : BitSet);
    for BitSet'Put_Image use Put_Image_BitSet;
    function Description (This : BitSet) return UString is
-      b : UString;
+      b : UString := "{";
    begin
       checkInvariants (This);
 
       --let numBits: Integer := (wordsInUse > 128) ?
       -- This.cardinality : wordsInUse * BitSet.BITS_PER_WORD
-      b := "{";
       i := This.firstSetBit;
       if i /= -1 then
-         b := @ & UString (i);
+         b := @ & i'Image;
          i := nextSetBit (i + 1); -- try!
          while i >= 0 loop
                endOfRun : constant := nextClearBit (i); -- try!
                loop
-                  b := @ & ", " & i'Image & "";
+                  b := @ & ", " & i'Image;
                   i := @ + 1;
                   exit when i < endOfRun;
                end loop;

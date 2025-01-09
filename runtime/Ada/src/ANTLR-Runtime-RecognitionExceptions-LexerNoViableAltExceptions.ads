@@ -1,69 +1,56 @@
 -- €
 
--- Indicates that the parser could not decide which of two or more paths
--- to take based upon the remaining input. It tracks the starting token
--- of the offending input and also knows where the parser was
--- in the various paths when the error. Reported by This.reportNoViableAlternative;
---
+with Ada.Strings;
+with ANTLR.Runtime.ATN.ConfigSets;
+with ANTLR.Runtime.ParserRuleContexts;
 
--- public
-type NoViableAltException is new RecognitionException with null record;
-{
-    -- Which configurations did we at input.index that couldn't match input.LT (1)?;
+use ANTLR.Runtime.ATN.ConfigSets;
+use ANTLR.Runtime.ParserRuleContexts;
 
-    -- private
-    deadEndConfigs : constant Optional_ATNConfigSet;
+package ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions is
 
-    -- The token object at the start index; the input stream might
-    -- not be buffering tokens so get a reference to it. (At the
-    -- time the error occurred, of course the stream needs to keep a
-    -- buffer all of the tokens but later we might not have access to those.);
-    --
-    -- private
-    startToken : constant Token;
+   use ANTLR.Runtime.RecognitionExceptions;
+   
+   -- public
+   type LexerNoViableAltException is new RecognitionException with
+   record
+      --
+      -- Matching attempted at what input index?
+      --
+      -- private
+      startIndex : Integer; -- constant
 
-    -- public convenience
-    procedure Initialize (Self : in out …; recognizer : Parser) {
-        -- LL (1) error
-        token : constant := recognizer.getCurrentToken; -- try!
-        Self.Initialize (recognizer,
-                recognizer.getInputStream!,
-                token,
-                token,
-                null,
-                recognizer._ctx);
-    end if;
+      --
+      -- Which configurations did we at input.index that couldn't match input.LA (1)?;
+      --
+      -- private
+      deadEndConfigs : ATNConfigSet; -- constant
+   end record;
 
-    -- public
-    procedure Initialize (Self : in out …; recognizer : Optional_Parser;
-                input : IntStream;
-                startToken : Token;
-                offendingToken : Optional_Token;
-                deadEndConfigs : Optional_ATNConfigSet;
-                ctx : Optional_ParserRuleContext;) {
+   subtype Object is LexerNoViableAltException;
+   subtype Super is RecognitionException;
+   type Class is access all Object;
+   type Class_Wide is access all Object'Class;
 
-        self.deadEndConfigs := deadEndConfigs
-        self.startToken := startToken
+   -- public
+   procedure Initialize (Self : in out LexerNoViableAltException;
+                   lexer : Optional_Lexer;
+                   input : CharStream;
+                   startIndex : Integer;
+                   deadEndConfigs : ATNConfigSet);
 
-        Super (Self).Initialize (recognizer, input, ctx);
-        offendingToken : constant Optional_Token := Maybe (offendingToken);
-         if Is_Valid (offendingToken) then
-            setOffendingToken (offendingToken);
-        end if;
-    end if;
+   -- public
+   function getStartIndex (This : LexerNoViableAltException) return Integer
+      is (This.startIndex);
 
+   -- public
+   function getDeadEndConfigs (This : LexerNoViableAltException) return ATNConfigSet
+      is (This.deadEndConfigs);
 
-    -- public
-    function getStartToken (This : …) return Token is
-begin
-        return startToken
-    end if;
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_LexerNoViableAltException (S : in out Sink'Class; X : LexerNoViableAltException);
+   for LexerNoViableAltException'Put_Image use Put_Image_LexerNoViableAltException;
+   -- public
+   function Description (This : LexerNoViableAltException) return UString;
 
-
-    -- public
-    function getDeadEndConfigs (This : …) return Optional_ATNConfigSet is
-   begin
-        return deadEndConfigs
-    end if;
-
-end if;
+end ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions;

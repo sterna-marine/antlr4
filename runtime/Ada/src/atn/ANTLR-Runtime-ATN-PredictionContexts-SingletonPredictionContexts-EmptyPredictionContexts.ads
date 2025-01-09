@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;
 
 use ANTLR.Runtime.ATN.PredictionContext;
@@ -75,6 +76,6 @@ package ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPr
    procedure Put_Image_EmptyPredictionContext (S : in out Sink'Class; X : EmptyPredictionContext);
    for EmptyPredictionContext'Put_Image use Put_Image_EmptyPredictionContext;
    function Description (This : EmptyPredictionContext) return UString
-      is ("$");
+      is ('$');
 
 end ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPredictionContexts;

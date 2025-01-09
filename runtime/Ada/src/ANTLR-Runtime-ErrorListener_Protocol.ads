@@ -52,9 +52,15 @@ package ANTLR.Runtime.ErrorListener_Protocol is
    -- the parser was able to recover in line without exiting the
    -- surrounding rule.
    --
+      -- ------------ --
+   -- Recognizer_T --
+   -- ------------ --
+
+   package Recognizers_T is new Recognizers (T);
+   subtype Recognizer_T is Recognizers_T.Recognizer;
+
    generic
       Type T is private;
-      package Recognizer_T is new Recognizer (T);
    procedure syntaxError (This : ANTLRErrorListener;
                           recognizer : Recognizer_T,
                           offendingSymbol : Optional_AnyObject;

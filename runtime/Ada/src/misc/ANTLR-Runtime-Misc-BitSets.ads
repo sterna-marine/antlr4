@@ -86,7 +86,7 @@ package ANTLR.Runtime.Misc.BitSets is
       -- use serialVersionUID from JDK 1.0.2 for interoperability
       --
       -- private
-      serialVersionUID : constant Integer_64 := 7997698588986878753; --L;
+      serialVersionUID : Integer_64 := 7997698588986878753; --L; -- constant
    end record;
 
    subtype Object is BitSet;
@@ -98,7 +98,7 @@ package ANTLR.Runtime.Misc.BitSets is
    procedure hash (This : BitSet; hasher : in out Hasher);
 
    function Equivalent_Keys (Left, Right : Integer) return Boolean
-      is Hash (Left) = Hash (Right);
+      is (Hash (Left) = Hash (Right));
 
 
    -- public
@@ -135,10 +135,10 @@ package ANTLR.Runtime.Misc.BitSets is
    --
    -- * returns: a string representation of this bit set
    --
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_BitSet (S : in out Sink'Class; X : BitSet);
    for BitSet'Put_Image use Put_Image_BitSet;
+   -- public
    function Description (This : BitSet) return UString;
 
 end ANTLR.Runtime.Misc.BitSets;

@@ -4,6 +4,7 @@ with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.Transitions;
 
 package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions is
 
@@ -18,7 +19,7 @@ package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions is
    type Class_Wide is access all Object'Class;
 
    --public
-   override
+   overriding
    procedure Initialize (Self : in out AbstractPredicateTransition; target : ATNState);
 
 end ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions;

@@ -7,6 +7,11 @@ package body ANTLR.Runtime.Tree.ParseTree_Protocol is
       return False; --TOFIX
    end "=";
 
+   function Hash (Key : UString) return Ada.Containers.Hash_Type is
+   begin
+      return 0; --TOFIX
+   end Hash;
+
    -- Equivalent to `getChild (index)! as! ParseTree`
    function subscript (index : Integer) return ParseTree is
    begin 

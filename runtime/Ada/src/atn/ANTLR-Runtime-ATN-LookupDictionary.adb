@@ -43,7 +43,7 @@ package body ANTLR.Runtime.ATN.LookupDictionaries is
    function Equivalent_Keys (Left, Right : Hash_Type) return Boolean
       is (Left = Right);
 
-   function equal (Left : ATNConfig; Right : ATNConfig) return Boolean is --TOFIX
+   function "=" (Left : ATNConfig; Right : ATNConfig) return Boolean is --TOFIX
    begin
       --  if This = lookup then
       --     if Left === Right then
@@ -56,14 +56,14 @@ package body ANTLR.Runtime.ATN.LookupDictionaries is
       --  else --Ordered
       --     return Left = Right;
       --  end if;
-   end equal;
+   end "=";
 
    package body Hashed_ATNConfig is new Ada.Containers.Hashed_Maps (
       Key_Type => Hash_Type,
       Element_Type => ATNConfig,
       Hash => Hash_ATNConfig,
       Equivalent_Keys => Equivalent_Keys,
-      "=" => equal);
+      "=" => "=");
 
    procedure Initialize (Self : in out LookupDictionary;
                    Type_of_LookupDictionary : LookupDictionaryType := LookupDictionaryType.lookup) is

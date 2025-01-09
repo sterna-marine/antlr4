@@ -1,10 +1,15 @@
 -- €
 
-with ANTLR.Runtime.ATN.LexerAction;
+with Ada.Strings;
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.ATN.LexerAction;
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerPushModeActions is
+
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Implements the `pushMode` lexer action by calling
@@ -77,11 +82,11 @@ package ANTLR.Runtime.ATN.LexerActions.LexerPushModeActions is
    -- public
    procedure execute (This : LexerPushModeAction; lexer : Lexer);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerPushModeAction (S : in out Sink'Class; X : LexerPushModeAction);
    for LexerPushModeAction'Put_Image use Put_Image_LexerPushModeAction;
+   -- public
    function Description (This : LexerPushModeAction) return UString
-      is ("pushMode (" & mode'Image & ")");
+      is ("pushMode (" & mode'Image & ')');
 
 end ANTLR.Runtime.ATN.LexerActions.LexerPushModeActions;

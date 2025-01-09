@@ -1,8 +1,14 @@
 -- €
 
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
+
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
+
 package ANTLR.Runtime.ATN.LexerActions.LexerCustomActions is
 
-   use ANTLR.Runtime.ATN.LexerAction;
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Executes a custom lexer action by calling _org.antlr.v4.runtime.Recognizer#action_ with the

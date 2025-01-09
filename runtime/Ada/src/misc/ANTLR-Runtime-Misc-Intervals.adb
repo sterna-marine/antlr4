@@ -23,10 +23,10 @@ package body ANTLR.Runtime.Misc.Intervals is
       Some_hasher.combine (This.B);
    end Hash;
 
-   function Equal (Left, Right : Interval) return Boolean is
+   function "=" (Left, Right : Interval) return Boolean is
    begin
       return Left.A = Right.A and Left.B = Right.B; --TOFIX
-   end Equal;
+   end "=";
 
    function differenceNotProperlyContained (This, Other : Interval) return Optional_Interval is
       Diff : Option_Interval.Optional;
@@ -46,7 +46,7 @@ package body ANTLR.Runtime.Misc.Intervals is
    procedure Put_Image_Interval (S : in out Sink'Class; X : Interval);
    for Interval'Put_Image use Put_Image_Interval;
    function Description (This : Interval) return UString is
-      return This.A'Image & ".." & This.B'Image;
+      return This.A'Image & " .. " & This.B'Image;
    end Image;
 
 end ANTLR.Runtime.Misc.Intervals;

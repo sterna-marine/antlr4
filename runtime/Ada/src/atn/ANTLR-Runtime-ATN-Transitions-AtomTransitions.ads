@@ -37,10 +37,10 @@ package ANTLR.Runtime.ATN.Transitions.AtomTransitions is
    function matches (This : AtomTransition; Symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
       is (This.label = Symbol);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_AtomTransition (S : in out Sink'Class; X : AtomTransition);
    for AtomTransition'Put_Image use Put_Image_AtomTransition;
+   -- public
    function Description (This : AtomTransition) return UString
       is (This.Label'Image);
 

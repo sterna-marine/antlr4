@@ -3,6 +3,7 @@
 with Ada.Containers;
 with Ada.Containers.Vectors;
 with Ada.Containers.Hashed_Sets;
+with Ada.Strings;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.Misc.IntervalSets;
 with Option;
@@ -152,11 +153,11 @@ package ANTLR.Runtime.ATN.States is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   function Equal (Left, Right : ATNState) return Boolean;
+   function "=" (Left, Right : ATNState) return Boolean;
    package ATNState_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Element_Type => ATNState,
-      "=" => Equal);
+      "=" => "=");
    subtype ATNState_List is ATNState_Container.Vector;
 
    -- Optionals
@@ -176,7 +177,7 @@ package ANTLR.Runtime.ATN.States is
       Element_Type => ATNState,
       Hash => Hash,
       Equivalent_Elements => Equivalent_Elements,
-      "=" => Equal);
+      "=" => "=");
    subtype Set_of_ATNStates is Set_Container.Set;
 
    -- public
@@ -186,6 +187,9 @@ package ANTLR.Runtime.ATN.States is
    function isNonGreedyExitState (This : ATNState) return Boolean
       is (False);
 
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_ATNState (S : in out Sink'Class; X : ATNState);
+   for ATNState'Put_Image use Put_Image_ATNState;
    -- public
    function Description (This : ATNState) return UString
       --return "MyClass " & string'Image & ""

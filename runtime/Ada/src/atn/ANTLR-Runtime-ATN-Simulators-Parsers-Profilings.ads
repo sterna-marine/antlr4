@@ -12,7 +12,6 @@ use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.Transitions;
 use ANTLR.Runtime.DFA.States;
 
-
 package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
 
    -- public
@@ -53,7 +52,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
    type Class_Wide is access all Object'Class;
 
    -- public
-   procedure Initialize (Self : in out ProfilingATNSimulator; parser : Parser) is
+   procedure Initialize (Self : in out ProfilingATNSimulator; parser : Parser);
 
    -- public
    overriding
@@ -61,14 +60,14 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                              input : TokenStream;
                              decision : Integer;
                              outerContext : Optional_ParserRuleContext)
-                             return Integer is
+                             return Integer;
 
    -- internal
    overriding
    function getExistingTargetState (This : ProfilingATNSimulator;
                                     previousD : DFAState;
                                     t : Integer)
-                                    return Optional_DFAState is
+                                    return Optional_DFAState;
 
    -- internal
    overriding
@@ -76,7 +75,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                                 dfa : DFA;
                                 previousD : DFAState;
                                 t : Integer)
-                                return DFAState is
+                                return DFAState;
       state : constant DFAState := Super (This).computeTargetState (dfa, previousD, t);
 
    overriding
@@ -85,7 +84,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                              closure : ATNConfigSet;
                              t : Integer;
                              fullCtx  : Boolean)
-                             return Optional_ATNConfigSet is
+                             return Optional_ATNConfigSet;
 
    -- internal
    overriding
@@ -94,7 +93,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                                  parserCallStack : ParserRuleContext;
                                  alt : Integer;
                                  fullCtx  : Boolean)
-                                 return Boolean is
+                                 return Boolean;
 
    -- internal
    overriding
@@ -102,7 +101,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                                           dfa : DFA;
                                           conflictingAlts : Optional_BitSet;
                                           configs : ATNConfigSet;
-                                          startIndex, stopIndex : Integer) is
+                                          startIndex, stopIndex : Integer);
 
    -- internal
    overriding
@@ -110,7 +109,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                                        dfa : DFA;
                                        prediction : Integer;
                                        configs : ATNConfigSet;
-                                       startIndex, stopIndex : Integer) is
+                                       startIndex, stopIndex : Integer);
 
    -- internal
    overriding
@@ -120,7 +119,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
                               startIndex, stopIndex : Integer;
                               exact : Boolean;
                               ambigAlts : Optional_BitSet;
-                              configs : ATNConfigSet) is
+                              configs : ATNConfigSet);
 
    -- public
    function getDecisionInfo (This : ProfilingATNSimulator) return DecisionInfo_List

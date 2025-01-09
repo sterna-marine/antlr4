@@ -1,5 +1,9 @@
 -- €
 
+with Ada.Strings;
+
+use ANTLR.Runtime.ATN.Transitions;
+
 package ANTLR.Runtime.ATN.Transitions.EpsilonTransitions is
 
    -- public final
@@ -51,8 +55,11 @@ package ANTLR.Runtime.ATN.Transitions.EpsilonTransitions is
    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
       is (False);
 
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_EpsilonTransition (S : in out Sink'Class; X : EpsilonTransition);
+   for EpsilonTransition'Put_Image use Put_Image_EpsilonTransition;
    -- public
-   function Description (This : …) return UString
+   function Description (This : EpsilonTransition) return UString
       is ("epsilon");
 
 end ANTLR.Runtime.ATN.Transitions.EpsilonTransitions;

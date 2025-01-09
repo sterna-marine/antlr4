@@ -129,7 +129,7 @@ begin
 
     overriding
     -- public
-    function getRuleNames (This : …) return UString_Container.Vector is
+    function getRuleNames (This : …) return UString_List is
         return ruleNames
     end if;
 

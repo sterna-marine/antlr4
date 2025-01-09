@@ -18,7 +18,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    end Initialize;
 
    overriding
-   function Description (This : …) return UString is
+   function Description (This : ArrayPredictionContext) return UString is
    begin
       if This.isEmpty then
             return "[]";
@@ -37,7 +37,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
          buf := @ & "" & returnState'Image & "";
          if parent : constant := parents.Element (i) then
-            buf := @ & ' ' & parent'Image & "";
+            buf := @ & ' ' & parent'Image;
          else
             buf := @ & "null";
          end if;
@@ -46,7 +46,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
       end loop;
       buf := @ & ']';
       return buf;
-   end Image;
+   end Description;
 
    procedure combineCommonParents (This : ArrayPredictionContext) is
       length : constant : Ada.Containers.Count_Type := This.parents.Length;

@@ -187,7 +187,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
          or else not Is_Valid (This.stop) then
             return Interval.INVALID;
       end if;
-      return Interval.of (This.start.getTokenIndex, This.stop.getTokenIndex);
+      return Interval.Set (This.start.getTokenIndex, This.stop.getTokenIndex);
    end getSourceInterval;
 
    function toInfoString (This : ParserRuleContext; recognizer : Parser) return UString is

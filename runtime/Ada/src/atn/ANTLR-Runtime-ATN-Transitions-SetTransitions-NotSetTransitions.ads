@@ -1,7 +1,7 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.States;
-with ANTLR.Runtime.ATN.SetTransition;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.Misc.IntervalSets;
 
@@ -39,9 +39,12 @@ package ANTLR.Runtime.ATN.Transitions.SetTransitions.NotSetTransitions is
                      maxVocabSymbol : Integer)
                      return Boolean;
 
-   overriding
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_NotSetTransition (S : in out Sink'Class; X : NotSetTransition);
+   for NotSetTransition'Put_Image use Put_Image_NotSetTransition;
    -- public
-   function Description (This : …) return UString
-      is ("~" & Image (SetTransition (This))); -- TOFIX super
+   overriding
+   function Description (This : NotSetTransition) return UString
+      is ('~' & Super (This)'Image);
 
 end ANTLR.Runtime.ATN.Transitions.SetTransitions.NotSetTransitions;

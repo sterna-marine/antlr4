@@ -6,10 +6,10 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    -- SemanticContext --
    -- --------------- --
 
-   function Equal (Left, Right : SemanticContex) return Boolean is
+   function "=" (Left, Right : SemanticContex) return Boolean is
    begin
       return Left = Right; --TOFIX
-   end Equal;
+   end "=";
 
 
    function Hash (Element : SemanticContext) return Ada.Containers.Hash_Type is
@@ -22,7 +22,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
       return Hash (Left) = Hash (Right); --TOFIX
    end Equivalent_Elements;
 
-   function Equal (Left, Right : SemanticContext) return Boolean is
+   function "=" (Left, Right : SemanticContext) return Boolean is
    begin
       return Left = Right; --TOFIX
    end Equivalent_Elements;
@@ -261,7 +261,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    begin
       This.opnds.Iterate (Build_Image'Access);
       return Result;
-   end Image;
+   end Description;
 
    -- ----------- --
    -- OR Operator --

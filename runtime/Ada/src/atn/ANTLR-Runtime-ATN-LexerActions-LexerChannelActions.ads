@@ -1,6 +1,13 @@
 -- €
 
+with Ada.Strings;
+with ANTLR.Runtime.ATN.LexerActionTypes;
+
+use ANTLR.Runtime.ATN.LexerActionTypes;
+
 package ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
+
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Implements the `channel` lexer action by calling
@@ -70,10 +77,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
    overriding
    procedure hash (This : LexerChannelAction; hasher : in out Hasher);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerChannelAction (S : in out Sink'Class; X : LexerChannelAction);
    for LexerChannelAction'Put_Image use Put_Image_LexerChannelAction;
+   -- public
    function Description (This : LexerChannelAction) return UString
       is ("channel" & This.channel'Image);
 

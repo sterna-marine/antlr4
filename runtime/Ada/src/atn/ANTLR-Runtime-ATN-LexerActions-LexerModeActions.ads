@@ -1,10 +1,15 @@
 -- €
 
-with ANTLR.Runtime.ATN.LexerAction;
+with Ada.Strings;
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.ATN.LexerAction;
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerModeActions is
+
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Implements the `mode` lexer action by calling _org.antlr.v4.runtime.Lexer#mode_ with
@@ -73,11 +78,11 @@ package ANTLR.Runtime.ATN.LexerActions.LexerModeActions is
    -- public
    procedure execute (This : LexerModeAction; lexer : Lexer);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerModeAction (S : in out Sink'Class; X : LexerModeAction);
    for LexerModeAction'Put_Image use Put_Image_LexerModeAction;
+   -- public
    function Description (This : LexerModeAction) return UString
-      is ("mode (" & This.mode'Image & ")");
+      is ("mode (" & This.mode'Image & ')');
 
 end ANTLR.Runtime.ATN.LexerActions.LexerModeActions;

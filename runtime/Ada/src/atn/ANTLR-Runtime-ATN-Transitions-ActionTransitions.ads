@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN;
@@ -10,13 +11,14 @@ package ANTLR.Runtime.ATN.Transitions.ActionTransitions is
    use ANTLR.Runtime.ATN.Transitions;
 
    -- public final
-   type ActionTransition is new ATNTransition with null record;
+   type ActionTransition is new ATNTransition with
+   record
       -- public
-      ruleIndex : constant Integer;
+      ruleIndex : Integer; -- constant
       -- public
-      actionIndex : constant Integer;
+      actionIndex : Integer; -- constant
       -- public
-      isCtxDependent : constant Boolean;
+      isCtxDependent : Boolean; -- constant
       -- e.g., $i ref in action
    end record;
 
@@ -48,13 +50,13 @@ package ANTLR.Runtime.ATN.Transitions.ActionTransitions is
    -- public
    overriding
    function matches (symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
-      is False;
+      is (False);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_ (S : in out Sink'Class; X : );
-   for 'Put_Image use Put_Image_;
-   function Description (This : …) return UString
-      is ("action_" & ruleIndex'Image & ":" & actionIndex'Image);
+   procedure Put_Image_ActionTransition (S : in out Sink'Class; X : ActionTransition);
+   for ActionTransition'Put_Image use Put_Image_ActionTransition;
+   -- public
+   function Description (This : ActionTransition) return UString
+      is ("action_" & ruleIndex'Image & ':' & actionIndex'Image);
 
 end ANTLR.Runtime.ATN.Transitions.ActionTransitions;

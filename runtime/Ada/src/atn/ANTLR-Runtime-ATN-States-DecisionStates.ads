@@ -24,13 +24,13 @@ package ANTLR.Runtime.ATN.States.DecisionStates is
    -- ------------------ --
    -- DecisionState_List --
    -- ------------------ --
-   function Equal (Left, Right : DecisionState) return Boolean
+   function "=" (Left, Right : DecisionState) return Boolean
       is (Left.decision = Right.decision and Left.nonGreedy = Right.nonGreedy);
 
    package DecisionState is new Ada.Cantainer.Vectors (
          Index_Type => Natural,
          Element_Type => DecisionState,
-         "=" => Equal);
+         "=" => "=");
    subtype DecisionState_List is DecisionState.Vector;
 
    -- ---------------------- --

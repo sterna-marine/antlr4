@@ -2,6 +2,7 @@
 
 with Ada.Finalization;
 with Ada.Real_Time;
+with Ada.Strings;
 
 use Ada;
 
@@ -247,6 +248,9 @@ package ANTLR.Runtime.ATN.DecisionInfos is
    -- public
    procedure Initialize (Self : in out DecisionInfo; decision : State);
 
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_DecisionInfo (S : in out Sink'Class; X : DecisionInfo);
+   for DecisionInfo'Put_Image use Put_Image_DecisionInfo;
    -- public
    function Description (This : DecisionInfo) return UString
       is ( '('

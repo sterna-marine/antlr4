@@ -33,9 +33,9 @@ package body ANTLR.Runtime.Token_Protocol is
       return Hash (Left) = Hash (Right);
    end Equivalent_Keys;
 
-   function Equal (Left, Right : Token_ID) is
+   function "=" (Left, Right : Token_ID) is
    begin
       return Left = Right;
-   end Equal;
+   end "=";
 
 end ANTLR.Runtime.Token_Protocol;

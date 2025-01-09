@@ -419,7 +419,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                -- In exact ambiguity mode, we never to terminate early.;
                -- Just keeps scarfing until we know what the conflict is
                if PredictionModes.allSubsetsConflict (altSubSets)
-               and PredictionModes.allSubsetsEqual (altSubSets) then
+               and PredictionModes.allSubsets"=" (altSubSets) then
                   foundExactAmbig := True;
                   predictedAlt : PredictionMode := PredictionModes.getSingleViableAlt (altSubSets);
                   exit;

@@ -30,7 +30,7 @@ package body ANTLR.Runtime.CommonTokenFactories is
          if Is_Valid (text) then
             t.setText (text);
       elsif cStream : constant := source.stream, copyText then
-            t.setText (try! cStream.getText (Interval.of (start, stop)));
+            t.setText (try! cStream.getText (Interval.Set (start, stop)));
       end if;
 
       return t

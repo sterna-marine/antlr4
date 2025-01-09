@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.Misc.Extensions.TokenExtension;
 with ANTLR.Runtime.WritableToken;
 
@@ -209,10 +210,10 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
    function getTokenSourceAndStream (This : CommonToken) return TokenSourceAndStream
       is (This.source);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_CommonToken (S : in out Sink'Class; X : CommonToken);
    for CommonToken'Put_Image use Put_Image_CommonToken;
+   -- public
    function Description (This : CommonToken) return UString
       is (toString (null));
 

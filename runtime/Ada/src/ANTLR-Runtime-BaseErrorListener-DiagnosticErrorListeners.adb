@@ -94,7 +94,7 @@ package body ANTLR.Runtime.BaseErrorListener.DiagnosticErrorListeners is
                                startIndex, stopIndex : Integer)
                                return UString is
    begin
-      return Set (Value (recognizer.getTokenStream).getText (Interval.of (startIndex, stopIndex)), Default => "<unknown>");
+      return Set (Value (recognizer.getTokenStream).getText (Interval.Set (startIndex, stopIndex)), Default => "<unknown>");
    exception
       when others =>
          return "<unknown>";

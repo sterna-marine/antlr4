@@ -54,17 +54,17 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
    end getReturnState;
 
    function Description (This : SingletonPredictionContext) return UString is
-      up : constant UString := (Image (This.parent), Default => "");
+      up : constant UString := Value (Image (This.parent), Default => "");
    begin
       if up.Length = 0 then
          if returnState = PredictionContext.EMPTY_RETURN_STATE then
-            return "$";
+            return '$';
          end if;
-         return UString (returnState);
+         return returnState'Image;
       else
-         return UString (returnState) & ' ' & up;
+         return returnState'Image & ' ' & up;
       end if;
-   end Image;
+   end Description;
 
    function "=" (Lhs, Rhs : SingletonPredictionContext) return Boolean is
    begin

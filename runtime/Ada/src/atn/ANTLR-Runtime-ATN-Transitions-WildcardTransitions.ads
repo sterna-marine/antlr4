@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 
@@ -28,12 +29,12 @@ package ANTLR.Runtime.ATN.Transitions.WildcardTransitions is
    overriding
    -- public
    function matches (This : WildcardTransition; symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
-      is (symbol >= minVocabSymbol and then symbol <= maxVocabSymbol)
+      is (symbol >= minVocabSymbol and then symbol <= maxVocabSymbol);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_WildcardTransition (S : in out Sink'Class; X : WildcardTransition);
    for WildcardTransition'Put_Image use Put_Image_WildcardTransition;
+   -- public
    function Description (This : WildcardTransition) return UString
       is (".");
 

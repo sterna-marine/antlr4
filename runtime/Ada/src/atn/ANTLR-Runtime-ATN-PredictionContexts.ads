@@ -1,17 +1,31 @@
 -- €
 
-with ANTLR.Runtime.ATN.States;
-with Option;
-with Interfaces;
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
-with Ada.Containers.RuleContexts.ParserRuleContexts;
+with Ada.Containers.Vectors;
+with Ada.Strings;
+with ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Misc.DoubleKeyMap;
+with ANTLR.Runtime.RuleContexts;
+with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+with ANTLR.Runtime.Recognizers;
+with Interfaces;
+with Option;
 
 use Ada;
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Misc.DoubleKeyMap;
+use ANTLR.Runtime.RuleContexts;
+use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+use ANTLR.Runtime.Recognizers;
 use Option;
 
 package ANTLR.Runtime.ATN.PredictionContexts is
+
+   use ANTLR.Runtime;
+   use ANTLR.Runtime.ATN;
 
    type Context_ID is new Natural;
    type Hash_Code  is new Interfaces.Unsigned_32;
@@ -64,8 +78,67 @@ package ANTLR.Runtime.ATN.PredictionContexts is
       cachedHashCode : Hash_code; -- constant
    end record;
 
+   function "=" (Left, Right : PredictionContext) return Boolean;
+
    -- public
    procedure hash (This : PredictionContext; hasher: in out Hasher);
+
+   -- -------------------------------------- --
+   -- PredictionContext_List --
+   -- -------------------------------------- --
+   package PredictionContext_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => PredictionContext,
+      "=" => "=");
+   subtype PredictionContext_List is PredictionContext_Container.Vector;
+
+   -- -------------------------- --
+   -- Optional_PredictionContext --
+   -- -------------------------- --
+   package Option_PredictionContext is new Option (PredictionContext);
+   subtype Optional_PredictionContext is Option_PredictionContext.Optional; -- renames
+
+   -- -------------------------------------- --
+   -- Optional_PredictionContext_List --
+   -- -------------------------------------- --
+   package Optional_PredictionContext_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => Optional_PredictionContext,
+      "=" => "=");
+   subtype Optional_PredictionContext_List is Optional_PredictionContext_Container.Vector;
+
+   -- ------------------------------------------------ --
+   -- PredictionContext_Dictionary (PredictionContext) --
+   -- ------------------------------------------------ --
+   function Hash (Key : PredictionContext) return Ada.Containers.Hash_Type;
+   function Equivalent_Keys (Left, Right : PredictionContext) return Boolean;
+   package PredictionContext_2_Dictorary is new Ada.Containers.Hashed_Maps (
+      Key_Type => PredictionContext,
+      Element_Type => PredictionContext,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => "=");
+   subtype PredictionContext_2_Map is PredictionContext_2_Dictorary.Map
+
+   -- -------------------------------------- --
+   -- PredictionContext_Dictionary (Integer) --
+   -- -------------------------------------- --
+   function Hash (Key : Integer) return Ada.Containers.Hash_Type;
+   function Equivalent_Keys (Left, Right : Integer) return Boolean;
+   package Map is new Ada.Containers.Hashed_Maps (
+      Key_Type => Integer,
+      Element_Type => PredictionContext,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => "=");
+
+   package DoubleKey_PredictionContext_Dictionary is new DoubleKeyMap (
+      Key1 => Hash,
+      Key2 => Hash,
+      Value => PredictionContext,
+      Optional_Value => Optional_PredictionContext);
+   subtype PredictionContext_DoubleKeyMap is DoubleKey_PredictionContext_Dictionary.DoubleKeyMap;
+
 
    procedure Initialize (Self : PredictionContext; cachedHashCode : Hash_code);
 
@@ -83,18 +156,18 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    function getParent (This : PredictionContext; index : Integer) return Optional_PredictionContext with No_Return;
 
    -- public
-   function getReturnState (This : PredictionContext; index : Integer) return ATNStates.State with No_Return;
+   function getReturnState (This : PredictionContext; index : Integer) return State with No_Return;
 
    -- public
    function hasEmptyPath (This : PredictionContext) return Boolean
-      is (getReturnState (Last_ID) == PredictionContext.EMPTY_RETURN_STATE)
+      is (getReturnState (Last_ID) = EMPTY_RETURN_STATE)
 
    -- static
    function calculateEmptyHashCode (This : PredictionContext) return Hash_Code;
       hash : constant Hash_Code := MurmurHash.initialize (INITIAL_HASH);
 
    -- static
-   function calculateHashCode (parent : Optional_PredictionContext; returnState : ATStates.State) return Hash_Code;
+   function calculateHashCode (parent : Optional_PredictionContext; returnState : State) return Hash_Code;
 
    -- static
    function calculateHashCode (parents : Optional_PredictionContext_List, returnStates : Integer_List) return Hash_Code;
@@ -104,7 +177,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    function merge (a : PredictionContext;
                    b : PredictionContext;
                    rootIsWildcard : Boolean;
-                   mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
+                   mergeCache : in out PredictionContext_DoubleKeyMap) -- PredictionContext.Optional_DoubleKeyMap)
                    return PredictionContext;
 
    --
@@ -130,7 +203,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    function mergeArrays (a : ArrayPredictionContext;
                          b : ArrayPredictionContext;
                          rootIsWildcard : Boolean;
-                         mergeCache : in out PredictionContext.Optional_DoubleKeyMap)
+                         mergeCache : in out PredictionContext_DoubleKeyMap) -- PredictionContext.Optional_DoubleKeyMap)
                          return PredictionContext;
 
    -- public static
@@ -141,75 +214,63 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    -- public static
    function getCachedContext (context : PredictionContext;
                               contextCache : PredictionContextCache;
-                              visited : in out [PredictionContext: PredictionContext])
+                              visited : in out PredictionContext_2_Map)
                               return PredictionContext;
 
    -- ter's recursive version of Sam's This.getAllNodes;
    -- public static
-   function getAllContextNodes (context : PredictionContext) return PredictionContext_Container.Vector;
-      nodes := PredictionContext.Container.Empty_Vector;
-      visited := [PredictionContext: PredictionContext]();
+   function getAllContextNodes (context : PredictionContext) return PredictionContext_List;
 
    -- private static
    procedure getAllContextNodes_2 (context : Optional_PredictionContext;
-                                  nodes : in out [PredictionContext],
-                                  visited : in out [PredictionContext: PredictionContext]);
+                                  nodes : in out PredictionContext_List,
+                                  visited : in out PredictionContext_2_Map);
 
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_SingletonPredictionContext (S : in out Sink'Class; X : SingletonPredictionContext);
+   for SingletonPredictionContext'Put_Image use Put_Image_SingletonPredictionContext;
    -- public
-   generic
-      type T is ;--TOFIX
-   function toString<T> (recog : Recognizer<T>) return UString;
+   function Description (This : PredictionContext) return UString
+      is (PredictionContext'External_Tag) & '@' & UString (Unmanaged.passUnretained (self).toOpaque.hashValue);
 
-   -- public
-   generic
-      type T is ;--TOFIX
-   function toStrings<T> (recognizer : Recognizer<T>, currentState : ATStates.State) return UString_Container.Vector;
-
-   -- FROM SAM
-   -- public
-   generic
-      type T is ;--TOFIX
-   function toStrings<T> (recognizer : Recognizer<T>?, stop : PredictionContext; currentState : ATStates.State) return UString_Container.Vector;
-
-   -- public
-   function Description (This : …) return UString
-      is (describing: PredictionContext.self) + "@" + UString (Unmanaged.passUnretained (self).toOpaque.hashValue);
-
-   function Equal (Left, Right : PredictionContext) return Boolean;
+   -- --------- --
+   -- DoubleKey --
+   -- --------- --
 
    type DoubleKey is record
       A, B : PredictionContext;
    end record;
 
-   -- ------------------------ --
-   -- Option_PredictionContext --
-   -- ------------------------ --
-   package Option_PredictionContext is new Option (PredictionContext);
-   subtype Optional_PredictionContext is Option_PredictionContext.Optional; -- renames
+   -- ------------ --
+   -- Recognizer_T --
+   -- ------------ --
+   package Recognizers_T is new Recognizers (T);
+   subtype Recognizer_T is Recognizers_T.Recognizer;
 
-   -- -------------------------------------- --
-   -- PredictionContext_Dictionary (Integer) --
-   -- -------------------------------------- --
-   function Hash (Key : Integer) return Ada.Containers.Hash_Type;
-   function Equivalent_Keys (Left, Right : Integer) return Boolean;
-   package Map is new Ada.Containers.Hashed_Maps (
-      Key_Type => Integer,
-      Element_Type => PredictionContext,
-      Hash => Hash,
-      Equivalent_Keys => Equivalent_Keys,
-      "=" => Equal);
+   package Option_Recognizer_T is new Option (Recognizer_T);
+   subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
 
-   -- ------------------------------------------------ --
-   -- PredictionContext_Dictionary (PredictionContext) --
-   -- ------------------------------------------------ --
-   function Hash (Key : PredictionContext) return Ada.Containers.Hash_Type;
-   function Equivalent_Keys (Left, Right : PredictionContext) return Boolean;
-   package Map2 is new Ada.Containers.Hashed_Maps (
-      Key_Type => PredictionContext,
-      Element_Type => PredictionContext,
-      Hash => Hash,
-      Equivalent_Keys => Equivalent_Keys,
-      "=" => Equal);
+   -- ------------ --
+   -- Recognizer_T --
+   -- ------------ --
+   package Recognizers_T is new Recognizers (T);
+   subtype Recognizer_T is Recognizers_T.Recognizer;
+
+   -- public
+   generic
+      type T is ;--TOFIX
+   function toString (recog : Recognizer_T) return UString;
+
+   -- public
+   generic
+      type T is ;--TOFIX
+   function toStrings (recognizer : Recognizer_T; currentState : State) return UString_List;
+
+   -- FROM SAM
+   -- public
+   generic
+      type T is ;--TOFIX
+   function toStrings (recognizer : Optional_Recognizer_T; stop : PredictionContext; currentState : State) return UString_List;
 
    -- ------------- --
    -- mergeCacheMap --

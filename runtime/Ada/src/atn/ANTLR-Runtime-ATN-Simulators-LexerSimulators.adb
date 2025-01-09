@@ -730,7 +730,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    function getText (This : LexerATNSimulator; input : CharStream) return UString is
    begin
       -- index is first lookahead char, don't include.
-      return input.getText (Interval.of (startIndex, input.index - 1)); --try!
+      return input.getText (Interval.Set (startIndex, input.index - 1)); --try!
    exception
       when Others => null;
    end getText;

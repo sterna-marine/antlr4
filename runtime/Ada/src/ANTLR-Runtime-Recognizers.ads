@@ -55,7 +55,7 @@ generic
    type ATNSimulator is private;
 package ANTLR.Runtime.Recognizers is
 
-   subtype ATNInterpreter is new ATNSimulator with null record;
+   type ATNInterpreter is new ATNSimulator with null record;
    --open
    type Recognizer is new Ada.Finalization.Controlled and RecognizerProtocol with
    record

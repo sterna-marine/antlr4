@@ -1,10 +1,15 @@
 -- €
 
-with ANTLR.Runtime.ATN.LexerAction;
+with Ada.Strings;
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.ATN.LexerAction;
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerPopModeActions is
+
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Implements the `popMode` lexer action by calling _org.antlr.v4.runtime.Lexer#popMode_.
@@ -67,10 +72,10 @@ package ANTLR.Runtime.ATN.LexerActions.LexerPopModeActions is
    overriding
    procedure execute (This : LexerPopModeAction; lexer : Lexer);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_LexerPopModeAction (S : in out Sink'Class; X : LexerPopModeAction);
    for LexerPopModeAction'Put_Image use Put_Image_LexerPopModeAction;
+   -- public
    function Description (This : LexerPopModeAction) return UString
       is ("popMode");
    

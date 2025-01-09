@@ -3,6 +3,7 @@
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Hashed_Sets;
+with Ada.Strings;
 with Ada.Finalization;
 with Ada.Strings.Unbounded;
 --TOFIX with AdaForge.MurMur3_Hash;
@@ -175,10 +176,10 @@ package ANTLR.Runtime.ATN.Configs is
    -- public final
    procedure setPrecedenceFilterSuppressed (This : in out ATNConfig; value : Boolean);
 
--- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_ATNConfig (S : in out Sink'Class; X : ATNConfig);
    for ATNConfig'Put_Image use Put_Image_ATNConfig;
+-- public
    function Description (This : ATNConfig) return UString
       is (toString ((Valid => False), True));
 
@@ -187,8 +188,9 @@ package ANTLR.Runtime.ATN.Configs is
    generic
       type T is private; --TOFIX
       package Option_T is new Option (T);  --TOFIX
-   package Option_Recognizer is new Option (T);  --TOFIX
-   type Optional_Recognizer is Option_Recognizer_T.Optional;  --TOFIX
+      subtype Optional_T is Option_T.Optional;
+   package Option_Recognizer is new Optional_T;  --TOFIX
+   subtype Optional_Recognizer is Option_Recognizer_T.Optional;  --TOFIX
 
    generic
       type T is private; --TOFIX

@@ -29,7 +29,7 @@ type ConsoleErrorListener is new BaseErrorListener with null record;
     --
     -- public
     overriding
-    procedure syntaxError<T> (recognizer : Recognizer<T>,
+    procedure syntaxError<T> (recognizer : Recognizer_T,
                                         offendingSymbol : Optional_AnyObject;
                                         line : Integer;
                                         charPositionInLine : Integer;

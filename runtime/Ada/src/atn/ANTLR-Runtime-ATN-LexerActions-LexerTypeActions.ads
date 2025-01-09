@@ -1,10 +1,14 @@
 -- €
 
-with ANTLR.Runtime.ATN.LexerAction;
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.ATN.LexerAction;
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerTypeActions is
+
+   use ANTLR.Runtime.ATN.LexerActions;
 
    --
    -- Implements the `type` lexer action by calling _org.antlr.v4.runtime.Lexer#setType_

@@ -5,7 +5,7 @@ with Ada.Containers.Hashed_Maps;
 
 generic
    type V is private;
-   function Equal (Left, Right : V) return Boolean;
+   function "=" (Left, Right : V) return Boolean;
 package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
 
    function Hash (Key : ObjectIdentifier) return Ada.Containers.Hash_Type;
@@ -16,7 +16,7 @@ package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
       Element_Type => V,
       Hash => Hash,
       Equivalent_Keys => Equivalent_Keys,
-      "=" => Equal);
+      "=" => "=");
 
    -- public
    type ParseTreeProperty<V> is tagged with record

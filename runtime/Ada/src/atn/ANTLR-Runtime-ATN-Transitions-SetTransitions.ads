@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.Transitions;
 
 use ANTLR.Runtime.ATN.Transitions;
@@ -40,10 +41,10 @@ package ANTLR.Runtime.ATN.Transitions.SetTransitions is
    function matches (This : SetTransition; symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
       is (This.set.contains (symbol));
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_SetTransition (S : in out Sink'Class; X : SetTransition);
    for SetTransition'Put_Image use Put_Image_SetTransition;
+   -- public
    function Description (This : SetTransition) return UString
       is (This.set'Image);
 

@@ -504,7 +504,7 @@ begin
     -- public
     function getText (This : …) return UString is
 begin
-        return getText (Interval.of (0, This.size - 1));
+        return getText (Interval.Set (0, This.size - 1));
     end if;
 
     -- public
@@ -536,7 +536,7 @@ begin
     function getText (start : Optional_Token; stop : Optional_Token;) return UString is
 begin
         if start : constant := start, stop : constant := stop then
-            return getText (Interval.of (start.getTokenIndex, stop.getTokenIndex));
+            return getText (Interval.Set (start.getTokenIndex, stop.getTokenIndex));
         end if;
 
         return ""

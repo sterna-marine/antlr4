@@ -1,8 +1,15 @@
 -- €
 
+with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Recognizers.Lexers;
+
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.ATN.LexerActionTypes;
+
 package ANTLR.Runtime.ATN.LexerActions.LexerIndexedCustomActions is
 
-   use ANTLR.Runtime.ATN.LexerAction;
+   use ANTLR.Runtime.ATN.LexerActions;
+
    --
    -- This implementation of _org.antlr.v4.runtime.atn.LexerAction_ is used for tracking input offsets
    -- for position-dependent actions within a _org.antlr.v4.runtime.atn.LexerActionExecutor_.

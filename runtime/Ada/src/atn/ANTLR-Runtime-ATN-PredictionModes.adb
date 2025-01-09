@@ -57,7 +57,7 @@ package body ANTLR.Runtime.ATN.PredictionModes is
       return False;
    end hasConflictingAltSet;
 
-   function allSubsetsEqual (altsets : BitSet_List) return Boolean is
+   function allSubsets"=" (altsets : BitSet_List) return Boolean is
       first : constant BitSet := altsets.Element (0);
    begin
       for it of altsets loop

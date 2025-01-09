@@ -4,6 +4,7 @@ with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Vectors;
 with Ada.Finalization;
+with Ada.Strings;
 with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.Token_Protocol;
@@ -131,7 +132,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
       tokens : TokenStream; --!
    end record;
 
-   function Equal (Left, Right : RewriteOperation) return Boolean;
+   function "=" (Left, Right : RewriteOperation) return Boolean;
 
    function Hash_Integer (Key : Integer) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Integer) return Boolean
@@ -142,12 +143,12 @@ package ANTLR.Runtime.TokenStreamRewriters is
       Element_Type => RewriteOperation,
       Hash => Hash_Integer,
       Equivalent_Keys => Equivalent_Keys,
-      "=" => Equal);
+      "=" => "=");
    subtype RewriteOperation_Map is RewriteOperation_Container.Map;
 
    package Option_RewriteOperation is new Option (RewriteOperation);
    subtype Optional_RewriteOperation is Option_RewriteOperation.Optional;
-   function Equal (Left, Right : Optional_RewriteOperation) return Boolean;
+   function "=" (Left, Right : Optional_RewriteOperation) return Boolean;
 
    package Optional_RewriteOperation_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
@@ -166,10 +167,10 @@ package ANTLR.Runtime.TokenStreamRewriters is
    function execute (This : RewriteOperation; buf : in out UString) return Integer
       is (This.index);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_RewriteOperation (S : in out Sink'Class; X : RewriteOperation);
    for RewriteOperation'Put_Image use Put_Image_RewriteOperation;
+   -- public
    function Description (This : RewriteOperation) return UString;
 
    -- ------------------- --
@@ -268,7 +269,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
       rewrites : Optional_RewriteOperation_List;
    end record;
 
-   function Equal (Left, Right : RewriteOperationArray) return Boolean;
+   function "=" (Left, Right : RewriteOperationArray) return Boolean;
 
    function Hash_UString (Key : UString) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : UString) return Boolean
@@ -279,7 +280,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
       Element_Type => RewriteOperationArray,
       Hash => Hash_UString,
       Equivalent_Keys => Equivalent_Keys,
-      "=" => Equal);
+      "=" => "=");
    subtype RewriteOperationArray_Map is RewriteOperationArray_Container.Map;
 
    -- public

@@ -51,7 +51,7 @@ begin
 
 
     -- override public
-    function isEqual (other : Chunk) return Boolean is
+    function is"=" (other : Chunk) return Boolean is
 begin
         other : constant TextChunk := TextChunk (other);
         if not Is_Valid (other) then

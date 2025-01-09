@@ -19,10 +19,10 @@ package body ANTLR.Runtime.ATN.States is
       return Hash (Left) = Hash (Right); 
    end Equivalent_Elements;
 
-   function Equal (Left, Right : ATNState) return Boolean is
+   function "=" (Left, Right : ATNState) return Boolean is
    begin
       return Left = Right; --TOFIX
-   end Equal;
+   end "=";
 
    procedure hash (This : ATNState; Some_Hasher : in out Hasher) is
    begin

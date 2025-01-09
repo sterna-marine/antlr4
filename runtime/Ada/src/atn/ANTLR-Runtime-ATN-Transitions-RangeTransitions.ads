@@ -1,5 +1,7 @@
 -- €
 
+with Ada.Strings;
+
 package ANTLR.Runtime.ATN.Transitions.RangeTransitions is
 
    use ANTLR.Runtime.ATN.Transitions;
@@ -29,18 +31,18 @@ package ANTLR.Runtime.ATN.Transitions.RangeTransitions is
    -- public
    overriding
    function labelIntervalSet (This : RangeTransition) return Optional_IntervalSet
-      is (IntervalSet.of (This.from, This.to));
+      is (IntervalSet.Set (This.from, This.to));
 
    -- public
    overriding
    function matches (This : RangeTransition; symbol : Integer; minVocabSymbol : Integer; maxVocabSymbol : Integer) return Boolean
       is (symbol >= This.from and then symbol <= This.to);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_RangeTransition (S : in out Sink'Class; X : RangeTransition);
    for RangeTransition'Put_Image use Put_Image_RangeTransition;
+   -- public
    function Description (This : RangeTransition) return UString
-      is ("'" + UString (This.from) + "'..'" + UString (This.to) + "'");
+      is (''' & This.from'Image & " .. " & This.to'Image & ''');
 
 end ANTLR.Runtime.ATN.Transitions.RangeTransitions;

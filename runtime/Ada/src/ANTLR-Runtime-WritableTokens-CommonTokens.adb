@@ -68,7 +68,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
             n : constant := input.size;
             if This.start < n and then This.stop < n then
                   begin
-                     return input.getText (Interval.of (This.start, This.stop));
+                     return input.getText (Interval.Set (This.start, This.stop));
                   exception
                      when others => return Optional_String (Valid = False);
                   end;

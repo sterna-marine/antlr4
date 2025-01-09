@@ -15,14 +15,17 @@ package body ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions is
    end Initialize;
 
    function Description (This : LexerNoViableAltException) return UString is
+      symbol : UString := "";
+      charStream : constant := Optional_CharStream ( This.getInputStream);
    begin
-      symbol := "";
-      if charStream : constant := Optional_CharStream ( This.getInputStream), startIndex >= 0 and then startIndex < charStream.size then
-         interval : constant := Interval.of (startIndex, startIndex);
+      if Is_Valid (charStream)
+      and then startIndex >= 0
+      and then startIndex < charStream.size then
+         interval : constant := Interval.Set (startIndex, startIndex);
          symbol := charStream.getText (interval); -- try!
          symbol := Utils.escapeWhitespace (symbol, False);
       end if;
-      return LexerNoViableAltException.self & "('" & symbol'Image & "')";
+      return LexerNoViableAltException'External_Tag & "('" & symbol & "')"; --TOFIX
    end Description;
 
 end ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions;

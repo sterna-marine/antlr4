@@ -45,7 +45,7 @@ package ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    record
 
       -- public
-      dfa_debug : constant Boolean := False;
+      dfa_debug : Boolean := False; -- constant
 
       -- internal weak
       recog : Optional_Lexer;

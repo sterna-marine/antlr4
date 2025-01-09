@@ -105,7 +105,7 @@ begin
 
 
     -- override public
-    function isEqual (other : Chunk) return Boolean is
+    function is"=" (other : Chunk) return Boolean is
 begin
         other : constant TagChunk := TagChunk (other);
         if not Is_Valid (other) then

@@ -2,6 +2,7 @@
 
 with Ada.Finalization;
 with Ada.Containers.Vectors;
+with Ada.Strings;
 with ANTLR.Runtime.ATN.DFAState;
 with ANTLR.Runtime.ATN.DecisionState;
 with ANTLR.Runtime.Misc.Utils.Mutex;
@@ -115,12 +116,12 @@ package ANTLR.Runtime.DFA is
    -- public
    function getStates (This : DFA) return DFAState_List;
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_DFA (S : in out Sink'Class; X : DFA);
    for DFA'Put_Image use Put_Image_DFA;
+   -- public
    function Description (This : DFA) return UString
-      is (toString (Vocabularies.EMPTY_VOCABULARY));
+      is (toString (EMPTY_VOCABULARY));
 
    -- public
    function toString (This : DFA; vocabulary : Vocabulary) return UString;

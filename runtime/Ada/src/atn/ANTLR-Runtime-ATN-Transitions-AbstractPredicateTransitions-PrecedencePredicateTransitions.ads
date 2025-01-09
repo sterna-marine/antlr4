@@ -1,5 +1,6 @@
 -- €
 
+with Ada.Strings;
 with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN;
@@ -10,7 +11,7 @@ package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePre
    type PrecedencePredicateTransition is new AbstractPredicateTransition with
    record
       -- public
-      precedence : constant Integer;
+      precedence : Integer; -- constant
    end record;
 
    subtype Object is PrecedencePredicateTransition;
@@ -40,8 +41,11 @@ package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePre
    function getPredicate (This : PrecedencePredicateTransition) return SemanticContext.PrecedencePredicate
       is (SemanticContext.PrecedencePredicate (This.precedence));
 
-   -- public
-   function Description (This : …) return UString
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_PrecedencePredicateTransition (S : in out Sink'Class; X : PrecedencePredicateTransition);
+   for PrecedencePredicateTransition'Put_Image use Put_Image_PrecedencePredicateTransition;
+-- public
+   function Description (This : PrecedencePredicateTransition) return UString
       is (precedence'Image & "  >= _p");
 
 end ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePredicateTransitions;

@@ -340,7 +340,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
    -- Just in case this optimization is bad, add an ENV variable to turn it off
    --
    -- public static
-   function Turn_Off_LR_Loop_Entry_Branch_Opt return Boolean is -- constant  --TOFIX
+   function Turn_Off_LR_Loop_Entry_Branch_Opt return Boolean; -- constant  --TOFIX
 
    --  Testing only!
    --  public convenience
@@ -813,7 +813,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
    procedure closure_2 (This : ParserATNSimulator; 
                         config : ATNConfig;
                         configs : ATNConfigSet;
-                        closureBusy : in out Set_of_ATNConfigs,
+                        closureBusy : in out Set_of_ATNConfigs;
                         collectPredicates : Boolean;
                         fullCtx : Boolean;
                         depth : Integer;

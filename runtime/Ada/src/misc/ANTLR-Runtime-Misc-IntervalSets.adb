@@ -6,10 +6,10 @@ use ANTLR.Runtime.Misc.Exceptions.Errors;
 
 package body ANTLR.Runtime.Misc.IntervalSets is
 
-   function Equal (Left, Right : IntervalSet) return Boolean is
+   function "=" (Left, Right : IntervalSet) return Boolean is
    begin
       return Left = Right; --TOFIX
-   end Equal;
+   end "=";
 
    procedure Initialize (Self : in out IntervalSet; intervals : Interval_List) is
    begin

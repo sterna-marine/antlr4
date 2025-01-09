@@ -1,6 +1,7 @@
 -- €
 
 with Ada.Containers;
+with Ada.Strings;
 with ANTLR.Runtime.ATN.LookupDictionaries;
 with ANTLR.Runtime.ATN.Configs;
 with ANTLR.Runtime.Misc.DoubleKeyMap;
@@ -191,12 +192,11 @@ package ANTLR.Runtime.ATN.ConfigSets is
    -- public
    procedure setReadonly (This : ATNConfigSet; readonly  : Boolean);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_ATNConfigSet (S : in out Sink'Class; X : ATNConfigSet);
    for ATNConfigSet'Put_Image use Put_Image_ATNConfigSet;
+   -- public
    function Description (This : ATNConfigSet) return UString;
-      buf : UString; -- := "";
 
    --
    -- override

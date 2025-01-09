@@ -21,7 +21,7 @@ package ANTLR.Runtime.ATN.Transitions is
       target : ATNState;
    end record;
 
-   function Equal (Left, Right : ATNTransition) return Boolean;
+   function "=" (Left, Right : ATNTransition) return Boolean;
 
    -- public
    type Transition is (
@@ -56,7 +56,7 @@ package ANTLR.Runtime.ATN.Transitions is
    package ATNTransition_Container is new Ada.Cantainers.Vectors (
       Index_Type => Container_Index,
       Element_Type => ATNTransition,
-      "=" => Equal);
+      "=" => "=");
    subtype ATNTransition_List is ATNTransition_Container.Vector;
 
       -- public static

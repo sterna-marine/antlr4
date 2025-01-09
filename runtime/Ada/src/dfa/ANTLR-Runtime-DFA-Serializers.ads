@@ -1,6 +1,7 @@
 -- €
 
 with Ada.Finalization;
+with Ada.Strings;
 
 package ANTLR.Runtime.DFA.Serializers is
 
@@ -12,9 +13,9 @@ package ANTLR.Runtime.DFA.Serializers is
    type DFASerializer is new Ada.Finalization.Controlled with
    record
       -- private
-      dfa : constant DFA;
+      dfa : DFA; -- constant
       -- private
-      vocabulary : constant Vocabulary;
+      vocabulary : Vocabulary; -- constant
    end record;
 
    subtype Object is DFASerializer;
@@ -24,10 +25,10 @@ package ANTLR.Runtime.DFA.Serializers is
    -- public
    procedure Initialize (Self : in out DFASerializer; dfa : DFA; vocabulary : Vocabulary);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_DFASerializer (S : in out Sink'Class; X : DFASerializer);
    for DFASerializer'Put_Image use Put_Image_DFASerializer;
+   -- public
    function Description (This : DFASerializer) return UString;
 
    -- internal
@@ -36,4 +37,4 @@ package ANTLR.Runtime.DFA.Serializers is
    -- internal
    function getStateString (This : DFASerializer; s : DFAState) return UString;
 
-end DFA.Serializers;
+end ANTLR.Runtime.DFA.Serializers;

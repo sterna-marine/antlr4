@@ -161,9 +161,6 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       This.configLookup.removeAll;
    end setReadonly;
 
-   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_ATNConfigSet (S : in out Sink'Class; X : ATNConfigSet);
-   for ATNConfigSet'Put_Image use Put_Image_ATNConfigSet;
    function Description (This : ATNConfigSet) return UString is
       buf : UString; -- := "";
    begin
@@ -181,7 +178,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
          buf := @ & ",dipsIntoOuterContext";
       end if;
       return buf;
-   end Image;
+   end Description;
 
    function configHash (This : ATNConfigSet;
                         stateNumber : ATNStates.State;

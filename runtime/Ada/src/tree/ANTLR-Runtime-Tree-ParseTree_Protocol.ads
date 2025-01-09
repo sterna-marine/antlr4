@@ -1,13 +1,15 @@
 -- €
 
+with Ada.Containers;
+with Ada.Containers.Hashed_Map;
 with Ada.Containers.Vectors;
 with Ada.Strings;
-with ANTLR.Runtime.RuleContexts
+with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.Tree.ParseTreeVisitors;
 with ANTLR.Runtime.Tree.SyntaxTree_Protocol;
 with Option;
 
-use ANTLR.Runtime.RuleContexts
+use ANTLR.Runtime.RuleContexts;
 use ANTLR.Runtime.Tree.ParseTreeVisitors;
 use ANTLR.Runtime.Tree.SyntaxTree_Protocol;
 
@@ -30,6 +32,19 @@ package ANTLR.Runtime.Tree.ParseTree_Protocol is
       Item_Type  => ParseTree,
       "=" => "=");
    subtype ParseTree_List is ParseTree_Container.Vector;
+
+   function Hash (Key : UString) return Ada.Containers.Hash_Type;
+
+   function Equivalent_Keys (Left, Right : Key_Type)
+      is (Hash (Left) = Hash (Right));
+
+   package ParseTree_Dictonary is new Ada.Containers.Hashed_Map (
+      Key_Type => UString,
+      Element_Type => ParseTree,
+      Hash => Hash,
+      Equivalent_Keys => Equivalent_Keys,
+      "=" => "=");
+   subtype ParseTree_MultiMap is ParseTree_Dictonary.Map;
 
    -- Set the parent for this leaf node.
    procedure setParent (This : ParseTree; parent : RuleContext) is abstract;
@@ -58,6 +73,9 @@ package ANTLR.Runtime.Tree.ParseTree_Protocol is
    procedure Put_Image_ParseTree (S : in out Sink'Class; X : ParseTree) is abstract;
    for ParseTree'Put_Image use Put_Image_ParseTree;
    
+   subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
+   procedure Put_Image_ParseTree (S : in out Sink'Class; X : ParseTree);
+   for ParseTree'Put_Image use Put_Image_ParseTree;
    function Description (This : ParseTree) return UString is abstract;
 
 end ANTLR.Runtime.Tree.ParseTree_Protocol;

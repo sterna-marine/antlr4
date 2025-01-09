@@ -15,15 +15,21 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- of speed.
    --
 
-   type Lexer_Mode is new Natural;
+   type Lexer_Mode is new Integer;
+
+   package Lexer_Mode_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type  => Integer,
+      "=" => "=");
+   subtype Lexer_Mode_Stack is Lexer_Mode_Container.Vector;
 
    -- public static
    DEFAULT_MODE : constant Lexer_Mode := 0;
 
    -- public static
-   MORE : constant Integer := -2
+   MORE : constant Integer := -2;
    -- public static
-   SKIP : constant Integer := -3
+   SKIP : constant Integer := -3;
 
    -- public static
    DEFAULT_TOKEN_CHANNEL : constant Channel_Number := CommonToken.DEFAULT_CHANNEL;
@@ -47,7 +53,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
       -- How to create token objects
       --
       -- internal
-      factory := CommonTokenFactory.DEFAULT;
+      factory : TOFIX := CommonTokenFactory.DEFAULT;
 
       --
       -- The goal of all lexer rules/methods is to create a token object.
@@ -101,7 +107,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
       Token_Type : Token_Kind := CommonToken.INVALID_Type;
 
       -- public final
-      modeStack := Stack<Lexer_Mode>;
+      modeStack : TOFIX := Lexer_Mode_Stack;
       -- public
       mode : Lexer_Mode := DEFAULT_MODE;
 
@@ -160,7 +166,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    -- open
    overriding
-   procedure setTokenFactory (This : Lexer; factory : TokenFactory);
+   procedure setTokenFactory (This : Lexer; Some_factory : TokenFactory);
 
    --open
    overriding
@@ -172,11 +178,11 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --
    -- open
    overriding
-   procedure setInputStream (This : Lexer; input : IntStream);
+   procedure setInputStream (This : Lexer; Some_input : IntStream);
 
    -- open
    function getSourceName (This : Lexer) return UString
-      is (_input!.getSourceName);
+      is (Value (input).getSourceName);
 
    -- open
    function getInputStream (This : Lexer) return Optional_CharStream
@@ -189,7 +195,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- rather than a single variable as this implementation does).
    --
    -- open
-   procedure emit (This : Lexer; token : Token);
+   procedure emit (This : Lexer; Some_token : Token);
 
    --
    -- The standard method called to automatically emit a token at the
@@ -225,7 +231,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --
    -- open
    function getCharIndex (This : Lexer) return Integer
-      is (_input!.index);
+      is (Value (input).index);
 
    --
    -- Return the text matched so far for the current token or any
@@ -246,20 +252,20 @@ package ANTLR.Runtime.Recognizers.Lexers is
    --
    -- open
    function getToken (This : Lexer) return Token
-      is (This.token!);
+      is (Value (This.token));
 
    -- open
-   procedure setToken (This : Lexer; token : Token);
+   procedure setToken (This : Lexer; Some_token : Token);
 
    -- open
    procedure setType (This : Lexer; tType : Token_Kind);
 
    -- open
    function getType (This : Lexer) return Token_Kind
-      is (This.Token_Type)
+      is (This.Token_Type);
 
    -- open
-   procedure setChannel (This : Lexer; Channel : Channel_Number);
+   procedure setChannel (This : Lexer; Some_Channel : Channel_Number);
 
    -- open
    function getChannel (This : Lexer) return Channel_Number
@@ -287,8 +293,9 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- open
    generic
       type T is private;
-      package T_Recognizers is new ANTLR.Runtime.Recognizers.Recognizer (T);
-   procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: T_Recognizer);
+      package Recognizers_T is new ANTLR.Runtime.Recognizers.Recognizer (T);
+      subtype Recognizer_T is Recognizers_T.Recognizer;
+   procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: Recognizer_T);
 
    -- open
    function getErrorDisplay (This : Lexer; s : UString) return UString;
@@ -298,7 +305,7 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    -- open
    function getCharErrorDisplay (This : Lexer; c : Character) return UString
-      is "'" & getErrorDisplay (c)'Image & "'";
+      is (''' & getErrorDisplay (c)'Image & ''');
 
    --
    -- Lexers can normally match any char in it's vocabulary after matching

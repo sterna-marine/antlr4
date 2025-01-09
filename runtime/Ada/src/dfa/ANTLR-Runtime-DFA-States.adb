@@ -2,10 +2,10 @@
 
 package body ANTLR.Runtime.DFA.States is
 
-   function Equal (Left, Right : PredPrediction) return Boolean is
+   function "=" (Left, Right : PredPrediction) return Boolean is
    begin
       return Left.Pred = Right.Pred and Left.Alt = Right.Alt;
-   end Equal;
+   end "=";
 
 
    procedure Initialize (Self : in out PredPrediction; pred : SemanticContext; alt : Integer) is
@@ -28,13 +28,13 @@ package body ANTLR.Runtime.DFA.States is
    procedure Put_Image_DFAState (S : in out Sink'Class; X : DFAState);
    for DFAState'Put_Image use Put_Image_DFAState;
    function Description (This : DFAState) return UString is
-      buf := ATNState.State'Image (This.stateNumber) & ':' & " & configs'Image & ";
+      buf : UString := ATNState.State'Image (This.stateNumber) & ':' & configs'Image;
    begin
         if This.isAcceptState then
             buf := @ & "=>";
             predicates : constant := This.predicates;
             if Is_Valid (predicates) then
-                buf := @ & UString (describing => predicates); --TOFIX
+                buf := @ & UString (predicates'External_Tag); --TOFIX
             else
                 buf := @ & UString (This.prediction); --TOFIX
             end if;
