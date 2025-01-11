@@ -2,10 +2,10 @@
 
 with Ada.Finalization;
 with ANTLR.Runtime.ATN.LexerActions;
-with ANTLR.Runtime.Recognizers.Lexers;
+with ANTLR.Runtime.Lexers;
 
 use ANTLR.Runtime.ATN.LexerActions;
-use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActionExecutors is
 

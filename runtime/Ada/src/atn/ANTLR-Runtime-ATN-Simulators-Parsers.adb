@@ -14,11 +14,11 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       return 0; --TOFIX
    end MurMur3_Hash;
 
-   function Equivalent_DoubleKeys (Left, Right : DoubleKey) return Boolean;
+   function Equivalent_DoubleKeys (Left, Right : DoubleKey) return Boolean
       is (MurMur3_Hash (Left) = MurMur3_Hash (Right)
       or else MurMur3_Hash ((Left.B, Left.B)) = MurMur3_Hash (Right)); --TOFIX
 
-   function "=" (Left, Right : Element_Type) return Boolean;
+   function "=" (Left, Right : Element_Type) return Boolean
       is (Left = Right); --TOFIX
 
    function Turn_Off_LR_Loop_Entry_Branch_Opt return Boolean is -- constant  --TOFIX
@@ -626,7 +626,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       return reach;
    end computeReachSet;
 
-   function removeAllConfigsNotInRuleStopState (This : ParserATNSimulator; configs : ATNConfigSet; lookToEndOfRule : Boolean) return ATNConfigSet;
+   function removeAllConfigsNotInRuleStopState (This : ParserATNSimulator; configs : ATNConfigSet; lookToEndOfRule : Boolean) return ATNConfigSet
       is (configs.removeAllConfigsNotInRuleStopState (This.mergeCache,lookToEndOfRule,atn));
 
    function computeStartState (This : ParserATNSimulator;p : ATNState; ctx : RuleContext; fullCtx : Boolean) return ATNConfigSet is
@@ -643,7 +643,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       return configs;
    end computeStartState;
 
-   function applyPrecedenceFilter (This : ParserATNSimulator; configs : ATNConfigSet) return ATNConfigSet;
+   function applyPrecedenceFilter (This : ParserATNSimulator; configs : ATNConfigSet) return ATNConfigSet
       is (configs.applyPrecedenceFilter (This.mergeCache,parser,This.outerContext));
 
    function getReachableTarget (This : ParserATNSimulator;trans : ATNTransition; tType : Token_Kind) return Optional_ATNState is
@@ -732,13 +732,13 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       return INVALID_ALT_NUMBER;
    end getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule;
 
-   function getAltThatFinishedDecisionEntryRule (This : ParserATNSimulator; configs : ATNConfigSet) return Integer;
+   function getAltThatFinishedDecisionEntryRule (This : ParserATNSimulator; configs : ATNConfigSet) return Integer
       is (This.configs.getAltThatFinishedDecisionEntryRule);
 
    function splitAccordingToSemanticValidity (This : ParserATNSimulator;
                                               configs : ATNConfigSet;
                                               outerContext : ParserRuleContext)
-                                              return Splitted_ConfigSets;
+                                              return Splitted_ConfigSets
       is (configs.splitAccordingToSemanticValidity (outerContext, evalSemanticContext'Access));
 
    function evalSemanticContext (This : ParserATNSimulator;
@@ -778,7 +778,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                                  parserCallStack : ParserRuleContext;
                                  alt : Integer;
                                  fullCtx : Boolean)
-                                 return Boolean;
+                                 return Boolean
       is (pred.eval (parser, parserCallStack));
 
    --

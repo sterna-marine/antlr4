@@ -12,7 +12,7 @@ use ANTLR.Runtime.Misc.Exceptions.Errors;
 use ANTLR.Runtime.Simulators.Parsers.Profilings;
 use Aspect;
 
-package body ANTLR.Runtime.Recognizers.Parsers is
+package body ANTLR.Runtime.Parsers is
 
    -------------------
    -- TraceListener --
@@ -709,4 +709,4 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       end if;
    end setTrace;
 
-end ANTLR.Runtime.Recognizers.Parsers;
+end ANTLR.Runtime.Parsers;

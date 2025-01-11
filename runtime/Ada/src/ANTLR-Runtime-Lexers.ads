@@ -11,7 +11,7 @@ use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
 use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.TokenSource_Protocol;
 
-package ANTLR.Runtime.Recognizers.Lexers is
+package ANTLR.Runtime.Lexers is
 
    --
    -- A lexer is recognizer that draws input symbols from a character stream.
@@ -306,11 +306,12 @@ package ANTLR.Runtime.Recognizers.Lexers is
    procedure recover (This : Lexer; e : LexerNoViableAltException);
 
 
+   package Recognizers_T is new ANTLR.Runtime.Recognizers (T);
+   subtype Recognizer_T is Recognizers_T.Recognizer;
+
    -- open
    generic
       type T is private;
-      package Recognizers_T is new ANTLR.Runtime.Recognizers.Recognizer (T);
-      subtype Recognizer_T is Recognizers_T.Recognizer;
    procedure notifyListeners (This : Lexer; e : LexerNoViableAltException; recognizer: Recognizer_T);
 
    -- open
@@ -332,4 +333,4 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- open
    procedure recover (This : Lexer; re : AnyObject);
 
-end  ANTLR.Runtime.Recognizers.Lexers;
+end  ANTLR.Runtime.Lexers;

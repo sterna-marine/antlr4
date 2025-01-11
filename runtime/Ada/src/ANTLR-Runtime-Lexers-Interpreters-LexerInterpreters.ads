@@ -8,7 +8,7 @@ use UString;
 use ANTLR.Runtime.DFA;
 use ANTLR.Runtime.Lexer;
 
-package ANTLR.Runtime.Recognizers.Lexers.Interpreters is
+package ANTLR.Runtime.Lexers.Interpreters is
 
    -- public
    type LexerInterpreter is new Lexer with
@@ -86,4 +86,4 @@ package ANTLR.Runtime.Recognizers.Lexers.Interpreters is
       is (Is_Valid (This.vocabulary) return This.vocabulary
          else return Lexer.getVocabulary (This));
 
-end ANTLR.Runtime.Recognizers.Lexers.Interpreters;
+end ANTLR.Runtime.Lexers.Interpreters;

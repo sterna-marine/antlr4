@@ -2,14 +2,14 @@
 
 with ANTLR.Runtime.ATN.ConfigSets;
 with ANTLR.Runtime.IntStream_Protocol;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Token_Protocol;
 
 use ANTLR.Runtime.ATN.ConfigSets;
 use ANTLR.Runtime.IntStream_Protocol;
 use ANTLR.Runtime.RecognitionExceptions;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Token_Protocol;
 

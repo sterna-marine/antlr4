@@ -22,7 +22,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
       This.errorRecoveryMode := True;
    end beginErrorCondition;
 
-   function inErrorRecoveryMode (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean;
+   function inErrorRecoveryMode (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean
       is (This.errorRecoveryMode);
    
    procedure endErrorCondition (This : ANTLRErrorStrategy; recognizer : Parser) is

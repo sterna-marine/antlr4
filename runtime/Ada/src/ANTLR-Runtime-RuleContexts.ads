@@ -6,7 +6,7 @@ with ANTLR.Runtime.ATN;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.Tree.ParseTreeVisitors;
 with ANTLR.Runtime.Tree.RuleNode_Protocol;
 with Option;
@@ -15,7 +15,7 @@ use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Misc.Intervals;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.Tree.ParseTreeVisitors;
 use ANTLR.Runtime.Tree.RuleNode_Protocol;
 

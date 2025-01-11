@@ -2,7 +2,7 @@
 
 with Ada.Finalization;
 
-package ANTLR.Runtime.ATN.PredictionContextCache is
+package ANTLR.Runtime.ATN.PredictionContextCaches is
 
    --
    -- Used to cache _org.antlr.v4.runtime.atn.PredictionContext_ objects. Its used for the shared
@@ -11,9 +11,9 @@ package ANTLR.Runtime.ATN.PredictionContextCache is
    --
 
    -- public final
-   type PredictionContextCache is new Ada.Finalization.Controlled record
+   type PredictionContextCache is new Ada.Finalization.Controlled with record
       -- private
-      cache := [PredictionContext: PredictionContext]();
+      cache : PredictionContext_2_Map;
    end record;
 
    -- public
@@ -34,6 +34,6 @@ package ANTLR.Runtime.ATN.PredictionContextCache is
 
    -- public
    function size (This : PredictionContextCache) return Integer
-      is This.cache.Length;
+      is (This.cache.Length);
 
-end ANTLR.Runtime.ATN.PredictionContextCache;
+end ANTLR.Runtime.ATN.PredictionContextCaches;

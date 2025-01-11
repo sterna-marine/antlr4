@@ -84,7 +84,7 @@ private
    function readInt (data : Integer_List; p : in out Integer) return Integer;
 
    function Read_Unicode (P1 : Integer_List; P2 : in out Integer) return Integer; --TOFIX
-   type Read_Unicode_Access is access (P1 : Integer_List; P2 : in out Integer) return Integer;
+   type Read_Unicode_Access is access function (P1 : Integer_List; P2 : in out Integer) return Integer;
    -- private
    procedure readSets (data : Integer_List;
                        p : in out Integer;

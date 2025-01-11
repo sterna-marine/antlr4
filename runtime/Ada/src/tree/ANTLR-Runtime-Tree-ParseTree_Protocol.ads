@@ -4,13 +4,13 @@ with Ada.Containers;
 with Ada.Containers.Hashed_Map;
 with Ada.Containers.Vectors;
 with Ada.Strings;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.Tree.ParseTreeVisitors;
 with ANTLR.Runtime.Tree.SyntaxTree_Protocol;
 with Option;
 
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.RuleContexts;
 use ANTLR.Runtime.Tree.ParseTreeVisitors;
 use ANTLR.Runtime.Tree.SyntaxTree_Protocol;

@@ -6,7 +6,7 @@ with Aspect;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ErrorStrategy;
 with ANTLR.Runtime.Misc.IntervalSets;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Token_Protocol;
 
@@ -15,7 +15,7 @@ use Aspect;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ErrorStrategy;
 use ANTLR.Runtime.Misc.IntervalSets;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Token_Protocol;
 

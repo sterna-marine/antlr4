@@ -40,7 +40,7 @@ package body ANTLR.Runtime.ATN.LookupDictionaries is
       end if;
     end hash;
 
-   function Equivalent_Keys (Left, Right : Hash_Type) return Boolean;
+   function Equivalent_Keys (Left, Right : Hash_Type) return Boolean
       is (Left = Right);
 
    function "=" (Left : ATNConfig; Right : ATNConfig) return Boolean is --TOFIX

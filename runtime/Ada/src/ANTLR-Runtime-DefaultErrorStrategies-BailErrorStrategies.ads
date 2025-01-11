@@ -1,6 +1,21 @@
 -- €
 
-package ANTLR.Runtime.ErrorStrategies is
+with ANTLR.Runtime.Parsers;
+with ANTLR.Runtime.Misc.Exceptions;
+with ANTLR.Runtime.RecognitionExceptions;
+with ANTLR.Runtime.RuleContexs.ParserRuleContexs;
+with ANTLR.Runtime.RecognitionExceptions.InputMismatchExceptions;
+with ANTLR.Runtime.Token_Protocol;
+
+use ANTLR.Runtime.DefaultErrorStrategies;
+use ANTLR.Runtime.Misc.Exceptions;
+use ANTLR.Runtime.Parsers;
+use ANTLR.Runtime.RecognitionExceptions;
+use ANTLR.Runtime.RuleContexs.ParserRuleContexs;
+use ANTLR.Runtime.RecognitionExceptions.InputMismatchExceptions;
+use ANTLR.Runtime.Token_Protocol;
+
+package ANTLR.Runtime.DefaultErrorStrategies.BailErrorStrategies is
 
    --
    --
@@ -34,7 +49,7 @@ package ANTLR.Runtime.ErrorStrategies is
 
    -- public
    overriding
-   procedure Initialize (Self : in out BailErrorStrategy) is null;
+   procedure Initialize (Self : in out BailErrorStrategy);
 
    --
    -- Instead of recovering from exception `e`, re-throw it wrapped
@@ -46,16 +61,7 @@ package ANTLR.Runtime.ErrorStrategies is
    overriding
    procedure recover (This : BailErrorStrategy;
                       recognizer : Parser;
-                      e : RecognitionException) is
-      context : Optional_ParserRuleContext := recognizer.getContext;
-   begin
-      while Is_Valid (context) loop
-         context.exception := e
-         context := Optional_ParserRuleContext (contextWrap.getParent);
-      end loop;
-
-      raise ANTLRException.parseCancellation with e;
-   end recover;
+                      e : RecognitionException);
 
    --
    -- Make sure we don't attempt to recover inline; if the parser
@@ -63,25 +69,13 @@ package ANTLR.Runtime.ErrorStrategies is
    --
    -- open
    overriding
-   function recoverInline (This : BailErrorStrategy; recognizer : Parser) return Token is
-      e : constant := InputMismatchException (recognizer);
-      contextWrap : Optional_ParserRuleContext := Set (recognizer.getContext);
-   begin
-      while Is_Valid (contextWrap) loop
-            contextWrap.exception := e;
-            contextWrap := Optional_ParserRuleContext (contextWrap.getParent); --TOFIX
-      end loop;
-
-      raise ANTLRException.parseCancellation with e;
-   end recoverInline;
+   function recoverInline (This : BailErrorStrategy; recognizer : Parser) return Token;
 
    --
    -- Make sure we don't attempt to recover from problems in subrules.
    --
-   overriding
    -- open
-   procedure sync (recognizer : Parser) is
-   begin
-   end if;
+   overriding
+   procedure sync (This : BailErrorStrategy; recognizer : Parser);
 
-end if;
+end ANTLR.Runtime.DefaultErrorStrategies.BailErrorStrategies;

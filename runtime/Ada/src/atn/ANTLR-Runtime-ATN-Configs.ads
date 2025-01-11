@@ -184,11 +184,12 @@ package ANTLR.Runtime.ATN.Configs is
       is (toString ((Valid => False), True));
 
    -- Optional_Recognizer_T --
+   package Option_T is new Option (T);  --TOFIX
+   subtype Optional_T is Option_T.Optional;
+
    -- public
    generic
       type T is private; --TOFIX
-      package Option_T is new Option (T);  --TOFIX
-      subtype Optional_T is Option_T.Optional;
    package Option_Recognizer is new Optional_T;  --TOFIX
    subtype Optional_Recognizer is Option_Recognizer_T.Optional;  --TOFIX
 

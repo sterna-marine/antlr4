@@ -1,15 +1,17 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
-with ANTLR.Runtime.Token_Protocol
+with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.Tree.ParseTree_Protocol;
+with ANTLR.Runtime.Tree_Protocol;
 
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
-use ANTLR.Runtime.Token_Protocol
+use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.Tree.ParseTree_Protocol;
+use ANTLR.Runtime.Tree_Protocol;
 
 package ANTLR.Runtime.Tree.Trees is
 
@@ -78,7 +80,7 @@ package ANTLR.Runtime.Tree.Trees is
    --
 
    -- public static
-   function getAncestors (t : Tree) return Array<Tree>;
+   function getAncestors (t : Tree) return Tree_List;
 
    -- public static
    function findAllTokenNodes (t : ParseTree; tType : Token_Kind) return ParseTree_List

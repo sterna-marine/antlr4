@@ -9,7 +9,7 @@ with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.Misc.DoubleKeyMap;
 with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
-with ANTLR.Runtime.Recognizers;
+with ANTLR.Runtime.Recognizer;
 with Interfaces;
 with Option;
 
@@ -19,7 +19,7 @@ use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Misc.DoubleKeyMap;
 use ANTLR.Runtime.RuleContexts;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
-use ANTLR.Runtime.Recognizers;
+use ANTLR.Runtime.Recognizer;
 use Option;
 
 package ANTLR.Runtime.ATN.PredictionContexts is

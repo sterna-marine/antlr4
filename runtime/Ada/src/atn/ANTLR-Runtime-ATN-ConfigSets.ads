@@ -7,7 +7,7 @@ with ANTLR.Runtime.ATN.Configs;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.Misc.DoubleKeyMap;
 with ANTLR.Runtime.Misc.BitSets;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.LookupDictionaries;
@@ -15,7 +15,7 @@ use ANTLR.Runtime.ATN.Configs;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Misc.DoubleKeyMap;
 use ANTLR.Runtime.Misc.BitSets;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 
 package ANTLR.Runtime.ATN.ConfigSets is
 

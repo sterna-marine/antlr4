@@ -3,14 +3,14 @@
 with ANTLR.Runtime.ATN.ConfigSets;
 with ANTLR.Runtime.DFA;
 with ANTLR.Runtime.Misc.BitSets;
-with ANTLR.Runtime.Recognizers;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Recognizer;
+with ANTLR.Runtime.Parsers;
 
 use ANTLR.Runtime.ATN.ConfigSets;
 use ANTLR.Runtime.DFA;
 use ANTLR.Runtime.Misc.BitSets;
-use ANTLR.Runtime.Recognizers;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Recognizer;
+use ANTLR.Runtime.Parsers;
 
 package ANTLR.Runtime.ErrorListener_Protocol is
 

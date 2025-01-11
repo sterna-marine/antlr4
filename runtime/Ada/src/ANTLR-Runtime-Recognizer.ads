@@ -15,6 +15,10 @@ use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Recognizer_Protocol;
 
+generic
+   type ATNSimulator is private;
+package ANTLR.Runtime.Recognizer is
+
 -- open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
 
 -- `ATNSimulator` subclasses are:
@@ -48,10 +52,6 @@ use ANTLR.Runtime.Recognizer_Protocol;
    --     with Type_Invariant'Class => Recognizer'Class'Tag = ATNSimulator'Tag;
 
    --  type ATNInterpreter is private
-
-generic
-   type ATNSimulator is private;
-package ANTLR.Runtime.Recognizers is
 
    type ATNInterpreter is new ATNSimulator with null record;
    --open
@@ -250,4 +250,4 @@ package ANTLR.Runtime.Recognizers is
    -- open
    procedure setTokenFactory (This : Recognizer; input : TokenFactory);
 
-end ANTLR.Runtime.Recognizers;
+end ANTLR.Runtime.Recognizer;

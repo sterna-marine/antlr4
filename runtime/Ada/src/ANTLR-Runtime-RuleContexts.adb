@@ -54,11 +54,11 @@ package body ANTLR.Runtime.RuleContexts is
    procedure setAltNumber (This : RuleContext; altNumber : Integer) is
 
       -- open
-      function getChild (i : Integer) return Optional_Tree;
+      function getChild (i : Integer) return Optional_Tree
          is (Valid => False);
 
       -- open
-      function getChildCount (This : RuleContext) return Natural;
+      function getChildCount (This : RuleContext) return Natural
          is (0);
 
 
@@ -84,22 +84,22 @@ package body ANTLR.Runtime.RuleContexts is
       -- We have to know the recognizer so we can get rule names.
       --
       -- open
-      function toStringTree (recog : Parser) return UString;
+      function toStringTree (recog : Parser) return UString
          is (Trees.toStringTree (This, recog));
 
       -- Print out a whole tree, not just a node, in LISP format
       -- (root child1 .. childN). Print just a node if this is a leaf.
       --
       -- public
-      function toStringTree (ruleNames : UString_List) return UString;
+      function toStringTree (ruleNames : UString_List) return UString
          is (Trees.toStringTree (This, ruleNames));
 
       -- open
-      function toStringTree (This : RuleContext) return UString;
+      function toStringTree (This : RuleContext) return UString
          is (toStringTree (null));
 
       -- open
-      function debugDescription (This : RuleContext) return UString;
+      function debugDescription (This : RuleContext) return UString
          is (Description (This));
 
       -- public final
@@ -108,12 +108,12 @@ package body ANTLR.Runtime.RuleContexts is
          package ParseTreeVisitors_T is new ParseTreeVisitors (T);
          package Option_T is new Option (T);
          subtype Optional_T is Option_T.Optional;
-      function toString_T (recog : Recognizer_T) return UString;
+      function toString_T (recog : Recognizer_T) return UString
          is (toString (recog, ParserRuleContexts.EMPTY));
 
       -- public final
-      function toString (ruleNames : UString_List) return UString;
-         is toString (ruleNames, null);
+      function toString (ruleNames : UString_List) return UString
+         is (toString (ruleNames, null));
 
       -- recog null unless ParserRuleContext, in which case we use subclass toString ( .. );
       -- open

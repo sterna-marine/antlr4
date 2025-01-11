@@ -5,13 +5,13 @@ with Ada.Finalization;
 with Ada.Strings;
 with ANTLR.Runtime.Misc.Integer_Set_Protocol;
 with ANTLR.Runtime.Misc.Intervals;
-with ANTLR.Runtime.Recognizers.Lexers;
+with ANTLR.Runtime.Lexers;
 with Option;
 
 use ANTLR.Runtime.Misc;
 use ANTLR.Runtime.Misc.Integer_Set_Protocol;
 use ANTLR.Runtime.Misc.Intervals;
-use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.Lexers;
 
 package ANTLR.Runtime.Misc.IntervalSets is
 

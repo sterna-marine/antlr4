@@ -42,7 +42,8 @@ package body ANTLR.Runtime.BaseErrorListener.DiagnosticErrorListeners is
                                           configs : ATNConfigSet) is
       decision : constant := getDecisionDescription (recognizer, dfa);
       text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
-      message : constant := "reportAttemptingFullContext d=" & decision'Image & ", input='" & text'Image & '''
+      message : constant := "reportAttemptingFullContext d=" & decision'Image
+                          & ", input='" & text'Image & ''';
    begin
       recognizer.notifyErrorListeners (message);
    end reportAttemptingFullContext;
@@ -56,7 +57,8 @@ package body ANTLR.Runtime.BaseErrorListener.DiagnosticErrorListeners is
                                        configs : ATNConfigSet) is
       decision : constant := getDecisionDescription (recognizer, dfa);
       text : constant := getTextInInterval (recognizer, startIndex, stopIndex);
-      message : constant := "reportContextSensitivity d=" & decision'Image & ", input='" & text'Image & '''
+      message : constant := "reportContextSensitivity d=" & decision'Image
+                          & ", input='" & text'Image & ''';
    begin
       recognizer.notifyErrorListeners (message);
    end reportContextSensitivity;

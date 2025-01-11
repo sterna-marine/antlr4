@@ -15,7 +15,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       return Ada.Containers.Hash_Type (Key); --TOFIX
    end Hash_Integer;
 
-   function "=" (Left, Right : RewriteOperation) return Boolean;
+   function "=" (Left, Right : RewriteOperation) return Boolean
       is (Left = Right); --TOFIX
 
    function "=" (Left, Right : Optional_RewriteOperation) return Boolean is
@@ -471,13 +471,13 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       return program;
    end initializeProgram;
 
-   function getText (This : TokenStreamRewriter) return UString;
+   function getText (This : TokenStreamRewriter) return UString
       is (getText (DEFAULT_PROGRAM_NAME, Interval.Set (0, This.tokens.size - 1)));
 
-   function getText (This : TokenStreamRewriter; programName : UString) return UString;
+   function getText (This : TokenStreamRewriter; programName : UString) return UString
       is (getText (programName, Interval.set (0, This.tokens.size - 1)));
 
-   function getText (This : TokenStreamRewriter; interval : Interval) return UString;
+   function getText (This : TokenStreamRewriter; interval : Interval) return UString
        is (getText (DEFAULT_PROGRAM_NAME, interval));
 
    function getText (This : TokenStreamRewriter;

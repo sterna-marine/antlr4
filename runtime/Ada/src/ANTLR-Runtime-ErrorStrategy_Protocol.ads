@@ -1,10 +1,10 @@
 -- €
 
-with ANTLR.Runtime.Recognizers;
+with ANTLR.Runtime.Recognizer;
 with ANTLR.Runtime.RecognitionException;
 with ANTLR.Runtime.Token_Protocol;
 
-use ANTLR.Runtime.Recognizers;
+use ANTLR.Runtime.Recognizer;
 use ANTLR.Runtime.RecognitionException;
 use ANTLR.Runtime.Token_Protocol;
 

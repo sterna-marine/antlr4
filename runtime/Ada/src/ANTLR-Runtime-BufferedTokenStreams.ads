@@ -14,7 +14,7 @@ use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.TokenSource_Protocol;
 use ANTLR.Runtime.TokenStream_Protocol;
 
-package ANTLR.Runtime.Tree.TerminalNode_Protocol is
+package ANTLR.Runtime.BufferedTokenStreams is
 
    --
    -- This implementation of _org.antlr.v4.runtime.TokenStream_ loads tokens from a
@@ -103,7 +103,7 @@ package ANTLR.Runtime.Tree.TerminalNode_Protocol is
    procedure seek (This : BufferedTokenStream; index : Integer);
 
    -- public
-   function size (This : BufferedTokenStream) return Ada.Containers.Count_Type;
+   function size (This : BufferedTokenStream) return Ada.Containers.Count_Type
       is (This.tokens.Length);
 
    -- public
@@ -298,4 +298,4 @@ package ANTLR.Runtime.Tree.TerminalNode_Protocol is
    -- public
    procedure fill (This : BufferedTokenStream);
 
-end ANTLR.Runtime.Tree.TerminalNode_Protocol;
+end ANTLR.Runtime.BufferedTokenStreams;

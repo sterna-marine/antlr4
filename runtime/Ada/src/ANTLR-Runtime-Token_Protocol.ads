@@ -24,7 +24,7 @@ package ANTLR.Runtime.Token_Protocol is
    EOF : constant Token_Kind := -1;
    -- EOF : constant Token_Kind := EOF;
 
-   INVALID_TYPE : constant : Token_Kind := 0;
+   INVALID_TYPE : constant Token_Kind := 0;
 
    MIN_USER_TOKEN_TYPE : constant Token_Kind := 1;
 
@@ -34,8 +34,10 @@ package ANTLR.Runtime.Token_Protocol is
    function Equivalent_Elements (Left, Right : Token_Kind) return Boolean
       is (Hash (Left) = Hash (Right));
 
-   package Token_Kind_Container is Ada.Containers.Hashed_Sets (
+   package Token_Kind_Container is new Ada.Containers.Hashed_Sets (
       Element_Type  => Token_Kind,
+      Hash => Hash,
+      Equivalent_Elements => Equivalent_Elements,
       "=" => "=");
    subtype Set_of_Token_Kind is Token_Kind_Container.Set;
 

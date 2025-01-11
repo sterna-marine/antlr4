@@ -25,7 +25,7 @@ package body ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions is
          symbol := charStream.getText (interval); -- try!
          symbol := Utils.escapeWhitespace (symbol, False);
       end if;
-      return LexerNoViableAltException'External_Tag & "('" & symbol & "')"; --TOFIX
+      return LexerNoViableAltException'External_Tag & '(' & symbol'Image & ')'; --TOFIX
    end Description;
 
 end ANTLR.Runtime.RecognitionExceptions.LexerNoViableAltExceptions;

@@ -2,12 +2,12 @@
 
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.Misc.Intervals;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.Token_Protocol;
 
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Misc.Intervals;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.Token_Protocol;
 
    use ANTLR.Runtime.RuleContext;

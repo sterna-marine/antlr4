@@ -1,10 +1,10 @@
 -- €
 
 with ANTLR.Runtime.ATN.LexerActionTypes;
-with ANTLR.Runtime.Recognizers.Lexers;
+with ANTLR.Runtime.Lexers;
 
 use ANTLR.Runtime.ATN.LexerActionTypes;
-use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
 

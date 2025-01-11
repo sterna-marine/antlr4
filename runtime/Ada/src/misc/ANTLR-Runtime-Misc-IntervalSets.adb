@@ -145,7 +145,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end if;
    end addAll;
 
-   function complement (This : in out IntervalSet; minElement : Integer; maxElement : Integer) return Optional_Integer_Set;
+   function complement (This : in out IntervalSet; minElement : Integer; maxElement : Integer) return Optional_Integer_Set
       is (complement (IntervalSet.Set (minElement, maxElement)));
 
    function complement (This : in out IntervalSet; vocabulary : Optional_Integer_Set) return Optional_Integer_Set is
@@ -385,7 +385,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end if;
    end getMinElement;
 
-   function getIntervals (This : IntervalSet) return Interval_List;
+   function getIntervals (This : IntervalSet) return Interval_List
       is (This.intervals);
 
    procedure hash (hasher: in out Hasher) is
@@ -396,7 +396,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end loop;
    end hash;
 
-   function Description (This : IntervalSet) return UString;
+   function Description (This : IntervalSet) return UString
       is (toString (False));
 
    function toString (This : in out IntervalSet; elemAreChar  : Boolean) return UString is
@@ -544,7 +544,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       while idx < This.intervals.endIndex loop
          interval : Interval_T;
 
-         function get (intervals : array (<>) of interval_T) return Interval_T;
+         function get (intervals : array (<>) of interval_T) return Interval_T
             is (intervals.Element (idx));
 
          procedure set (intervals : in out array (<>) of interval; newValue : Interval_T) is

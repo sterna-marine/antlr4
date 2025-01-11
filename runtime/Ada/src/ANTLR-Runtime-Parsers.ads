@@ -5,8 +5,8 @@ with ANTLR.Runtime.ATN.ParseInfos;
 with ANTLR.Runtime.ATN.PredictionModes;
 with ANTLR.Runtime.ATN.Simulators.ParserSimulators;
 with ANTLR.Runtime.Misc.Utils.Mutex;
--- with ANTLR.Runtime.Recognizers;
-with ANTLR.Runtime.Recognizers.Lexers;
+-- with ANTLR.Runtime.Recognizer;
+with ANTLR.Runtime.Lexers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.Tree.ParseTreeListeners;
@@ -16,13 +16,13 @@ use ANTLR.Runtime.ATN.ParseInfos;
 use ANTLR.Runtime.ATN.PredictionModes;
 use ANTLR.Runtime.ATN.Simulators.LexerSimulators;
 use ANTLR.Runtime.Misc.Utils.Mutex;
-use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.Lexers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.Tree.ParseTreeListener;
 use ANTLR.Runtime.Tree.ParseTreePatterns;
 
-package ANTLR.Runtime.Recognizers.Parsers is
+package ANTLR.Runtime.Parsers is
 
    --
    -- This is all the parsing support code essentially; most of it is error recovery stuff.
@@ -751,4 +751,4 @@ private
    -- private
    bypassAltsAtnCacheMutex : constant := Mutex.Synchronised;
 
-end ANTLR.Runtime.Recognizers.Parsers;
+end ANTLR.Runtime.Parsers;

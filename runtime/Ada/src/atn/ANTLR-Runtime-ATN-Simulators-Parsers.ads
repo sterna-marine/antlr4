@@ -12,7 +12,7 @@ with ANTLR.Runtime.ATN.TokenStream_Protocol;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.DFA;
 with ANTLR.Runtime.Misc.BitSets;
-with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Token_Protocol;
 
@@ -28,7 +28,7 @@ use ANTLR.Runtime.ATN.Transitions;
 use ANTLR.Runtime.ATN.TokenStream_Protocol;
 use ANTLR.Runtime.DFA;
 use ANTLR.Runtime.Misc.BitSets;
-use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Token_Protocol;
 

@@ -11,6 +11,6 @@ package ANTLR.Runtime.Tree.TerminalNode_Protocol is
    -- public
    type TerminalNode is interface and ParseTree;
 
-   function getSymbol (This :TerminalNode) return Optional_Token;
+   function getSymbol (This :TerminalNode) return Optional_Token is abstract;
 
 end ANTLR.Runtime.Tree.TerminalNode_Protocol;

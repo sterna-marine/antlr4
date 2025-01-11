@@ -8,7 +8,7 @@ use Aspect;
 
 with ANTLR.Runtime.Token_Protocol;
 
-package body ANTLR.Runtime.Recognizers is
+package body ANTLR.Runtime.Recognizer is
 
    function getRuleNames (This : Recognizer) return UString_List is
       raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.getRuleNames() must be overridden";
@@ -139,4 +139,4 @@ package body ANTLR.Runtime.Recognizers is
       raise PROGRAM_ERROR with "ANTLR.Runtime.Recognizer.setTokenFactory() must be overridden";
    end setTokenFactory;
 
-end ANTLR.Runtime.Recognizers;
+end ANTLR.Runtime.Recognizer;

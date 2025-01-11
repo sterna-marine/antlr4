@@ -1,9 +1,9 @@
 -- €
 
 with Ada.Containers.Vectors;
-with ANTLR.Runtime.Recognizers.Lexers;
+with ANTLR.Runtime.Lexers;
 
-use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions is
 

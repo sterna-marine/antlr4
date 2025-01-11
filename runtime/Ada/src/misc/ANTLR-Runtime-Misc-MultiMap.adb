@@ -40,7 +40,7 @@ package ANTLR.Runtime.Misc.MultiMaps is
    end GetPairs;
 
    -- public
-   function Get (Container : MultiMap; key : Key_Type) return Element_Array;
+   function Get (Container : MultiMap; key : Key_Type) return Element_Array
       is (Mapping.Element (key));
 
    -- public

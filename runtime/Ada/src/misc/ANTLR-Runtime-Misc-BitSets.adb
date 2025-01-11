@@ -24,7 +24,7 @@ package body ANTLR.Runtime.Misc.BitSets is
     -- Given a bit index, return word index containing it.
     --
     -- private static
-   function wordIndex (bitIndex : Integer) return Integer;
+   function wordIndex (bitIndex : Integer) return Integer
       is (Shift_Right (bitIndex, ADDRESS_BITS_PER_WORD));
 
    --
@@ -127,7 +127,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- of all the bits in this bit set
    --
    -- public
-   function toLongArray (This : BitSet) return Integer_64_List;
+   function toLongArray (This : BitSet) return Integer_64_List
       is (copyOf (This.words, This.wordsInUse));
 
    -- private
@@ -999,7 +999,7 @@ begin
    -- * returns: the number of bits currently in this bit set
    --
    -- public
-   function size (This : BitSet) return Integer;
+   function size (This : BitSet) return Integer
       is (This.words.Length * BitSet.BITS_PER_WORD);
 
 

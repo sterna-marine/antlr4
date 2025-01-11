@@ -6,7 +6,7 @@ with Ada.Wide_Wide_Text_IO;
 use Ada;
 use Aspect;
 
-package body ANTLR.Runtime.Tree.TerminalNode_Protocol is
+package body ANTLR.Runtime.BufferedTokenStreams is
 
    procedure Initialize (Self : in out BufferedTokenStream; tokenSource : TokenSource) is
    begin
@@ -374,4 +374,4 @@ package body ANTLR.Runtime.Tree.TerminalNode_Protocol is
       end loop;
    end fill;
 
-end ANTLR.Runtime.Tree.TerminalNode_Protocol;
+end ANTLR.Runtime.BufferedTokenStreams;

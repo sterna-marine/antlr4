@@ -21,8 +21,8 @@ package ANTLR.Runtime.ATN.DecisionInfos is
 --
 
    -- public
-   type DecisionInfo is tagged Ada.Finalization.Controlled record--
-
+   type DecisionInfo is new Ada.Finalization.Controlled with
+   record
       --
       -- The decision number, which is an index into _org.antlr.v4.runtime.atn.ATN#decisionToState_.
       --

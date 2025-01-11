@@ -8,7 +8,7 @@ use Ada;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
-package body ANTLR.Runtime.Recognizers.Lexers is
+package body ANTLR.Runtime.Lexers is
 
    overriding
    procedure Initialize (Self : Lexer) is
@@ -312,7 +312,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    end recover;
 
    -- internal
-   function makeTokenSourceAndStream (This : Lexer) return TokenSourceAndStream;
+   function makeTokenSourceAndStream (This : Lexer) return TokenSourceAndStream
       is (TokenSourceAndStream (This, This.input));
 
-end ANTLR.Runtime.Recognizers.Lexers;
+end ANTLR.Runtime.Lexers;

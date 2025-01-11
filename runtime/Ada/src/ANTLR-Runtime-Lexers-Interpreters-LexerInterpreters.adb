@@ -1,6 +1,6 @@
 -- €
 
-package body ANTLR.Runtime.Recognizers.Lexers.Interpreters.LexerInterpreters is
+package body ANTLR.Runtime.Lexers.Interpreters.LexerInterpreters is
 
    procedure Initialize (Self : in out LexerInterpreter;
                    grammarFileName : UString;
@@ -36,4 +36,4 @@ package body ANTLR.Runtime.Recognizers.Lexers.Interpreters.LexerInterpreters is
       raise PROGRAM_ERROR with "Use the other initializer";
    end Initialize;
 
-end ANTLR.Runtime.Recognizers.Lexers.Interpreters.LexerInterpreters;
+end ANTLR.Runtime.Lexers.Interpreters.LexerInterpreters;
