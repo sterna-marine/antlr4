@@ -107,7 +107,7 @@ package ANTLR.Runtime.RuleContexts is
    -- current context.
    --
    -- open
-   function isEmpty (This : RuleContext) return Boolean
+   function Is_Empty (This : RuleContext) return Boolean
       is (This.invokingState = INVALID_STATE_NUMBER);
 
    -- satisfy the ParseTree / SyntaxTree interface
@@ -158,6 +158,6 @@ package ANTLR.Runtime.RuleContexts is
    for RuleContext'Put_Image use Put_Image_RuleContext;
    -- open
    function Description (This : RuleContext) return UString
-      is toString (UString.Container.Empty_Vector, Option_RuleContext.Unset);
+      is (toString (UString.Container.Empty_Vector, Option_RuleContext.Unset));
 
 end ANTLR.Runtime.RuleContexts;

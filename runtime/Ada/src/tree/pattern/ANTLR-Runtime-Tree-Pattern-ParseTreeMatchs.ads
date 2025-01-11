@@ -1,10 +1,13 @@
 -- €
 
+with Ada.Containers.Vectors;
 with ANTLR.Runtime.Tree.ParseTree_Protocol;
+with ANTLR.Runtime.Tree.Pattern.ParseTreePatterns;
 
 use ANTLR.Runtime.Tree.ParseTree_Protocol;
+use ANTLR.Runtime.Tree.Pattern.ParseTreePatterns;
 
-package ANTLR.Runtime.Tree.ParseTreeMatchs is
+package ANTLR.Runtime.Tree.Pattern.ParseTreeMatchs is
 
    --
    -- Represents the result of matching a _org.antlr.v4.runtime.tree.ParseTree_ against a tree pattern.
@@ -28,7 +31,7 @@ package ANTLR.Runtime.Tree.ParseTreeMatchs is
       -- This is the backing field for _#getLabels_.
       --
       -- private
-      labels :  MultiMap<UString, ParseTree>; -- constant
+      labels :  ParseTree_MultiMap; -- constant
 
       --
       -- This is the backing field for _#getMismatchedNode_.
@@ -36,6 +39,14 @@ package ANTLR.Runtime.Tree.ParseTreeMatchs is
       -- private
       mismatchedNode : constant Optional_ParseTree;
    end record;
+
+   function "=" (Left, Right : Element_Type);
+
+   package ParseTreeMatch_Container is Ada.Containers.Vectors (
+      Index_Type => Natural,
+      item_Type  => ParseTreeMatch,
+      "=" => "=");
+   subtype ParseTreeMatch_List is ParseTreeMatch_Container.Vector;
 
    --
    -- Constructs a new instance of _org.antlr.v4.runtime.tree.pattern.ParseTreeMatch_ from the specified
@@ -53,20 +64,17 @@ package ANTLR.Runtime.Tree.ParseTreeMatchs is
    -- * Throws: ANTLRError.ilegalArgument if `labels` is `null`
    --
    -- public
-   procedure Initialize (Self : in out ParseTreeMatch; tree : ParseTree; pattern : ParseTreePattern; labels : MultiMap<UString, ParseTree>, mismatchedNode : Optional_ParseTree;) {
-
-      self.tree := tree
-      self.pattern := pattern
-      self.labels := labels
-      self.mismatchedNode := mismatchedNode
-   end if;
-
+   procedure Initialize (Self : in out ParseTreeMatch;
+                         tree : ParseTree;
+                         pattern : ParseTreePattern;
+                         labels : ParseTree_MultiMap;
+                         mismatchedNode : Optional_ParseTree);
    --
    -- Get the last node associated with a specific `label`.
    --
    -- For example, for pattern `<id:ID>`, `get ("id")` returns the
    -- node matched for that `ID`. If more than one node
-   -- matched the specified label, only the last is returned. If there is
+   -- matched the specified label, only the last is returned. If there;
    -- no node associated with the label, this returns `null`.
    --
    -- Pattern tags like `<ID>` and `<expr>` without labels are
@@ -79,15 +87,7 @@ package ANTLR.Runtime.Tree.ParseTreeMatchs is
    --
 
    -- public
-   function get (label : UString) return Optional_ParseTree is
-begin
-      if parseTrees : constant := labels.get (label) , parseTrees.count > 0 then
-         return parseTrees[parseTrees.count - 1]   -- return last if multiple
-      else
-         return (Valid => False);
-      end if;
-
-   end if;
+   function get (This : ParseTreeMatch; label : UString) return Optional_ParseTree;
 
    --
    -- Return all nodes matching a rule or token tag with the specified label.
@@ -111,9 +111,8 @@ begin
    -- is returned.
    --
    -- public
-   function getAll (label : UString) return ParseTree_List {
-      return labels.get (label), Default => []
-   end if;
+   function getAll (label : UString) return ParseTree_List
+      is (Value (This.labels.get (label), Default => ParseTree_Container.Empty_Vector));
 
    --
    -- Return a mapping from label > [list of nodes].
@@ -126,9 +125,8 @@ begin
    -- pattern did not contain any rule or token tags, this map will be empty.
    --
    -- public
-   function getLabels (This : ParseTreeMatch) return MultiMap<UString, ParseTree> {
-      return labels
-   end if;
+   function getLabels (This : ParseTreeMatch) return ParseTree_MultiMap
+      is (This.labels);
 
    --
    -- Get the node at which we first detected a mismatch.
@@ -137,10 +135,8 @@ begin
    -- if the match was successful.
    --
    -- public
-   function getMismatchedNode (This : ParseTreeMatch) return Optional_ParseTree is
-begin
-      return mismatchedNode
-   end if;
+   function getMismatchedNode (This : ParseTreeMatch) return Optional_ParseTree
+      is (This.mismatchedNode);
 
    --
    -- Gets a value indicating whether the match operation succeeded.
@@ -149,10 +145,8 @@ begin
    -- `False`.
    --
    -- public
-   function succeeded (This : ParseTreeMatch) return Boolean is
-begin
-      return not Is_Valid (mismatchedNode);
-   end if;
+   function succeeded (This : ParseTreeMatch) return Boolean
+      is (not Is_Valid (mismatchedNode));
 
    --
    -- Get the tree pattern we are matching against.
@@ -160,10 +154,8 @@ begin
    -- * Returns: The tree pattern we are matching against.
    --
    -- public
-   function getPattern (This : ParseTreeMatch) return ParseTreePattern is
-begin
-      return pattern
-   end if;
+   function getPattern (This : ParseTreeMatch) return ParseTreePattern
+      is (This.pattern);
 
    --
    -- Get the parse tree we are trying to match to a pattern.
@@ -171,18 +163,13 @@ begin
    -- * Returns: The _org.antlr.v4.runtime.tree.ParseTree_ we are trying to match to a pattern.
    --
    -- public
-   function getTree (This : ParseTreeMatch) return ParseTree is
-begin
-      return tree
-   end if;
+   function getTree (This : ParseTreeMatch) return ParseTree
+      is (This.tree);
 
-   -- public
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_ParseTreeMatch (S : in out Sink'Class; X : ParseTreeMatch);
    for ParseTreeMatch'Put_Image use Put_Image_ParseTreeMatch;
-   function Description (This : ParseTreeMatch) return UString is
-      info : constant := This.succeeded ? "succeeded" : "failed"
-      return "Match " & info'Image & "; found " & This.getLabels.size) labels"
-   end if;
+   -- public
+   function Description (This : ParseTreeMatch) return UString;
 
-end ANTLR.Runtime.Tree.ParseTreeMatchs;
+end ANTLR.Runtime.Tree.Pattern.ParseTreeMatchs;

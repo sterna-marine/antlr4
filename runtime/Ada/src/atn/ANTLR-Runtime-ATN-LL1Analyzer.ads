@@ -1,16 +1,17 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.ATN;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Configs;
 
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.Configs;
 
 package ANTLR.Runtime.ATN.LL1Analyzer is
 
    -- public
-   type LL1Analyzer is new Ada.Finalization.Controlled record
+   type LL1Analyzer is new Ada.Finalization.Controlled with
+   record
       --
       -- Special value added to the lookahead sets to indicate that we hit
       -- a predicate during analysis if `seeThruPreds = False`.
@@ -36,7 +37,7 @@ package ANTLR.Runtime.ATN.LL1Analyzer is
    -- * returns: the expected symbols for each outgoing transition of `s`.
    --
    -- public
-   function getDecisionLookahead (This : LL1Analyzer; s : Optional_ATNState) return Optional_IntervalSet_List is --?]? 
+   function getDecisionLookahead (This : LL1Analyzer; s : Optional_ATNState) return Optional_IntervalSet_List; --?]? 
 
    --
    -- Compute set of tokens that can follow `s` in the ATN in the
@@ -56,7 +57,7 @@ package ANTLR.Runtime.ATN.LL1Analyzer is
    --
    -- public
    function LOOK (This : LL1Analyzer; s : ATNState; ctx : Optional_RuleContext) return IntervalSet
-      is LOOK (This, s, (Valid => False), ctx);
+      is (LOOK ((This, s, (Valid => False), ctx)));
 
    --
    -- Compute set of tokens that can follow `s` in the ATN in the

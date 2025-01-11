@@ -90,8 +90,8 @@ type ParserInterpreter is new Parser with null record;
         self.atn := atn
         self.ruleNames := ruleNames
         self.vocabulary := vocabulary
-        self.decisionToDFA := DFA.Container.Empty_Vector;
-        for i in 0 ..< atn.getNumberOfDecisions loop
+        self.decisionToDFA := DFA_Container.Empty_Vector;
+        for i in 0 .. atn.getNumberOfDecisions - 1 loop
             decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
         end loop;
 
@@ -117,27 +117,27 @@ type ParserInterpreter is new Parser with null record;
     -- public
     function getATN (This : …) return ATN is
 begin
-        return atn
+        return atn;
     end if;
 
     overriding
     -- public
     function getVocabulary (This : …) return Vocabulary is
 begin
-        return vocabulary
+        return vocabulary;
     end if;
 
     overriding
     -- public
     function getRuleNames (This : …) return UString_List is
-        return ruleNames
+        return ruleNames;
     end if;
 
     overriding
     -- public
     function getGrammarFileName (This : …) return UString is
 begin
-        return grammarFileName
+        return grammarFileName;
     end if;
 
     -- Begin parsing at startRuleIndex
@@ -158,15 +158,15 @@ begin
             case p.getStateType is
                when ATNState.RULE_STOP =>
                   -- pop; return from rule
-                  if _ctx!.isEmpty then
+                  if _ctx!.Is_Empty then
                      if startRuleStartState.isPrecedenceRule then
                            result : constant ParserRuleContext := _ctx!;
                            parentContext : constant (ParserRuleContext?, Int) := _parentContextStack.pop;
                            unrollRecursionContexts (parentContext.0!);
-                           return result
+                           return result;
                      else
                            This.exitRule;
-                           return rootContext
+                           return rootContext;
                      end if;
                   end if;
 
@@ -211,7 +211,7 @@ begin
         altNum : Integer;
         if p.getNumberOfTransitions > 1 then
             This.getErrorHandler.sync (self);
-            decision : constant DecisionState := DecisionState ((p);).decision
+            decision : constant DecisionState := DecisionState ((p)).decision
             if decision = overrideDecision and then _input.index = overrideDecisionInputIndex then
                 altNum := overrideDecisionAlt
             else

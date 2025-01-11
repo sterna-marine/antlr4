@@ -2,8 +2,12 @@
 
 with Ada.Strings;
 with ANTLR.Runtime.ATN.LexerActionTypes;
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+with ANTLR.Runtime.Recognizers.Lexers;
 
 use ANTLR.Runtime.ATN.LexerActionTypes;
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
 
@@ -60,7 +64,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerChannelActions is
    --public
    overriding
    function isPositionDependent (This : LexerChannelAction) return Boolean
-      is False;
+      is (False);
 
    --
    --

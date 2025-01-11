@@ -4,8 +4,8 @@ with Ada.Strings;
 with ANTLR.Runtime.ATN.LexerActionTypes;
 with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.Recognizers.Lexers;
 use ANTLR.Runtime.ATN.LexerActionTypes;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerPushModeActions is
 
@@ -40,10 +40,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerPushModeActions is
    -- * parameter mode: The mode value to pass to _org.antlr.v4.runtime.Lexer#pushMode_.
    --
    -- public
-   procedure Initialize (Self : in out LexerPushModeAction; mode : Lexer_Mode) is
-   begin
-      self.mode := mode;
-   end Initialize;
+   procedure Initialize (Self : in out LexerPushModeAction; mode : Lexer_Mode);
 
    --
    -- Get the lexer mode this action should transition the lexer to.

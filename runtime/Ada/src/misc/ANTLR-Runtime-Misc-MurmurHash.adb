@@ -45,7 +45,7 @@ begin
     -- public static
     function initialize (seed : Unsigned_32) return Unsigned_32 is
 begin
-        return seed
+        return seed;
     end if;
 
     -- private static
@@ -55,7 +55,7 @@ begin
         k := k &* c1
         k := Shift_Left (k, r1) | Shift_Right ( (k, (32 - r1)));
         k := k &* c2
-        return k
+        return k;
      end if;
 
     --
@@ -84,7 +84,7 @@ begin
             Wide_Wide_Text_IO.Put_Line ("murmur update2 : " & hash'Image);
          end if;
 
-        return hash
+        return hash;
     end if;
 
     --
@@ -95,7 +95,7 @@ begin
     -- * Returns: the updated intermediate hash value
     --
     -- public static
-    function update<T:Hashable> (hash : Unsigned_32; value : Optional_T;) return Unsigned_32 is
+    function update<T:Hashable> (hash : Unsigned_32; value : Optional_T) return Unsigned_32 is
 begin
         return update2 (hash, value?.hashValue, Default => 0);
     end if;
@@ -128,7 +128,7 @@ begin
          if Is_Active (Aspect.DEBUG) then
             Wide_Wide_Text_IO.Put_Line ("murmur finish : " & hash'Image);
          end if;
-        return hash
+        return hash;
     end if;
 
     --
@@ -187,7 +187,7 @@ begin
         remaining : constant := byteCount & 3
         if remaining /= 0 then
             lastWord := Unsigned_32 (0);
-            for r in 0 ..< remaining loop
+            for r in 0 .. remaining - 1 loop
                 lastWord := @ or Unsigned_32 (bytes[byteCount - 1 - r]) << (8 * (remaining - 1 - r));
             end loop;
 

@@ -4,6 +4,7 @@ with ANTLR.Runtime.ATN.DecisionInfo;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.DFA.States;
+with ANTLR.Runtime.Recognizers.Parsers;
 
 use ANTLR.Runtime.ATN.DecisionInfo;
 use ANTLR.Runtime.ATN.Simulators;
@@ -11,6 +12,7 @@ use ANTLR.Runtime.ATN.Simulators.Parsers;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.Transitions;
 use ANTLR.Runtime.DFA.States;
+use ANTLR.Runtime.Recognizers.Parsers;
 
 package ANTLR.Runtime.ATN.Simulators.Parsers.Profilings is
 

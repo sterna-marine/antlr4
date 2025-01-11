@@ -6,6 +6,7 @@ with Ada.Wide_Wide_Characters.Handling;
 with ANTLR.Runtime.Token_Protocol;
 
 use Ada.Wide_Wide_Characters.Handling;
+use ANTLR.Runtime;
 use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.Vocabularies is
@@ -65,7 +66,7 @@ package ANTLR.Runtime.Vocabularies is
    --
    -- public convenience
    procedure Initialize (Self : in out Vocabulary;
-                         literalNames : Optional_String_List;
+                         literalNames : Optional_UString_List;
                          symbolicNames : Optional_UString_List);
 
    --

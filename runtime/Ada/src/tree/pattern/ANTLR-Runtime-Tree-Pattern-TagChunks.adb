@@ -1,5 +1,8 @@
 -- €
 
+package ANTLR.Runtime.Tree.Pattern.TagChunks is
+
+   use ANTLR.Runtime;
 --
 -- Represents a placeholder tag in a tree pattern. A tag can have any of the
 -- following forms.
@@ -58,7 +61,7 @@ type TagChunk is new Chunk with null record;
         self.label := label
         self.tag := tag
         super.Initialize (Self);
-        if tag.isEmpty then
+        if tag.Is_Empty then
             raise ANTLRError.illegalArgument with "tag cannot be null or empty";
         end if;
     end if;
@@ -71,7 +74,7 @@ type TagChunk is new Chunk with null record;
     -- public final
     function getTag (This : …) return UString is
 begin
-        return tag
+        return tag;
     end if;
 
     --
@@ -81,9 +84,9 @@ begin
     -- assigned to the chunk.
     --
     -- public final
-    function getLabel (This : …) return Optional_String is
+    function getLabel (This : …) return Optional_UString is
    begin
-        return label
+        return label;
     end if;
 
     --
@@ -113,4 +116,5 @@ begin
         end if;
         return tag = other.tag and then label = other.label
     end if;
-end if;
+
+end ANTLR.Runtime.Tree.Pattern.TagChunks;

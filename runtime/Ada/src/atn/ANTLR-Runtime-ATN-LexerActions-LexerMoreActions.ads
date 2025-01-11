@@ -4,8 +4,8 @@ with Ada.Strings;
 with ANTLR.Runtime.ATN.LexerActionTypes;
 with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.Recognizers.Lexers;
 use ANTLR.Runtime.ATN.LexerActionTypes;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
 
@@ -26,7 +26,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerMoreActions is
       -- Provides a singleton instance of this parameterless lexer action.
       --
       -- public static
-      INSTANCE : constant LexerMoreAction := This.LexerMoreAction;
+      INSTANCE : LexerMoreAction := This.LexerMoreAction; -- constant
    end record;
 
    subtype Object is LexerMoreAction;

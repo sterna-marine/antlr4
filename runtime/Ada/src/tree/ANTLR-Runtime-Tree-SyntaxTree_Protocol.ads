@@ -1,7 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.Tree_Protocol;
 
+use ANTLR.Runtime.Misc.Intervals;
 use ANTLR.Runtime.Tree_Protocol;
 
 package ANTLR.Runtime.Tree.SyntaxTree_Protocol is

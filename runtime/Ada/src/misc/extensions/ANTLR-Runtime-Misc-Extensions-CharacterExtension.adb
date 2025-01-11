@@ -25,16 +25,16 @@ extension Character {
     end if;
     utf8Value : Ada.Interface.C.unsigned_short {;
         for s in UString (self).utf8 loop
-            return s
+            return s;
         end loop;
-        return 0
+        return 0;
     end if;
 
     utf16Value : Ada.Interface.C.unsigned {;
         for s in UString (self).utf16 loop
-            return s
+            return s;
         end loop;
-        return 0
+        return 0;
     end if;
 
     --char ->  int
@@ -45,12 +45,12 @@ extension Character {
     -- public static
     MAX_VALUE : Integer {;
         c : constant Character := To_Unicode (16#10FFFF#);
-        return c.unicodeValue
+        return c.unicodeValue;
     end if;
     -- public static
     MIN_VALUE : Integer {;
         c : constant Character := To_Unicode (16#0000#);
-        return c.unicodeValue
+        return c.unicodeValue;
     end if;
 
     -- public static

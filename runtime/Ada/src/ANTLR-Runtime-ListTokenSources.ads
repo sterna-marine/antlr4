@@ -84,7 +84,7 @@ package ANTLR.Runtime.ListTokenSources is
    -- public
    procedure Initialize (Self : in out ListTokenSource;
                         tokens : Token_List;
-                        sourceName : Optional_String);
+                        sourceName : Optional_UString);
 
    -- public
    function getCharPositionInLine (This : ListTokenSource) return Integer;

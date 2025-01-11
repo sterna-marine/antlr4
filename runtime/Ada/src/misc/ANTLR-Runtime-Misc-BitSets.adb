@@ -24,7 +24,7 @@ package body ANTLR.Runtime.Misc.BitSets is
     -- Given a bit index, return word index containing it.
     --
     -- private static
-   function wordIndex (bitIndex : Integer) return Integer
+   function wordIndex (bitIndex : Integer) return Integer;
       is (Shift_Right (bitIndex, ADDRESS_BITS_PER_WORD));
 
    --
@@ -127,7 +127,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    -- of all the bits in this bit set
    --
    -- public
-   function toLongArray (This : BitSet) return Integer_64_List
+   function toLongArray (This : BitSet) return Integer_64_List;
       is (copyOf (This.words, This.wordsInUse));
 
    -- private
@@ -180,16 +180,16 @@ package body ANTLR.Runtime.Misc.BitSets is
    procedure checkRange (fromIndex : Integer; toIndex : Integer) is
    begin
       if fromIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image ;
 
       end if;
 
       if toIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "toIndex < 0: " & toIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "toIndex < 0: " & toIndex'Image ;
 
       end if;
       if fromIndex > toIndex then
-         raise ANTLRError.indexOutOfBounds with "fromInde: " & fromIndex'Image & " > toIndex: " & toIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "fromInde: " & fromIndex'Image & " > toIndex: " & toIndex'Image ;
 
       end if;
    end if;
@@ -205,7 +205,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    procedure flip (bitIndex : Integer) is
    begin
       if bitIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image ;
 
 
       end if;
@@ -277,7 +277,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    procedure set (bitIndex : Integer) is
    begin
       if bitIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image ;
 
       end if;
       index : constant Integer := BitSet.wordIndex (bitIndex);
@@ -388,7 +388,7 @@ package body ANTLR.Runtime.Misc.BitSets is
    procedure clear (bitIndex : Integer) is
    begin
       if bitIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image ;
       end if;
       index : constant Integer := BitSet.wordIndex (bitIndex);
       if index >= wordsInUse then
@@ -483,7 +483,7 @@ begin
    function get (bitIndex : Integer) return Boolean is
 begin
       if bitIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "bitIndex < 0: " & bitIndex'Image ;
 
       end if;
       This.checkInvariants;
@@ -564,7 +564,7 @@ begin
       result.recalculateWordsInUse;
       result.checkInvariants;
 
-      return result
+      return result;
    end if;
 
    --
@@ -598,7 +598,7 @@ begin
    function nextSetBit (fromIndex : Integer) return Integer is
 begin
       if fromIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image ;
 
       end if;
       This.checkInvariants;
@@ -613,7 +613,7 @@ begin
       loop
          if word /= 0 then
                bit : constant := (u * BitSet.BITS_PER_WORD) + word.trailingZeroBitCount
-               return bit
+               return bit;
          end if;
          u := @ + 1;
          if u = wordsInUse then
@@ -637,7 +637,7 @@ begin
       -- Neither spec nor implementation handle bitsets of maximal length.
       -- See 4816253.
       if fromIndex < 0 then
-         raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "fromIndex < 0: " & fromIndex'Image ;
 
       end if;
       This.checkInvariants;
@@ -690,7 +690,7 @@ begin
          if fromIndex == -1 then
                return -1;
          end if;
-         raise ANTLRError.indexOutOfBounds with "fromIndex < -1: " & fromIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "fromIndex < -1: " & fromIndex'Image ;
 
       end if;
 
@@ -734,7 +734,7 @@ begin
          if fromIndex == -1 then
                return -1;
          end if;
-         raise ANTLRError.indexOutOfBounds with "fromIndex < -1: " & fromIndex'Image & "";
+         raise ANTLRError.indexOutOfBounds with "fromIndex < -1: " & fromIndex'Image ;
 
       end if;
 
@@ -784,7 +784,7 @@ begin
    -- * returns: boolean indicating whether this `BitSet` is empty
    --
    -- public
-   function isEmpty (This : BitSet) return Boolean is
+   function Is_Empty (This : BitSet) return Boolean is
 begin
       return wordsInUse = 0
    end if;
@@ -822,7 +822,7 @@ begin
       for i in 0 .. wordsInUse - 1 loop
          sum := @ + words.Element (i).nonzeroBitCount;
       end loop;
-      return sum
+      return sum;
    end if;
 
    --
@@ -885,7 +885,7 @@ begin
 
       -- Copy any remaining words
       if wordsInCommon < set.wordsInUse then
-         words[wordsInCommon ..< wordsInUse] := set.words[wordsInCommon ..< wordsInUse]
+         words[wordsInCommon .. wordsInUse - 1] := set.words[wordsInCommon .. wordsInUse - 1]
 
       end if;
 
@@ -923,7 +923,7 @@ begin
 
       -- Copy any remaining words
       if wordsInCommon < set.wordsInUse then
-         words[wordsInCommon ..< wordsInUse] := set.words[wordsInCommon ..< wordsInUse]
+         words[wordsInCommon .. wordsInUse - 1] := set.words[wordsInCommon .. wordsInUse - 1]
 
 
       end if;
@@ -999,7 +999,7 @@ begin
    -- * returns: the number of bits currently in this bit set
    --
    -- public
-   function size (This : BitSet) return Integer
+   function size (This : BitSet) return Integer;
       is (This.words.Length * BitSet.BITS_PER_WORD);
 
 

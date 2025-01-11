@@ -14,11 +14,11 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       return 0; --TOFIX
    end MurMur3_Hash;
 
-   function Equivalent_DoubleKeys (Left, Right : DoubleKey) return Boolean
+   function Equivalent_DoubleKeys (Left, Right : DoubleKey) return Boolean;
       is (MurMur3_Hash (Left) = MurMur3_Hash (Right)
       or else MurMur3_Hash ((Left.B, Left.B)) = MurMur3_Hash (Right)); --TOFIX
 
-   function "=" (Left, Right : Element_Type) return Boolean
+   function "=" (Left, Right : Element_Type) return Boolean;
       is (Left = Right); --TOFIX
 
    function Turn_Off_LR_Loop_Entry_Branch_Opt return Boolean is -- constant  --TOFIX
@@ -281,7 +281,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
 
          previousD := D;
 
-         if t /= BufferedTokenStream.EOF then
+         if t /= EOF then
             This.input.consume;
             t := input.LA (1);
          end if;
@@ -302,7 +302,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
    begin
       if not Is_Valid (reach) then
          addDFAEdge (dfa, previousD, t, ATNSimulator.ERROR);
-         return ATNSimulator.ERROR
+         return ATNSimulator.ERROR;
       end if;
 
       -- create new target state; we'll add to DFA after it's complete
@@ -430,7 +430,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
             end if;
 
             previous := reach;
-            if t /= BufferedTokenStream.EOF then
+            if t /= EOF then
                This.input.consume;
                t := input.LA (1);
             end if;
@@ -443,7 +443,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          -- not SLL.
          if reach.uniqueAlt /= ATN.INVALID_ALT_NUMBER then
             reportContextSensitivity (dfa, predictedAlt, reach, startIndex, This.input.index);
-            return predictedAlt
+            return predictedAlt;
          end if;
 
          -- We do not check predicates here because we have checked them
@@ -516,8 +516,8 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          end if;
 
          if config.state is RuleStopState then
-            pragma assert (config.context!.isEmpty, "Expected: c.context.isEmpty");
-            if fullCtx or else t = BufferedTokenStream.EOF then
+            pragma assert (config.context!.Is_Empty, "Expected: c.context.Is_Empty");
+            if fullCtx or else t = EOF then
                if not Is_Valid (skippedStopStates) then
                   skippedStopStates := ATNConfig.Container.Empty_Vector;
                end if;
@@ -550,7 +550,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       -- condition is not True when one or more configurations have been
       -- withheld in skippedStopStates, or when the current symbol is EOF.
       --
-      if not Is_Valid (skippedStopStates) and then t /= CommonToken.EOF then
+      if not Is_Valid (skippedStopStates) and then t /= EOF then
          if This.intermediate.size = 1 then
             -- Don't pursue the closure if there is just one state.
             -- It can only have one alternative; just add to result
@@ -573,7 +573,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       if not Is_Valid (reach) then
          reach := ATNConfigSet (fullCtx);
          closureBusy : Set_of_ATNConfigs;
-         treatEofAsEpsilon : constant Boolean := (t = CommonToken.EOF);
+         treatEofAsEpsilon : constant Boolean := (t = EOF);
          for config of intermediate.configs loop
             closure (config, Value (reach), closureBusy'Access, False, fullCtx, treatEofAsEpsilon);
          end loop;
@@ -613,20 +613,20 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       if Is_Valid (reach) then
          skippedStopStates : constant := skippedStopStates, (not fullCtx or else not PredictionModes.hasConfigInRuleStopState (reach));
          if  Is_Valid (skippedStopStates) then
-            pragma assert (not skippedStopStates.isEmpty, "Expected: not skippedStopStates.isEmpty");
+            pragma assert (not skippedStopStates.Is_Empty, "Expected: not skippedStopStates.Is_Empty");
             for c of skippedStopStates loop
                reach.add (c, This.mergeCache); -- try!
             end loop;
          end if;
 
-         if This.reach.isEmpty then
+         if This.reach.Is_Empty then
             return (Valid => False);
          end if;
       end if;
       return reach;
    end computeReachSet;
 
-   function removeAllConfigsNotInRuleStopState (This : ParserATNSimulator; configs : ATNConfigSet; lookToEndOfRule : Boolean) return ATNConfigSet
+   function removeAllConfigsNotInRuleStopState (This : ParserATNSimulator; configs : ATNConfigSet; lookToEndOfRule : Boolean) return ATNConfigSet;
       is (configs.removeAllConfigsNotInRuleStopState (This.mergeCache,lookToEndOfRule,atn));
 
    function computeStartState (This : ParserATNSimulator;p : ATNState; ctx : RuleContext; fullCtx : Boolean) return ATNConfigSet is
@@ -643,7 +643,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       return configs;
    end computeStartState;
 
-   function applyPrecedenceFilter (This : ParserATNSimulator; configs : ATNConfigSet) return ATNConfigSet
+   function applyPrecedenceFilter (This : ParserATNSimulator; configs : ATNConfigSet) return ATNConfigSet;
       is (configs.applyPrecedenceFilter (This.mergeCache,parser,This.outerContext));
 
    function getReachableTarget (This : ParserATNSimulator;trans : ATNTransition; tType : Token_Kind) return Optional_ATNState is
@@ -729,16 +729,16 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
             return alt;
          end if;
       end if;
-      return INVALID_ALT_NUMBER
+      return INVALID_ALT_NUMBER;
    end getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule;
 
-   function getAltThatFinishedDecisionEntryRule (This : ParserATNSimulator; configs : ATNConfigSet) return Integer
+   function getAltThatFinishedDecisionEntryRule (This : ParserATNSimulator; configs : ATNConfigSet) return Integer;
       is (This.configs.getAltThatFinishedDecisionEntryRule);
 
    function splitAccordingToSemanticValidity (This : ParserATNSimulator;
                                               configs : ATNConfigSet;
                                               outerContext : ParserRuleContext)
-                                              return Splitted_ConfigSets
+                                              return Splitted_ConfigSets;
       is (configs.splitAccordingToSemanticValidity (outerContext, evalSemanticContext'Access));
 
    function evalSemanticContext (This : ParserATNSimulator;
@@ -778,7 +778,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                                  parserCallStack : ParserRuleContext;
                                  alt : Integer;
                                  fullCtx : Boolean)
-                                 return Boolean
+                                 return Boolean;
       is (pred.eval (parser, parserCallStack));
 
    --
@@ -819,7 +819,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          configContext : constant PredictionContext := Value (config.context); -- !
          -- We hit rule end. If we have context info, use it
          -- run thru all possible stack tops in ctx
-         if not This.configContext.isEmpty then
+         if not This.configContext.Is_Empty then
             length : constant := This.configContext.size;
             for i in 0 .. length - 1 loop
                   if configContext.getReturnState (i) == PredictionContext.EMPTY_RETURN_STATE then
@@ -920,7 +920,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                -- come in handy and we avoid evaluating context dependent
                -- preds if this is > 0.
                if Is_Valid (This.dfa) and then This.$1dfa.isPrecedenceDfa then
-                  outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t);).outermostPrecedenceReturn;
+                  outermostPrecedenceReturn : constant Integer := EpsilonTransition ((t)).outermostPrecedenceReturn;
                   if outermostPrecedenceReturn = This.dfa.atnStartState.ruleIndex then
                      c.setPrecedenceFilterSuppressed (True);
                   end if;
@@ -995,7 +995,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       if p.getStateType /= STAR_LOOP_ENTRY
          or else not ( (StarLoopEntryState (p))).precedenceRuleDecision
          or else -- Are we the special loop entry/exit state?
-            This.configContext.isEmpty
+            This.configContext.Is_Empty
          or else -- If SLL wildcard
             This.configContext.hasEmptyPath then
             return False;
@@ -1004,7 +1004,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       -- Require all return states to return back to the same rule
       -- that p is in.
       numCtxs : constant := This.configContext.size;
-      for  i in 0 ..< numCtxs loop -- for each stack context
+      for  i in 0 .. numCtxs - 1 loop -- for each stack context
          returnState : constant := atn.states[configContext.getReturnState (i)]!
          if  returnState.ruleIndex /= p.ruleIndex then
             return False;
@@ -1106,7 +1106,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
             -- EOF transitions act like epsilon transitions after the first EOF
             -- transition is traversed
             if treatEofAsEpsilon then
-               if t.matches (CommonToken.EOF, 0, 1) then
+               if t.matches (EOF, 0, 1) then
                   return ATNConfig (config, t.target);
                end if;
             end if;
@@ -1208,7 +1208,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       if This.debug then
          Wide_Wide_Text_IO.Put_Line ("config from pred transition=" & c?'Image, Default => (Valid => False) & ')'); --TOFIX
       end if;
-      return c
+      return c;
    end precedenceTransition;
 
    function ruleTransition (This : ParserATNSimulator; config : ATNConfig; t : RuleTransition) return ATNConfig is
@@ -1242,7 +1242,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
 
    function getTokenName (This : ParserATNSimulator; t : Integer) return UString is
    begin
-      if t = CommonToken.EOF then
+      if t = EOF then
          return "EOF";
       else
          vocabulary : constant Vocabulary := This.parser.getVocabulary;

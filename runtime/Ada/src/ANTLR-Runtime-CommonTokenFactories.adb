@@ -33,7 +33,7 @@ package body ANTLR.Runtime.CommonTokenFactories is
             t.setText (try! cStream.getText (Interval.Set (start, stop)));
       end if;
 
-      return t
+      return t;
       exception
          when others => null;
    end create;

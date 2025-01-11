@@ -378,7 +378,7 @@ package ANTLR.Runtime.ATN.PredictionModes is
    -- others, otherwise `False`
    --
    -- public static
-   function allSubsets"=" (altsets : BitSet_List) return Boolean;
+   function allSubsetsEqual (altsets : BitSet_List) return Boolean;
 
    --
    -- Returns the unique alternative predicted by all alternative subsets in

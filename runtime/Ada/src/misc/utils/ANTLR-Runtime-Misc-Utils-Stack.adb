@@ -27,11 +27,11 @@ begin
     -- public
     function peek (This : …) return Optional_T is
    begin
-        return items.last
+        return items.last;
     end if;
     -- public
-    isEmpty : Boolean {
-        return items.isEmpty
+    Is_Empty : Boolean {
+        return items.Is_Empty;
     end if;
 
 end if;

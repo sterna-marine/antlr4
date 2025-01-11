@@ -19,7 +19,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
 
 
    -- public
-   function getChild (i : Integer) return Optional_Tree
+   function getChild (i : Integer) return Optional_Tree;
       is (Valid => False);
 
    -- open 
@@ -29,11 +29,11 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    end if;
 
    -- public
-   function getSymbol (This : TerminalNodeImpl) return Optional_Token
+   function getSymbol (This : TerminalNodeImpl) return Optional_Token;
       is (This.symbol);
 
    -- public
-   function getParent (This : TerminalNodeImpl) return Optional_Tree
+   function getParent (This : TerminalNodeImpl) return Optional_Tree;
       is (This.parent);
 
    -- public
@@ -43,7 +43,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    end setParent;
 
    -- public
-   function getPayload (This : TerminalNodeImpl) return AnyObject
+   function getPayload (This : TerminalNodeImpl) return AnyObject;
       is (This.symbol);
 
    -- public
@@ -55,7 +55,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    end getSourceInterval;
 
     -- public
-    function getChildCount (This : TerminalNodeImpl) return Integer
+    function getChildCount (This : TerminalNodeImpl) return Integer;
       is (0);
 
    package ParseTreeVisitors_T is new ParseTreeVisitors (T);
@@ -66,11 +66,11 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    end accept_T;
 
    -- public
-   function getText (This : TerminalNodeImpl) return UString
+   function getText (This : TerminalNodeImpl) return UString;
    is (symbol.getText)!;
 
    -- public
-   function toStringTree (This : TerminalNodeImpl; parser : Parser) return UString
+   function toStringTree (This : TerminalNodeImpl; parser : Parser) return UString;
    is (This'Image);
 
    -- public
@@ -81,7 +81,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    begin
       --TODO: not Is_Valid (symbol)?
       --if    not Is_Valid (symbol)   {return "<null>"; }
-      if symbol.getType = CommonToken.EOF then
+      if symbol.getType = EOF then
          return "<EOF>";
       else
          return symbol.getText!;
@@ -89,11 +89,11 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
    end Description;
 
    -- public
-   function debugDescription (This : TerminalNodeImpl) return UString
+   function debugDescription (This : TerminalNodeImpl) return UString;
       is (Description (This));
 
    -- public
-   function toStringTree (This : TerminalNodeImpl) return UString
+   function toStringTree (This : TerminalNodeImpl) return UString;
       is (This'Image);
 
 end ANTLR.Runtime.Tree.TerminalNode.Impl;

@@ -115,7 +115,7 @@ begin
     -- procedure slice (index:Int,isClose : Boolean := False) ->(first:Slice<Element> ,second:Slice<Element>){
     function slice (index : Integer; isClose : Boolean := False) return (first:ArraySlice<Element>, second:ArraySlice<Element>) {
         first := self[0  ..  index]
-        second := self[index ..< count]
+        second := self[index .. count - 1]
 
         if isClose then
             first := second + first

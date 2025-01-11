@@ -24,13 +24,13 @@ package ANTLR.Runtime.ATN.Configs.LexerConfigs is
 
    -- public
    procedure Initialize (Self : in out LexerATNConfig;
-                   state : ATNStates.ATNState;
+                   state : ATNState;
                    alt : Integer;
                    context : PredictionContext);
 
     -- public
    procedure Initialize (Self : in out LexerATNConfig;
-                   state : ATNStates.ATNState;
+                   state : ATNState;
                    alt : Integer;
                    context : PredictionContext;
                    lexerActionExecutor : Optional_LexerActionExecutor);
@@ -38,18 +38,18 @@ package ANTLR.Runtime.ATN.Configs.LexerConfigs is
    -- public
    procedure Initialize (Self : in out LexerATNConfig;
                    c : LexerATNConfig;
-                   state : ATNStates.ATNState);
+                   state : ATNState);
 
    -- public
    procedure Initialize (Self : in out LexerATNConfig;
                    c : LexerATNConfig;
-                   state : ATNStates.ATNState;
+                   state : ATNState;
                    lexerActionExecutor : Optional_LexerActionExecutor);
 
    -- public
    procedure Initialize (Self : in out LexerATNConfig;
                    c : LexerATNConfig;
-                   state : ATNStates.ATNState;
+                   state : ATNState;
                    context : PredictionContext);
 
    --
@@ -73,18 +73,13 @@ private
       -- This is the backing field for _#getLexerActionExecutor_.
       --
       -- private
-      lexerActionExecutor : constant Optional_LexerActionExecutor;
+      lexerActionExecutor : Optional_LexerActionExecutor; --constant
 
       -- fileprivate
-      passedThroughNonGreedyDecision : constant Boolean;
+      passedThroughNonGreedyDecision : Boolean; -- constant
    end record;
 
    -- private static
-   function checkNonGreedyDecision (source : LexerATNConfig; target : ATNStates.ATNState) return Boolean;
-   begin
-      return source.passedThroughNonGreedyDecision
-             or else target is DecisionState
-             and then (DecisionState (target)).nonGreedy
-   end checkNonGreedyDecision;
+   function checkNonGreedyDecision (source : LexerATNConfig; target : ATNState) return Boolean;
 
 end ANTLR.Runtime.ATN.Configs.LexerConfigs;

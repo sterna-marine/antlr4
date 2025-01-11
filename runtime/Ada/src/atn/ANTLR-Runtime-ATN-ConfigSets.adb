@@ -107,7 +107,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       if This.readonly then
          raise ANTLRError.illegalState with "This set is readonly";
       end if;
-      if configLookup.isEmpty then
+      if configLookup.Is_Empty then
          exit;
       end if;
       for config of This.configs loop
@@ -142,7 +142,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
          --  hashCode := hashCode &* 3 &+ item.hashValue;
          hashCode := hashCode * 3 + item.hashValue;  --TOFIX
       end loop;
-      return hashCode
+      return hashCode;
    end configshashValue;
 
    procedure clear (This : ATNConfigSet) is
@@ -233,7 +233,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
    function getAltSet (This : ATNConfigSet) return Set_of_Optional_Integers is
    begin
-      if This.configs.isEmpty then
+      if This.configs.Is_Empty then
          return (Valid => False);
       else
          alts := This.Set_of_Optional_Integers;
@@ -250,7 +250,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       for config of This.configs loop
          result.set (config.alt); -- try!
       end loop;
-      return result
+      return result;
    end getAltBitSet;
 
    function firstConfigWithRuleStopState return Optional_ATNConfig is
@@ -274,7 +274,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
             return ATN.INVALID_ALT_NUMBER;
          end if;
       end loop;
-      return alt
+      return alt;
    end getUniqueAlt;
 
    function removeAllConfigsNotInRuleStopState (This : ATNConfigSet;

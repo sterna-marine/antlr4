@@ -5,7 +5,7 @@ with Foundation;
 extension UString {
     function lastIndex (of target => UString) return UString.Optional_Index is
    begin
-        if target.isEmpty then
+        if target.Is_Empty then
             return (Valid => False);
         end if;
         result : UString.Index? := (Valid => False);
@@ -13,7 +13,7 @@ extension UString {
         loop
             targetRange : constant := substring.range (of => target);
             if not Is_Valid (targetRange) then
-                return result
+                return result;
             end if;
             result := targetRange.lowerBound
             nextChar : constant := substring.index (after => targetRange.lowerBound);
@@ -25,7 +25,7 @@ extension UString {
 begin
         start : constant := index (startIndex, offsetBy => integerRange.lowerBound);
         end : constant := index (startIndex, offsetBy => integerRange.upperBound);
-        range : constant := start ..< end
+        range : constant := start .. end - 1
         return UString (self.Element (range));
     end if;
 end if;

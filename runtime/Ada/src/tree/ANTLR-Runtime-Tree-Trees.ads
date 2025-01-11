@@ -63,7 +63,7 @@ package ANTLR.Runtime.Tree.Trees is
    function toStringTree (t : Tree; ruleNames : array (<>) of UString?) return UString;
 
    -- public static
-   function getNodeText (t : Tree; recog : Optional_Parser;) return UString
+   function getNodeText (t : Tree; recog : Optional_Parser) return UString
       is getNodeText (t, recog?.getRuleNames);
 
    -- public static

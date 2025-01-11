@@ -32,7 +32,7 @@ package body ANTLR.Runtime.ATN.States is
    procedure addTransition (This : ATNState; e : ATNTransition'Class) is
       alreadyPresent :Boolean := False;
    begin
-      if Transitions_List.isEmpty (This.Transitions) then
+      if Transitions_List.Is_Empty (This.Transitions) then
          This.epsilonOnlyTransitions := e.isEpsilon;
       elsif This.epsilonOnlyTransitions /= e.isEpsilon then
          This.epsilonOnlyTransitions := False;

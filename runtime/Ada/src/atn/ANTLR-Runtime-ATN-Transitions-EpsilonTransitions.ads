@@ -1,8 +1,10 @@
 -- €
 
 with Ada.Strings;
+with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN.Transitions;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.Transitions.EpsilonTransitions is
 

@@ -47,7 +47,7 @@ package body ANTLR.Runtime.Tree.Trees is
       return toStringTree (t, rulsName);
    end toStringTree;
 
-   function toStringTree (t : Tree; recog : Optional_Parser;) return UString is
+   function toStringTree (t : Tree; recog : Optional_Parser) return UString is
       ruleNamesList : constant UString_List := recog?.getRuleNames;
    begin
       return toStringTree (t, ruleNamesList);
@@ -82,11 +82,11 @@ package body ANTLR.Runtime.Tree.Trees is
          if Is_Valid (ruleNode) then
             ruleIndex : constant Integer := ruleNode.getRuleContext.getRuleIndex;
             ruleName : constant UString := ruleNames.Element (ruleIndex);
-            altNumber : constant RuleContext := RuleContext ((t);).getAltNumber;
+            altNumber : constant RuleContext := RuleContext ((t)).getAltNumber;
             if altNumber /= ATN.INVALID_ALT_NUMBER  then
-               return "" & ruleName'Image & ':' & altNumber'Image & "";
+               return "" & ruleName'Image & ':' & altNumber'Image ;
             end if;
-            return ruleName
+            return ruleName;
          else
             errorNode : constant Optional_ErrorNode := Maybe (t);
             if Is_Valid (errorNode) then
@@ -137,7 +137,7 @@ package body ANTLR.Runtime.Tree.Trees is
          tp := tpWrap.getParent;
          tpWrap := tp; --TOFIX
       end loop;
-      return ancestors
+      return ancestors;
    end getAncestors;
 
    function findAllNodes (t : ParseTree; index : Integer; findTokens  : Boolean) return ParseTree_List is
@@ -184,7 +184,7 @@ package body ANTLR.Runtime.Tree.Trees is
             nodes.concat (descendants (ParseTree (child)));
          end if;
       end loop;
-      return nodes
+      return nodes;
    end descendants;
 
    procedure getRootOfSubtreeEnclosingRegion (t : ParseTree;

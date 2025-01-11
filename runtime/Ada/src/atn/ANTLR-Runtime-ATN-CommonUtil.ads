@@ -1,13 +1,16 @@
 -- €
 
+with ANTLR.Runtime.Token_Protocol;
 with Interfaces;
 
+use ANTLR.Runtime;
+use ANTLR.Runtime.Token_Protocol;
 use Interfaces;
 
 package ANTLR.Runtime.ATN.CommonUtil is
 
    -- public
-   function "&" (Lhs: UString; Rhs : Integer) Return UString
+   function "&" (Lhs: UString; Rhs : Integer) return UString
       is (lhs & rhs'Image);
 
    -- public

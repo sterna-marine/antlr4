@@ -1,8 +1,11 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.ATN.ATNState;
-use ANTLR.Runtime.ATN;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Token_Protocol;
+
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.ATN.Deserializers is
 
@@ -10,7 +13,7 @@ package ANTLR.Runtime.ATN.Deserializers is
    SERIALIZED_VERSION : constant := 4;
 
    -- public
-   type ATNDeserializer is new Ada.Finalization.Controlled private;
+   type ATNDeserializer is new Ada.Finalization.Controlled with private;
 
    subtype Object is ATNDeserializer;
    type Class is access all Object;
@@ -40,10 +43,10 @@ package ANTLR.Runtime.ATN.Deserializers is
    procedure checkCondition (condition  : Boolean);
 
    -- internal
-   procedure checkCondition (condition : Boolean; message : Optional_String);
+   procedure checkCondition (condition : Boolean; message : Optional_UString);
 
    -- internal
-   procedure edgeFactory (atn : ATN;
+   function edgeFactory (atn : ATN;
                           Token_Type : Token_Kind;
                           src : Integer;
                           trg : Integer;
@@ -54,7 +57,7 @@ package ANTLR.Runtime.ATN.Deserializers is
                           return Transition;
 
    -- internal
-   function stateFactory (State : ATNState.State; ruleIndex : Integer) return Optional_ATNState;
+   function stateFactory (State : State; ruleIndex : Integer) return Optional_ATNState;
 
    -- internal
    function lexerActionFactory (ActionType : LexerActionType; data1, data2 : Integer) return LexerAction;
@@ -62,7 +65,7 @@ package ANTLR.Runtime.ATN.Deserializers is
 private
 
    -- public
-   type ATNDeserializer is new Ada.Finalization.Controlled record
+   type ATNDeserializer is new Ada.Finalization.Controlled with record
       -- private
       deserializationOptions : ATNDeserializationOptions; -- constant
    end record;
@@ -81,12 +84,12 @@ private
    function readInt (data : Integer_List; p : in out Integer) return Integer;
 
    function Read_Unicode (P1 : Integer_List; P2 : in out Integer) return Integer; --TOFIX
-
+   type Read_Unicode_Access is access (P1 : Integer_List; P2 : in out Integer) return Integer;
    -- private
    procedure readSets (data : Integer_List;
                        p : in out Integer;
                        sets : in out IntervalSet_Container.Vector;
-                       readUnicode : Read_Unicode'Access);
+                       readUnicode : Read_Unicode_Access);
 
    -- private
    procedure fillRuleToStopState (atn : ATN);

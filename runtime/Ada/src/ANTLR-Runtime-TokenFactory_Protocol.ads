@@ -1,9 +1,15 @@
 -- €
 
 with Ada.Finalization;
-with ANTLR.Runtime.Misc.Extensions.TokenExtension;
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+with ANTLR.Runtime.CharStream_Protocol;
+with ANTLR.Runtime.Token_Protocol;
+with ANTLR.Runtime.TokenSource_Protocol;
 
-use ANTLR.Runtime.Misc.Extensions.TokenExtension;
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+use ANTLR.Runtime.CharStream_Protocol;
+use ANTLR.Runtime.Token_Protocol;
+use ANTLR.Runtime.TokenSource_Protocol;
 
 package ANTLR.Runtime.TokenFactory_Protocol is
 
@@ -17,7 +23,8 @@ package ANTLR.Runtime.TokenFactory_Protocol is
    --   to avoid retain cycles.
    --
    -- public
-   type TokenSourceAndStream is new Ada.Finalization.Controlled record
+   type TokenSourceAndStream is new Ada.Finalization.Controlled with
+   record
       --
       -- An empty TokenSourceAndStream which is used as the default value of
       -- _#source_ for tokens that do not have a source.
@@ -67,7 +74,5 @@ package ANTLR.Runtime.TokenFactory_Protocol is
                     Token_Kind : Token_Kind;
                     text       : UString)
                   return Token is abstract;
-
-
 
 end ANTLR.Runtime.TokenFactory_Protocol;

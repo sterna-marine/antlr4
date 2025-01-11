@@ -4,10 +4,12 @@ with Ada.Finalization;
 with ANTLR.Runtime.ATN.ConfigSets;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.DFA.States;
+with ANTLR.Runtime.Token_Protocol;
 
 use ANTLR.Runtime.ATN.ConfigSets;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.DFA.States;
+use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.ATN.Simulators is
 

@@ -4,14 +4,18 @@ with Ada.Containers;
 with Ada.Strings;
 with ANTLR.Runtime.ATN.LookupDictionaries;
 with ANTLR.Runtime.ATN.Configs;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.Misc.DoubleKeyMap;
 with ANTLR.Runtime.Misc.BitSets;
+with ANTLR.Runtime.Recognizers.Parsers;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.LookupDictionaries;
 use ANTLR.Runtime.ATN.Configs;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Misc.DoubleKeyMap;
 use ANTLR.Runtime.Misc.BitSets;
+use ANTLR.Runtime.Recognizers.Parsers;
 
 package ANTLR.Runtime.ATN.ConfigSets is
 
@@ -175,7 +179,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
    function size (This : ATNConfigSet) return Ada.Containers.Count_Type renames count;
 
    -- public
-   function isEmpty (This : ATNConfigSet) return Boolean
+   function Is_Empty (This : ATNConfigSet) return Boolean
       is (This.configs.is_Empty);
 
    -- public
@@ -203,12 +207,12 @@ package ANTLR.Runtime.ATN.ConfigSets is
    -- public
    -- generic
    --    type T is private;
-   -- function toArray (a : T_List) return T_List
+   -- function toArray (a : T_List) return T_List;
    --    is (configLookup.toArray (a));
    --
    -- private
    function configHash (This : ATNConfigSet;
-                        stateNumber : ATNStates.State;
+                        stateNumber : State;
                         context : Optional_PredictionContext)
                         return Ada.Containers.Hash_Type;
 

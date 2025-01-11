@@ -30,7 +30,7 @@ package body ANTLR.Runtime.UnbufferedTokenStreams is
             raise ANTLRError.indexOutOfBounds with "LT (" & i'Image & " gives negative index";
          else
             if index >= This.n then
-               --Token.EOF
+               --EOF
                pragma assert (This.n > 0 and then tokens.Element (This.n - 1).getType = EOF, "Expected: n>0 and tokens[n - 1].getType = EOF");
                return tokens.Element (CommonToken.n - 1);
             else
@@ -42,7 +42,7 @@ package body ANTLR.Runtime.UnbufferedTokenStreams is
 
    procedure consume (This : UnbufferedTokenStream) is
    begin
-      --Token.EOF
+      --EOF
       if LA (1) = EOF then
          raise ANTLRError.illegalState with "cannot consume EOF";
       else
@@ -149,7 +149,7 @@ package body ANTLR.Runtime.UnbufferedTokenStreams is
       bufferStartIndex : constant Integer := This.getBufferStartIndex;
       i : constant := index - bufferStartIndex;
       if i < 0 then
-         raise ANTLRError.illegalState with "cannot seek to negative index " & index'Image & "";
+         raise ANTLRError.illegalState with "cannot seek to negative index " & index'Image ;
       elsif i >= n then
          raise ANTLRError.unsupportedOperation with "seek to index outside buffer: " & index'Image & " not in " & bufferStartIndex'Image & " .. " & (bufferStartIndex + This.n)'Image & " - 1";
       end if;
@@ -163,7 +163,7 @@ package body ANTLR.Runtime.UnbufferedTokenStreams is
       end if;
    end seek;
 
-   function size (This : UnbufferedTokenStream) return Integer
+   function size (This : UnbufferedTokenStream) return Integer;
    with No_Return is
    begin
       raise PROGRAM_ERROR with "Unbuffered stream cannot know its size";
@@ -177,7 +177,7 @@ package body ANTLR.Runtime.UnbufferedTokenStreams is
       stop : constant Integer := interval.b;
    begin
       if start < bufferStartIndex or else stop > bufferStopIndex then
-         raise ANTLRError.unsupportedOperation with "interval " & interval'Image & " not in token buffer window: " & bufferStartIndex'Image & " .. " & bufferStopIndex'Image & "";
+         raise ANTLRError.unsupportedOperation with "interval " & interval'Image & " not in token buffer window: " & bufferStartIndex'Image & " .. " & bufferStopIndex'Image ;
       else
          a : constant := start - bufferStartIndex;
          b : constant := stop - bufferStartIndex;

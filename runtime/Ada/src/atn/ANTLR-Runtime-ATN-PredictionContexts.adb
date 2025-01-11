@@ -18,9 +18,9 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
          ID := @ + 1;
       end New_ID;
 
-      function Last_ID return Context_ID
+      function Last_ID return Context_ID;
          is (ID);
-      function Count return Context_ID
+      function Count return Context_ID;
          is (ID + 1);
 
    end globalNodeCount;
@@ -64,10 +64,10 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.PredictionContext.getReturnState() must be overridden";
    end getReturnState;
 
-   function isEmpty (This : PredictionContext) return Boolean
+   function Is_Empty (This : PredictionContext) return Boolean;
       is This === EmptyPredictionContext.Instance;
 
-   function hasEmptyPath (This : PredictionContext) return Boolean
+   function hasEmptyPath (This : PredictionContext) return Boolean;
       is (getReturnState (Last_ID) = EMPTY_RETURN_STATE);
 
    procedure hash (This : PredictionContext; hasher: in out Hasher) is
@@ -198,8 +198,8 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                end if;
                return Some_a;
             else
-               mergedParents := Array (mergedParents[0 ..< k]);
-               mergedReturnStates := Array (mergedReturnStates[0 ..< k]);
+               mergedParents := Array (mergedParents[0 .. k - 1]);
+               mergedReturnStates := Array (mergedReturnStates[0 .. k - 1]);
             end if;
          end if;
 
@@ -302,7 +302,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                               visited : in out [PredictionContext: PredictionContext])
                               return PredictionContext is
    begin
-      if context.isEmpty then
+      if context.Is_Empty then
          return context;
       else
          visitedContext : constant := visited.Element (context);
@@ -345,7 +345,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                   return context;
                else
                   updated : constant PredictionContext;
-                  if parents.isEmpty then
+                  if parents.Is_Empty then
                      updated := EmptyPredictionContext.Instance;
                   elsif parents.count = 1 then
                      updated := SingletonPredictionContext.create (parents.Element (0), context.getReturnState (0));
@@ -412,7 +412,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
          p := self;
          stateNumber := currentState
          localBuffer := "[";
-         while not p.isEmpty and then p !== stop loop
+         while not p.Is_Empty and then p !== stop loop
             index := 0;
             if p.size > 0 then
                bits := 1;
@@ -444,7 +444,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                ruleName : constant := recognizer.getRuleNames[s.ruleIndex!]
                localBuffer.append (ruleName);
             elsif p.getReturnState (index) /= PredictionContext.EMPTY_RETURN_STATE then
-               if not p.isEmpty then
+               if not p.Is_Empty then
                   if localBuffer.count > 1 then
                      -- first char is '[', if more than that this isn't the first rule
                      localBuffer := @ & ' ';
@@ -501,19 +501,19 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       end if;
    end "=";
 
-   function "=" (lhs: ArrayPredictionContext; rhs: SingletonPredictionContext) return Boolean
+   function "=" (lhs: ArrayPredictionContext; rhs: SingletonPredictionContext) return Boolean;
       is (False);
 
-   function "=" (lhs: SingletonPredictionContext; rhs: ArrayPredictionContext) return Boolean
+   function "=" (lhs: SingletonPredictionContext; rhs: ArrayPredictionContext) return Boolean;
       is (False);
 
-   function "=" (lhs: SingletonPredictionContext; rhs: EmptyPredictionContext) return Boolean
+   function "=" (lhs: SingletonPredictionContext; rhs: EmptyPredictionContext) return Boolean;
       is (False);
 
-   function "=" (lhs: EmptyPredictionContext; rhs: ArrayPredictionContext) return Boolean
+   function "=" (lhs: EmptyPredictionContext; rhs: ArrayPredictionContext) return Boolean;
       is (lhs === rhs);
 
-   function "=" (lhs: EmptyPredictionContext; rhs: SingletonPredictionContext) return Boolean
+   function "=" (lhs: EmptyPredictionContext; rhs: SingletonPredictionContext) return Boolean;
       is (lhs === rhs);
 
 end ANTLR.Runtime.ATN.PredictionContexts;

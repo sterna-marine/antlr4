@@ -1,18 +1,21 @@
 -- €
 
 with Ada.Finalize;
+with ANTLR.Runtime.CharStream_Protocol;
+with ANTLR.Runtime.InputStream;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
+with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.TokenSource_Protocol;
-with ANTLR.Runtime.CharStream_Protocol;
 with ANTLR.Runtime.WritableTokens.CommonTokens;
-with ANTLR.Runtime.InputStream;
 with Interfaces;
 
+use ANTLR.Runtime.CharStream_Protocol;
+use ANTLR.Runtime.InputStream;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
+use ANTLR.Runtime.Misc.Intervals;
 use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.TokenSource_Protocol;
-use ANTLR.Runtime.CharStream_Protocol;
 use ANTLR.Runtime.WritableTokens.CommonTokens;
 use Interfaces;
 

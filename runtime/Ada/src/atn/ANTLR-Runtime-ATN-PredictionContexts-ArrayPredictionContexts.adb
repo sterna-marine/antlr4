@@ -20,7 +20,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
    overriding
    function Description (This : ArrayPredictionContext) return UString is
    begin
-      if This.isEmpty then
+      if This.Is_Empty then
             return "[]";
       end if;
       buf := "[";
@@ -35,7 +35,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
             goto CONTINUE;
          end if;
 
-         buf := @ & "" & returnState'Image & "";
+         buf := @ & "" & returnState'Image ;
          if parent : constant := parents.Element (i) then
             buf := @ & ' ' & parent'Image;
          else

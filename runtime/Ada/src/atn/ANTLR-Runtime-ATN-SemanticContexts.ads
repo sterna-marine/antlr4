@@ -61,7 +61,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    procedure Put_Image_SemanticContext (S : in out Sink'Class; X : SemanticContext);
    for SemanticContext'Put_Image use Put_Image_SemanticContext;
    -- public
-   function Description (This : SemanticContext) return UString
+   function Description (This : SemanticContext) return UString;
    with No_Return;
 
    -- -------------------- --
@@ -127,7 +127,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    function eval (This : SemanticContext;
                   parser : Recognizer_T;
                   parserCallStack : RuleContext)
-                  return Boolean
+                  return Boolean;
    with No_Return;
 
    --
@@ -198,7 +198,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- public
    procedure Initialize (Self : in out Predicate;
                    ruleIndex : Integer;
-                   predIndex : Integer;
+                   predIndex : Integer
                    isCtxDependent  : Boolean);
 
    overriding
@@ -231,9 +231,9 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    end record;
 
    package PrecedencePredicate_Container is new Ada.Containers.Vectors (
-      Index_Type : Natural;
-      Element_Type : PrecedencePredicate;
-      "=" : "=");
+      Index_Type => Natural,
+      Element_Type => PrecedencePredicate,
+      "=" => "=");
    subtype PrecedencePredicate_List is PrecedencePredicate_Container.Vector;
 
    function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector;
@@ -289,7 +289,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       --
 
    -- public
-   function getOperands (This : Operator) return SemanticContext_Array
+   function getOperands (This : Operator) return SemanticContext_Array;
    with No_Return;
 
    -- ------------ --

@@ -40,7 +40,7 @@ type CommonTokenStream is new BufferedTokenStream with null record;
     -- default channel assigned to tokens created by the lexer.
     --
     -- internal
-    channel := CommonToken.DEFAULT_CHANNEL
+    channel := DEFAULT_CHANNEL
 
     --
     -- Constructs a new _org.antlr.v4.runtime.CommonTokenStream_ using the specified token
@@ -137,8 +137,8 @@ begin
             if t.getChannel = channel then
                 n := @ + 1;
             end if;
-            exit when t.getType = CommonToken.EOF;
+            exit when t.getType = EOF;
         end loop;
-        return n
+        return n;
     end if;
 end if;

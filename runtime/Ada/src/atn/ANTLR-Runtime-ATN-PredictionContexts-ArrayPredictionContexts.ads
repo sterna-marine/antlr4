@@ -23,7 +23,7 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
       -- _#EMPTY_RETURN_STATE_ is always last.
       --
       -- public final
-      returnStates : constant Integer_List;
+      returnStates : Integer_List; -- constant
    end record;
 
    subtype Object is ArrayPredictionContext;
@@ -44,7 +44,7 @@ package ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts is
 
    overriding
    -- final public
-   function isEmpty (This : ArrayPredictionContext) return Boolean
+   function Is_Empty (This : ArrayPredictionContext) return Boolean
       is -- since EMPTY_RETURN_STATE can only appear in the last position, we don't need to verify that size = 1
          (This.returnStates.Element (0) = PredictionContext.EMPTY_RETURN_STATE);
 

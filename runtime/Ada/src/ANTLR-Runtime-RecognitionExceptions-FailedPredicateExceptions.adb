@@ -59,19 +59,19 @@ package ANTLR.Runtime.RecognitionExceptions.FailedPredicateExceptions is
    end Initialize;
 
    -- public
-   function getRuleIndex (This : FailedPredicateException) return Integer
+   function getRuleIndex (This : FailedPredicateException) return Integer;
       is (This.ruleIndex);
 
    -- public
-   function getPredIndex (This : FailedPredicateException) return Integer
+   function getPredIndex (This : FailedPredicateException) return Integer;
       is (This.predicateIndex);
 
    -- public
-   function getPredicate (This : FailedPredicateException) return Optional_String
+   function getPredicate (This : FailedPredicateException) return Optional_UString;
       is (This.predicate);
 
    -- private static
-   function formatMessage (predicate : Optional_UString; message : Optional_String) return UString is
+   function formatMessage (predicate : Optional_UString; message : Optional_UString) return UString is
    begin
       if Is_Valid (message) then
          return message;

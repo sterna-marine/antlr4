@@ -9,7 +9,7 @@ package ANTLR.Runtime.DFA.Serializers.LexerSerializers is
    end Initialize;
 
    overriding
-   function getEdgeLabel (i : Integer) return UString
+   function getEdgeLabel (i : Integer) return UString;
       is ("'" & Character (integerLiteral => i) & '''); --TOFIX
 
 end ANTLR.Runtime.DFA.Serializers.LexerSerializers;

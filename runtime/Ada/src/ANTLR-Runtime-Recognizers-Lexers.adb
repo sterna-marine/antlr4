@@ -35,7 +35,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       end if;
       This.token := (Valid => False);
       This.Token_Type := CommonToken.INVALID_Token_Type;
-      This.channel := CommonToken.DEFAULT_CHANNEL;
+      This.channel := DEFAULT_CHANNEL;
       This.tokenStartCharIndex := -1;
       This.tokenStartCharPositionInLine := -1;
       This.tokenStartLine := -1;
@@ -68,7 +68,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
                end if;
 
                This.token := (Valid => False);
-               This.channel := CommonToken.DEFAULT_CHANNEL
+               This.channel := DEFAULT_CHANNEL
                This.tokenStartCharIndex := This.input.index;
                This.tokenStartCharPositionInLine := This.getInterpreter.getCharPositionInLine;
                This.tokenStartLine := This.getInterpreter.getLine;
@@ -87,7 +87,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
                         ttype := Lexer.SKIP
                   end;
 
-                  if This.input.LA (1) = BufferedTokenStream.EOF then
+                  if This.input.LA (1) = EOF then
                      This.hitEOF := True;
                   end if;
                   if This.Token_Type = CommonToken.INVALID_Token_Type then
@@ -137,19 +137,19 @@ package body ANTLR.Runtime.Recognizers.Lexers is
          Wide_Wide_Text_IO.Put_Line ("pushMode " & m'Image);
       end if;
       This.modeStack.push (This.mode);
-      mode (m);
+      This.mode (m);
    end pushMode;
 
    function popMode (This : Lexer) return Lexer_Mode is
    begin
-      if This.modeStack.isEmpty then
+      if This.modeStack.Is_Empty then
          raise ANTLRError.unsupportedOperation with " EmptyStackException";
       end if;
 
       if LexerATNSimulator.debug then
-         Wide_Wide_Text_IO.Put_Line ("popMode back to " & UString (describing => This.modeStack.peek));
+         Wide_Wide_Text_IO.Put_Line ("popMode back to " & This.modeStack.peek'External_Tag);
       end if;
-      mode (This.modeStack.pop);
+      This.mode (This.modeStack.pop);
       return This.mode;
    end popMode;
 
@@ -190,9 +190,9 @@ package body ANTLR.Runtime.Recognizers.Lexers is
       idx : constant := This.input!.index;
       eof : constant := This.factory.create (
          This.tokenFactorySourcePair,
-         CommonToken.EOF,
+         EOF,
          null,
-         CommonToken.DEFAULT_CHANNEL,
+         DEFAULT_CHANNEL,
          idx,
          idx - 1,
          line,
@@ -242,18 +242,18 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    end setChannel;
 
    function getAllTokens (This : Lexer) return Token_List is
-      tokens : Token_List := Token.Container.Empty_Vector;
+      tokens : Token_List := Token_Container.Empty_Vector;
       t := This.nextToken;
-      while t.getType /= CommonToken.EOF loop
-         Token.Container.append (tokens, t);
+      while t.getType /= EOF loop
+         tokens.append (tokens, t);
          t := This.nextToken;
       end loop;
-      return tokens
+      return tokens;
    end getAllTokens;
 
    procedure recover (This : Lexer; e : LexerNoViableAltException) is
    begin
-      if This.input!.LA (1) /= BufferedTokenStream.EOF then
+      if This.input!.LA (1) /= EOF then
          -- skip a char and again;
          This.getInterpreter.consume (This.input!);
       end if;
@@ -289,7 +289,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
 
    function getErrorDisplay (This : Lexer; c : Character) return UString is
    begin
-      if c.integerValue = CommonToken.EOF then
+      if c.integerValue = EOF then
          return "<EOF>";
       else
          case c is
@@ -312,7 +312,7 @@ package body ANTLR.Runtime.Recognizers.Lexers is
    end recover;
 
    -- internal
-   function makeTokenSourceAndStream (This : Lexer) return TokenSourceAndStream
+   function makeTokenSourceAndStream (This : Lexer) return TokenSourceAndStream;
       is (TokenSourceAndStream (This, This.input));
 
 end ANTLR.Runtime.Recognizers.Lexers;

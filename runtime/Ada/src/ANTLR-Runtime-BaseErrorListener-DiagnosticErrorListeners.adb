@@ -74,8 +74,8 @@ package body ANTLR.Runtime.BaseErrorListener.DiagnosticErrorListeners is
       end if;
 
       ruleName : constant UString := ruleNames.Element (ruleIndex);
-      --if (ruleName = (Valid => False) or else ruleName.isEmpty) {
-      if ruleName.isEmpty then
+      --if (ruleName = (Valid => False) or else ruleName.Is_Empty) {
+      if ruleName.Is_Empty then
          return UString (decision);
       else
          return decision'Image & " (" & ruleName'Image & ')';

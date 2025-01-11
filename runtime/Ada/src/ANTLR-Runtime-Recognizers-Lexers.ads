@@ -1,9 +1,14 @@
 -- €
 
+with Ada.Containers.Vectors;
 with ANTLR.Runtime.ATN.Simulators.LexerSimulators;
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.TokenSource_Protocol;
 
 use ANTLR.Runtime.ATN.Simulators.LexerSimulators;
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.TokenSource_Protocol;
 
 package ANTLR.Runtime.Recognizers.Lexers is
@@ -15,26 +20,34 @@ package ANTLR.Runtime.Recognizers.Lexers is
    -- of speed.
    --
 
+   -- ---------- --
+   -- Lexer_Mode --
+   -- ---------- --
    type Lexer_Mode is new Integer;
 
-   package Lexer_Mode_Container is new Ada.Containers.Vectors (
-      Index_Type => Natural,
-      Item_Type  => Integer,
-      "=" => "=");
-   subtype Lexer_Mode_Stack is Lexer_Mode_Container.Vector;
+   -- public static
+   MORE : constant Lexer_Mode := -2;
+
+   -- public static
+   SKIP : constant Lexer_Mode := -3;
 
    -- public static
    DEFAULT_MODE : constant Lexer_Mode := 0;
 
-   -- public static
-   MORE : constant Integer := -2;
-   -- public static
-   SKIP : constant Integer := -3;
+   -- ---------------- --
+   -- Lexer_Mode_Stack --
+   -- ---------------- --
+   package Lexer_Mode_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Item_Type  => Lexer_Mode,
+      "=" => "=");
+   subtype Lexer_Mode_Stack is Lexer_Mode_Container.Vector;
 
    -- public static
-   DEFAULT_TOKEN_CHANNEL : constant Channel_Number := CommonToken.DEFAULT_CHANNEL;
+   DEFAULT_TOKEN_CHANNEL : constant Channel_Number := DEFAULT_CHANNEL;
    -- public static
-   HIDDEN : constant Channel_Number := CommonToken.HIDDEN_CHANNEL;
+   HIDDEN : constant Channel_Number := HIDDEN_CHANNEL;
+
    -- public static
    MIN_CHAR_VALUE : constant := Character.MIN_VALUE; --FIXME
    -- public static
@@ -42,6 +55,9 @@ package ANTLR.Runtime.Recognizers.Lexers is
 
    package Lexer_Recognizers is new ANTLR.Runtime.Recognizers.Recognizer (LexerATNSimulator);
 
+   -- ----- --
+   -- Lexer --
+   -- ----- --
    -- open
    type Lexer is new Lexer_Recognizers.Recognizer and TokenSource with record
       -- public

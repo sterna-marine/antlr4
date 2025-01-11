@@ -4,8 +4,8 @@ with Ada.Strings;
 with ANTLR.Runtime.ATN.LexerActionTypes;
 with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.Recognizers.Lexers;
 use ANTLR.Runtime.ATN.LexerActionTypes;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerModeActions is
 

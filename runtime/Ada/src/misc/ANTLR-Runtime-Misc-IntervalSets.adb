@@ -145,7 +145,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end if;
    end addAll;
 
-   function complement (This : in out IntervalSet; minElement : Integer; maxElement : Integer) return Optional_Integer_Set
+   function complement (This : in out IntervalSet; minElement : Integer; maxElement : Integer) return Optional_Integer_Set;
       is (complement (IntervalSet.Set (minElement, maxElement)));
 
    function complement (This : in out IntervalSet; vocabulary : Optional_Integer_Set) return Optional_Integer_Set is
@@ -252,7 +252,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       -- If rightI reached right.intervals.size, no more intervals to subtract from result.
       -- If resultI reached result.intervals.size, we would be subtracting from an empty set.
       -- Either way, we are done.
-      return result
+      return result;
    end subtract;
 
    function "or" (This : in out IntervalSet; a : Integer_Set) return Integer_Set is
@@ -352,7 +352,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
    function isnull (This : IntervalSet) return Boolean is
    begin
-      return This.intervals.isEmpty;
+      return This.intervals.Is_Empty;
    end isnull;
 
    function getSingleElement (This : IntervalSet) return Integer is
@@ -385,7 +385,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end if;
    end getMinElement;
 
-   function getIntervals (This : IntervalSet) return Interval_List
+   function getIntervals (This : IntervalSet) return Interval_List;
       is (This.intervals);
 
    procedure hash (hasher: in out Hasher) is
@@ -396,12 +396,12 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       end loop;
    end hash;
 
-   function Description (This : IntervalSet) return UString
+   function Description (This : IntervalSet) return UString;
       is (toString (False));
 
    function toString (This : in out IntervalSet; elemAreChar  : Boolean) return UString is
    begin
-      if This.intervals.isEmpty then
+      if This.intervals.Is_Empty then
          return "{}";
       end if;
 
@@ -425,7 +425,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
             elsif elemAreChar then
                buf := @ & ''' & interval.A'Image & ''';
             else
-               buf := @ & "" & interval.A'Image & "";
+               buf := @ & "" & interval.A'Image ;
             end if;
          end if;
          elsif elemAreChar then
@@ -447,7 +447,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       buf : UString := "";
       first : Boolean := True;
    begin
-      if This.intervals.isEmpty then
+      if This.intervals.Is_Empty then
          return "{}";
       end if;
 
@@ -517,7 +517,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
             s.insert (v);
          end loop;
       end loop;
-      return s
+      return s;
    end toSet;
 
    function get (This : in out IntervalSet; i : Integer) return Integer is
@@ -544,7 +544,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       while idx < This.intervals.endIndex loop
          interval : Interval_T;
 
-         function get (intervals : array (<>) of interval_T) return Interval_T
+         function get (intervals : array (<>) of interval_T) return Interval_T;
             is (intervals.Element (idx));
 
          procedure set (intervals : in out array (<>) of interval; newValue : Interval_T) is
@@ -572,8 +572,8 @@ package body ANTLR.Runtime.Misc.IntervalSets is
          -- if in middle a .. x..b, split interval
          if el > interval.a and then el < interval.b then
             -- found in this interval
-            oldb : constant := interval.b
-            interval.b := el - 1      -- [a .. x-1]
+            oldb : constant := interval.b;
+            interval.b := el - 1;      -- [a .. x-1]
             This.add (el + 1, oldb); -- add [x+1 .. b]
          end if;
       end loop;

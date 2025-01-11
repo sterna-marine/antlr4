@@ -24,7 +24,7 @@ package ANTLR.Runtime.ATN.LookupDictionaries is
    function getOrAdd (This : in out LookupDictionary; config : ATNConfig) return ATNConfig;
 
 -- public
-   function isEmpty (This : LookupDictionary) return Boolean
+   function Is_Empty (This : LookupDictionary) return Boolean
       is (Hashed_ATNConfig.Is_Empty (This.Cache));
 
 

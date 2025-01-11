@@ -101,7 +101,7 @@ package body ANTLR.Runtime.ATN.Configs.LexerConfigs is
    begin
       return source.passedThroughNonGreedyDecision
              or else target is DecisionState
-             and then (DecisionState (target)).nonGreedy
+             and then (DecisionState (target)).nonGreedy;
    end checkNonGreedyDecision;
 
 end ANTLR.Runtime.ATN.Configs.LexerConfigs;

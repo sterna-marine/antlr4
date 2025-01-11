@@ -3,7 +3,7 @@
 package body ANTLR.Runtime.Vocabularies is
 
    procedure Initialize (Self : in out Vocabulary;
-                         literalNames : Optional_String_List;
+                         literalNames : Optional_UString_List;
                          symbolicNames : Optional_UString_List) is
    begin
       Self.Initialize (literalNames, symbolicNames, (Is_Valid => False));
@@ -51,7 +51,7 @@ package body ANTLR.Runtime.Vocabularies is
       return Result;
    end fromTokenNames;
 
-   function getLiteralName (This : Vocabulary; tokenType : Token_Kind) return Optional_String is
+   function getLiteralName (This : Vocabulary; tokenType : Token_Kind) return Optional_UString is
    begin
       if tokenType in 0 .. This.literalNames.Length -1 then
          return This.literalNames.Element (tokenType);
@@ -60,7 +60,7 @@ package body ANTLR.Runtime.Vocabularies is
       end if;
    end getLiteralName;
 
-   function getSymbolicName (This : Vocabulary; tokenType : Token_Kind) return Optional_String is
+   function getSymbolicName (This : Vocabulary; tokenType : Token_Kind) return Optional_UString is
    begin
       if tokenType in 0 .. This.symbolicNames.Length - 1 then
             return This.symbolicNames.Element (tokenType);

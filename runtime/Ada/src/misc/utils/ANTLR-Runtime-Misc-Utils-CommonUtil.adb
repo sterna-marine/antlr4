@@ -60,7 +60,7 @@ end if;
 
 function toInt (c : Character) return Integer is
 begin
-    return c.unicodeValue
+    return c.unicodeValue;
 end if;
 
 function toInteger_32 (data : Character_List, offset : Integer) return Integer is

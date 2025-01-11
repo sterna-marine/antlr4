@@ -13,7 +13,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --        hashCode = 31 * hashCode + state.stateNumber
 --        hashCode = 31 * hashCode + alt
 --        hashCode = 31 * hashCode + semanticContext.hashValue
---        return hashCode
+--        return hashCode;
 --
 --    }
 --
@@ -23,7 +23,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --public func ==(Lhs, Rhs : DefaultATNConfig) -> Bool {
 --
 --    if lhs === rhs {
---        return true
+--        return true;
 --    }
 --
 --    let same: Bool =
@@ -31,7 +31,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --            lhs.alt == rhs.alt &&
 --            lhs.semanticContext == rhs.semanticContext
 --
---    return same
+--    return same;
 --
 --}
 --public class DefaultATNConfig: ATNConfig {
@@ -43,7 +43,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --        hashCode = 31 * hashCode + state.stateNumber
 --        hashCode = 31 * hashCode + alt
 --        hashCode = 31 * hashCode + semanticContext.hashValue
---        return hashCode
+--        return hashCode;
 --
 --    }
 --
@@ -53,7 +53,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --public func ==(Lhs, Rhs : DefaultATNConfig) -> Bool {
 --
 --    if lhs === rhs {
---        return true
+--        return true;
 --    }
 --
 --    let same: Bool =
@@ -61,7 +61,7 @@ package ANTLR.Runtime.ATN.DefaultATNConfig is
 --            lhs.alt == rhs.alt &&
 --            lhs.semanticContext == rhs.semanticContext
 --
---    return same
+--    return same;
 --
 --}
 

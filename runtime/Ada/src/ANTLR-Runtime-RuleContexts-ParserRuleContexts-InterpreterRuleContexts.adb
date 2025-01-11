@@ -18,7 +18,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts.InterpreterRuleContex
    end Initialize;
 
    overriding
-   function getRuleIndex (This : InterpreterRuleContext) return Integer
+   function getRuleIndex (This : InterpreterRuleContext) return Integer;
       is (This.ruleIndex);
 
    function fromParserRuleContext (ctx : Optional_ParserRuleContext) return Optional_InterpreterRuleContext is

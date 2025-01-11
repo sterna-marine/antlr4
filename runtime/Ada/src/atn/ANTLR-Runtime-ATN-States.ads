@@ -4,10 +4,12 @@ with Ada.Containers;
 with Ada.Containers.Vectors;
 with Ada.Containers.Hashed_Sets;
 with Ada.Strings;
+with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.Misc.IntervalSets;
 with Option;
 
+use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.Transitions;
 use ANTLR.Runtime.Misc.IntervalSets;
 
@@ -127,7 +129,7 @@ package ANTLR.Runtime.ATN.States is
       atn : Optional_ATN;
 
       -- public internal (set) final var
-      StateNumber : States.State := INVALID_STATE_NUMBER;
+      StateNumber : State := INVALID_STATE_NUMBER;
 
       -- public internal (set) final var
       ruleIndex: Optional_Integer;
@@ -191,7 +193,7 @@ package ANTLR.Runtime.ATN.States is
    procedure Put_Image_ATNState (S : in out Sink'Class; X : ATNState);
    for ATNState'Put_Image use Put_Image_ATNState;
    -- public
-   function Description (This : ATNState) return UString
+   function Description (This : ATNState) return UString;
       --return "MyClass " & string'Image & ""
       is (stateNumber'Image);
 

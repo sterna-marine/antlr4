@@ -118,7 +118,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
       Hash => Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
-   subtype PredictionContext_2_Map is PredictionContext_2_Dictorary.Map
+   subtype PredictionContext_2_Map is PredictionContext_2_Dictorary.Map;
 
    -- -------------------------------------- --
    -- PredictionContext_Dictionary (Integer) --
@@ -208,7 +208,6 @@ package ANTLR.Runtime.ATN.PredictionContexts is
 
    -- public static
    function toDOTString (context : Optional_PredictionContext) return UString;
-   begin
 
    -- From Sam
    -- public static

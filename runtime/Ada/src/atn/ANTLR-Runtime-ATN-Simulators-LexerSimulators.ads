@@ -75,7 +75,7 @@ package ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       decisionToDFA : DFA_List;
 
       -- internal
-      mode : Lexer_Mode := Lexer.DEFAULT_MODE;
+      mode : Lexer_Mode := DEFAULT_MODE;
 
       --
       -- Used during DFA/ATN exec to record the most recent accept configuration info

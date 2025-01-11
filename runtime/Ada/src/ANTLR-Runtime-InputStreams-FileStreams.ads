@@ -21,7 +21,7 @@ package ANTLR.Runtime.InputStreams.FileStreams is
    -- public
    procedure Initialize (Self : in out ANTLRFileStream;
                          fileName : UString;
-                         encoding : Optional_String.Encoding := (Valid => False));
+                         encoding : Optional_UString.Encoding := (Valid => False));
 
    -- public
    overriding

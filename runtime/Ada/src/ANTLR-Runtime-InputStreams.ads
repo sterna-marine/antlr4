@@ -4,9 +4,11 @@ with Ada.Finalize
 with Ada.Strings.Wide_Wide_Unbounded;
 with ANTLR.Runtime.IntStream_Protocol.Extensions;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
+with ANTLR.Runtime.Misc.Intervals;
 
 use ANTLR.Runtime.IntStream_Protocol.Extensions;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
+use ANTLR.Runtime.Misc.Intervals;
 
 package body ANTLR.Runtime.InputStreams is
    --

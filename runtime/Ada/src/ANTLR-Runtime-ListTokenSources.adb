@@ -9,7 +9,7 @@ package body ANTLR.Runtime.ListTokenSources is
 
    procedure Initialize (Self : in out ListTokenSource;
                         tokens : Token_List;
-                        sourceName : Optional_String) is
+                        sourceName : Optional_UString) is
    begin
       self.tokens := tokens;
       self.sourceName := sourceName;
@@ -19,8 +19,8 @@ package body ANTLR.Runtime.ListTokenSources is
    begin
       if This.i < This.tokens.Length then
          return This.tokens.Element (This.i).getCharPositionInLine;
-      elsif Is_Valid (This.eofToken) then
-         return This.eofToken.getCharPositionInLine;
+      elsif Is_Valid (EOFToken) then
+         return EOFToken.getCharPositionInLine;
       elsif not This.tokens.Is_Empty then
          -- have to calculate the result from the line/column of the previous
          -- token, along with the text of the token.
@@ -45,7 +45,7 @@ package body ANTLR.Runtime.ListTokenSources is
    function nextToken (This : ListTokenSource) return Token is
    begin
       if This.i >= This.tokens.Length then
-         if not Is_Valid (This.eofToken) then
+         if not Is_Valid (EOFToken) then
             start := -1;
             if This.tokens.Length > 0 then
                previousStop : constant := This.tokens.Element (This.tokens.Length - 1).getStopIndex;
@@ -72,7 +72,7 @@ package body ANTLR.Runtime.ListTokenSources is
 
       t : constant := This.tokens.Element (i);
       if This.i = (This.tokens.Length - 1) and then t.getType = EOF then
-         This.eofToken := t;
+         EOFToken := t;
       end if;
 
       This.i := @ + 1;
@@ -83,8 +83,8 @@ package body ANTLR.Runtime.ListTokenSources is
    begin
       if This.i < This.tokens.Length then
          return This.tokens.Element (This.i).getLine;
-      elsif Is_Valid (This.eofToken) then
-         return This.eofToken.getLine;
+      elsif Is_Valid (EOFToken) then
+         return EOFToken.getLine;
       elsif not This.tokens.Is_Empty then
          -- have to calculate the result from the line/column of the previous
          -- token, along with the text of the token.
@@ -114,7 +114,7 @@ package body ANTLR.Runtime.ListTokenSources is
       if This.i < tokens.count then
          return This.tokens.Element (i).getInputStream;
       elsif Is_Valud (eofToken) then
-         return This.eofToken.getInputStream;
+         return EOFToken.getInputStream;
       elsif not This.tokens.Is_Empty then
          return This.tokens.Last_Element.getInputStream;
       end getInputStream;

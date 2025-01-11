@@ -8,7 +8,7 @@ use ANTLR.Runtime.ATN.Configs;
 package ANTLR.Runtime.ATN.LookupConfigs is
 
    -- public
-   type LookupATNConfig is new Ada.Finalization.Controlled -- and Hashable
+   type LookupATNConfig is new Ada.Finalization.Controlled with -- and Hashable
    record
       -- public
       config : ATNConfig; -- constant

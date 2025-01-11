@@ -14,7 +14,7 @@ package ANTLR.Runtime.ATN.LexerActions is
    --
 
    -- public
-   type LexerAction is Ada.Finalization.Controlled with null record;-- and Hashable 
+   type LexerAction is new Ada.Finalization.Controlled with null record;-- and Hashable 
 
    subtype Object is LexerAction;
    type Class is access all Object;
@@ -27,9 +27,9 @@ package ANTLR.Runtime.ATN.LexerActions is
    procedure hash (This : LexerAction; hasher : in out Hasher) with No_Return;
 
    package LexerAction_Container is new Ada.Containers.Vectors (
-      Index_Type : Natural;
-      Element_Type : LexerAction;
-      "=" : "=");
+      Index_Type => Natural,
+      Element_Type => LexerAction,
+      "=" => "=");
    subtype LexerAction_list is LexerAction_Container.Vector;
 
    --

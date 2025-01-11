@@ -2,9 +2,13 @@
 
 with Ada.Finalization;
 with Ada.Containers.Vectors;
--- with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Misc.IntervalSets;
+with ANTLR.Runtime.Token_Protocol;
 
--- use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Misc.IntervalSets;
+use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.ATN is
 

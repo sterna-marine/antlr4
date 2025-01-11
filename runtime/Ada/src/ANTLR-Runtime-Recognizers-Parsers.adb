@@ -152,7 +152,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
          $Param_0 === TrimToSizeListener.INSTANCE;
       end Closure;
    begin
-      return (not This.getParseListeners.filter (Closure'Access).isEmpty);
+      return (not This.getParseListeners.filter (Closure'Access).Is_Empty);
    end getTrimParseTree;
 
    function getParseListeners (This : …) return ParseTreeListener_List is
@@ -173,16 +173,16 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       end if;
    end addParseListener;
 
-   procedure removeParseListener (This : Parser; listener : Optional_ParseTreeListener;) is
+   procedure removeParseListener (This : Parser; listener : Optional_ParseTreeListener) is
       function Closure (Param_0 : <>) is
       begin
          $Param_0 === listener;
       end Closure;
    begin
       if Is_Valid (This.parseListeners) then
-         if not This.parseListeners!.filter (Closure'Access).isEmpty then
+         if not This.parseListeners!.filter (Closure'Access).Is_Empty then
             This.parseListeners := This.parseListeners!.filter (Closure'Access);
-            if This.parseListeners!.isEmpty then
+            if This.parseListeners!.Is_Empty then
                This.parseListeners := (Valid => False);
             end if;
          end if;
@@ -327,14 +327,14 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       o : constant Token := This.getCurrentToken;
       hasListener : Boolean;
    begin
-      if o.getType /= Parser.EOF then
+      if o.getType /= EOF then
          This.getInputStream!.consume;
       end if;
       if not Is_Valid (This.ctx) then
          return o;
       else
 
-         hasListener := Is_Valid (This.parseListeners) and then not This.parseListeners!.isEmpty
+         hasListener := Is_Valid (This.parseListeners) and then not This.parseListeners!.Is_Empty
 
          if This.buildParseTrees or else hasListener then
             if This.errHandler.inErrorRecoveryMode (self) then
@@ -418,11 +418,11 @@ package body ANTLR.Runtime.Recognizers.Parsers is
 
    function getPrecedence (This : Parser) return Integer is
    begin
-      if This.precedenceStack.isEmpty then
+      if This.precedenceStack.Is_Empty then
          return -1;
       else
          if Is_Valid (precedenceStack.peek) then
-            return This.precedenceStack.peek
+            return This.precedenceStack.peek;
          else
             return -1;
       end if;
@@ -598,7 +598,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
             ctxWrap := ctx; --TOFIX
          end loop;
 
-         if following.contains (CommonToken.EPSILON) and then symbol = CommonToken.EOF then
+         if following.contains (CommonToken.EPSILON) and then symbol = EOF then
             return True;
          else
             return False;
@@ -613,7 +613,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
       return atn.nextTokens (s);
    end getExpectedTokensWithinCurrentRule;
 
-   function getRuleInvocationStack (This : Parser; p : Optional_RuleContext;) return UString_List is
+   function getRuleInvocationStack (This : Parser; p : Optional_RuleContext) return UString_List is
       ruleNames : constant := This.getRuleNames;
       Stack : UString_List;
    begin
@@ -630,7 +630,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
          p := pWrap.parent;
          pWrap := p; --FIXME
       end loop;
-      return stack
+      return stack;
    end getRuleInvocationStack;
 
    function getDFAStrings (This : Parser) return UString_List is
@@ -655,7 +655,7 @@ package body ANTLR.Runtime.Recognizers.Parsers is
          seenOne := False;
          vocab : constant := This.getVocabulary;
          for dfa of This.interp.decisionToDFA loop
-            if not dfa.states.isEmpty then
+            if not dfa.states.Is_Empty then
                if seenOne then
                   Wide_Wide_Text_IO.Put_Line ("");
                end if;

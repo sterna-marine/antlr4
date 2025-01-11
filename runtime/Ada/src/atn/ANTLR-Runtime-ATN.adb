@@ -14,7 +14,7 @@ package body ANTLR.Runtime.ATN is
       self.maxTokenType := maxTokenType;
    end Initialize;
 
-   function nextTokens (This : ATN; s : ATNState; ctx : Optional_RuleContext;) return IntervalSet is
+   function nextTokens (This : ATN; s : ATNState; ctx : Optional_RuleContext) return IntervalSet is
       anal : constant := LL1Analyzer (This);
       next : constant := anal.LOOK (s, ctx);
    begin
@@ -38,7 +38,7 @@ package body ANTLR.Runtime.ATN is
       end if;
    end nextTokens;
 
-   procedure addState (This : ATN; state : Optional_ATNState;) is
+   procedure addState (This : ATN; state : Optional_ATNState) is
       state : constant Optional_ATNState := state;
    begin
       if Is_Valid (state) then
@@ -65,7 +65,7 @@ package body ANTLR.Runtime.ATN is
 
    function getDecisionState (This : ATN; decision : State) return Optional_DecisionState is
    begin
-      if not This.decisionToState.isEmpty  then
+      if not This.decisionToState.Is_Empty  then
          return This.decisionToState.Element (decision); --TOFIX
       else
          return (Valid => False);
@@ -78,7 +78,7 @@ package body ANTLR.Runtime.ATN is
          raise ANTLRError.illegalArgument with "Invalid state number.";
       end if;
 
-      ctx : Optional_RuleContext; := context;
+      ctx : Optional_RuleContext := context;
       s : constant ATNStates.State := This.states.Element (stateNumber);
       following := nextTokens (s);
       if not following.contains (CommonToken.EPSILON) then
@@ -88,8 +88,8 @@ package body ANTLR.Runtime.ATN is
       expected : constant := This.IntervalSet;
       expected.addAll (following); -- try!
       expected.remove (CommonToken.EPSILON); -- try!
-      ctxWrap : constant := ctx;
-      while Is_Valid (ctxWrap)
+      ctxWrap : Optional_RuleContext := ctx; --TOFIX
+      while Is_Valid (ctxWrap)  --TOFIX
          and then ctxWrap.invokingState >= 0
          and then following.contains (CommonToken.EPSILON) loop
             declare
@@ -103,11 +103,11 @@ package body ANTLR.Runtime.ATN is
             exception
                when others => null;
             end;
-         ctxWrap : constant := ctx; --TOFIX
+         ctxWrap := ctx; --TOFIX
       end loop;
 
       if following.contains (CommonToken.EPSILON) then
-         expected.add (CommonToken.EOF); -- try!
+         expected.add (EOF); -- try!
       end if;
 
       return expected;

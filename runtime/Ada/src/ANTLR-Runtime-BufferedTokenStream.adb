@@ -6,555 +6,372 @@ with Ada.Wide_Wide_Text_IO;
 use Ada;
 use Aspect;
 
-package ANTLR.Runtime.Tree.TerminalNode_Protocol is
+package body ANTLR.Runtime.Tree.TerminalNode_Protocol is
 
---
--- This implementation of _org.antlr.v4.runtime.TokenStream_ loads tokens from a
--- _org.antlr.v4.runtime.TokenSource_ on-demand, and places the tokens in a buffer to provide
--- access to any previous token by index.
---
---
--- This token stream ignores the value of _org.antlr.v4.runtime.Token#getChannel_. If your
--- parser requires the token stream filter tokens to only those on a particular
--- channel, such as _org.antlr.v4.runtime.Token#DEFAULT_CHANNEL_ or
--- _org.antlr.v4.runtime.Token#HIDDEN_CHANNEL_, use a filtering token stream such a
--- _org.antlr.v4.runtime.CommonTokenStream_.
---
+   procedure Initialize (Self : in out BufferedTokenStream; tokenSource : TokenSource) is
+   begin
+      self.tokenSource := tokenSource;
+   end Initialize;
 
--- public
-type BufferedTokenStream is new TokenStream with null record;
-{
-    --
-    -- The _org.antlr.v4.runtime.TokenSource_ from which tokens for this stream are fetched.
-    --
-    -- internal
-    tokenSource : TokenSource
+   procedure release (This : BufferedTokenStream; marker : Integer) is
+   begin
+      null;
+      -- no resources to release
+   end release;
 
-    --
-    -- A collection of all tokens fetched from the token source. The list is
-    -- considered a complete view of the input once _#fetchedEOF_ is set
-    -- to `True`.
-    --
-    -- internal
-    tokens := Token.Container.Empty_Vector;
+   procedure reset (This : BufferedTokenStream) is
+   begin
+      This.seek (0);
+   end reset;
 
-    --
-    -- The index into _#tokens_ of the current token (next token to
-    -- _#consume_). _#tokens_`[`_#p_`]` should be
-    -- _#LT LT (1)_.
-    --
-    -- This field is set to -1 when the stream is first constructed or when
-    -- _#setTokenSource_ is called, indicating that the first token has
-    -- not yet been fetched from the token source. For additional information,
-    -- see the documentation of _org.antlr.v4.runtime.IntStream_ for a description of
-    -- Initializing Methods.
-    --
-    -- internal
-    p := -1
+   procedure seek (This : BufferedTokenStream; index : Integer) is
+   begin
+      This.lazyInit;
+      This.p := This.adjustSeekIndex (index);
+   end seek;
 
-    --
-    -- Indicates whether the _org.antlr.v4.runtime.Token#EOF_ token has been fetched from
-    -- _#tokenSource_ and added to _#tokens_. This field improves
-    -- performance for the following cases:
-    --
-    -- * _#consume_: The lookahead check in _#consume_ to prevent
-    -- consuming the EOF symbol is optimized by checking the values of
-    -- _#fetchedEOF_ and _#p_ instead of calling _#LA_.
-    --
-    -- * _#fetch_: The check to prevent adding multiple EOF symbols into
-    -- _#tokens_ is trivial with this field.
-    --
-    -- internal
-    fetchedEOF := False;
-
-
-    -- public
-    procedure Initialize (Self : in out …; tokenSource : TokenSource) {
-        self.tokenSource := tokenSource
-    end if;
-
-
-    -- public
-    function getTokenSource (This : …) return TokenSource is
-begin
-        return tokenSource
-    end if;
-
-
-    -- public
-    function index (This : …) return Integer is
-begin
-        return p
-    end if;
-
-
-    -- public
-    function mark (This : …) return Integer is
-begin
-        return 0
-    end if;
-
-    -- public
-    procedure release (marker : Integer) is
-    begin
-        -- no resources to release
-    end if;
-
-    -- public
-    procedure reset (This : …) is
-begin
-        seek (0);
-    end if;
-
-
-    -- public
-    procedure seek (index : Integer) is
-    begin
-        This.lazyInit;
-        p := adjustSeekIndex (index);
-    end if;
-
-
-    -- public
-    function size (This : …) return Integer is
-begin
-        return tokens.count
-    end if;
-
-
-    -- public
-    procedure consume (This : …) is
-begin
-        skipEofCheck : Boolean;
-        if p >= 0 then
-            if fetchedEOF then
-                -- the last token in tokens is EOF. skip check if p indexes any
-                -- fetched token except the last.
-                skipEofCheck := p < tokens.count - 1
-            else
-                -- no EOF token in tokens. skip check if p indexes a fetched token.
-                skipEofCheck := p < tokens.count;
-            end if;
-        else
-            -- not yet initialized
-            skipEofCheck := False;
-        end if;
-
-        if not skipEofCheck and then LA (1) == BufferedTokenStream.EOF then
-            raise ANTLRError.illegalState with "cannot consume EOF";
-        end if;
-
-        if sync (p + 1) then
-            p := adjustSeekIndex (p + 1);
-        end if;
-    end if;
-
-    --
-    -- Make sure index `i` in tokens has a token.
-    --
-    -- * returns: `True` if a token is located at index `i`, otherwise
-    -- `False`.
-    -- * seealso: #get (int i);
-    --
-    @discardableResult
-    -- internal
-    function sync (i : Integer) return Boolean is
-begin
-        pragma assert (i >= 0, "Expected: i>=0");
-        n : constant := i - tokens.count + 1 -- how many more elements we need?
-         if Is_Active (Aspect.DEBUG) then
-            Wide_Wide_Text_IO.Put_Line ("sync (" & i & ") needs " & n);
+   procedure consume (This : BufferedTokenStream) is
+      skipEofCheck : Boolean;
+   begin
+      if This.p >= 0 then
+         if This.fetchedEOF then
+               -- the last token in tokens is EOF. skip check if p indexes any
+               -- fetched token except the last.
+               skipEofCheck := This.p < This.tokens.Length - 1;
+         else
+               -- no EOF token in tokens. skip check if p indexes a fetched token.
+               skipEofCheck := This.p < This.tokens.Length;
          end if;
-        if n > 0 then
-            fetched : constant := fetch (n);
-            return fetched >= n
-        end if;
+      else
+         -- not yet initialized
+         skipEofCheck := False;
+      end if;
 
-        return True;
-    end if;
+      if not skipEofCheck and then This.LA (1) = EOF then
+         raise ANTLRError.illegalState 
+            with "cannot consume EOF";
+      else
+         if This.sync (This.p + 1) then
+            This.p := This.adjustSeekIndex (This.p + 1);
+         end if;
+      end if;
+   end consume;
 
-    --
-    -- Add `n` elements to buffer.
-    --
-    -- * returns: The actual number of elements added to the buffer.
-    --
-    -- internal
-    function fetch (n : Integer) return Integer is
-begin
-        if fetchedEOF then
-            return 0;
-        end if;
+   function sync (This : BufferedTokenStream; i : Integer) return Boolean is
+   begin
+      pragma assert (i >= 0, "Expected: i>=0");
+      n : constant := i -  This.tokens.Length + 1; -- how many more elements we need?
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line ("sync (" & i'Image & ") needs " & n'Image);
+      end if;
+      if n > 0 then
+         fetched : constant Integer := This.fetch (n);
+         return fetched >= n;
+      else
+         return True;
+      end if;
+   end sync;
 
-        for i in 0 .. n - 1 loop
+   function fetch (This : BufferedTokenStream; n : Integer) return Integer is
+   begin
+      if This.fetchedEOF then
+         return 0;
+      else
+         for i in 0 .. n - 1 loop
             t : constant := tokenSource.nextToken;
             wt : constant Optional_WritableToken := Maybe (t);
             if Is_Valid (wt) then
-                wt.setTokenIndex (tokens.count);
+                  wt.setTokenIndex (This.tokens.Length);
             end if;
 
-            tokens.append (t);
-            if t.getType = BufferedTokenStream.EOF then
-                fetchedEOF := True;
-                return i + 1
+            This.tokens.append (t);
+            if t.getType = EOF then
+                  This.fetchedEOF := True;
+                  return i + 1;
             end if;
-        end loop;
+         end loop;
+         return n;
+      end if;
+   end fetch;
 
-        return n
-    end if;
-
-    -- public
-    function get (i : Integer) return Token is
-begin
-        if not tokens.indices.contains (i) then
-            raise ANTLRError.indexOutOfBounds with "token index " & i'Image & " out of range 0 ..< " & tokens.count;
-        end if;
-        return tokens.Element (i);
-    end if;
-
-    --
-    -- Get all tokens from start .. stop inclusively
-    --
-    -- public
-    function get (start : Integer;stop : Integer) return Array<Token>? {
-        stop := stop
-        if start < 0 or else stop < 0 then
-            return (Valid => False);
-        end if;
-        This.lazyInit;
-        subset := Token.Container.Empty_Vector;
-        if stop >= tokens.count then
-            stop := tokens.count - 1;
-        end if;
-        for i in start .. stop loop
-            t : constant := tokens.Element (i);
-            exit when t.getType = BufferedTokenStream.EOF;
-            subset.append (t);
-        end if;
-        return subset
-    end if;
-
-    -- public
-    function LA (i : Integer) return Integer is
-begin
-        return LT (i)!.getType;
-    end if;
-
-    -- internal
-    function LB (k : Integer) return Optional_Token is
+   function get (This : BufferedTokenStream; i : Integer) return Token is
    begin
-        if (p - k) < 0 then
-            return (Valid => False);
-        end if;
-        return tokens[p - k]
-    end if;
+      if not This.tokens.Has_Element (This.tokens.To_Cursor (i)) then
+         raise ANTLRError.indexOutOfBounds
+            with "token index " & i'Image & " out of range 0 .. " & (This.tokens.Length - 1)'Image;
+      else
+         return This.tokens.Element (i);
+      end if;
+   end get;
 
-
-    -- public
-    function LT (k : Integer) return Optional_Token is
+   function get (This : BufferedTokenStream; start, stop : Integer) return Token_List is
+      subset : Token_List; -- := Token_Container.Empty_Vector;
    begin
-        This.lazyInit;
-        if k = 0 then
-            return (Valid => False);
-        end if;
-        if k < 0 then
-            return LB (-k);
-        end if;
+      Some_stop : Integer := stop;
+      if This.start < 0 or else This.stop < 0 then
+         return (Valid => False);
+      end if;
+      This.lazyInit;
+      if This.stop >= This.tokens.Length then
+         Some_stop := This.tokens.Length - 1;
+      end if;
 
-        i : constant := p + k - 1
-        sync (i);
-        if i >= tokens.count then
+      for i in This.start .. Some_stop loop
+         t : constant Token := This.tokens.Element (i);
+         exit when t.getType = EOF;
+         subset.append (t);
+      end if;
+      return subset;
+   end get;
+
+   function LB (This : BufferedTokenStream; k : Integer) return Optional_Token is
+   begin
+      if (This.p - k) < 0 then
+         return (Valid => False);
+      else
+         return This.tokens.Element (This.p - k);
+      end if;
+   end LB;
+
+   function LT (This : BufferedTokenStream; k : Integer) return Optional_Token is
+   begin
+      This.lazyInit;
+      if k = 0 then
+         return (Valid => False);
+      else
+         if k < 0 then
+            return This.LB (-k);
+         end if;
+
+         i : constant := This.p + k - 1
+         This.sync (i);
+         if i >= This.tokens.Length then
             -- return EOF token
             -- EOF must be last token
-            return tokens.last!
-        end if;
-        return tokens.Element (i);
-    end if;
+            return Value (This.tokens.last);
+         else
+            return This.tokens.Element (i);
+         end if;
+      end if;
+   end LT;
 
-    --
-    -- Allowed derived classes to modify the behavior of operations which change
-    -- the current stream position by adjusting the target token index of a seek
-    -- operation. The default implementation simply returns `i`. If an
-    -- exception is thrown in this method, the current stream index should not be
-    -- changed.
-    --
-    -- For example, _org.antlr.v4.runtime.CommonTokenStream_ overrides this method to ensure that
-    -- the seek target is always an on-channel token.
-    --
-    -- * parameter i: The target token index.
-    -- * returns: The adjusted target token index.
-    --
-    -- internal
-    function adjustSeekIndex (i : Integer) return Integer is
-begin
-        return i
-    end if;
+   procedure lazyInit (Self : BufferedTokenStream) is
+   begin
+      if This.p = -1 then
+         This.setup;
+      end if;
+   end lazyInit;
 
-    internal final procedure lazyInit (Self : …) is
-begin
-        if p == -1 then
-            This.setup;
-        end if;
-    end if;
+   procedure setup (This : BufferedTokenStream) is
+   begin
+      This.sync (0);
+      This.p := This.adjustSeekIndex (0);
+   end setup;
 
-    -- internal
-    procedure setup (This : …) is
-begin
-        sync (0);
-        p := adjustSeekIndex (0);
-    end if;
+   procedure setTokenSource (This : BufferedTokenStream; tokenSource : TokenSource) is
+   begin
+      This.tokenSource := tokenSource;
+      This.tokens.Clear;
+      This.p := -1;
+      This.fetchedEOF := False;
+   end setTokenSource;
 
-    --
-    -- Reset this token stream by setting its token source.
-    --
-    -- public
-    procedure setTokenSource (tokenSource : TokenSource) is
-    begin
-        self.tokenSource := tokenSource
-        tokens.removeAll;
-        p := -1
-        fetchedEOF := False;
-    end if;
-
-    -- public
-    function getTokens (This : …) return Token_Container.Vector is
-        return tokens
-    end if;
-
-    -- public
-    function getTokens (start : Integer; stop : Integer) return Token_List {
-        return getTokens (start, stop, null);
-    end if;
-
-    --
-    -- Given a start and stop index, return a List of all tokens in
-    -- the token type BitSet.  return (Valid => False) if no tokens were found.  This
-    -- method looks at both on and off channel tokens.
-    --
-    -- public
-    function getTokens (start : Integer; stop : Integer; types : Set_of_Optional_Integers?) return Token_List {
-        This.lazyInit;
-        if not tokens.indices.contains (start) or not tokens.indices.contains (stop) then
-            raise ANTLRError.indexOutOfBounds with "start " & start'Image & " or stop " & stop'Image & " not in 0 ..< " & tokens.count;
-        end if;
-        if start > stop then
+   function getTokens (This : BufferedTokenStream;
+                       start, stop : Integer;
+                       types : Set_of_Token_Kind)
+                       return Token_List is
+   begin
+      This.lazyInit;
+      if not This.tokens.Has_Element (This.tokens.To_Cursor (start))
+      or else not This.tokens.Has_Element (This.tokens.To_Cursor (stop)) then
+         raise ANTLRError.indexOutOfBounds
+            with "start " & start'Image & " or stop " & stop'Image & " not in 0 .. " & (This.tokens.Length - 1)'Image;
+      elsif start > stop then
             return (Valid => False);
-        end if;
-
-        filteredTokens := Token.Container.Empty_Vector;
-        for i in start .. stop loop
-            t : constant := tokens.Element (i);
-            if types?.contains (t.getType), Default => True then
-                filteredTokens.append (t);
+      else
+         filteredTokens := Token_Container.Empty_Vector;
+         for i in start .. stop loop
+            t : constant := This.tokens.Element (i);
+            if types.Is_Empty or types.Contains (t.getType) then --TOFIX
+               filteredTokens.append (t);
             end if;
-        end loop;
-        if filteredTokens.isEmpty then
+         end loop;
+
+         if filteredTokens.Is_Empty then
             return (Valid => False);
-        end if;
-        return filteredTokens
-    end if;
+         else
+            return filteredTokens;
+         end if;
+      end if;
+   end getTokens;
 
-    -- public
-    function getTokens (start : Integer; stop : Integer; tType : Token_Kind) return Token_List {
-        return getTokens (start, stop, [ttype]);
-    end if;
+   function getTokens (This : BufferedTokenStream;
+                       start, stop : Integer;
+                       tType : Token_Kind)
+                       return Token_List
+      is (This.getTokens (start, stop, Token_Kind_Sets.To_Set (ttype)));
 
-    --
-    -- Given a starting index, return the index of the next token on channel.
-    -- Return `i` if `tokens.Element (i)` is on channel. Return the index of
-    -- the EOF token if there are no tokens on channel between `i` and
-    -- EOF.
-    --
-    -- internal
-    function nextTokenOnChannel (i : Integer; Channel : Channel_Number) return Integer is
-begin
-        i := i
-        sync (i);
-        if i >= This.size then
-            return This.size - 1;
-        end if;
-
-        token := tokens.Element (i);
-        while token.getChannel /= channel loop
-            if token.getType = BufferedTokenStream.EOF then
-                return i;
+   function nextTokenOnChannel (This : BufferedTokenStream;
+                                i : Integer;
+                                Channel : Channel_Number)
+                                return Integer is
+      Actual_i : Integer := i;
+   begin
+      This.sync (i);
+      if i >= This.size then
+         return This.size - 1;
+      else
+         token := This.tokens.Element (i);
+         while token.getChannel /= channel loop
+            if token.getType = EOF then
+               return i;
+            else
+               Actual_i := @ + 1;
+               This.sync (Some_i);
+               token := This.tokens.Element (Actual_i);
             end if;
+         end loop;
+         return Actual_i;
+      end if;
+   end nextTokenOnChannel;
 
-            i := @ + 1;
-            sync (i);
-            token := tokens.Element (i);
-        end loop;
-
-        return i
-    end if;
-
-    --
-    -- Given a starting index, return the index of the previous token on
-    -- channel. Return `i` if `tokens.Element (i)` is on channel. Return -1
-    -- if there are no tokens on channel between `i` and 0.
-    --
-    --
-    -- If `i` specifies an index at or after the EOF token, the EOF token
-    -- index is returned. This is due to the fact that the EOF token is treated
-    -- as though it were on every channel.
-    --
-    -- internal
-    function previousTokenOnChannel (i : Integer; Channel : Channel_Number) return Integer is
-begin
-        i := i
-        sync (i);
-        if i >= This.size then
-            -- the EOF token is on every channel
-            return This.size - 1
-        end if;
-
-        while i >= 0 loop
-            token : constant := tokens.Element (i);
-            if token.getType = BufferedTokenStream.EOF or else token.getChannel = channel then
-                return i;
+   function previousTokenOnChannel (This : BufferedTokenStream;
+                                    i : Integer;
+                                    Channel : Channel_Number)
+                                    return Integer is
+      Actual_i : Integer := i;
+   begin
+      This.sync (i);
+      if i >= This.size then
+         -- the EOF token is on every channel
+         return This.size - 1;
+      else
+         while Actual_i >= 0 loop
+            token : constant := This.tokens.Element (Actual_i);
+            if token.getType = EOF or else token.getChannel = channel then
+               return Actual_i;
+            else
+               Actual_i := @ - 1;
             end if;
+         end loop;
+         return Actual_i;
+      end if;
+   end previousTokenOnChannel;
 
-            i := @ - 1;
-        end loop;
-
-        return i
-    end if;
-
-    --
-    -- Collect all tokens on specified channel to the right of
-    -- the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
-    -- EOF. If channel is -1, find any non default channel token.
-    --
-    -- public
-    function getHiddenTokensToRight (tokenIndex : Integer; Channel : Channel_Number := -1) return Token_List {
-        This.lazyInit;
-        if not tokens.indices.contains (tokenIndex) then
-            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
-        end if;
-
-        nextOnChannel : constant Token := nextTokenOnChannel (tokenIndex + 1, Lexer.DEFAULT_TOKEN_CHANNEL);
-        from : constant := tokenIndex + 1
-        let to : Integer;
-        -- if none onchannel to right, nextOnChannel=-1 so set to := last token
-        if nextOnChannel == -1 then
-            to := This.size - 1
-        else
+   function getHiddenTokensToRight (This : BufferedTokenStream;
+                                    tokenIndex : Integer;
+                                    Channel : Channel_Number := NON_DEFAULT_CHANNEL)
+                                    return Token_List is
+   begin
+      This.lazyInit;
+      if not This.tokens.Has_Element (This.tokens.To_Cursor (tokenIndex)) then
+         raise ANTLRError.indexOutOfBounds
+            with tokenIndex'Image & " not in 0 .. " & (This.tokens.Length - 1)'Image;
+      else
+         nextOnChannel : constant Token := nextTokenOnChannel (tokenIndex + 1, DEFAULT_TOKEN_CHANNEL);
+         from : constant Integer := tokenIndex + 1;
+         to : Integer;
+         -- if none onchannel to right, nextOnChannel=-1 so set to := last token
+         if nextOnChannel = NON_DEFAULT_CHANNEL then
+            to := This.size - 1;
+         else
             to := nextOnChannel;
-        end if;
+         end if;
+         return filterForChannel (from, to, channel);
+      end if;
+   end getHiddenTokensToRight;
 
-        return filterForChannel (from, to, channel);
-    end if;
-
-    --
-    -- Collect all tokens on specified channel to the left of
-    -- the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
-    -- If channel is -1, find any non default channel token.
-    --
-    -- public
-    function getHiddenTokensToLeft (tokenIndex : Integer; Channel : Channel_Number := -1) return Token_List {
-        This.lazyInit;
-        if not tokens.indices.contains (tokenIndex) then
-            raise ANTLRError.indexOutOfBounds with "" & tokenIndex'Image & " not in 0 ..< " & tokens.count;
-        end if;
-
-        if tokenIndex = 0 then
+   function getHiddenTokensToLeft (This : BufferedTokenStream;
+                                   tokenIndex : Integer;
+                                   Channel : Channel_Number := NON_DEFAULT_CHANNEL)
+                                   return Token_List is
+   begin
+      This.lazyInit;
+      if not This.tokens.Has_Element (This.tokens.To_Cursor (tokenIndex)) then
+         raise ANTLRError.indexOutOfBounds
+            with tokenIndex'Image & " not in 0 .. " & (This.tokens.Length - 1)'Image;
+      else
+         if tokenIndex = 0 then
             -- obviously no tokens can appear before the first token
             return (Valid => False);
-        end if;
-
-        prevOnChannel : constant Token := previousTokenOnChannel (tokenIndex - 1, Lexer.DEFAULT_TOKEN_CHANNEL);
-        if prevOnChannel = tokenIndex - 1 then
-            return (Valid => False);
-        end if;
-        -- if none onchannel to left, prevOnChannel=-1 then from=0
-        from : constant := prevOnChannel + 1
-        to : constant := tokenIndex - 1
-        return filterForChannel (from, to, channel);
-    end if;
-
-    -- internal
-    function filterForChannel (from : Integer; to : Integer; Channel : Channel_Number) return Token_List {
-        hidden := Token.Container.Empty_Vector;
-        for t of tokens[from .. to] loop
-            if channel == -1 then
-                if t.getChannel /= Lexer.DEFAULT_TOKEN_CHANNEL then
-                    hidden.append (t);
-                end if;
+         else
+            prevOnChannel : constant Token := previousTokenOnChannel (tokenIndex - 1, DEFAULT_TOKEN_CHANNEL);
+            if prevOnChannel = tokenIndex - 1 then
+               return (Valid => False);
             else
-                if t.getChannel = channel then
-                    hidden.append (t);
-                end if;
+               -- if none onchannel to left, prevOnChannel=-1 then from=0
+               from : constant := prevOnChannel + 1;
+               to : constant := tokenIndex - 1;
+               return filterForChannel (from, to, channel);
             end if;
-        end loop;
-        if hidden.isEmpty then
-            return (Valid => False);
-        end if;
-        return hidden
-    end if;
+         end if;
+      end if;
+   end getHiddenTokensToLeft;
 
-
-    -- public
-    function getSourceName (This : …) return UString is
-begin
-        return tokenSource.getSourceName;
-    end if;
-
-    --
-    -- Get the text of all tokens in this buffer.
-    --
-    -- public
-    function getText (This : …) return UString is
-begin
-        return getText (Interval.Set (0, This.size - 1));
-    end if;
-
-    -- public
-    function getText (interval : Interval) return UString is
-begin
-        start : constant := interval.a
-        if start < 0 then
-            return "";
-        end if;
-        This.fill;
-        stop : constant := min (tokens.count, interval.b + 1);
-        buf := ""
-        for t of tokens[start ..< stop] loop
-            exit when t.getType = BufferedTokenStream.EOF;
-            buf := @ + t.getText!;
-        end loop;
-        return buf
-    end if;
-
-
-    -- public
-    function getText (ctx : RuleContext) return UString is
-begin
-        return getText (ctx.getSourceInterval);
-    end if;
-
-
-    -- public
-    function getText (start : Optional_Token; stop : Optional_Token;) return UString is
-begin
-        if start : constant := start, stop : constant := stop then
-            return getText (Interval.Set (start.getTokenIndex, stop.getTokenIndex));
-        end if;
-
-        return ""
-    end if;
-
-    --
-    -- Get all tokens from lexer until EOF
-    --
-    -- public
-    procedure fill (This : …) is
-begin
-        This.lazyInit;
-        blockSize : constant := 1000
-        loop
-            fetched : constant := fetch (blockSize);
-            if fetched < blockSize then
-                return;
+   function filterForChannel (This : BufferedTokenStream;
+                              from, to : Integer;
+                              Channel : Channel_Number)
+                              return Token_List is
+      hidden : Token_List; -- := Token_Container.Empty_Vector;
+   begin
+      for t of This.tokens[from .. to] loop
+         if channel = NON_DEFAULT_CHANNEL then
+            if t.getChannel /= DEFAULT_TOKEN_CHANNEL then
+               hidden.append (t);
             end if;
-        end loop;
-    end if;
-end if;
+         else
+            if t.getChannel = channel then
+               hidden.append (t);
+            end if;
+         end if;
+      end loop;
+      if hidden.Is_Empty then
+         return Token_Container.Empty_Vector;
+      else
+         return hidden;
+      end if;
+   end filterForChannel;
+
+   function getText (This : BufferedTokenStream;
+                     interval : Interval)
+                     return UString is
+      start : constant Integer := interval.a;
+   begin
+      if start < 0 then
+         return "";
+      else
+         This.fill;
+         stop : constant := min (This.tokens.Length, interval.b + 1);
+         buf := "";
+         for t of tokens [start .. stop - 1] loop
+            exit when t.getType = EOF;
+            buf := @ + Value (t.getText);
+         end loop;
+         return buf;
+      end if;
+   end getText;
+
+   function getText (This : BufferedTokenStream;
+                     start, stop : Optional_Token)
+                     return UString is
+   begin
+      if Is_Valid (start) and then Is_Valid (stop) then
+         return This.getText (Interval.Set (start.getTokenIndex, stop.getTokenIndex));
+      else
+         return "";
+      end if;
+   end getText;
+
+   procedure fill (This : BufferedTokenStream) is
+      blockSize : constant Integer := 1_000;
+   begin
+      This.lazyInit;
+      loop --TOFIX
+         fetched : constant Integer := This.fetch (blockSize);
+         if fetched < blockSize then
+            return;
+         end if;
+      end loop;
+   end fill;
+
+end ANTLR.Runtime.Tree.TerminalNode_Protocol;

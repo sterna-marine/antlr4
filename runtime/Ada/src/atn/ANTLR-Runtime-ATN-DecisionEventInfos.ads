@@ -19,7 +19,7 @@ package ANTLR.Runtime.ATN.DecisionEventInfos is
 --
 
    -- public
-   type DecisionEventInfo is new Ada.Finalization.Controlled record
+   type DecisionEventInfo is new Ada.Finalization.Controlled with record
       --
       -- The invoked decision number which this event is related to.
       --

@@ -612,7 +612,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
       end if;
    end checkCondition;
 
-   procedure edgeFactory (atn : ATN;
+   function edgeFactory (atn : ATN;
                           Token_Type : Token_Kind;
                           src : Integer;
                           trg : Integer;
@@ -627,13 +627,13 @@ package body ANTLR.Runtime.ATN.Deserializers is
          when Transition.EPSILON => return EpsilonTransition (target);
          when TRANSITION_RANGE =>
                if arg3 /= 0 then
-                  return RangeTransition (target, CommonToken.EOF, arg2);
+                  return RangeTransition (target, EOF, arg2);
                else
                   return RangeTransition (target, arg1, arg2);
                end if;
          when Transition.RULE =>
                rt : constant RuleStartState := RuleStartState (RuleTransition (atn.states.Element (arg1)), arg2, arg3, target);
-               return rt
+               return rt;
          when Transition.PREDICATE =>
                pt : constant := PredicateTransition (target, arg1, arg2, arg3 /= 0);
                return pt;
@@ -641,7 +641,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
                return PrecedencePredicateTransition (target, arg1);
          when Transition.ATOM =>
                if arg3 /= 0 then
-                  return AtomTransition (target, CommonToken.EOF);
+                  return AtomTransition (target, EOF);
                else
                   return AtomTransition (target, arg1);
                end if;

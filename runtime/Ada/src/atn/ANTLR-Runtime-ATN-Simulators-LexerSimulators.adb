@@ -1,10 +1,12 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
+with ANTLR.Runtime.DFA;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
 with Aspect;
 
 use Ada;
+use ANTLR.Runtime.DFA;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
 use Aspect;
 
@@ -79,18 +81,18 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    -- LexerATNSimulator --
    -- ----------------- --
    procedure Initialize (Self : in out LexerATNSimulator;
-                   atn : ATN;
-                   decisionToDFA : DFA_List;
-                   sharedContextCache : PredictionContextCache) is
+                         atn : ATN;
+                         decisionToDFA : DFA_List;
+                         sharedContextCache : PredictionContextCache) is
    begin
       Self.Initialize (null, atn, decisionToDFA, sharedContextCache);
    end Initialize;
 
    procedure Initialize (Self : in out LexerATNSimulator;
-                   recog : Optional_Lexer;
-                   atn : ATN;
-                   decisionToDFA : DFA_List,
-                   sharedContextCache : PredictionContextCache) is
+                         recog : Optional_Lexer;
+                         atn : ATN;
+                         decisionToDFA : DFA_List,
+                         sharedContextCache : PredictionContextCache) is
    begin
       self.decisionToDFA := decisionToDFA;
       self.recog := recog;
@@ -147,8 +149,9 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
    overriding
    procedure clearDFA (This : LexerATNSimulator) is
    begin
-      for d of This.decisionToDFA loop --TOFIX
-            DFA.Container.Replace (This.decisionToDFA, d) := DFA (atn.getDecisionState (d)!, d);
+      for d in 0 .. This.decisionToDFA.Length - 1 loop
+         This.decisionToDFA.Replace_Element (Index => d,
+                                             New_Item => DFA.Initialize (Value (atn.getDecisionState (d)), d));  --TOFIX
       end loop;
    end clearDFA;
 
@@ -233,13 +236,13 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          -- capturing the accept state so the input index, line, and char
          -- position accurately reflect the state of the interpreter at the
          -- end of the token.
-         if t /= BufferedTokenStream.EOF then
+         if t /= EOF then
             consume (input);
          end if;
 
          if target.isAcceptState then
             captureSimState (prevAccept, input, target);
-            exit when t = BufferedTokenStream.EOF;
+            exit when t = EOF;
          end if;
 
          t := input.LA (1);
@@ -281,7 +284,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
       getReachableConfigSet (input, s.configs, reach, t);
 
-      if reach.isEmpty then
+      if reach.Is_Empty then
          -- we got nowhere on t from s
          if not reach.hasSemanticContext then
             -- we got nowhere on t, don't raise out this knowledge; it'd
@@ -308,11 +311,11 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          lexerActionExecutor : constant := dfaState.lexerActionExecutor
          accept_State (input, lexerActionExecutor, startIndex,;
             prevAccept.index, prevAccept.line, prevAccept.charPos);
-         return dfaState.prediction
+         return dfaState.prediction;
       else
-         -- if no accept and EOF is first char, return EOF
-         if t = BufferedTokenStream.EOF and then input.index = startIndex then
-            return CommonToken.EOF;
+         -- if no accept and EOF is first char, return EOF;
+         if t = EOF and then input.index = startIndex then
+            return EOF;
          else
             raise ANTLRException.recognition with LexerNoViableAltException (recog, input, startIndex, reach);
          end if;
@@ -349,7 +352,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                         lexerActionExecutor := lex.fixOffsetBeforeMatch (input.index - startIndex);
                   end if;
 
-                  treatEofAsEpsilon : constant := (t = BufferedTokenStream.EOF);
+                  treatEofAsEpsilon : constant := (t = EOF);
                   if closure (input,;
                         LexerATNConfig (c, target, lexerActionExecutor),
                         reach,
@@ -440,7 +443,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          end if;
 
          if config.context?.hasEmptyPath, Default => True then
-            if config.context?.isEmpty, Default => True then
+            if config.context?.Is_Empty, Default => True then
                configs.add (config);
                return True;
             else
@@ -449,11 +452,11 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
             end if;
          end if;
 
-         if configContext : constant := config.context , not configContext.isEmpty then
+         if configContext : constant := config.context , not configContext.Is_Empty then
             length : constant := configContext.size;
             for i in 0 .. length - 1 loop
                if configContext.getReturnState (i) /= PredictionContext.EMPTY_RETURN_STATE then
-                     newContext : constant := configContext.getParent (i)!; -- "pop" return state
+                     newContext : constant := configContext.getParent (i)!; -- "pop" return state;
                      returnState : constant := atn.states[configContext.getReturnState (i)];
                      c : constant := LexerATNConfig (config, returnState!, newContext);
                      currentAltReachedAcceptState := closure (input, c, configs, currentAltReachedAcceptState, speculative, treatEofAsEpsilon);
@@ -461,7 +464,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
             end loop;
          end if;
 
-         return currentAltReachedAcceptState
+         return currentAltReachedAcceptState;
       end if;
 
       -- optimization
@@ -542,14 +545,14 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                -- TODO: if the enrule is invoked recursively, some;
                -- actions may be executed during the recursive call. The
                -- problem can appear when This.hasEmptyPath is True but
-               -- This.isEmpty is False. In this case, the config needs to be
+               -- This.Is_Empty is False. In this case, the config needs to be
                -- split into two contexts - one with just the empty path
                -- and another with everything but the empty path.
                -- Unfortunately, the current algorithm does not allow
                -- getEpsilonTarget to return two configurations, so
                -- additional modifications are needed before we can support
                -- the split operation.
-               lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append (config.getLexerActionExecutor, atn.lexerActions[(t);).actionIndex]);
+               lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append (config.getLexerActionExecutor, atn.lexerActions[(t)).actionIndex]);
                c := LexerATNConfig (config, t.target, lexerActionExecutor);
             else
                -- ignore actions in referenced rules
@@ -563,7 +566,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
          when TRANSITION_RANGE => fallthrough;
          when Transition.SET =>
             if treatEofAsEpsilon then
-               if t.matches (BufferedTokenStream.EOF, Character.MIN_VALUE, Character.MAX_VALUE) then
+               if t.matches (EOF, Character.MIN_VALUE, Character.MAX_VALUE) then
                      c := LexerATNConfig (config, t.target);
                end if;
             end if;

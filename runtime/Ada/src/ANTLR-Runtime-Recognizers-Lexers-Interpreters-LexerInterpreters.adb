@@ -17,9 +17,9 @@ package body ANTLR.Runtime.Recognizers.Lexers.Interpreters.LexerInterpreters is
       self.channelNames := channelNames;
       self.modeNames := modeNames;
       self.vocabulary := vocabulary;
-      self._decisionToDFA := DFA.Container.Empty_Vector;
+      self._decisionToDFA := DFA_Container.Empty_Vector;
 
-      for i in 0 ..< atn.getNumberOfDecisions loop
+      for i in 0 .. atn.getNumberOfDecisions - 1 loop
          _decisionToDFA.append (DFA (atn.getDecisionState (i)!, i));
       end loop;
 

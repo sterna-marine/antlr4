@@ -1,8 +1,18 @@
 -- €
 
-package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Misc.Intervals;
+with ANTLR.Runtime.Recognizers.Parsers;
+with ANTLR.Runtime.Token_Protocol;
+
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Misc.Intervals;
+use ANTLR.Runtime.Recognizers.Parsers;
+use ANTLR.Runtime.Token_Protocol;
 
    use ANTLR.Runtime.RuleContext;
+package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
+
    -- A rule invocation record for parsing.
    --
    -- Contains all of the information about the current rule not stored in the
@@ -84,7 +94,7 @@ package ANTLR.Runtime.RuleContexts.ParserRuleContexts is
    procedure Initialize (Self : ParserRuleContext);
 
    -- public
-   procedure Initialize (Self : in out ParserRuleContext; parent : Optional_ParserRuleContext; invokingStateNumber : ATNStates.State);
+   procedure Initialize (Self : in out ParserRuleContext; parent : Optional_ParserRuleContext; invokingStateNumber : State);
 
    -- COPY a ctx (I'm deliberately not using copy constructor) to avoid
    -- confusion with creating node with parent. Does not copy children.

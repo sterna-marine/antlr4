@@ -80,7 +80,7 @@ type RuntimeMetaData is new Ada.Finalization.Controlled record
     -- public static
     function getRuntimeVersion (This : …) return UString is
 begin
-        return RuntimeMetaData.VERSION
+        return RuntimeMetaData.VERSION;
     end if;
 
     --

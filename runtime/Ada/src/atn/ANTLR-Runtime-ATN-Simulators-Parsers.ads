@@ -14,6 +14,7 @@ with ANTLR.Runtime.DFA;
 with ANTLR.Runtime.Misc.BitSets;
 with ANTLR.Runtime.Recognizers.Parsers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+with ANTLR.Runtime.Token_Protocol;
 
 use Ada;
 --  use ANTLR.Runtime;
@@ -29,6 +30,7 @@ use ANTLR.Runtime.DFA;
 use ANTLR.Runtime.Misc.BitSets;
 use ANTLR.Runtime.Recognizers.Parsers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+use ANTLR.Runtime.Token_Protocol;
 
 package ANTLR.Runtime.ATN.Simulators.Parsers is
 
@@ -525,7 +527,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
    -- the 1st + of input 1+2+3, the loop ensees both predicates;
    -- and the loop exit also sees both predicates by falling off the
    -- edge of e.  This is because we have no stack information with
-   -- SLL and find the follow of e, which will hit the return states
+   -- SLL and find the follow of e, which will hit the return states;
    -- inside the loop after e.Element (4) and e.Element (3), which brings it back to
    -- the enter or exit decision. In this case, we know that we
    -- cannot evaluate those predicates because we have fallen off
@@ -836,7 +838,7 @@ package ANTLR.Runtime.ATN.Simulators.Parsers is
    --
    -- To verify we are in the right situation we must first check
    -- closure is at a StarLoopEntryState generated during LR removal.
-   -- Then we check that each stack top of context is a return state
+   -- Then we check that each stack top of context is a return state;
    -- from one of these cases:
    --
    -- 1. 'not' expr, '(' type ')' expr. The return state points at loop enstate;

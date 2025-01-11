@@ -101,8 +101,8 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             return;
          end if;
 
-         if ctx.isEmpty and then addEOF then
-            look.add (CommonToken.EOF); -- try!
+         if ctx.Is_Empty and then addEOF then
+            look.add (EOF); -- try!
             return;
          end if;
       end if;
@@ -113,8 +113,8 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             return;
          end if;
 
-         if ctx.isEmpty and then addEOF then
-            look.add (CommonToken.EOF); -- try!
+         if ctx.Is_Empty and then addEOF then
+            look.add (EOF); -- try!
             return;
          end if;
 

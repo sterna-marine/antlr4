@@ -146,13 +146,13 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
 
       if rootMerge : constant := mergeRoot (a, b, rootIsWildcard) then
          mergeCache?.put (a, b, rootMerge);
-         return rootMerge
+         return rootMerge;
       end if;
 
       if a.returnState = b.returnState then
          -- a = b
          parent : constant := merge (a.parent!, b.parent!, rootIsWildcard, mergeCache'Access);
-         -- if parent is same as existing a or b parent or reduced to a parent, return it
+         -- if parent is same as existing a or b parent or reduced to a parent, return it;
          if parent === a.parent! then
             return a;
          end if; -- ax + bx := ax, if a=b
@@ -165,7 +165,7 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
          -- new joined parent so create new singleton pointing to it, a'
          a_ : constant := SingletonPredictionContext.create (parent, a.returnState);
          mergeCache?.put (a, b, a_);
-         return a_
+         return a_;
       else
          -- a /= b payloads differ
          -- see if we can collapse parents due to $+x parents if local ctx
@@ -186,7 +186,7 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
             parents : constant := [singleParent, singleParent]
             a_ : constant := ArrayPredictionContext (parents, payloads);
             mergeCache?.put (a, b, a_);
-            return a_
+            return a_;
          end if;
          -- parents differ and can't merge them. Just pack together
          -- into array; can't merge.
@@ -207,7 +207,7 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
          end if;
          a_ : constant := ArrayPredictionContext (parents, payloads);
          mergeCache?.put (a, b, a_);
-         return a_
+         return a_;
       end if;
    end mergeSingletons;
 
@@ -232,14 +232,14 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
             payloads : constant := [b.returnState, EMPTY_RETURN_STATE]
             parents : constant := [b.parent, null]
             joined : constant := ArrayPredictionContext (parents, payloads);
-            return joined
+            return joined;
          end if;
          if b === EmptyPredictionContext.Instance then
             -- x + $ := [$,x] ($ is always first if present);
             payloads : constant := [a.returnState, EMPTY_RETURN_STATE]
             parents : constant := [a.parent, null]
             joined : constant := ArrayPredictionContext (parents, payloads);
-            return joined
+            return joined;
          end if;
       end if;
       return (Valid => False);

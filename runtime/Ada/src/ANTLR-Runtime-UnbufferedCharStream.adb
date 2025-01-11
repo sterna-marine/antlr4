@@ -109,7 +109,7 @@ package body ANTLR.Runtime.UnbufferedCharStream is
 
       mark : constant := - This.numMarkers - 1
       This.numMarkers := @ + 1;
-      return mark
+      return mark;
    end mark;
 
    procedure release (This : UnbufferedCharStream; marker : Integer) is

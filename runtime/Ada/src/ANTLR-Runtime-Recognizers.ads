@@ -1,13 +1,12 @@
 -- €
 
 with Ada.Finalization;
+with ANTLR.Runtime.ATN;
 with ANTLR.Runtime.ATN.ParseInfos;
 with ANTLR.Runtime.ATN.Simulators;
-with ANTLR.Runtime.Vocabularies;
-with ANTLR.Runtime.ATN;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.Recognizer_Protocol;
-with UString;
+with ANTLR.Runtime.Vocabularies;
 
 use ANTLR.Runtime.ATN.ParseInfos;
 use ANTLR.Runtime.ATN.Simulators;
@@ -15,7 +14,6 @@ use ANTLR.Runtime.Vocabularies;
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.Recognizer_Protocol;
-use UString;
 
 -- open class Recognizer<ATNInterpreter: ATNSimulator>: RecognizerProtocol {
 
@@ -66,7 +64,7 @@ package ANTLR.Runtime.Recognizers is
       interp : ATNSimulator'Class; -- !
 
       -- private
-      stateNumber : ATNStates.State := INVALID_STATE_NUMBER;
+      stateNumber : State := INVALID_STATE_NUMBER;
 
       -- public lazy
       tokenTypeMap : TokenID_Map;

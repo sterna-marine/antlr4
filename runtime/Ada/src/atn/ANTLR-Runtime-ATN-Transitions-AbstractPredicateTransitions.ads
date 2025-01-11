@@ -2,7 +2,6 @@
 
 with ANTLR.Runtime.ATN.States;
 
-use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.Transitions;
 

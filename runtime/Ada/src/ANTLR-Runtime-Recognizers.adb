@@ -42,7 +42,7 @@ package body ANTLR.Runtime.Recognizers is
          end if;
       end loop;
 
-      result.Insert (Key => "EOF", New_Item => CommonToken.EOF);
+      result.Insert (Key => "EOF", New_Item => EOF);
 
       return result;
    end TokenTypeMap;

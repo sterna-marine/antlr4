@@ -31,10 +31,10 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
 
    procedure Initialize (Self : in out CommonToken;
                    Token_Type : Token_Kind;
-                   text : Optional_String) is
+                   text : Optional_UString) is
    begin
       self.Token_Type := Token_Type;
-      self.channel := CommonToken.DEFAULT_CHANNEL;
+      self.channel := DEFAULT_CHANNEL;
       self.text := text;
       self.source := TokenSourceAndStream.EMPTY;
    end Initialize;
@@ -57,7 +57,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
       This.line := line;
    end setLine;
 
-   function getText (This : CommonToken) return Optional_String is
+   function getText (This : CommonToken) return Optional_UString is
       text : constant Optional_Text := Maybe (text);
    begin
       if Is_Valid (text) then
@@ -70,13 +70,13 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
                   begin
                      return input.getText (Interval.Set (This.start, This.stop));
                   exception
-                     when others => return Optional_String (Valid = False);
+                     when others => return Optional_UString (Valid = False);
                   end;
             else
                   return "<EOF>";
             end if;
          end if;
-         return Optional_String (Valid = False);
+         return Optional_UString (Valid = False);
       end if;
    end getText;
 
@@ -133,7 +133,7 @@ package body ANTLR.Runtime.WritableTokens.CommonTokens is
       if Is_Valid (r) then
          typeString := r.getVocabulary.getDisplayName (Token_Type);
       else
-         typeString := "" & Token_Type'Image & "";
+         typeString := "" & Token_Type'Image ;
       end if;
 
       return "[@" & This.getTokenIndex & ',' & This.start'Image & ':' & This.stop'Image & "='" & txt'Image & "',<" & typeString'Image & '>' & channelStr'Image & ',' & This.line'Image & ':' & This.getCharPositionInLine & ']'

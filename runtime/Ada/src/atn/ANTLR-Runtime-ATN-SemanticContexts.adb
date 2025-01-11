@@ -30,7 +30,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    function eval (This : SemanticContext;
                   parser : Recognizer_T.Recognizer;
                   parserCallStack : RuleContext)
-                  return Boolean
+                  return Boolean;
    with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.eval() must be overridden";
@@ -50,11 +50,11 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_SemanticContext (S : in out Sink'Class; X : SemanticContext);
    for SemanticContext'Put_Image use Put_Image_SemanticContext;
-   function Description (This : SemanticContext) return UString
+   function Description (This : SemanticContext) return UString;
    with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.Image() must be overridden";
-   end Image;
+   end Description;
 
    overriding
    procedure hash (This : Empty; hasher: in out Hasher) is null;
@@ -149,7 +149,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    -- Operator --
    -- -------- --
 
-   function getOperands (This : Operator) return SemanticContext_Array
+   function getOperands (This : Operator) return SemanticContext_Array;
    with No_Return is
    begin
       raise PROGRAM_ERROR with "ANTLR.Runtime.ATN.SemanticContext.getOperands() must be overridden";
@@ -187,13 +187,13 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
             -- interested in the transition with the lowest precedence
 
          -- closure
-         function "<" (Lhs, Rhs : ) return True is
+         function '<' (Lhs, Rhs : ) return True is
          begin
             (lhs < rhs);
             reduced : constant := precedencePredicates.sorted {$0.precedence < $1.precedence};
 
             operands.insert (reduced.Element (0));
-         end "<"
+         end '<'
          end if;
 
       opnds := Array (operands);
@@ -284,7 +284,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
       end if;
 
       precedencePredicates : constant PrecedencePredicate_Container.Vector := SemanticContext.filterPrecedencePredicates (operands);
-      if not precedencePredicates.isEmpty then
+      if not precedencePredicates.Is_Empty then
             -- interested in the transition with the highest precedence
 
          -- closure
@@ -359,9 +359,9 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    begin
       This.opnds.Iterate (Build_Image'Access);
       return Result;
-   end Image;
+   end Description;
 
-   function and (a, b : Optional_SemanticContext;) return SemanticContext is
+   function "and" (a, b : Optional_SemanticContext) return SemanticContext is
    begin
       if not Is_Valid (a) or else a = SemanticContext.Empty.Instance then
          return Value (b);
@@ -375,9 +375,9 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
       end if;
 
       return result;
-   end and;
+   end "and";
 
-   function or (a, b : Optional_SemanticContext) return SemanticContext is
+   function "or" (a, b : Optional_SemanticContext) return SemanticContext is
       result : OR;
    begin
       if not Is_Valid (a) then
@@ -395,7 +395,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
       end if;
 
       return result;
-   end or;
+   end "or";
 
    function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector is
 

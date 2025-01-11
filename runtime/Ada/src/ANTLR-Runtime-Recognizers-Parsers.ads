@@ -6,13 +6,21 @@ with ANTLR.Runtime.ATN.PredictionModes;
 with ANTLR.Runtime.ATN.Simulators.ParserSimulators;
 with ANTLR.Runtime.Misc.Utils.Mutex;
 -- with ANTLR.Runtime.Recognizers;
-with ANTLR.Runtime.Tree.ParseTreeListener;
+with ANTLR.Runtime.Recognizers.Lexers;
+with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+with ANTLR.Runtime.Token_Protocol;
+with ANTLR.Runtime.Tree.ParseTreeListeners;
+with ANTLR.Runtime.Tree.ParseTreePatterns;
 
 use ANTLR.Runtime.ATN.ParseInfos;
 use ANTLR.Runtime.ATN.PredictionModes;
 use ANTLR.Runtime.ATN.Simulators.LexerSimulators;
 use ANTLR.Runtime.Misc.Utils.Mutex;
+use ANTLR.Runtime.Recognizers.Lexers;
+use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
+use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.Tree.ParseTreeListener;
+use ANTLR.Runtime.Tree.ParseTreePatterns;
 
 package ANTLR.Runtime.Recognizers.Parsers is
 

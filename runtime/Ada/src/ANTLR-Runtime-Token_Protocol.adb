@@ -4,6 +4,11 @@ package body ANTLR.Runtime.Token_Protocol is
 
    visited : Boolean; --TOFIX Multi-process ?
 
+   function Hash (Element : Token_Kind) return Ada.Containers.Hash_Type is
+   begin
+      return 0; --TOFIX
+   end Hash;
+
    -- public
    function "=" (Left, Right : Token) return Boolean is
    begin

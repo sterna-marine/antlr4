@@ -6,6 +6,7 @@ with Aspect;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ErrorStrategy;
 with ANTLR.Runtime.Misc.IntervalSets;
+with ANTLR.Runtime.Recognizers.Parsers;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Token_Protocol;
 
@@ -14,6 +15,7 @@ use Aspect;
 use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ErrorStrategy;
 use ANTLR.Runtime.Misc.IntervalSets;
+use ANTLR.Runtime.Recognizers.Parsers;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Token_Protocol;
 
@@ -400,7 +402,7 @@ package ANTLR.Runtime.DefaultErrorStrategies is
    function getTokenErrorDisplay (This : ANTLRErrorStrategy; t : Optional_Token) return UString;
 
    -- open
-   function getSymbolText (symbol : Token) return Optional_String
+   function getSymbolText (symbol : Token) return Optional_UString
       is (symbol.getTextUnbufferedTokenStream);
 
    -- open

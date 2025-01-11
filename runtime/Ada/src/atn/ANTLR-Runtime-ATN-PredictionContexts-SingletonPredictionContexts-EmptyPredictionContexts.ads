@@ -45,14 +45,14 @@ package ANTLR.Runtime.ATN.PredictionContexts.SingletonPredictionContexts.EmptyPr
 
    overriding
    -- public
-   function isEmpty (This : EmptyPredictionContext) return Boolean
+   function Is_Empty (This : EmptyPredictionContext) return Boolean
       is (EmptyPredictionContext.True);
 
    --
    -- This means only the _#EMPTY_ context is in set.
    --
    -- public
-   function isEmpty (This : PredictionContext) return Boolean
+   function Is_Empty (This : PredictionContext) return Boolean
       is This === EmptyPredictionContext.Instance;
 
    overriding

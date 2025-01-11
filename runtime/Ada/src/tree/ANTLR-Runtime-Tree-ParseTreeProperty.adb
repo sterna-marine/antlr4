@@ -9,7 +9,7 @@ generic
 package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is
 
    function Hash (Key : ObjectIdentifier) return Ada.Containers.Hash_Type;
-   function Equivalent_Keys (Left, Right : ObjectIdentifier) return Boolean
+   function Equivalent_Keys (Left, Right : ObjectIdentifier) return Boolean;
       is Hash (Left) = Hash (Right);
    package Annotations_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => ObjectIdentifier,

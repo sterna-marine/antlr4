@@ -22,7 +22,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
       This.errorRecoveryMode := True;
    end beginErrorCondition;
 
-   function inErrorRecoveryMode (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean
+   function inErrorRecoveryMode (This : ANTLRErrorStrategy; recognizer : Parser) return Boolean;
       is (This.errorRecoveryMode);
    
    procedure endErrorCondition (This : ANTLRErrorStrategy; recognizer : Parser) is
@@ -231,7 +231,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
          -- we have deleted the extra token.
          -- now, move past ttype token as if all were ok
          recognizer.consumeUnbufferedTokenStream;
-         return matchedSymbol
+         return matchedSymbol;
       end if;
 
       -- SINGLE TOKEN INSERTION
@@ -280,7 +280,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
          -- we want to return the token we're actually matching
          matchedSymbol : constant := recognizer.getCurrentTokenUnbufferedTokenStream;
          reportMatch (recognizer)  -- we know current token is correct
-         return matchedSymbol
+         return matchedSymbol;
       end if;
       return (Valid => False);
    end singleTokenDeletion;
@@ -310,7 +310,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
       token : constant := recognizer.getTokenFactoryUnbufferedTokenStream.create (
          current.getTokenSourceAndStreamUnbufferedTokenStream,
          expectedTokenType, tokenText,
-         CommonToken.DEFAULT_CHANNEL,
+         DEFAULT_CHANNEL,
          -1, -1,
          current.getLineUnbufferedTokenStream, current.getCharPositionInLineUnbufferedTokenStream);
 
@@ -324,7 +324,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
       else
          s := getSymbolText (t);
          if s = (Valid => False) then
-            if getSymbolType (t) == CommonToken.EOF then
+            if getSymbolType (t) == EOF then
                   s := "<EOF>";
             else
                   s := '<' & getSymbolType (t) & '>';

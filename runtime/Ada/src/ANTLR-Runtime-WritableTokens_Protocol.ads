@@ -1,5 +1,11 @@
 -- €
 
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+with ANTLR.Runtime.Token_Protocol;
+
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+use ANTLR.Runtime.Token_Protocol;
+
 package ANTLR.Runtime.WritableTokens_Protocol is
 
    -- public
@@ -16,4 +22,5 @@ package ANTLR.Runtime.WritableTokens_Protocol is
    procedure setChannel (Channel : Channel_Number) is abstract;
 
    procedure setTokenIndex (index : Integer) is abstract;
+
 end ANTLR.Runtime.WritableTokens_Protocol;

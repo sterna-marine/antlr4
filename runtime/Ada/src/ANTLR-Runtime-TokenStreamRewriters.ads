@@ -350,7 +350,7 @@ package ANTLR.Runtime.TokenStreamRewriters is
    function reduceToSingleOperationPerIndex (This : RewriteOperationArray) return RewriteOperation_Map;
 
    -- final
-   function catOpText (This : RewriteOperationArray; a, b : Optional_String) return UString;
+   function catOpText (This : RewriteOperationArray; a, b : Optional_UString) return UString;
 
    -- Get all operations before an index of a particular kind
 
@@ -429,10 +429,10 @@ package ANTLR.Runtime.TokenStreamRewriters is
    procedure replace (This : TokenStreamRewriter; from, to : Token; text : UString);
 
    -- public
-   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Integer; text : Optional_String);
+   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Integer; text : Optional_UString);
 
    -- public
-   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Token; text : Optional_String);
+   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Token; text : Optional_UString);
 
    -- public
    procedure delete (This : TokenStreamRewriter; index : Integer);

@@ -1,5 +1,11 @@
 -- €
 
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Misc.IntervalSets;
+
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.Misc.IntervalSets;
+
 package ANTLR.Runtime.ATN.Transitions is
 
    --

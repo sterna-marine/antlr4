@@ -25,7 +25,7 @@ type ProxyErrorListener is new ANTLRErrorListener with null record;
                                line : Integer;
                                charPositionInLine : Integer;
                                msg : UString;
-                               e : Optional_AnyObject;);
+                               e : Optional_AnyObject);
     {
         for listener of delegates loop
             listener.syntaxError (recognizer, offendingSymbol, line, charPositionInLine, msg, e);

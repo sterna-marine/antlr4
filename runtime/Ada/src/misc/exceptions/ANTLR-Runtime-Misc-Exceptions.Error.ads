@@ -11,4 +11,4 @@ package ANTLR.Runtime.Misc.Exceptions.Errors is
       negativeArraySize : exception; -- (msg:String);
    end ANTLRError;
 
-end ANTLR.Runtime.Misc.Exceptions.ANTLRErrors;
+end ANTLR.Runtime.Misc.Exceptions.Errors;

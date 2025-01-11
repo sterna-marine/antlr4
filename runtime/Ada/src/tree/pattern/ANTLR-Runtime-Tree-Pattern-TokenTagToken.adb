@@ -1,5 +1,8 @@
 -- €
 
+package ANTLR.Runtime.Tree.Pattern.TokenTagTokens is
+
+   use ANTLR.Runtime;
 
 --
 -- A _org.antlr.v4.runtime.Token_ object representing a token of a particular type; e.g.,
@@ -59,7 +62,7 @@ type TokenTagToken is new CommonToken with null record;
     -- public final
     function getTokenName (This : …) return UString is
 begin
-        return tokenName
+        return tokenName;
     end if;
 
     --
@@ -70,9 +73,9 @@ begin
     --
 
     -- public final
-    function getLabel (This : …) return Optional_String is
+    function getLabel (This : …) return Optional_UString is
    begin
-        return label
+        return label;
     end if;
 
     --
@@ -86,10 +89,10 @@ begin
     function getText (This : …) return UString is
 begin
         if label : constant := label then
-            return "<" & label & ':' & tokenName & '>';
+            return '<' & label & ':' & tokenName & '>';
         end if;
 
-        return "<" & tokenName & '>'
+        return '<' & tokenName & '>'
     end if;
 
     --
@@ -107,4 +110,5 @@ begin
     function Description (This : …) return UString is
         return tokenName & ':' & UString (type);
     end if;
-end if;
+
+end ANTLR.Runtime.Tree.Pattern.TokenTagTokens;

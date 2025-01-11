@@ -3,8 +3,8 @@
 with ANTLR.Runtime.ATN.LexerActionTypes;
 with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.Recognizers.Lexers;
 use ANTLR.Runtime.ATN.LexerActionTypes;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerTypeActions is
 
@@ -19,7 +19,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerTypeActions is
    type LexerTypeAction is new LexerAction with
    record
       -- fileprivate
-      Type_of_Action : constant Integer;
+      Type_of_Action : Integer; -- constant
    end record;
 
    subtype Object is LexerTypeAction;

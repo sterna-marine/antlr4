@@ -1,5 +1,8 @@
 -- €
 
+package ANTLR.Runtime.Tree.Pattern.TextChunks is
+
+   use ANTLR.Runtime;
 --
 -- Represents a span of raw text (concrete syntax) between tags in a tree
 -- pattern string.
@@ -34,7 +37,7 @@ type TextChunk is new Chunk with null record;
     -- public final
     function getText (This : …) return UString is
 begin
-        return text
+        return text;
     end if;
 
     --
@@ -59,4 +62,5 @@ begin
         end if;
         return text = other.text
     end if;
-end if;
+
+end ANTLR.Runtime.Tree.Pattern.TextChunks;

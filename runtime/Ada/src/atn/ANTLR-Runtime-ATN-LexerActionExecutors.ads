@@ -1,10 +1,11 @@
 -- €
 
-with ANTLR.Runtime.ATN.LexerActions;
-with ANTLR.Runtime.ATN.Lexer;
 with Ada.Finalization;
+with ANTLR.Runtime.ATN.LexerActions;
+with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.LexerActions;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActionExecutors is
 
@@ -18,7 +19,7 @@ package ANTLR.Runtime.ATN.LexerActionExecutors is
    --
 
    -- public
-   type LexerActionExecutor is is tagged Ada.Finalization.Controlled with -- and Hashable
+   type LexerActionExecutor is new Ada.Finalization.Controlled with -- and Hashable
    record
       -- fileprivate final
       lexerActions : LexerAction_List;

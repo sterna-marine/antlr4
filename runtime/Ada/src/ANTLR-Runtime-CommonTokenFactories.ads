@@ -1,9 +1,11 @@
 -- €
 
 with Ada.Finalization;
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
 with ANTLR.Runtime.TokenFactory_Protocol;
 with ANTLR.Runtime.Token_Protocol;
 
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
 use ANTLR.Runtime.TokenFactory_Protocol;
 use ANTLR.Runtime.Token_Protocol;
 

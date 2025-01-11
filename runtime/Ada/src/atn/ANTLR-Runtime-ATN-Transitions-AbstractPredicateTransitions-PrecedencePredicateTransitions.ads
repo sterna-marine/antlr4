@@ -3,7 +3,7 @@
 with Ada.Strings;
 with ANTLR.Runtime.ATN.States;
 
-use ANTLR.Runtime.ATN;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePredicateTransitions is
 
@@ -20,7 +20,7 @@ package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePre
    type Class_Wide is access all Object'Class;
 
    -- public
-   procedure Initialize (Self : in out PrecedencePredicateTransition; target : ATNStates.ATNState; precedence : Integer);
+   procedure Initialize (Self : in out PrecedencePredicateTransition; target : ATNState; precedence : Integer);
 
    overriding
    -- public

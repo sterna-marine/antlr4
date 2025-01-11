@@ -89,7 +89,7 @@ package ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
    -- * Returns: The updated aggregate result.
    --
    -- open
-   function aggregateResult (This : AbstractParseTreeVisitor; aggregate : Optional_T; nextResult : Optional_T;) return Optional_T;
+   function aggregateResult (This : AbstractParseTreeVisitor; aggregate : Optional_T; nextResult : Optional_T) return Optional_T;
 
    --
    -- This method is called after visiting each child in
@@ -112,10 +112,10 @@ package ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
    -- to the current point.
    --
    -- * Returns: `True` to continue visiting children. Otherwise return
-   -- `False` to stop visiting children and immediately return the
+   -- `False` to stop visiting children and immediately return the;
    -- current aggregate result from _#visitChildren_.
    --
    -- open
-   function shouldVisitNextChild (This : AbstractParseTreeVisitor; node : RuleNode; currentResult : Optional_T;) return Boolean;
+   function shouldVisitNextChild (This : AbstractParseTreeVisitor; node : RuleNode; currentResult : Optional_T) return Boolean;
 
 end ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors;

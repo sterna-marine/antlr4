@@ -1,11 +1,13 @@
 -- €
 
 with Ada.Strings;
-with ANTLR.Runtime.Misc.Extensions.TokenExtension;
-with ANTLR.Runtime.WritableToken;
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+with ANTLR.Runtime.Token_Protocol;
 
 use ANTLR.Runtime;
-use ANTLR.Runtime.Misc.Extensions.TokenExtension;
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+use ANTLR.Runtime.Token_Protocol;
+use ANTLR.Runtime.WritableToken;
 
 package ANTLR.Runtime.WritableTokens.CommonTokens is
 
@@ -31,7 +33,7 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
       -- _#setCharPositionInLine_.
       --
       -- internal
-      charPositionInLine : Integer := -1;
+      charPositionInLine : Integer := INVALID_POSITION;
       -- set to invalid position
 
       --
@@ -39,7 +41,7 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
       -- _#setChannel_.
       --
       -- internal
-      channel : Channel_Number:= DEFAULT_CHANNEL;
+      channel : Channel_Number := DEFAULT_CHANNEL;
 
       --
       -- This is the backing field for _#getTokenSource_ and
@@ -122,7 +124,7 @@ package ANTLR.Runtime.WritableTokens.CommonTokens is
    -- public
    procedure Initialize (Self : in out CommonToken;
                    Token_Type : Token_Kind;
-                   text : Optional_String) is
+                   text : Optional_UString) is
 
    --
    -- Constructs a new _org.antlr.v4.runtime.CommonToken_ as a copy of another _org.antlr.v4.runtime.Token_.

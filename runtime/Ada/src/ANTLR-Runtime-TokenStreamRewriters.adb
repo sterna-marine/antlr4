@@ -15,7 +15,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       return Ada.Containers.Hash_Type (Key); --TOFIX
    end Hash_Integer;
 
-   function "=" (Left, Right : RewriteOperation) return Boolean
+   function "=" (Left, Right : RewriteOperation) return Boolean;
       is (Left = Right); --TOFIX
 
    function "=" (Left, Right : Optional_RewriteOperation) return Boolean is
@@ -61,7 +61,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       if Is_Valid (text) then
          buf.append (text);
       end if;
-      if token.getType /= CommonToken.EOF then
+      if token.getType /= EOF then
          buf.append (Value (token.getText));
       end if;
       return This.index + 1;
@@ -269,7 +269,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
          return m;
       end reduceToSingleOperationPerIndex;
 
-   function catOpText (This : RewriteOperationArray; a, b : Optional_String) return UString is
+   function catOpText (This : RewriteOperationArray; a, b : Optional_UString) return UString is
    begin
          x : constant Ustring := Maybe (a, Default => "");
          y : constant Ustring := Maybe (b, Default => "");
@@ -392,7 +392,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       replace (DEFAULT_PROGRAM_NAME, from, to, text);
    end replace;
 
-   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Integer; text : Optional_String) is
+   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Integer; text : Optional_UString) is
    begin
       if from > to or else from < 0 or else to < 0 or else to >= This.tokens.size then
             raise ANTLRError.illegalArgument with "replace: range invalid: " & from'Image & ".." & to'Image & "(size=" & tokens.size);
@@ -402,7 +402,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
       rewritesArray.append (op);
    end replace;
 
-   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Token; text : Optional_String) is
+   procedure replace (This : TokenStreamRewriter; programName : UString; from, to : Token; text : Optional_UString) is
    begin
       replace (programName,;
             from.getTokenIndex,
@@ -458,7 +458,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    function getProgram (This : TokenStreamRewriter; name : UString) return RewriteOperationArray is
    begin
       if program : constant := programs.Element (name) then
-            return program
+            return program;
       else
             return initializeProgram (name);
       end if;
@@ -468,16 +468,16 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    begin
       program : constant := This.RewriteOperationArray;
       programs.Insert (Key => name, New_Item => program);
-      return program
+      return program;
    end initializeProgram;
 
-   function getText (This : TokenStreamRewriter) return UString
+   function getText (This : TokenStreamRewriter) return UString;
       is (getText (DEFAULT_PROGRAM_NAME, Interval.Set (0, This.tokens.size - 1)));
 
-   function getText (This : TokenStreamRewriter; programName : UString) return UString
+   function getText (This : TokenStreamRewriter; programName : UString) return UString;
       is (getText (programName, Interval.set (0, This.tokens.size - 1)));
 
-   function getText (This : TokenStreamRewriter; interval : Interval) return UString
+   function getText (This : TokenStreamRewriter; interval : Interval) return UString;
        is (getText (DEFAULT_PROGRAM_NAME, interval));
 
    function getText (This : TokenStreamRewriter;
@@ -516,7 +516,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
                i := op.execute (buf'Access); -- execute operation and skip
             else
                -- no operation at that index, just dump token
-               if t.getType /= CommonToken.EOF then
+               if t.getType /= EOF then
                   buf.append (t.getText!);
                end if;
                i := @ + 1; -- move to next token

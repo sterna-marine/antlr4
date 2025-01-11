@@ -1,5 +1,9 @@
 -- €
 
+with ANTLR.Runtime.Misc.IntervalSets;
+
+use ANTLR.Runtime.Misc.IntervalSets;
+
 package ANTLR.Runtime.Misc.Integer_Set_Protocol is
 
    --

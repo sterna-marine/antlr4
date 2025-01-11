@@ -1,5 +1,10 @@
 -- €
 
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.Misc.IntervalSets;
+
+use ANTLR.Runtime.ATN.States;
+
 package ANTLR.Runtime.ATN.Transitions.AtomTransitions is
 
    use ANTLR.Runtime.ATN.Transitions;

@@ -1,12 +1,14 @@
 -- €
 
 with ANTLR.Runtime.Misc.Exceptions.Errors;
+with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.TokenSource_Protocol;
 with ANTLR.Runtime.TokenStream_Protocol;
 with ANTLR.Runtime.WritableTokens.CommonTokens;
 
 use ANTLR.Runtime.Misc.Exceptions.Errors;
+use ANTLR.Runtime.Misc.Intervals;
 use ANTLR.Runtime.Token_Protocol;
 use ANTLR.Runtime.TokenSource_Protocol;
 use ANTLR.Runtime.TokenStream_Protocol;
@@ -152,7 +154,7 @@ package ANTLR.Runtime.UnbufferedTokenStreams is
    procedure seek (This : UnbufferedTokenStream; index : Integer);
 
    -- public
-   function size (This : UnbufferedTokenStream) return Integer
+   function size (This : UnbufferedTokenStream) return Integer;
    with No_Return;
 
    -- public

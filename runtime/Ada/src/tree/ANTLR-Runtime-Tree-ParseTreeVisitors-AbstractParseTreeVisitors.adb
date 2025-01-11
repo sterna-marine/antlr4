@@ -42,13 +42,13 @@ package body ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
       return This.defaultResult;
    end visitErrorNode;
 
-   function defaultResult (This : AbstractParseTreeVisitor) return Optional_T
+   function defaultResult (This : AbstractParseTreeVisitor) return Optional_T;
       is (Valid => False);
 
-   function aggregateResult (This : AbstractParseTreeVisitor; aggregate : Optional_T; nextResult : Optional_T;) return Optional_T
+   function aggregateResult (This : AbstractParseTreeVisitor; aggregate : Optional_T; nextResult : Optional_T) return Optional_T;
       is (nextResult);
 
-   function shouldVisitNextChild (This : AbstractParseTreeVisitor; node : RuleNode; currentResult : Optional_T;) return Boolean
+   function shouldVisitNextChild (This : AbstractParseTreeVisitor; node : RuleNode; currentResult : Optional_T) return Boolean;
        is (True);
 
 end ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors;

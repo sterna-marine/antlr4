@@ -85,7 +85,7 @@ package ANTLR.Runtime.RecognitionExceptions is
     -- public
     function getOffendingState (This : RecognitionException) return Integer is
 begin
-        return offendingState
+        return offendingState;
     end if;
 
     -- internal final
@@ -124,7 +124,7 @@ begin
     -- public
     function getCtx (This : RecognitionException) return Optional_RuleContext is
    begin
-        return ctx
+        return ctx;
     end if;
 
     --
@@ -140,7 +140,7 @@ begin
     -- public
     function getInputStream (This : RecognitionException) return Optional_IntStream is
    begin
-        return input
+        return input;
     end if;
 
     -- public
@@ -152,7 +152,7 @@ begin
     -- public
     function getOffendingToken (This : RecognitionException) return Token is
 begin
-        return offendingToken
+        return offendingToken;
     end if;
 
     -- internal final
@@ -172,7 +172,7 @@ begin
     -- public
     function getRecognizer (This : RecognitionException) return Optional_RecognizerProtocol is
    begin
-        return recognizer
+        return recognizer;
     end if;
 
     -- public

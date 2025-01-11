@@ -2,7 +2,7 @@
 
 with ANTLR.Runtime.Token_Protocol;
 
-package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
+package ANTLR.Runtime.Misc.Extensions.TokenExtensions is
 
    -- ------ --
    -- TOKENS --
@@ -19,7 +19,7 @@ package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
    EPSILON : constant Integer := -2;
 
    -- static public
-   MIN_USER_TOKEN_TYPE : constant Integer := 1
+   MIN_USER_TOKEN_TYPE : constant Integer := 1;
 
    -- -------- --
    -- CHANNELS --
@@ -29,10 +29,13 @@ package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
    -- on a particular "channel".  The parser tunes to a particular channel
    -- so that whitespace etc ..  can go to the parser on a "hidden" channel.
    --
-   type Channel_Number is new Integer;
+   type Channel_Number is Integer range -1 .. Integer'Last;
 
-    -- static public
+   NON_DEFAULT_CHANNEL : constant Channel_Number := -1;
+
+   -- static public
    DEFAULT_CHANNEL : constant Channel_Number := 0;
+
    --
    -- Anything on different channel than DEFAULT_CHANNEL is not parsed
    -- by parser.
@@ -53,4 +56,6 @@ package body ANTLR.Runtime.Misc.Extensions.TokenExtension is
    -- static public
    MIN_USER_CHANNEL_VALUE : Channel_Number := 2;
 
-end ANTLR.Runtime.Misc.Extensions.TokenExtension;
+   subtype User_Channel_Number is Channel_Number range MIN_USER_CHANNEL_VALUE .. Integer'Last;
+
+end ANTLR.Runtime.Misc.Extensions.TokenExtensions;

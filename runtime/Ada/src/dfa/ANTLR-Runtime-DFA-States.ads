@@ -8,8 +8,8 @@ with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.SemanticContext;
 with ANTLR.Runtime.ATN.LexerAction;
 
+use ANTLR.Runtime;
 use ANTLR.Runtime.ATN.ConfigSets;
-use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.SemanticContext;
 use ANTLR.Runtime.ATN.LexerAction;
 
@@ -74,7 +74,7 @@ package ANTLR.Runtime.DFA.States is
    with
    record
       -- public internal (set);
-      stateNumber : State := INVALID_STATE_NUMBER;
+      stateNumber : ATN.States.State := INVALID_STATE_NUMBER;
 
       -- public internal (set)
       configs : ATNConfigSet;

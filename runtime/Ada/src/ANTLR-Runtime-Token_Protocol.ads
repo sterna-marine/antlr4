@@ -2,6 +2,10 @@
 
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
+with Ada.Containers.Hashed_Sets;
+with ANTLR.Runtime.Misc.Extensions.TokenExtensions;
+
+use ANTLR.Runtime.Misc.Extensions.TokenExtensions;
 
 package ANTLR.Runtime.Token_Protocol is
 
@@ -9,10 +13,36 @@ package ANTLR.Runtime.Token_Protocol is
    -- (so we can ignore tabs), token channel, index, and source from which
    -- we obtained this token.
    --
-   type Token_Kind is new Integer;
+   type Token_Kind is new Integer range -2 .. Integer'Last;
+
+   -- During lookahead operations, this "token" signifies we hit rule end ATN state
+   -- and did not follow it despite needing to.
+   --
+   EPSILON : constant Token_Kind := -2;
 
    -- public static
    EOF : constant Token_Kind := -1;
+   -- EOF : constant Token_Kind := EOF;
+
+   INVALID_TYPE : constant : Token_Kind := 0;
+
+   MIN_USER_TOKEN_TYPE : constant Token_Kind := 1;
+
+   type User_Token_Kind is new Integer range MIN_USER_TOKEN_TYPE .. Integer'Last;
+
+   function Hash (Element : Token_Kind) return Ada.Containers.Hash_Type;
+   function Equivalent_Elements (Left, Right : Token_Kind) return Boolean
+      is (Hash (Left) = Hash (Right));
+
+   package Token_Kind_Container is Ada.Containers.Hashed_Sets (
+      Element_Type  => Token_Kind,
+      "=" => "=");
+   subtype Set_of_Token_Kind is Token_Kind_Container.Set;
+
+   -- All tokens go to the parser (unless This.skip is called in that rule);
+   -- on a particular "channel".  The parser tunes to a particular channel
+   -- so that whitespace etc ..  can go to the parser on a "hidden" channel.
+   --
 
    subtype Token_String is UString;
    subtype Token_ID is Integer;
@@ -50,64 +80,29 @@ package ANTLR.Runtime.Token_Protocol is
       "=" => "=");
    subtype Token_list is Token_Container.Vector;
 
-   --INVALID_TYPE : constant : Token_Kind := 0;
-
-   -- During lookahead operations, this "token" signifies we hit rule end ATN state
-   -- and did not follow it despite needing to.
-   --
-   --EPSILON : constant : Token_Kind := -2;
-
-   --MIN_USER_TOKEN_TYPE : constant : Token_Kind := 1;
-
-   --EOF : constant : Token_Kind := IntStream.EOF;
-
-   -- All tokens go to the parser (unless This.skip is called in that rule);
-   -- on a particular "channel".  The parser tunes to a particular channel
-   -- so that whitespace etc ..  can go to the parser on a "hidden" channel.
-   --
-   --DEFAULT_CHANNEL : constant : Channel_Number := 0;
-
-   -- Anything on different channel than DEFAULT_CHANNEL is not parsed
-   -- by parser.
-   --
-   --HIDDEN_CHANNEL : constant : Channel_Number := 1;
-
-   --
-   -- This is the minimum constant value which can be assigned to a
-   -- user-defined token channel.
-   --
-   --
-   -- The non-negative numbers less than _#MIN_USER_CHANNEL_VALUE_ are
-   -- assigned to the predefined channels _#DEFAULT_CHANNEL_ and
-   -- _#HIDDEN_CHANNEL_.
-   --
-   -- * SeeAlso: org.antlr.v4.runtime.Token#getChannel;
-   --
-   --MIN_USER_CHANNEL_VALUE : constant : Channel_Number := 2;
-
    --
    -- Get the text of the token.
    --
-   function getText (This :Token) return Optional_UString;
+   function getText (This : Token) return Optional_UString;
 
    -- Get the token type of the token
-   function getType (This :Token) return Token_Kind;
+   function getType (This : Token) return Token_Kind;
 
    -- The line number on which the 1st character of this token was matched,
    -- line=1 .. n
    --
-   function getLine (This :Token) return Integer;
+   function getLine (This : Token) return Integer;
 
    -- The index of the first character of this token relative to the
    -- beginning of the line at which it occurs, 0 .. n - 1
    --
-   function getCharPositionInLine (This :Token) return Integer;
+   function getCharPositionInLine (This : Token) return Integer;
 
    -- Return the channel this token. Each token can arrive at the parser
    -- on a different channel, but the parser only "tunes" to a single channel.
    -- The parser ignores everything not on DEFAULT_CHANNEL.
    --
-   function getChannel (This :Token) return Channel_Number;
+   function getChannel (This : Token) return Channel_Number;
 
    -- An index from 0 .. n - 1 of the token object in the input stream.
    -- This must be valid in order to print token streams and
@@ -116,32 +111,32 @@ package ANTLR.Runtime.Token_Protocol is
    -- Return -1 to indicate that this token was conjured up since
    -- it doesn't have a valid index.
    --
-   function getTokenIndex (This :Token) return Integer;
+   function getTokenIndex (This : Token) return Integer;
 
    -- The starting character index of the token
    -- This method is optional; return -1 if not implemented.
    --
-   function getStartIndex (This :Token) return Integer;
+   function getStartIndex (This : Token) return Integer;
 
    -- The last character index of the token.
    -- This method is optional; return -1 if not implemented.
    --
-   function getStopIndex (This :Token) return Integer;
+   function getStopIndex (This : Token) return Integer;
 
    -- Gets the _org.antlr.v4.runtime.TokenSource_ which created this token.
    --
-   function getTokenSource (This :Token) return TokenSource_Optional;
+   function getTokenSource (This : Token) return TokenSource_Optional;
 
    --
    -- Gets the _org.antlr.v4.runtime.CharStream_ from which this token was derived.
    --
-   function getInputStream (This :Token) return CharStream_Optional;
+   function getInputStream (This : Token) return CharStream_Optional;
 
-   function getTokenSourceAndStream (This :Token) return TokenSourceAndStream;
+   function getTokenSourceAndStream (This : Token) return TokenSourceAndStream;
 
    protected Visited is
-      function Was_Visited return Boolean; --TOFIX for This :Token 
-      procedure Set_as_Visited (is_visited : Boolean); --TOFIX for This :Token 
+      function Was_Visited return Boolean; --TOFIX for This : Token 
+      procedure Set_as_Visited (is_visited : Boolean); --TOFIX for This : Token 
    private  
       Has_Been_Visited : Boolean := False;
    end Visited;

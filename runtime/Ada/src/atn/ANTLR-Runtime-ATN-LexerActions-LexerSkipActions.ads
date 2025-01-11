@@ -3,8 +3,8 @@
 with ANTLR.Runtime.ATN.LexerActionTypes;
 with ANTLR.Runtime.Recognizers.Lexers;
 
-use ANTLR.Runtime.Recognizers.Lexers;
 use ANTLR.Runtime.ATN.LexerActionTypes;
+use ANTLR.Runtime.Recognizers.Lexers;
 
 package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
 
@@ -62,7 +62,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
    overriding
    -- public
    function isPositionDependent (This : LexerSkipAction) return Boolean
-      is False;
+      is (False);
 
    --
    --
@@ -74,7 +74,7 @@ package ANTLR.Runtime.ATN.LexerActions.LexerSkipActions is
    procedure execute (This : LexerSkipAction; lexer : Lexer);
 
    -- public
-   function Description (This : …) return UString
+   function Description (This : LexerSkipAction) return UString
       is ("skip");
 
 end ANTLR.Runtime.ATN.LexerActions.LexerSkipActions;

@@ -5,8 +5,8 @@ with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.Misc.IntervalSets;
 
-use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.SetTransition;
+use ANTLR.Runtime.ATN.States;
 use ANTLR.Runtime.ATN.Transitions;
 use ANTLR.Runtime.Misc.IntervalSets;
 
