@@ -1,5 +1,15 @@
 -- €
 
+with Ada.Containers.Vectors;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.ATN.ConfigSets;
+with ANTLR.Runtime.TokenStream_Protocol;
+
+use ANTLR.Runtime.ATN.DecisionEventInfos;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.ConfigSets;
+use ANTLR.Runtime.TokenStream_Protocol;
+
 package ANTLR.Runtime.ATN.DecisionEventInfos.ErrorInfos is
 
    --
@@ -19,6 +29,15 @@ package ANTLR.Runtime.ATN.DecisionEventInfos.ErrorInfos is
    subtype Super is DecisionEventInfo;
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
+
+   function "=" (Left, Right : ErrorInfo) return Boolean;
+
+   package ErrorInfo_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => ErrorInfo,
+      "=" => "=");
+   subtype ErrorInfo_List is ErrorInfo_Container.Vector;
+
 
    --
    -- Constructs a new instance of the _org.antlr.v4.runtime.atn.ErrorInfo_ class with the

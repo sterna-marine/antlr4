@@ -54,7 +54,7 @@ package ANTLR.Runtime.RuleContexts is
    -- symbol s then call r1, which calls r2, the  would look like
    -- this:
    --
-   -- SContext[-1]   <- root node (bottom of the stack);
+   -- SContext.Element (-1)   <- root node (bottom of the stack);
    -- R1Context.Element (p)   <- p in rule s called r1
    -- R2Context.Element (q)   <- q in rule r1 called r2
    --

@@ -58,7 +58,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
       seeThruPreds : constant Boolean := True; -- ignore preds; get all lookahead
    begin
       if Is_Valid (ctx) then
-         lookContext := PredictionContext.fromRuleContext (s.atn!, ctx);
+         lookContext := PredictionContext.fromRuleContext (Value (s.atn), ctx);
       else
          lookContext := (Valid => False);
       end if;
@@ -119,8 +119,8 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
          end if;
 
          if ctx /= EmptyPredictionContext.Instance then
-            removed : constant := calledRuleStack.get (s.ruleIndex!); -- try!
-            calledRuleStack.clear (s.ruleIndex!); -- try!
+            removed : constant := calledRuleStack.get (Value (s.ruleIndex)); -- try!
+            calledRuleStack.clear (Value (s.ruleIndex)); -- try!
             -- run thru all possible stack tops in ctx
             length : constant := ctx.size;
             for i in 0 .. length - 1 loop
@@ -138,7 +138,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             defer:
                begin
                   if removed then
-                        calledRuleStack.set (s.ruleIndex!); -- try!
+                        calledRuleStack.set (Value (s.ruleIndex)); -- try!
                   end if;
                end defer;
             return;
@@ -150,12 +150,12 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
          t : constant := s.transition (i);
          rt : constant Optional_RuleTransition := Maybe (t);
          if Is_Valid (rt) then
-            if calledRuleStack.get (rt.target.ruleIndex!) then -- try!
+            if calledRuleStack.get (Value (rt.target.ruleIndex)) then -- try!
                goto CONTINUE;
             end if;
 
             newContext : constant := SingletonPredictionContext.create (ctx, rt.followState.stateNumber);
-            calledRuleStack.set (rt.target.ruleIndex!); -- try!
+            calledRuleStack.set (Value (rt.target.ruleIndex)); -- try!
             This_LOOK (This => This,
                         s => t.target,
                         stopState => stopState,
@@ -165,7 +165,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
                         calledRuleStack => calledRuleStack,
                         seeThruPreds => seeThruPreds,
                         addEOF  => addEOF);
-            calledRuleStack.clear (rt.target.ruleIndex!); -- try!
+            calledRuleStack.clear (Value (rt.target.ruleIndex)); -- try!
          elsif t is AbstractPredicateTransition then
             if seeThruPreds then
                This_LOOK (This => This,
@@ -196,7 +196,7 @@ package body ANTLR.Runtime.ATN.LL1Analyzer is
             set := t.labelIntervalSet;
             if Is_Valid (set) then
                if t is NotSetTransition then
-                  set := set!.complement (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, Optional_IntervalSet ( This.atn.maxTokenType)));
+                  set := Value (set);.complement (IntervalSet.of (CommonToken.MIN_USER_TOKEN_TYPE, Optional_IntervalSet ( This.atn.maxTokenType)));
                end if;
                look.addAll (set); -- try!
             end if;

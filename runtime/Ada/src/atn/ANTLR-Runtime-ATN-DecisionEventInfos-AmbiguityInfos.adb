@@ -2,6 +2,11 @@
 
 package body ANTLR.Runtime.ATN.DecisionEventInfos.AmbiguityInfos is
 
+   function "=" (Left, Right : AmbiguityInfo) return Boolean is
+   begin
+      return False; --TOFIX
+   end "=";
+
    procedure Initialize (Self : in out AmbiguityInfo;
                    decision : Integer;
                    configs : ATNConfigSet;

@@ -64,7 +64,7 @@ package body ANTLR.Runtime.Lexers is
             loop
                if This.hitEOF then
                   This.emitEOF;
-                  return This.token!
+                  return Value (This.token)
                end if;
 
                This.token := (Valid => False);
@@ -103,7 +103,7 @@ package body ANTLR.Runtime.Lexers is
                   This.emit;
                end if;
 
-               return This.token!;
+               return Value (This.token);
 
                <<CONTINUE_OUTER>>
             end loop OUTER;
@@ -187,7 +187,7 @@ package body ANTLR.Runtime.Lexers is
    function emitEOF (This : Lexer) return Token is
       cpos : constant := This.getCharPositionInLine;
       line : constant := This.getLine;
-      idx : constant := This.input!.index;
+      idx : constant := Value (This.input).index;
       eof : constant := This.factory.create (
          This.tokenFactorySourcePair,
          EOF,
@@ -215,9 +215,9 @@ package body ANTLR.Runtime.Lexers is
    function getText (This : Lexer) return UString is
    begin
       if This.text /= (Valid => False) then
-         return This.text!;
+         return Value (This.text);
       else
-         return This.getInterpreter.getText (This.input!);
+         return This.getInterpreter.getText (Value (This.input));
       end if;
    end getText;
 
@@ -253,9 +253,9 @@ package body ANTLR.Runtime.Lexers is
 
    procedure recover (This : Lexer; e : LexerNoViableAltException) is
    begin
-      if This.input!.LA (1) /= EOF then
+      if Value (This.input).LA (1) /= EOF then
          -- skip a char and again;
-         This.getInterpreter.consume (This.input!);
+         This.getInterpreter.consume (Value (This.input));
       end if;
    end recover;
 
@@ -266,7 +266,7 @@ package body ANTLR.Runtime.Lexers is
 
       declare
       begin
-         text := This.input!.getText (Interval.Set (_tokenStartCharIndex, This.input!.index));
+         text := Value (This.input).getText (Interval.Set (_tokenStartCharIndex, Value (This.input).index));
       exception
          when others =>
             text := "<unknown>";
@@ -308,7 +308,7 @@ package body ANTLR.Runtime.Lexers is
    procedure recover (This : Lexer; re : AnyObject) is
    begin
       -- TODO: Do we lose character or line position information?
-      This.input!.consume;
+      Value (This.input).consume;
    end recover;
 
    -- internal

@@ -265,7 +265,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       else
          target := s.edges.Element (t - LexerATNSimulator.MIN_DFA_EDGE); -- constant
          if LexerATNSimulator.debug and then not target.Is_Empty then
-               Wide_Wide_Text_IO.Put_Line ("reuse state " & s.stateNumber & " edge to " & target!.stateNumber);
+               Wide_Wide_Text_IO.Put_Line ("reuse state " & s.stateNumber & " edge to " & Value (target).stateNumber);
          end if;
          return target;
       end if;
@@ -436,7 +436,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       if config.state is RuleStopState then
          if LexerATNSimulator.debug then
             if recog : constant := recog then
-               Wide_Wide_Text_IO.Put_Line ("closure at " & recog.getRuleNames[config.state.ruleIndex!] & " rule stop " & config'Image & "\n");
+               Wide_Wide_Text_IO.Put_Line ("closure at " & recog.getRuleNames.Element ((Value (config.state.ruleIndex)) & " rule stop " & config'Image & "\n");
             else
                Wide_Wide_Text_IO.Put_Line ("closure at rule stop " & config'Image & "\n");
             end if;
@@ -456,9 +456,9 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
             length : constant := configContext.size;
             for i in 0 .. length - 1 loop
                if configContext.getReturnState (i) /= PredictionContext.EMPTY_RETURN_STATE then
-                     newContext : constant := configContext.getParent (i)!; -- "pop" return state;
-                     returnState : constant := atn.states[configContext.getReturnState (i)];
-                     c : constant := LexerATNConfig (config, returnState!, newContext);
+                     newContext : constant := Value (configContext.getParent (i)); -- "pop" return state;
+                     returnState : constant := atn.states.Element (configContext.getReturnState (i));
+                     c : constant := LexerATNConfig (config, Value (returnState), newContext);
                      currentAltReachedAcceptState := closure (input, c, configs, currentAltReachedAcceptState, speculative, treatEofAsEpsilon);
                end if;
             end loop;
@@ -539,7 +539,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 
          when Transition.ACTION =>
             if not Is_Valid (config.context)
-            or else config.context!.hasEmptyPath then
+            or else Value (config.context).hasEmptyPath then
                -- execute actions anywhere in the start rule for a token.
                --
                -- TODO: if the enrule is invoked recursively, some;
@@ -552,7 +552,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                -- getEpsilonTarget to return two configurations, so
                -- additional modifications are needed before we can support
                -- the split operation.
-               lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append (config.getLexerActionExecutor, atn.lexerActions[(t)).actionIndex]);
+               lexerActionExecutor : constant ActionTransition := ActionTransition (LexerActionExecutor.append (config.getLexerActionExecutor, atn.lexerActions.Element ((t)).actionIndex));
                c := LexerATNConfig (config, t.target, lexerActionExecutor);
             else
                -- ignore actions in referenced rules
@@ -666,7 +666,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
                --  make room for tokens 1 .. n and -1 masquerading as index 0
                p.edges := [DFAState?](repeating => null, count => LexerATNSimulator.MAX_DFA_EDGE - LexerATNSimulator.MIN_DFA_EDGE + 1);
          end if;
-         p.edges[t - LexerATNSimulator.MIN_DFA_EDGE] := q -- connect
+         p.edges.Element (t - LexerATNSimulator.MIN_DFA_EDGE) := q -- connect
       end Closure;
       Closure_Return_Value : LexerATNSimulator;
       function Synchronized_Closure is new Mutex.Gen_Closure (Closure => Closure, Result_Type => LexerATNSimulator);
@@ -720,7 +720,7 @@ package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
       if rss : constant := configs.firstConfigWithRuleStopState then
             proposed.isAcceptState := True;
             proposed.lexerActionExecutor := (LexerATNConfig (rss)).getLexerActionExecutor;
-            proposed.prediction := atn.ruleToTokenType[rss.state.ruleIndex!];
+            proposed.prediction := atn.ruleToTokenType.Element ((Value (rss.state.ruleIndex));
       end if;
 
       dfa : constant := decisionToDFA.Element (mode);

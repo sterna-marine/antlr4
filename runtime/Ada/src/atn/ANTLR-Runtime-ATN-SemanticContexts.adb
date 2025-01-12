@@ -115,6 +115,11 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    -- PrecedencePredicate --
    -- ------------------- --
 
+   function "=" (Left, Right : PrecedencePredicate) return Boolean is
+   begin
+      return False; --TOFIX
+   end "=";
+
    overriding
    procedure Initialize (Self : in out PrecedencePredicate) is
    begin
@@ -159,13 +164,13 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
    -- AND Operator --
    -- ------------ --
 
-   procedure Initialize (Self : in out AND; a, b : SemanticContext) is
+   procedure Initialize (Self : in out And_Opnds; a, b : SemanticContext) is
       operands : Set_Of_SemanticContexts;
       aAnd : constant Optional_AND := Maybe (a);
       bAnd : constant Optional_AND := Maybe (b);
    begin
       if Is_Valid (aAnd) then
-            operands.Union (aAnd.opnds);
+            operands.Union (aAnd);
             --  for Operand of aAnd.opnds loop
             --     operands.Insert (Operand);
             --  end loop;
@@ -173,7 +178,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
             operands.insert (a);
       end if;
       if Is_Valid (bAnd) then
-            operands.Union (bAnd.opnds);
+            operands.Union (bAnd);
             --  for Operand of bAnd.opnds loop
             --     operands.Insert (Operand);
             --  end loop;
@@ -181,20 +186,24 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
             operands.insert (b);
       end if;
 
-      precedencePredicates : constant PrecedencePredicate_Container.Vector := SemanticContext.filterPrecedencePredicates (operands);
+      precedencePredicates : constant PrecedencePredicate_List := SemanticContext.filterPrecedencePredicates (operands);
 
       if not precedencePredicates.Is_Empty then
             -- interested in the transition with the lowest precedence
 
          -- closure
-         function '<' (Lhs, Rhs : ) return True is
+         function "<" (Lhs, Rhs : precedencePredicates) return True is
          begin
             (lhs < rhs);
-            reduced : constant := precedencePredicates.sorted {$0.precedence < $1.precedence};
+            function reduced (Lhs, Rhs : precedencePredicates) return precedencePredicates is
+            begin 
+               precedencePredicates.sorted;
+               Lhs.precedence < Rhs.precedence;
+            end reduced;
 
             operands.insert (reduced.Element (0));
-         end '<'
-         end if;
+         end "<";
+      end if;
 
       opnds := Array (operands);
    end Initialize;
@@ -232,7 +241,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
                return (Valid => False);
             elsif evaluated /= SemanticContext.Empty.Instance then
                -- Reduce the result by skipping True elements
-               operands.append (evaluated!);
+               operands.append (Value (evaluated));
             end if;
       end loop;
 
@@ -283,7 +292,7 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
             operands.insert (b);
       end if;
 
-      precedencePredicates : constant PrecedencePredicate_Container.Vector := SemanticContext.filterPrecedencePredicates (operands);
+      precedencePredicates : constant PrecedencePredicate_List := SemanticContext.filterPrecedencePredicates (operands);
       if not precedencePredicates.Is_Empty then
             -- interested in the transition with the highest precedence
 
@@ -397,9 +406,9 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
       return result;
    end "or";
 
-   function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector is
+   function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_List is
 
-      result : PrecedencePredicate_Container.Vector;
+      result : PrecedencePredicate_List;
 
       procedure compactMap (At_Cursor : SemanticContext_Sets.Cursor) is
       -- Transfer `PrecedencePredicate` items to the `Result` vector

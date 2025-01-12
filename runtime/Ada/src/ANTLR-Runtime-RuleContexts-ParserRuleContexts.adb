@@ -44,7 +44,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       if not Is_Valid (children) then
             children := ParseTree.Container.Empty_Vector;
       end if;
-      children!.append (t);
+      Value (children).append (t);
    end addAnyChild;
 
    procedure addChild (This : ParserRuleContext; ruleInvocation : RuleContext) is
@@ -116,7 +116,7 @@ package body ANTLR.Runtime.RuleContexts.ParserRuleContexts is
       for o of children loop
             tnode : constant Optional_TerminalNode := Maybe (o);
             if Is_Valid (tnode) then
-               symbol : constant := tnode.getSymbol!;
+               symbol : constant := Value (tnode.getSymbol);
                if symbol.getType = ttype then
                   j := @ + 1;
                   if j = i then

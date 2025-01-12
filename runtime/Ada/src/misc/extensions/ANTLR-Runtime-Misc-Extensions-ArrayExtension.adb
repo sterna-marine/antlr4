@@ -24,7 +24,7 @@ extension Array {
 
         if Is_Valid (index) then
 
-            self.remove (at => index!);
+            self.remove (at => Value (index));
         end if;
 
     end if;

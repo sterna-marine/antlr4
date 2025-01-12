@@ -31,7 +31,7 @@ package body ANTLR.Runtime.Tree.TerminalNode.Impl is
       if symbol.getType = EOF then
          return "<EOF>";
       else
-         return symbol.getText!;
+         return Value (symbol.getText);
       end if;
    end Description;
 

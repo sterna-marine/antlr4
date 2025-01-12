@@ -7,7 +7,7 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
                    returnState : ATStates.State) is
    begin
       --TODO pragma assert
-      --assert ( returnState=ATNState.INVALID_STATE_NUMBER,"Expected: returnState!/=ATNState.INVALID_STATE_NUMBER");
+      --assert ( returnState=ATNState.INVALID_STATE_NUMBER,"Expected: Value (returnState)/=ATNState.INVALID_STATE_NUMBER");
       self.parent := parent;
       self.returnState := returnState;
       declare
@@ -151,12 +151,12 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
 
       if a.returnState = b.returnState then
          -- a = b
-         parent : constant := merge (a.parent!, b.parent!, rootIsWildcard, mergeCache'Access);
+         parent : constant := merge (Value (a.parent), Value (b.parent), rootIsWildcard, mergeCache'Access);
          -- if parent is same as existing a or b parent or reduced to a parent, return it;
-         if parent === a.parent! then
+         if parent === Value (a.parent) then
             return a;
          end if; -- ax + bx := ax, if a=b
-         if parent === b.parent! then
+         if parent === Value (b.parent) then
             return b;
          end if; -- ax + bx := bx, if a=b
          -- else: ax + ay := a'[x,y]
@@ -171,7 +171,7 @@ package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
          -- see if we can collapse parents due to $+x parents if local ctx
          singleParent : Optional_PredictionContext; := (Valid => False);
          --added by janyou
-         if a === b or else (Is_Valid (a.parent) and then a.parent! == b.parent) then
+         if a === b or else (Is_Valid (a.parent) and then Value (a.parent) == b.parent) then
             -- ax + bx := [a,b]x
             singleParent := a.parent
          end if;

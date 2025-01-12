@@ -68,11 +68,11 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
          case p.getStateType is
             when ATNState.RULE_STOP =>
                -- pop; return from rule
-               if This.ctx!.Is_Empty then
+               if Value (This.ctx).Is_Empty then
                   if startRuleStartState.isPrecedenceRule then
-                        result : constant ParserRuleContext := This.ctx!;
+                        result : constant ParserRuleContext := Value (This.ctx);
                         parentContext : constant (ParserRuleContext?, Int) := This.parentContextStack.pop;
-                        unrollRecursionContexts (parentContext.0!);
+                        unrollRecursionContexts (Value (parentContext.0));
                         return result;
                   else
                         This.exitRule;
@@ -91,8 +91,8 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
                exception
                   when ANTLRException.recognition =>
                      (let e)
-                  This.setState (self.atn.ruleToStopState[p.ruleIndex!].stateNumber);
-                  This.getContext!.exception := e
+                  This.setState (self.atn.ruleToStopState.Element (Value (p.ruleIndex)).stateNumber);
+                  Value (This.getContext).exception := e
                   This.getErrorHandler.reportError (self, e);
                   This.getErrorHandler.recover (self, e);
                end if;
@@ -135,11 +135,11 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
                -- We are at the start of a left recursive rule's ( .. )* loop
                -- but it's not the exit branch of loop.
                ctx : constant InterpreterRuleContext := InterpreterRuleContext (;
-               This.parentContextStack.last!.0, --peek;
-                     This.parentContextStack.last!.1, --peek;
+               Value (This.parentContextStack.last).0, --peek;
+                     Value (This.parentContextStack.last).1, --peek;
 
-                     This.ctx!.getRuleIndex);
-               pushNewRecursionContext (ctx, atn.ruleToStartState[p.ruleIndex!].stateNumber, This.ctx!.getRuleIndex);
+                     Value (This.ctx).getRuleIndex);
+               pushNewRecursionContext (ctx, atn.ruleToStartState.Element (Value (p.ruleIndex)).stateNumber, Value (This.ctx).getRuleIndex);
          end if;
 
       when Transition.ATOM =>
@@ -158,7 +158,7 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
 
       when Transition.RULE =>
          ruleStartState : constant RuleStartState := RuleStartState (transition.target);
-         ruleIndex : constant := ruleStartState.ruleIndex!
+         ruleIndex : constant := Value (ruleStartState.ruleIndex)
          ctx : constant := InterpreterRuleContext (This.ctx, p.stateNumber, ruleIndex);
          if ruleStartState.isPrecedenceRule then
                enterRecursionRule (ctx, ruleStartState.stateNumber, ruleIndex, (RuleTransition (transition)).precedence);
@@ -168,7 +168,7 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
 
       when Transition.PREDICATE =>
          predicateTransition : constant PredicateTransition := PredicateTransition (transition);
-         if not sempred (This.ctx!, predicateTransition.ruleIndex, predicateTransition.predIndex) then
+         if not sempred (Value (This.ctx), predicateTransition.ruleIndex, predicateTransition.predIndex) then
                raise ANTLRException.recognition with FailedPredicateException (self);
          end if;
 
@@ -177,7 +177,7 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
          action (This.ctx, actionTransition.ruleIndex, actionTransition.actionIndex);
 
       when Transition.PRECEDENCE =>
-         if not precpred (This.ctx!, (PrecedencePredicateTransition (transition)).precedence) then
+         if not precpred (Value (This.ctx), (PrecedencePredicateTransition (transition)).precedence) then
                raise ANTLRException.recognition
                   with FailedPredicateException (self, "precpred (ctx," & PrecedencePredicateTransition (transition).precedence'Image) & ')';
          end if;
@@ -192,17 +192,17 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
    end visitState;
 
    procedure visitRuleStopState (This : ParserInterpreter; p : ATNState) is
-      ruleStartState : constant := atn.ruleToStartState.ELement (p.ruleIndex!);
+      ruleStartState : constant := atn.ruleToStartState.ELement (Value (p.ruleIndex));
    begin
       if ruleStartState.isPrecedenceRule then
          let (parentContext, parentState) := This.parentContextStack.pop;
-         unrollRecursionContexts (parentContext!);
+         unrollRecursionContexts (Value (parentContext));
          This.setState (parentState);
       else
          This.exitRule;
       end if;
 
-      ruleTransition : constant RuleTransition := RuleTransition (atn.states[getState]!.transition (0));
+      ruleTransition : constant RuleTransition := Value (RuleTransition (atn.states.Element (getState)).transition (0));
       This.setState (ruleTransition.followState.stateNumber);
    end visitRuleStopState;;
 

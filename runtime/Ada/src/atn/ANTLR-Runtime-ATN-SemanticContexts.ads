@@ -27,7 +27,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- SemanticContext --
    -- --------------- --
    -- public
-   type SemanticContext is tagged Ada.Finalization.Controlled with null record; -- and Hashable 
+   type SemanticContext is new Ada.Finalization.Controlled with null record; -- and Hashable 
    
    subtype Object is SemanticContext;
    type Class is access all Object;
@@ -61,7 +61,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    procedure Put_Image_SemanticContext (S : in out Sink'Class; X : SemanticContext);
    for SemanticContext'Put_Image use Put_Image_SemanticContext;
    -- public
-   function Description (This : SemanticContext) return UString;
+   function Description (This : SemanticContext) return UString
    with No_Return;
 
    -- -------------------- --
@@ -71,7 +71,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
      (Index_Type   => Natural,
       Element_Type => SemanticContext,
       "="          => "=");
-   subtype SemanticContext_List is SemanticContext_Container.Vector;
+   subtype SemanticContext_List is SemanticContext_List;
 
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
    procedure Put_Image_SemanticContext_List (S : in out Sink'Class; X : SemanticContext_List);
@@ -108,8 +108,8 @@ package ANTLR.Runtime.ATN.SemanticContexts is
 
    function "=" (Left, Right : Optional_SemanticContext) return Boolean
       is (if Is_Valid (Left) and then Is_Valid (Right)
-            then return Value (Left) = Value (Right)
-            else return False);
+            then (Value (Left) = Value (Right))
+            else False);
 
    package Optional_SemanticContext_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
@@ -127,7 +127,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    function eval (This : SemanticContext;
                   parser : Recognizer_T;
                   parserCallStack : RuleContext)
-                  return Boolean;
+                  return Boolean
    with No_Return;
 
    --
@@ -160,7 +160,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       -- a predicate of the form `{True?}.
       --
       -- public static
-      Instance : constant Empty := This.Empty;
+      Instance : Empty := This.Empty; -- constant
    end record;
 
    -- public
@@ -190,15 +190,15 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       -- e.g., $i ref in pred
    end record;
 
-   overriding
    -- public
    overriding
    procedure Initialize (Self : in out Predicate);
 
    -- public
+   overriding
    procedure Initialize (Self : in out Predicate;
                    ruleIndex : Integer;
-                   predIndex : Integer
+                   predIndex : Integer;
                    isCtxDependent  : Boolean);
 
    overriding
@@ -230,13 +230,15 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       precedence : Integer; -- constant
    end record;
 
+   function "=" (Left, Right : PrecedencePredicate) return Boolean;
+
    package PrecedencePredicate_Container is new Ada.Containers.Vectors (
       Index_Type => Natural,
       Element_Type => PrecedencePredicate,
       "=" => "=");
    subtype PrecedencePredicate_List is PrecedencePredicate_Container.Vector;
 
-   function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector;
+   function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_List;
 
    overriding
    procedure Initialize (Self : in out PrecedencePredicate);
@@ -289,39 +291,35 @@ package ANTLR.Runtime.ATN.SemanticContexts is
       --
 
    -- public
-   function getOperands (This : Operator) return SemanticContext_Array;
+   function getOperands (This : Operator) return SemanticContext_Array
    with No_Return;
 
-   -- ------------ --
-   -- AND Operator --
-   -- ------------ --
+   -- ----------------------- --
+   -- Opnds with AND Operator --
+   -- ----------------------- --
    --
    -- A semantic context which is True whenever none of the contained contexts
    -- is False.
    --
 
    -- public
-   type AND is new Operator with
-   record
-      -- public
-      opnds : SemanticContext_List; -- constant
-      --TOFIX opnds : Set_Of_SemanticContexts;
-   end record;
+   subtype And_Opnds is SemanticContext_List; -- constant
+   --TOFIX opnds : Set_Of_SemanticContexts;
 
-   package Option_AND is new Option (AND);
-   subtype Optional_AND is Option_AND.Optional;
+   package Option_And_Opnds is new Option (And_Opnds);
+   subtype Optional_And_Opnds is Option_And_Opnds.Optional;
 
    -- public
-   procedure Initialize (Self : in out AND; a, b : SemanticContext);
+   procedure Initialize (Self : in out And_Opnds; a, b : SemanticContext);
 
    overriding
    -- public
-   function getOperands (This : AND) return SemanticContext_Container.Vector
-      is (This.opnds);
+   function getOperands (This : And_Opnds) return SemanticContext_List
+      is (This);
 
    -- public
    overriding
-   procedure hash (This : AND; hasher: in out Hasher);
+   procedure hash (This : And_Opnds; hasher: in out Hasher);
    
    --
    -- The evaluation of predicates by this context is short-circuiting, but
@@ -329,42 +327,37 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    --
    overriding
    -- public
-   function eval (This : AND; parser : Recognizer_T; parserCallStack : RuleContext) return Boolean;
+   function eval (This : And_Opnds; parser : Recognizer_T; parserCallStack : RuleContext) return Boolean;
 
    overriding
    -- public
-   function evalPrecedence (This : AND; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
+   function evalPrecedence (This : And_Opnds; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
 
    -- ----------- --
-   -- OR Operator --
+   -- Opnds with OR Operator --
    -- ----------- --
    --
    -- A semantic context which is True whenever at least one of the contained
    -- contexts is True.
    --
+   -- public
+   subtype Or_Opnds is SemanticContext_List; -- constant
+   --TOFIX opnds : Set_Of_SemanticContexts;
+
+   package Option_Or_Opnds is new Option (Or_Opnds);
+   subtype Optional_Or_Opnds is Option_Or_Opnds.Optional;
 
    -- public
-   type OR is new Operator with
-   record
-      -- public final
-      opnds: SemanticContext_List
-      --TOFIX opnds : Set_Of_SemanticContexts;
-   end record;
-
-   package Option_OR is new Option (OR);
-   subtype Optional_OR is Option_OR.Optional;
-
-   -- public
-   procedure Initialize (Self : in out OR; a, b : SemanticContext);
+   procedure Initialize (Self : in out Or_Opnds; a, b : SemanticContext);
 
    overriding
    -- public
-   function getOperands (This : OR) return SemanticContext_Container.Vector
-      is This.opnds
+   function getOperands (This : Or_Opnds) return SemanticContext_List
+      is (This);
 
    -- public
    overriding
-   procedure hash (This : OR; hasher: in out Hasher)
+   procedure hash (This : Or_Opnds; hasher: in out Hasher);
 
    --
    -- The evaluation of predicates by this context is short-circuiting, but
@@ -372,11 +365,11 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    --
    overriding
    -- public
-   function eval (This : OR; parser : Recognizer_T; parserCallStack : RuleContext) return Boolean;
+   function eval (This : Or_Opnds; parser : Recognizer_T; parserCallStack : RuleContext) return Boolean;
    
    overriding
    -- public
-   function evalPrecedence (This : OR; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
+   function evalPrecedence (This : Or_Opnds; parser : Recognizer_T; parserCallStack : RuleContext) return Optional_SemanticContext;
 
    -- --------- --
 
@@ -391,7 +384,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    function "or" (a, b : Optional_SemanticContext) return SemanticContext;
    
    -- private static
-   function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_Container.Vector;
+   function filterPrecedencePredicates (collection : in out Set_Of_SemanticContexts) return PrecedencePredicate_List;
 
    -- public
    function "=" (Lhs, Rhs : SemanticContext) return Boolean;
@@ -401,7 +394,6 @@ package ANTLR.Runtime.ATN.SemanticContexts is
 
    -- public
    function "=" (lhs, rhs : SemanticContext.PrecedencePredicate) return Boolean;
-
 
    -- public
    function "=" (lhs, rhs : SemanticContext_List) return Boolean;

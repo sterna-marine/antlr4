@@ -52,7 +52,7 @@ package ANTLR.Runtime.Tree.TerminalNode.Impl is
 
    -- public
    function getText (This : TerminalNodeImpl) return UString
-      is (symbol.getText)!;
+      is (Value (symbol.getText));
 
    -- public
    function toStringTree (This : TerminalNodeImpl; parser : Parser) return UString

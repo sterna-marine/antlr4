@@ -160,7 +160,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
 
    -- public
    function hasEmptyPath (This : PredictionContext) return Boolean
-      is (getReturnState (Last_ID) = EMPTY_RETURN_STATE)
+      is (getReturnState (Last_ID) = EMPTY_RETURN_STATE);
 
    -- static
    function calculateEmptyHashCode (This : PredictionContext) return Hash_Code;
@@ -170,7 +170,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    function calculateHashCode (parent : Optional_PredictionContext; returnState : State) return Hash_Code;
 
    -- static
-   function calculateHashCode (parents : Optional_PredictionContext_List, returnStates : Integer_List) return Hash_Code;
+   function calculateHashCode (parents : Optional_PredictionContext_List; returnStates : Integer_List) return Hash_Code;
 
    -- dispatch
    -- public static
@@ -222,15 +222,15 @@ package ANTLR.Runtime.ATN.PredictionContexts is
 
    -- private static
    procedure getAllContextNodes_2 (context : Optional_PredictionContext;
-                                  nodes : in out PredictionContext_List,
+                                  nodes : in out PredictionContext_List;
                                   visited : in out PredictionContext_2_Map);
 
    subtype Sink is Ada.Strings.Text_Buffers.Root_Buffer_Type;
-   procedure Put_Image_SingletonPredictionContext (S : in out Sink'Class; X : SingletonPredictionContext);
-   for SingletonPredictionContext'Put_Image use Put_Image_SingletonPredictionContext;
+   procedure Put_Image_PredictionContext (S : in out Sink'Class; X : PredictionContext);
+   for PredictionContext'Put_Image use Put_Image_PredictionContext;
    -- public
    function Description (This : PredictionContext) return UString
-      is (PredictionContext'External_Tag) & '@' & UString (Unmanaged.passUnretained (self).toOpaque.hashValue);
+      is (PredictionContext'External_Tag & '@' & "(Unmanaged.passUnretained (self).toOpaque.hashValue)'Image"); --TOFIX
 
    -- --------- --
    -- DoubleKey --
@@ -249,26 +249,20 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    package Option_Recognizer_T is new Option (Recognizer_T);
    subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
 
-   -- ------------ --
-   -- Recognizer_T --
-   -- ------------ --
-   package Recognizers_T is new Recognizers (T);
-   subtype Recognizer_T is Recognizers_T.Recognizer;
-
    -- public
    generic
-      type T is ;--TOFIX
+      type T is private;--TOFIX
    function toString (recog : Recognizer_T) return UString;
 
    -- public
    generic
-      type T is ;--TOFIX
+      type T is private;--TOFIX
    function toStrings (recognizer : Recognizer_T; currentState : State) return UString_List;
 
    -- FROM SAM
    -- public
    generic
-      type T is ;--TOFIX
+      type T is private;--TOFIX
    function toStrings (recognizer : Optional_Recognizer_T; stop : PredictionContext; currentState : State) return UString_List;
 
    -- ------------- --

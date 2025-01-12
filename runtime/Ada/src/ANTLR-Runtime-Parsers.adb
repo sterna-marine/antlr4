@@ -24,15 +24,15 @@ package body ANTLR.Runtime.Parsers is
    end Initialize;
 
    procedure enterEveryRule (This : TraceListener; ctx : ParserRuleContext) is
-      ruleName : constant := host.getRuleNames[ctx.getRuleIndex];
-      lt1 : constant := host.input.LT (1)!.getText!;
+      ruleName : constant := host.getRuleNames.Element (ctx.getRuleIndex);
+      lt1 : constant := Value (Value (host.input.LT (1)).getText);
    begin
       Wide_Wide_Text_IO.Put_Line ("enter   " & ruleName'Image & ", LT (1)=" & lt1'Image);
    end enterEveryRule;
 
    procedure visitTerminal (This : TraceListener; node : TerminalNode) is
    begin
-      Wide_Wide_Text_IO.Put_Line ("consume " & UString (describing => node.getSymbol) & " rule " & host.getRuleNames[host.ctx!.getRuleIndex]);
+      Wide_Wide_Text_IO.Put_Line ("consume " & UString (describing => node.getSymbol) & " rule " & host.getRuleNames.Element (host.ctx!.getRuleIndex));
    end visitTerminal;
 
    procedure visitErrorNode (This : TraceListener; node : ErrorNode) is
@@ -41,8 +41,8 @@ package body ANTLR.Runtime.Parsers is
    end visitErrorNode;
 
    procedure exitEveryRule (This : TraceListener; ctx : ParserRuleContext) is
-      ruleName : constant := host.getRuleNames[ctx.getRuleIndex];
-      lt1 : constant := host.input.LT (1)!.getText!;
+      ruleName : constant := host.getRuleNames.Element (ctx.getRuleIndex);
+      lt1 : constant := Value (Value (host.input.LT (1)).getText);
    begin
       Wide_Wide_Text_IO.Put_Line ("exit    " & ruleName'Image & ", LT (1)=" & lt1'Image);
    end exitEveryRule;
@@ -105,7 +105,7 @@ package body ANTLR.Runtime.Parsers is
          if This.buildParseTrees and then t.getTokenIndex = -1 then
                -- we must have conjured up a new token during single token insertion
                -- if it's not the current symbol
-               This.ctx!.addErrorNode (createErrorNode (parent => This.ctx!, t => t));
+               Value (This.ctx).addErrorNode (createErrorNode (parent => Value (This.ctx), t => t));
          end if;
       end if;
       return t;
@@ -122,7 +122,7 @@ package body ANTLR.Runtime.Parsers is
          if This.buildParseTrees and then t.getTokenIndex = -1 then
                -- we must have conjured up a new token during single token insertion
                -- if it's not the current symbol
-               This.ctx!.addErrorNode (createErrorNode (parent => This.ctx!, t => t));
+               Value (This.ctx).addErrorNode (createErrorNode (parent => Value (This.ctx), t => t));
          end if;
       end if;
 
@@ -169,7 +169,7 @@ package body ANTLR.Runtime.Parsers is
       if not Is_Valid (parseListeners) then
          This.parseListeners := ParseTreeListener.Container.Empty_Vector;
       else
-         This.parseListeners!.Append (listener);
+         Value (This.parseListeners).Append (listener);
       end if;
    end addParseListener;
 
@@ -180,9 +180,9 @@ package body ANTLR.Runtime.Parsers is
       end Closure;
    begin
       if Is_Valid (This.parseListeners) then
-         if not This.parseListeners!.filter (Closure'Access).Is_Empty then
-            This.parseListeners := This.parseListeners!.filter (Closure'Access);
-            if This.parseListeners!.Is_Empty then
+         if not Value (This.parseListeners).filter (Closure'Access).Is_Empty then
+            This.parseListeners := Value (This.parseListeners).filter (Closure'Access);
+            if Value (This.parseListeners).Is_Empty then
                This.parseListeners := (Valid => False);
             end if;
          end if;
@@ -240,7 +240,7 @@ package body ANTLR.Runtime.Parsers is
                opts.generateRuleBypassTransitions := True;
                result := ATNDeserializer (opts).deserialize (serializedAtn); -- try!
                This.bypassAltsAtnCache := result;
-               return This.bypassAltsAtnCache!;
+               return Value (This.bypassAltsAtnCache);
             exception
                when others => null;
             end;
@@ -328,13 +328,13 @@ package body ANTLR.Runtime.Parsers is
       hasListener : Boolean;
    begin
       if o.getType /= EOF then
-         This.getInputStream!.consume;
+         Value (This.getInputStream).consume;
       end if;
       if not Is_Valid (This.ctx) then
          return o;
       else
 
-         hasListener := Is_Valid (This.parseListeners) and then not This.parseListeners!.Is_Empty
+         hasListener := Is_Valid (This.parseListeners) and then not Value (This.parseListeners).Is_Empty
 
          if This.buildParseTrees or else hasListener then
             if This.errHandler.inErrorRecoveryMode (self) then
@@ -365,7 +365,7 @@ package body ANTLR.Runtime.Parsers is
       -- add current context to parent if we have a parent
       parent : constant ParserRuleContext := ParserRuleContext (This.ctx?.parent);
       if Is_Valid (parent) then
-         parent.addChild (This.ctx!);
+         parent.addChild (Value (This.ctx));
       end if;
    end addContextToParseTree;
 
@@ -376,7 +376,7 @@ package body ANTLR.Runtime.Parsers is
    begin
       setState (state);
       This.ctx := localctx;
-      This.ctx!.start := This.input.LT (1);
+      Value (This.ctx).start := This.input.LT (1);
       if This.buildParseTrees then
          This.addContextToParseTree;
       end if;
@@ -403,7 +403,7 @@ package body ANTLR.Runtime.Parsers is
       localctx.setAltNumber (altNum);
       -- if we have new localctx, make sure we replace existing ctx
       -- that is previous child of parse tree
-      if This.buildParseTrees and then This.ctx! !== localctx then
+      if This.buildParseTrees and then Value (This.ctx) !== localctx then
          parent : constant ParserRuleContext := ParserRuleContext (ctx?.parent);
          if Is_Valid (parent) then
                parent.removeLastChild;
@@ -439,7 +439,7 @@ package body ANTLR.Runtime.Parsers is
       setState (state);
       This.precedenceStack.push (precedence);
       This.ctx := localctx;
-      This.ctx!.start := This.input.LT (1);
+      Value (This.ctx).start := This.input.LT (1);
       if Is_Valid (parseListeners) then
          This.triggerEnterRuleEvent; -- simulates rule enfor left-recursive rules;
       end if;
@@ -449,16 +449,16 @@ package body ANTLR.Runtime.Parsers is
                                       localctx : ParserRuleContext;
                                       state : Integer;
                                       ruleIndex : Integer) is
-      previous : constant := This.ctx!
+      previous : constant := Value (This.ctx)
    begin
       previous.parent := localctx
       previous.invokingState := state
       previous.stop := This.input.LT (-1);
 
       This.ctx := localctx;
-      This.ctx!.start := previous.start;
+      Value (This.ctx).start := previous.start;
       if This.buildParseTrees then
-         This.ctx!.addChild (previous);
+         Value (This.ctx).addChild (previous);
       end if;
 
       if Is_Valid (This.parseListeners)xthen
@@ -469,7 +469,7 @@ package body ANTLR.Runtime.Parsers is
    procedure unrollRecursionContexts (This : Parser; parentctx : Optional_ParserRuleContext) is
    begin
       This.precedenceStack.pop;
-      This.ctx!.stop := This.input.LT (-1);
+      Value (This.ctx).stop := This.input.LT (-1);
       retctx : constant := Value (This.ctx); -- save current ctx (return value);
 
       -- unroll so This.ctx is as it was before call to recursive method
@@ -489,7 +489,7 @@ package body ANTLR.Runtime.Parsers is
 
       if This.buildParseTrees and then Is_Valid (parentctx) then
          -- add return ctx into invoking rule's tree
-         parentctx!.addChild (retctx);
+         Value (parentctx).addChild (retctx);
       end if;
    end unrollRecursionContexts;
 
@@ -539,7 +539,7 @@ package body ANTLR.Runtime.Parsers is
 --     -- Make sure that we don't get any error messages from using this temporary parser
 --     parser.removeErrorListeners;
 --     parser.removeParseListeners;
---     parser.getInterpreter!.setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
+--     Value (parser.getInterpreter).setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
 --
 --     -- get ambig trees
 --     alt : Integer := ambiguityInfo.ambigAlts.firstSetBit;
@@ -570,7 +570,7 @@ package body ANTLR.Runtime.Parsers is
    function isExpectedToken (This : Parser; symbol : Integer) return Boolean is
       atn : constant := This.getInterpreter.atn;
       ctx : Optional_ParserRuleContext := This.ctx;
-      s : constant := atn.states[getState]!;
+      s : constant := Value (atn.states.Element (getState));
       following := atn.nextTokens (s);
    begin
       if following.contains (symbol) then
@@ -587,7 +587,7 @@ package body ANTLR.Runtime.Parsers is
          while Is_Valid (ctxWrap)
             and then ctxWrap.invokingState >= 0
             and then following.contains (CommonToken.EPSILON) loop
-            invokingState : constant := atn.states.Element (ctxWrap.invokingState)!;
+            invokingState : constant := Value (atn.states.Element (ctxWrap.invokingState));
             rt : constant RuleTransition := RuleTransition (invokingState.transition (0));
             following := atn.nextTokens (rt.followState);
             if following.contains (symbol) then
@@ -608,7 +608,7 @@ package body ANTLR.Runtime.Parsers is
 
    function getExpectedTokensWithinCurrentRule (This : Parser) return IntervalSet is
       atn : constant := This.getInterpreter.atn;
-      s : constant := atn.states[getState]!;
+      s : constant := Value (atn.states.Element (getState));
    begin
       return atn.nextTokens (s);
    end getExpectedTokensWithinCurrentRule;
@@ -705,7 +705,7 @@ package body ANTLR.Runtime.Parsers is
          else
                This.tracer := TraceListener (This);
          end if;
-         addParseListener (This.tracer!);
+         addParseListener (Value (This.tracer));
       end if;
    end setTrace;
 

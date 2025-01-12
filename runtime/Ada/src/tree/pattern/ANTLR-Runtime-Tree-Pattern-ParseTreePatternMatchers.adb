@@ -103,7 +103,7 @@ package body ANTLR.Runtime.Tree.Pattern.ParseTreePatternMatchers is
          t2 : constant TerminalNode := TerminalNode (patternTree);
          mismatchedNode : Optional_ParseTree := (Valid => False);
          -- both are tokens and they have same type
-         if t1.getSymbol!.getType = t2.getSymbol!.getType then
+         if Value (t1.getSymbol).getType = Value (t2.getSymbol).getType then
             if t2.getSymbol is TokenTagToken then
                -- x and <ID>
                tokenTagToken : constant TokenTagToken := TokenTagToken (t2.getSymbol);
@@ -208,7 +208,7 @@ package body ANTLR.Runtime.Tree.Pattern.ParseTreePatternMatchers is
          tagChunk : constant Optional_TagChunk := Maybe (chunk);
          if Is_Valid (tagChunk) then
             -- add special rule token or conjure up new token from name
-            firstStr : constant UString := To_String (tagChunk.getTag.first!);
+            firstStr : constant UString := To_String (Value (tagChunk.getTag.first));
             if firstStr.lowercased /= firstStr then
                ttype : constant := parser.getTokenType (tagChunk.getTag);
                if ttype = CommonToken.INVALID_TYPE then
@@ -325,7 +325,7 @@ package body ANTLR.Runtime.Tree.Pattern.ParseTreePatternMatchers is
          end loop;
 
          if ntags > 0 then
-            afterLastTag : constant := stops[ntags - 1].upperBound
+            afterLastTag : constant := stops.Element (ntags - 1).upperBound
             if afterLastTag < n then
                -- copy text from end of last tag to end
                text : constant := pattern[afterLastTag .. n - 1]

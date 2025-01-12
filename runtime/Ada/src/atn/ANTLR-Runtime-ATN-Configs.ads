@@ -183,18 +183,21 @@ package ANTLR.Runtime.ATN.Configs is
    function Description (This : ATNConfig) return UString
       is (toString ((Valid => False), True));
 
+
+   -- Recognizer_T --
+   package Recognizers_T is new Recognizers (T);  --TOFIX
+   subtype Recognizer_T is Recognizers_T.Recognizer;
+
    -- Optional_Recognizer_T --
-   package Option_T is new Option (T);  --TOFIX
-   subtype Optional_T is Option_T.Optional;
+   package Option_Recognizer_T is new Option (Recognizer_T);  --TOFIX
+   subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
 
    -- public
    generic
       type T is private; --TOFIX
-   package Option_Recognizer is new Optional_T;  --TOFIX
-   subtype Optional_Recognizer is Option_Recognizer_T.Optional;  --TOFIX
-
-   generic
-      type T is private; --TOFIX
-   function toString (This : ATNConfig; recog : Optional_Recognizer_T; showAlt : Boolean) return UString;
+   function toString (This : ATNConfig; 
+                      recog : Optional_Recognizer_T;
+                      showAlt : Boolean)
+                      return UString;
 
 end ANTLR.Runtime.ATN.Configs;

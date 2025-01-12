@@ -2,6 +2,11 @@
 
 package body ANTLR.Runtime.ATN.DecisionEventInfos.ErrorInfos is
 
+   function "=" (Left, Right : ErrorInfo) return Boolean is
+   begin
+      False; --TOFIX
+   end "=";
+
    procedure Initialize (Self : in out ErrorInfo;
                    decision : Integer;
                    configs : ATNConfigSet;

@@ -22,7 +22,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       Self.addAll (set); -- try!
    end Initialize;
 
-   procedure Initialize (Self : in out IntervalSet; els : array (<>) of Integer) is --TOFIX
+   procedure Initialize (Self : in out IntervalSet; els : Integer_List) is --TOFIX
    begin
       Self.intervals := Interval_Container.Empty_Vector;
       if els'Length > 0 then
@@ -210,8 +210,8 @@ package body ANTLR.Runtime.Misc.IntervalSets is
             goto CONTINUE;
          end if;
 
-         beforeCurrent : Optional_Interval; := (Valid => False);
-         afterCurrent : Optional_Interval; := (Valid => False);
+         beforeCurrent : Optional_Interval := (Valid => False);
+         afterCurrent : Optional_Interval := (Valid => False);
          if rightInterval.a > resultInterval.a then
             beforeCurrent := Interval (resultInterval.a, rightInterval.a - 1);
          end if;
@@ -269,13 +269,13 @@ package body ANTLR.Runtime.Misc.IntervalSets is
          return (Valid => False);  -- nothing in common with null set
       end if;
 
-      myIntervals : constant := self.intervals
-      theirIntervals : constant IntervalSet := IntervalSet ((other)).intervals
-      intersection : Optional_IntervalSet; := (Valid => False);
-      mySize : constant := myIntervals.count
-      theirSize : constant := theirIntervals.count
-      i := 0
-      j := 0
+      myIntervals : constant := self.intervals;
+      theirIntervals : constant IntervalSet := IntervalSet ((other)).intervals;
+      intersection : Optional_IntervalSet := (Valid => False);
+      mySize : constant := myIntervals.count;
+      theirSize : constant := theirIntervals.count;
+      i := 0;
+      j := 0;
       -- iterate down both interval lists looking for nondisjoint intervals
       while i < mySize and then j < theirSize loop
          mine : constant := myIntervals.Element (i);
@@ -295,7 +295,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
                      intersection := This.IntervalSet;
                   end if;
 
-                  intersection!.add (mine.intersection (theirs)); -- try!
+                  Value (intersection).add (mine.intersection (theirs)); -- try!
                   j := @ + 1;
                else
                   if theirs.properlyContains (mine) then
@@ -303,7 +303,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
                      if not Is_Valid (intersection) then
                         intersection := This.IntervalSet;
                      end if;
-                     intersection!.add (mine.intersection (theirs)); -- try!
+                     Value (intersection).add (mine.intersection (theirs)); -- try!
                      i := @ + 1;
                   else
                      if not mine.disjoint (theirs) then
@@ -311,7 +311,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
                         if not Is_Valid (intersection) then
                            intersection := This.IntervalSet;
                         end if;
-                        intersection!.add (mine.intersection (theirs)); -- try!
+                        Value (intersection).add (mine.intersection (theirs)); -- try!
                         -- Move the iterator of lower range [a .. b], but not
                         -- the upper range as it may contain elements that will collide
                         -- with the next iterator. So, if mine=[0 .. 115] and
@@ -381,7 +381,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       if This.isnull then
          return CommonToken.INVALID_TYPE;
       else
-         return This.intervals.Element (0).a
+         return This.intervals.Element (0).a;
       end if;
    end getMinElement;
 
@@ -425,9 +425,8 @@ package body ANTLR.Runtime.Misc.IntervalSets is
             elsif elemAreChar then
                buf := @ & ''' & interval.A'Image & ''';
             else
-               buf := @ & "" & interval.A'Image ;
+               buf := @ & "" & interval.A'Image;
             end if;
-         end if;
          elsif elemAreChar then
             buf := @ & ''' & interval.A'Image & "'..'" & interval.B'Image & ''';
          else
@@ -485,7 +484,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
       if a = EOF then
          return "<EOF>";
       elsif a = EPSILON then
-         return "<EPSILON>"
+         return "<EPSILON>";
       else
          return vocabulary.getDisplayName (a);
       end if;
@@ -493,7 +492,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
 
    function size (This : IntervalSet) return Natural is
    begin
-      n := 0
+      n := 0;
       for interval of This.intervals loop
          n := @ + (interval.b - interval.a + 1);
       end loop;
@@ -503,7 +502,7 @@ package body ANTLR.Runtime.Misc.IntervalSets is
    function toList (This : IntervalSet) return Integer_List is
       values : Integer_List; -- := Integer_Container.Empty_Vector;
    begin
-      for interval of This.intervals loop
+      for interval in This.intervals.a .. This.intervals.b loop
          values.append (contentsOf => interval.a .. interval.b);
       end loop;
       return values;

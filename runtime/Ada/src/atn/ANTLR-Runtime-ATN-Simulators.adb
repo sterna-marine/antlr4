@@ -38,8 +38,8 @@ package body ANTLR.Runtime.ATN.Simulators is
 
    function getCachedContext (This : ATNSimulator; context : PredictionContext) return PredictionContext is
    begin
-      --TODO: synced (sharedContextCache!);
-      --synced (sharedContextCache!) {
+      --TODO: synced (Value (sharedContextCache));
+      --synced (Value (sharedContextCache)) {
       visited := PredictionContext.Map2.Vector; -- := PredictionContext.Map2.Empty_Vector;
       return PredictionContext.getCachedContext (
                context,

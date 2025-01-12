@@ -69,7 +69,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
             existing.setPrecedenceFilterSuppressed (True);
       end if;
 
-      existing.context := merged -- replace context; no need to alt mapping
+      existing.context := merged; -- replace context; no need to alt mapping
       return True;
    end add;
 
@@ -133,7 +133,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       else
          hasher.combine (configsHashValue);
       end if;
-   end if;
+   end hash;
 
    function configshashValue return Ada.Containers.Hash_Type is
       hashCode : Ada.Containers.Hash_Type := 1;
@@ -210,7 +210,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
          alts.set (cfg.alt); -- try!
       end loop;
 
-      return Array (configToAlts.values);
+      return BitSet_Dictionary.To_Vector (configToAlts.values);
    end getConflictingAltSubsets;
 
    function getStateToAltMap (This : ATNConfigSet) return BitSet_Map is
@@ -256,8 +256,8 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    function firstConfigWithRuleStopState return Optional_ATNConfig is
    begin
       for config of This.configs loop
-         if config.state is RuleStopState then
-               return config;
+         if config.state'Tag = RuleStopState'Tag then --TOFIX
+            return config;
          end if;
       end loop;
       return (Valid => False);
@@ -269,7 +269,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       alt := ATN.INVALID_ALT_NUMBER;
       for config of This.configs loop
          if alt = ATN.INVALID_ALT_NUMBER then
-            alt := config.alt -- found first alt;
+            alt := config.alt; -- found first alt;
          elsif config.alt /= alt then
             return ATN.INVALID_ALT_NUMBER;
          end if;
@@ -288,7 +288,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       else
          result : constant := ATNConfigSet (fullCtx);
          for config of This.configs loop
-            if config.state is RuleStopState then
+            if config.state'Tag = RuleStopState'Tag then --TOFIX
                result.add (config, mergeCache); -- try!
                goto CONTINUE_CONFIGS;
             end if;
@@ -296,7 +296,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
             if lookToEndOfRule and then config.state.onlyHasEpsilonTransitions then
                nextTokens : constant := atn.nextTokens (config.state);
                if nextTokens.contains (CommonToken.EPSILON) then
-                  endOfRuleState : constant := atn.ruleToStopState[config.state.ruleIndex!]
+                  endOfRuleState : constant State := atn.ruleToStopState.Element (Value (config.state.ruleIndex));
                   result.add (ATNConfig (config, endOfRuleState), mergeCache); -- try!
                end if;
             end if;
@@ -328,7 +328,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
          statesFromAlt1.Insert (Key => config.state.stateNumber, New_Item => config.context);
          if updatedContext /= config.semanticContext then
-               configSet.add (ATNConfig (config, updatedContext!), mergeCache); -- try!
+               configSet.add (ATNConfig (config, Value (updatedContext)), mergeCache); -- try!
          else
                configSet.add (config, mergeCache); -- try!
          end if;
@@ -365,8 +365,9 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       return configSet;
    end applyPrecedenceFilter;
 
-   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_Container.Vector is -- ]?
-      altToPred : SemanticContext_Container.Vector := SemanticContext_Container.To_Vector (New_Item => null, Length => nalts + 1);
+   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_List is -- ]?
+      altToPred : SemanticContext_List := SemanticContext_Container.To_Vector (New_Item => null, Length => nalts + 1);
+   begin
       for config of This.configs loop
          if ambigAlts.get (config.alt) then -- try!
                altToPred.Insert (Key => config.alt, New_Item => SemanticContext.or (altToPred.Element (config.alt), config.semanticContext));
@@ -388,9 +389,11 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       --      end loop;
 
       -- nonambig alts are null in altToPred
-      return (if nPredAlts = 0 then
-               return Optional_SemanticContext_Container.Empty_Vector; --null
-               else return altToPred);
+      if nPredAlts = 0 then
+         return Optional_SemanticContext_Container.Empty_Vector; --null
+      else
+         return altToPred;
+      end if;
    end getPredsForAmbigAlts;
 
    function getAltThatFinishedDecisionEntryRule (This : ATNConfigSet) return Integer is
@@ -398,7 +401,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    begin
       for config of This.configs loop
          if config.getOuterContextDepth > 0
-         or else (config.state is RuleStopState and config.context!.hasEmptyPath) then
+         or else config.state'Tag = RuleStopState'Tag and Value (config.context).hasEmptyPath then
             alts.add (config.alt); -- try!
          end if;
       end loop;
@@ -413,7 +416,12 @@ package body ANTLR.Runtime.ATN.ConfigSets is
                                  P3 : Integer;
                                  P4 : Boolean)
                                  return Boolean;
-   type evalSemanticContext_Access is evalSemanticContext'Access;
+
+   type evalSemanticContext_Access is access function (P1 : SemanticContext;
+                                 P2 : ParserRuleContext;
+                                 P3 : Integer;
+                                 P4 : Boolean)
+                                 return Boolean;
 
    function splitAccordingToSemanticValidity (This : ATNConfigSet;
                                               outerContext : ParserRuleContext;
@@ -425,7 +433,7 @@ package body ANTLR.Runtime.ATN.ConfigSets is
    begin
       for config of This.configs loop
          if config.semanticContext /= SemanticContext.Empty.Instance then
-            predicateEvaluationResult : constant Boolean := evalSemanticContext (config.semanticContext, outerContext, config.alt,fullCtx);
+            predicateEvaluationResult : constant Boolean := evalSemanticContext (config.semanticContext, outerContext, config.alt, fullCtx);
             if predicateEvaluationResult then
                Pair_of_ConfigSets.Succeeded.add (config); -- try!
             else
@@ -452,18 +460,20 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
       RuleStopState_Found : Boolean := False;
 
-      function Check_RuleStopState (At_Cursor : configs.Cursor) is
+      procedure Check_RuleStopState (At_Cursor : configs.Cursor) is
       begin
-         if Element (At_Cursor).state is RuleStopState then
+         if Element (At_Cursor).state'Tag = RuleStopState'Tag then --TOFIX
             RuleStopState_Found := True;
          end if;
       end Check_RuleStopState;
 
    begin
       for At_Cursor in configs.Iterate loop
-         if Check_RuleStopState (At_Cursor) then
+         Check_RuleStopState (At_Cursor);  --TOFIX
+         if RuleStopState_Found then
             exit; -- RuleStopState_Found !
-         end loop;
+         end if;
+      end loop;
       return RuleStopState_Found;
    end hasConfigInRuleStopState;
 
@@ -471,9 +481,9 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
       RuleStopState_Found : Boolean := False;
 
-      function Check_RuleStopState (At_Cursor : configs.Cursor) is
+      procedure Check_RuleStopState (At_Cursor : configs.Cursor) is
       begin
-         if Element (At_Cursor).state is RuleStopState then
+         if Element (At_Cursor).state'Tag = RuleStopState'TAG then --TOFIX
             RuleStopState_Found := True;
          else
             RuleStopState_Found := False;
@@ -482,9 +492,11 @@ package body ANTLR.Runtime.ATN.ConfigSets is
 
    begin
       for At_Cursor in configs.Iterate loop
-         if not Check_RuleStopState (At_Cursor) then
+         Check_RuleStopState (At_Cursor);
+         if not RuleStopState_Found then
             exit; -- some state is not a RuleStopState !
-         end loop;
+         end if;
+      end loop;
       return RuleStopState_Found;
    end allConfigsInRuleStopStates;
 
@@ -493,14 +505,13 @@ package body ANTLR.Runtime.ATN.ConfigSets is
       --  if lhs === rhs then
       --     return True;
       --  end if;
-
       return
          lhs.configs = rhs.configs and then -- includes stack context
          lhs.fullCtx = rhs.fullCtx and then
          lhs.uniqueAlt = rhs.uniqueAlt and then
          lhs.conflictingAlts = rhs.conflictingAlts and then
          lhs.hasSemanticContext = rhs.hasSemanticContext and then
-         lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext
+         lhs.dipsIntoOuterContext = rhs.dipsIntoOuterContext;
    end "=";
 
 end ANTLR.Runtime.ATN.ConfigSets;

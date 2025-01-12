@@ -28,7 +28,7 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
       --lexerActions : LexerAction_List := lexerActionExecutor.lexerActions, --lexerActionExecutor.lexerActions.length + 1);
       lexerActions := lexerActionExecutor.lexerActions;
       LexerActionContainer.Append (lexerActions, lexerAction);
-      --lexerActions[lexerActions.length - 1] := lexerAction;
+      --lexerActions.Element (lexerActions.length - 1) := lexerAction;
       return LexerActionExecutor (lexerActions);
    end append;
 
@@ -42,14 +42,14 @@ package body ANTLR.Runtime.ATN.LexerActionExecutors is
                updatedLexerActions := lexerActions;  --lexerActions.clone;
             end if;
 
-            updatedLexerActions!.Replace_Element (Index =>i, New_Item => LexerIndexedCustomAction (offset, lexerActions.Element (i));
+            Value (updatedLexerActions).Replace_Element (Index =>i, New_Item => LexerIndexedCustomAction (offset, lexerActions.Element (i));
          end if;
       end loop;
 
       if not Is_Valid (updatedLexerActions) then
             return This;
       else
-         return LexerActionExecutor (updatedLexerActions!);
+         return LexerActionExecutor (Value (updatedLexerActions));
       end if;
    end fixOffsetBeforeMatch;
 

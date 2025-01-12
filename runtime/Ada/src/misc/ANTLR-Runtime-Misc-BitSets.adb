@@ -534,7 +534,7 @@ begin
       i : Integer := 0;
       while i < targetWords - 1 loop
          wordOption1 : constant Integer_64 := Shift_Right_Arithmetic ( (words.Element (sourceIndex), Integer_64 (fromIndex)));
-         wordOption2 : constant Integer_64 := (words[sourceIndex + 1] << Integer_64 (-fromIndex % 64));
+         wordOption2 : constant Integer_64 := (words.Element (sourceIndex + 1) << Integer_64 (-fromIndex % 64));
          wordOption : constant := wordOption1 | wordOption2
          result.words.Insert (Key => i, New_Item => wordAligned ? words.Element (sourceIndex) : wordOption);
 
@@ -548,13 +548,13 @@ begin
       fromIndexTest : constant := (fromIndex & BitSet.BIT_INDEX_MASK);
 
       wordOption1 : constant Integer_64 := Shift_Right_Arithmetic ( (words.Element (sourceIndex), Integer_64 (fromIndex)));
-      wordOption2 : constant Integer_64 := (words[sourceIndex + 1] & lastWordMask);
+      wordOption2 : constant Integer_64 := (words.Element (sourceIndex + 1) & lastWordMask);
       wordOption3 : constant Integer_64 := (64 + Integer_64 (-fromIndex % 64));
       wordOption : constant := wordOption1 | Shift_Left (wordOption2, wordOption3)
 
       wordOption4 : constant := (words.Element (sourceIndex) & lastWordMask);
       wordOption5 : constant := Shift_Right_Arithmetic ( wordOption4, Integer_64 (fromIndex));
-      result.words[targetWords - 1] =
+      result.words.Element (targetWords - 1) =
                toIndexTest < fromIndexTest
                ? wordOption : wordOption5
 
@@ -774,7 +774,7 @@ begin
       end if;
 
       return BitSet.BITS_PER_WORD * (wordsInUse - 1) +
-               (BitSet.BITS_PER_WORD - words[wordsInUse - 1].leadingZeroBitCount);
+               (BitSet.BITS_PER_WORD - words.Element (wordsInUse - 1).leadingZeroBitCount);
    end if;
 
    --

@@ -255,7 +255,7 @@ package ANTLR.Runtime.ATN.ConfigSets is
                                    return ATNConfigSet;
 
    -- internal
-   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_Container.Vector; -- ]?
+   function getPredsForAmbigAlts (ambigAlts : BitSet; nalts : Integer) return Optional_SemanticContext_List; -- ]?
 
    -- public
    function getAltThatFinishedDecisionEntryRule (This : ATNConfigSet) return Integer;

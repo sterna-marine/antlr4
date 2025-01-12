@@ -2,6 +2,11 @@
 
 package body ANTLR.Runtime.ATN.DecisionEventInfos.ContextSensitivityInfos is
 
+   function "=" (Left, Right : ContextSensitivityInfo) return Boolean is
+   begin
+      return False; --TOFIX
+   end "=";
+
    procedure Initialize (Self : in out ContextSensitivityInfo;
                   decision : Integer;
                   configs : ATNConfigSet;

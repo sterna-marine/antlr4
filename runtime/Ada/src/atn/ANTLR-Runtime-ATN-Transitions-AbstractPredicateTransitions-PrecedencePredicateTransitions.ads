@@ -1,6 +1,7 @@
 -- €
 
 with Ada.Strings;
+with Ada.Containers.Vectors;
 with ANTLR.Runtime.ATN.States;
 
 use ANTLR.Runtime.ATN.States;
@@ -46,6 +47,6 @@ package ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePre
    for PrecedencePredicateTransition'Put_Image use Put_Image_PrecedencePredicateTransition;
 -- public
    function Description (This : PrecedencePredicateTransition) return UString
-      is (precedence'Image & "  >= _p");
+      is (precedence'Image & "  >= p");
 
 end ANTLR.Runtime.ATN.Transitions.AbstractPredicateTransitions.PrecedencePredicateTransitions;

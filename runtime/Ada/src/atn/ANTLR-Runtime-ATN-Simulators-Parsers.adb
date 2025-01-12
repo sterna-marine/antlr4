@@ -124,7 +124,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
             if This.debug or else This.trace_atn_sim then
                debugInfo := "predictATN decision " & dfa.decision
                debugInfo := @ & "exec LA (1)==" & getLookaheadName (input) & ", ";
-               debugInfo := @ & "outerContext=" & outerContext!.toString (parser);
+               debugInfo := @ & "outerContext=" & Value (outerContext).toString (parser);
                Wide_Wide_Text_IO.Put_Line (debugInfo);
             end if;
 
@@ -143,14 +143,14 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                -- dfa.s0!.configs := s0_closure -- not used for prediction but useful to know start configs anyway
                s0_closure := applyPrecedenceFilter (s0_closure);
                s0 := addDFAState (dfa, DFAState (s0_closure));
-               dfa.setPrecedenceStartState (This.parser.getPrecedence, s0!);
+               dfa.setPrecedenceStartState (This.parser.getPrecedence, Value (s0));
             else
                s0 := addDFAState (dfa, DFAState (s0_closure));
                dfa.s0 := s0;
             end if;
          end if;
 
-         alt : constant := execATN (dfa, s0!, input, index, outerContext!);
+         alt : constant := execATN (dfa, s0!, input, index, Value (outerContext));
          if This.debug then
             Wide_Wide_Text_IO.Put_Line ("DFA after predictATN: " & dfa.toString (This.parser.getVocabulary));
          end if;
@@ -516,7 +516,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          end if;
 
          if config.state is RuleStopState then
-            pragma assert (config.context!.Is_Empty, "Expected: c.context.Is_Empty");
+            pragma assert (Value (config.context).Is_Empty, "Expected: c.context.Is_Empty");
             if fullCtx or else t = EOF then
                if not Is_Valid (skippedStopStates) then
                   skippedStopStates := ATNConfig.Container.Empty_Vector;
@@ -693,7 +693,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          pragma assert (pred /=  (Valid => False), "Expected: pred /=  (Valid => False)");
 
          if ambigAlts : constant := ambigAlts, ambigAlts.get (i) then -- try!
-            pairs.append (DFAState.PredPrediction (pred!, i));
+            pairs.append (DFAState.PredPrediction (Value (pred), i));
          end if;
          if pred /= SemanticContext.Empty.Instance then
             containsPredicate := True;
@@ -704,7 +704,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
          return (Valid => False);
       end if;
 
-      return pairs;    --pairs.toArray (new, DFAState.PredPrediction[pairs.size]);
+      return pairs;    --pairs.toArray (new, DFAState.PredPrediction.Element (pairs.size));
    end getPredicatePredictions;
 
    function getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule (This : ParserATNSimulator; 
@@ -829,14 +829,14 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
                      else
                         -- we have no context info, just chase follow links (if greedy);
                         if This.debug then
-                           Wide_Wide_Text_IO.Put_Line ("FALLING off rule" & getRuleName (config.state.ruleIndex!));
+                           Wide_Wide_Text_IO.Put_Line ("FALLING off rule" & getRuleName (Value (config.state.ruleIndex)));
                         end if;
                         closure_2 (config, configs, closureBusy'Access, collectPredicates,
                               fullCtx, depth, treatEofAsEpsilon);
                      end if;
                      goto CONTINUE;
                   end if;
-                  returnState : constant ATNState := atn.states[configContext.getReturnState (i)]!;
+                  returnState : constant ATNState := Value (atn.states.Element (configContext.getReturnState (i)));;
                   newContext : constant Optional_PredictionContext := configContext.getParent (i); -- "pop" return state;
                   c : constant ATNConfig := ATNConfig (returnState, config.alt, newContext,
                      config.semanticContext);
@@ -1005,7 +1005,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       -- that p is in.
       numCtxs : constant := This.configContext.size;
       for  i in 0 .. numCtxs - 1 loop -- for each stack context
-         returnState : constant := atn.states[configContext.getReturnState (i)]!
+         returnState : constant := Value (atn.states.Element (configContext.getReturnState (i)));
          if  returnState.ruleIndex /= p.ruleIndex then
             return False;
          end if;
@@ -1061,7 +1061,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
    function getRuleName (This : ParserATNSimulator; index : Integer) return UString is
    begin
       if index >= 0  then
-         return This.parser.getRuleNames[index];
+         return This.parser.getRuleNames.Element (index);
       else
          return "<rule " & index'Image & '>'';
       end if;
@@ -1216,7 +1216,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       newContext : constant SingletonPredictionContext := SingletonPredictionContext.create (config.context, returnState.stateNumber);
    begin
       if This.debug then
-         Wide_Wide_Text_IO.Put_Line ("CALL rule " & getRuleName (t.target.ruleIndex!) & ", ctx=" & config.context?'Image, Default => (Valid => False) & ')');
+         Wide_Wide_Text_IO.Put_Line ("CALL rule " & getRuleName (Value (t.target.ruleIndex)) & ", ctx=" & config.context?'Image, Default => (Valid => False) & ')');
       end if;
 
       return ATNConfig (config, t.target, newContext);
@@ -1258,7 +1258,7 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
    procedure dumpDeadEndConfigs (This : ParserATNSimulator; nvae : NoViableAltException) is
    begin
       Wide_Wide_Text_IO.Put_Line (Standard_Error, "dead end configs: ");
-      for c of nvae.getDeadEndConfigs!.configs loop
+      for c of Value (nvae.getDeadEndConfigs).configs loop
          trans := "no edges";
          if c.state.getNumberOfTransitions > 0 then
             t : constant Transition := c.state.transition (0);
@@ -1310,10 +1310,10 @@ package body ANTLR.Runtime.ATN.Simulators.Parsers is
       begin
          [unowned This] in
          if from.edges =  (Valid => False) then
-            from.edges := [DFAState?](repeating:  (Valid => False), count => This.atn.maxTokenType + 1 + 1);  --new DFAState[atn.maxTokenType+1+1];
+            from.edges := [DFAState?](repeating:  (Valid => False), count => This.atn.maxTokenType + 1 + 1);  --new DFAState.Element (atn.maxTokenType+1+1);
          end if;
 
-         from.edges[t + 1] := to -- connect
+         from.edges.Element (t + 1) := to -- connect
       end Closure;
       closure_2Return_Value : …;
       function Synchronized_Closure is new Mutex.Gen_Closure (Closure => Closure, Result_Type => …);

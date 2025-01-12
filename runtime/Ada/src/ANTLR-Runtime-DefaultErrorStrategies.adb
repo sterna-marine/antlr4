@@ -88,13 +88,13 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
       if lastErrorStates = (Valid => False) then
          lastErrorStates := This.IntervalSet;
       end if;
-      lastErrorStates!.add (recognizer.getState);
+      Value (lastErrorStates).add (recognizer.getState);
       followSet : constant := getErrorRecoverySet (recognizer);
       consumeUntil (recognizer, followSet);
    end recover;
 
    procedure sync (This : ANTLRErrorStrategy; recognizer : Parser) is
-      s : constant := recognizer.getInterpreterUnbufferedTokenStream.atn.states.Element (recognizer.getStateUnbufferedTokenStream); -- !
+      s : constant := Value (recognizer.getInterpreterUnbufferedTokenStream.atn.states.Element (recognizer.getStateUnbufferedTokenStream));
    begin
       if Is_Active (Aspect.DEBUG) then
         Wide_Wide_Text_IO.Put_Line (Standard_Error, "sync @ " & s.stateNumber & '=' & s.getClass.getSimpleName);
@@ -248,7 +248,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
       -- if current token is consistent with what could come after current
       -- ATN state, then we know we're missing a token; error recovery
       -- is free to conjure up and insert the missing token
-      currentState : constant ATNState := recognizer.getInterpreterUnbufferedTokenStream.atn.states[recognizer.getStateUnbufferedTokenStream]!
+      currentState : constant ATNState := Value (recognizer.getInterpreterUnbufferedTokenStream.atn.states.Element (recognizer.getStateUnbufferedTokenStream));
       next : constant ATNState := currentState.transition (0).target;
       atn : constant ATN := recognizer.getInterpreterUnbufferedTokenStream.atn;
       expectingAtLL2 : constant IntervalSet := atn.nextTokens (next, recognizer._ctx);
@@ -330,7 +330,7 @@ package body ANTLR.Runtime.DefaultErrorStrategies is
                   s := '<' & getSymbolType (t) & '>';
             end if;
          end if;
-         return escapeWSAndQuote (s!);
+         return escapeWSAndQuote (Value (s);
       end if;
    end getTokenErrorDisplay;
 

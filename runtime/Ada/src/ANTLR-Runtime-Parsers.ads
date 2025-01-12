@@ -619,7 +619,7 @@ package ANTLR.Runtime.Parsers is
 --         -- Make sure that we don't get any error messages from using this temporary parser
 --         parser.removeErrorListeners;
 --         parser.removeParseListeners;
---         parser.getInterpreter!.setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
+--         Value (parser.getInterpreter).setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
 --
 --         -- get ambig trees
 --         alt : Integer := ambiguityInfo.ambigAlts.firstSetBit;

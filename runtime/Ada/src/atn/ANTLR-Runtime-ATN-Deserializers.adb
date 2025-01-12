@@ -59,7 +59,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
 
             ruleIndex := data.Element (p);
             p := @ + 1;
-            s := stateFactory (stype, ruleIndex)!;
+            s := Value (stateFactory (stype, ruleIndex));
             if stype = ATNState.LOOP_END then
                -- special case
                loopBackStateNumber := data.Element (p);
@@ -507,7 +507,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
                   goto CONTINUE;
                end if;
                for transition in state.transitions loop
-                  if transition === excludeTransition! then
+                  if transition === Value (excludeTransition) then
                      goto CONTINUE;
                   end if;
 
@@ -526,7 +526,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
 
          -- link the new states
          atn.ruleToStartState.Element (i).addTransition (EpsilonTransition (bypassStart));
-         bypassStop.addTransition (EpsilonTransition (endState!));
+         bypassStop.addTransition (EpsilonTransition (Value (endState)));
 
          matchState := This.BasicState;
          atn.addState (matchState);
@@ -621,7 +621,7 @@ package body ANTLR.Runtime.ATN.Deserializers is
                           arg3 : Integer;
                           sets : IntervalSet_List)
                           return Transition is
-      target : constant := atn.states.Element (trg)!;
+      target : constant := Value (atn.states.Element (trg));;
    begin
       case Token_Type is
          when Transition.EPSILON => return EpsilonTransition (target);

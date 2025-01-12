@@ -517,7 +517,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
             else
                -- no operation at that index, just dump token
                if t.getType /= EOF then
-                  buf.append (t.getText!);
+                  buf.append (Value (t.getText));
                end if;
                i := @ + 1; -- move to next token
             end if;
@@ -531,7 +531,7 @@ package body ANTLR.Runtime.TokenStreamRewriters is
             -- should be included (they will be inserts).
             for op in indexToOp.values loop
                if op.index >= This.tokens.size - 1 then
-                  buf := @ + op.text!;
+                  buf := @ + Value (op.text);
                end if;
             end loop;
       end if;

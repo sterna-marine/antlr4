@@ -3,8 +3,22 @@
 with Ada.Finalization;
 with Ada.Real_Time;
 with Ada.Strings;
+with Ada.Containers.Vectors;
+with ANTLR.Runtime.ATN.DecisionEventInfos.AmbiguityInfos;
+with ANTLR.Runtime.ATN.DecisionEventInfos.ContextSensitivityInfos;
+with ANTLR.Runtime.ATN.DecisionEventInfos.ErrorInfos;
+with ANTLR.Runtime.ATN.DecisionEventInfos.LookaheadEventInfos;
+with ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfo;
+with ANTLR.Runtime.ATN.States;
 
 use Ada;
+use ANTLR.Runtime.ATN.DecisionEventInfos;
+use ANTLR.Runtime.ATN.DecisionEventInfos.AmbiguityInfos;
+use ANTLR.Runtime.ATN.DecisionEventInfos.ContextSensitivityInfos;
+use ANTLR.Runtime.ATN.DecisionEventInfos.ErrorInfos;
+use ANTLR.Runtime.ATN.DecisionEventInfos.LookaheadEventInfos;
+use ANTLR.Runtime.ATN.DecisionEventInfos.PredicateEvalInfo;
+use ANTLR.Runtime.ATN.States;
 
 package ANTLR.Runtime.ATN.DecisionInfos is
 
@@ -34,7 +48,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- invoked for this decision.
       --
       -- public
-      invocations : Long_Long_Integer := 0
+      invocations : Long_Long_Integer := 0;
 
       --
       -- The total time spent in _org.antlr.v4.runtime.atn.ParserATNSimulator#adaptivePredict_ for
@@ -57,7 +71,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- _org.antlr.v4.runtime.atn.PredictionMode#LL_EXACT_AMBIG_DETECTION_ is used.
       --
       -- public
-      SLL_TotalLook : Long_Long_Integer := 0
+      SLL_TotalLook : Long_Long_Integer := 0;
 
       --
       -- Gets the minimum lookahead required for any single SLL prediction to
@@ -65,7 +79,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- SLL conflict state, or encountering a syntax error.
       --
       -- public
-      SLL_MinLook : Long_Long_Integer := 0
+      SLL_MinLook : Long_Long_Integer := 0;
 
       --
       -- Gets the maximum lookahead required for any single SLL prediction to
@@ -73,14 +87,14 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- SLL conflict state, or encountering a syntax error.
       --
       -- public
-      SLL_MaxLook : Long_Long_Integer := 0
+      SLL_MaxLook : Long_Long_Integer := 0;
 
       --
       -- Gets the _org.antlr.v4.runtime.atn.LookaheadEventInfo_ associated with the event where the
       -- _#SLL_MaxLook_ value was set.
       --
       -- public
-      SLL_MaxLookEvent : LookaheadEventInfo!
+      SLL_MaxLookEvent : LookaheadEventInfo;
 
       --
       -- The sum of the lookahead required for LL prediction for this decision.
@@ -88,7 +102,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- conflict state.
       --
       -- public
-      LL_TotalLook : Long_Long_Integer := 0
+      LL_TotalLook : Long_Long_Integer := 0;
 
       --
       -- Gets the minimum lookahead required for any single LL prediction to
@@ -98,7 +112,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- _org.antlr.v4.runtime.atn.PredictionMode#LL_EXACT_AMBIG_DETECTION_, or a syntax error.
       --
       -- public
-      LL_MinLook : Long_Long_Integer := 0
+      LL_MinLook : Long_Long_Integer := 0;
 
       --
       -- Gets the maximum lookahead required for any single LL prediction to
@@ -108,14 +122,14 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- _org.antlr.v4.runtime.atn.PredictionMode#LL_EXACT_AMBIG_DETECTION_, or a syntax error.
       --
       -- public
-      LL_MaxLook : Long_Long_Integer := 0
+      LL_MaxLook : Long_Long_Integer := 0;
 
       --
       -- Gets the _org.antlr.v4.runtime.atn.LookaheadEventInfo_ associated with the event where the
       -- _#LL_MaxLook_ value was set.
       --
       -- public
-      LL_MaxLookEvent : LookaheadEventInfo!
+      LL_MaxLookEvent : LookaheadEventInfo;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.ContextSensitivityInfo_ instances describing the
@@ -124,7 +138,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.ContextSensitivityInfo
       --
       -- public final
-      contextSensitivities: array (<>) of ContextSensitivityInfo := Array<ContextSensitivityInfo>;
+      contextSensitivities : ContextSensitivityInfo_List;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.ErrorInfo_ instances describing the parse errors
@@ -134,7 +148,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.ErrorInfo
       --
       -- public final
-      errors: array (<>) of ErrorInfo := Array<ErrorInfo>;
+      errors : ErrorInfo_List;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.AmbiguityInfo_ instances describing the
@@ -143,7 +157,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.AmbiguityInfo
       --
       -- public final
-      ambiguities: array (<>) of AmbiguityInfo := Array<AmbiguityInfo>;
+      ambiguities: AmbiguityInfo_List;
 
       --
       -- A collection of _org.antlr.v4.runtime.atn.PredicateEvalInfo_ instances describing the
@@ -153,7 +167,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.PredicateEvalInfo
       --
       -- public final
-      predicateEvals: array (<>) of PredicateEvalInfo := Array<PredicateEvalInfo>;
+      predicateEvals: PredicateEvalInfo_List;
 
       --
       -- The total number of ATN transitions required during SLL prediction for
@@ -172,7 +186,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#computeTargetState
       --
       -- public
-      SLL_ATNTransitions : Long_Long_Integer := 0
+      SLL_ATNTransitions : Long_Long_Integer := 0;
 
       --
       -- The total number of DFA transitions required during SLL prediction for
@@ -185,7 +199,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#getExistingTargetState
       --
       -- public
-      SLL_DFATransitions : Long_Long_Integer := 0
+      SLL_DFATransitions : Long_Long_Integer := 0;
 
       --
       -- Gets the total number of times SLL prediction completed in a conflict
@@ -199,7 +213,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- parsing result as _org.antlr.v4.runtime.atn.PredictionMode#LL_.
       --
       -- public
-      LL_Fallback : Long_Long_Integer := 0
+      LL_Fallback : Long_Long_Integer := 0;
 
       --
       -- The total number of ATN transitions required during LL prediction for
@@ -218,7 +232,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#computeTargetState
       --
       -- public
-      LL_ATNTransitions : Long_Long_Integer := 0
+      LL_ATNTransitions : Long_Long_Integer := 0;
 
       --
       -- The total number of DFA transitions required during LL prediction for
@@ -231,7 +245,7 @@ package ANTLR.Runtime.ATN.DecisionInfos is
       -- * seealso: org.antlr.v4.runtime.atn.LexerATNSimulator#getExistingTargetState
       --
       -- public
-      LL_DFATransitions : Long_Long_Integer := 0
+      LL_DFATransitions : Long_Long_Integer := 0;
 
    end record;
 
@@ -254,16 +268,16 @@ package ANTLR.Runtime.ATN.DecisionInfos is
    -- public
    function Description (This : DecisionInfo) return UString
       is ( '('
-            & "decision=" & decision'Image;
-            & ", contextSensitivities=" & contextSensitivities.count'Image;
-            & ", errors=" & errors.count'Image;
-            & ", ambiguities=" & ambiguities.count'Image;
-            & ", SLL_lookahead=" & SLL_TotalLook'Image;
-            & ", SLL_ATNTransitions=" & SLL_ATNTransitions'Image;
-            & ", SLL_DFATransitions=" & SLL_DFATransitions'Image;
-            & ", LL_Fallback=" & LL_Fallback'Image;
-            & ", LL_lookahead=" & LL_TotalLook'Image;
-            & ", LL_ATNTransitions=" & LL_ATNTransitions'Image;
+            & "decision=" & decision'Image
+            & ", contextSensitivities=" & contextSensitivities.count'Image
+            & ", errors=" & errors.count'Image
+            & ", ambiguities=" & ambiguities.count'Image
+            & ", SLL_lookahead=" & SLL_TotalLook'Image
+            & ", SLL_ATNTransitions=" & SLL_ATNTransitions'Image
+            & ", SLL_DFATransitions=" & SLL_DFATransitions'Image
+            & ", LL_Fallback=" & LL_Fallback'Image
+            & ", LL_lookahead=" & LL_TotalLook'Image
+            & ", LL_ATNTransitions=" & LL_ATNTransitions'Image
             & ')');
 
 end ANTLR.Runtime.ATN.DecisionInfos;

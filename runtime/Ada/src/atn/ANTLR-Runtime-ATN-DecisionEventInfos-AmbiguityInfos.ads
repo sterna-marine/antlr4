@@ -1,8 +1,16 @@
 -- €
 
-with ANTLR.Runtime.ATN.DecisionEventInfos;
+with Ada.Containers.Vectors;
+with ANTLR.Runtime.ATN.States;
+with ANTLR.Runtime.ATN.ConfigSets;
+with ANTLR.Runtime.Misc.BitSets;
+with ANTLR.Runtime.TokenStream_Protocol;
 
 use ANTLR.Runtime.ATN.DecisionEventInfos;
+use ANTLR.Runtime.ATN.States;
+use ANTLR.Runtime.ATN.ConfigSets;
+use ANTLR.Runtime.Misc.BitSets;
+use ANTLR.Runtime.TokenStream_Protocol;
 
 package ANTLR.Runtime.ATN.DecisionEventInfos.AmbiguityInfos is
 
@@ -48,6 +56,14 @@ package ANTLR.Runtime.ATN.DecisionEventInfos.AmbiguityInfos is
    subtype Super is DecisionEventInfo;
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
+
+   function "=" (Left, Right : AmbiguityInfo) return Boolean;
+
+   package AmbiguityInfo_Container is new Ada.Containers.Vectors (
+      Index_Type => Natural,
+      Element_Type => AmbiguityInfo,
+      "=" => "=");
+   subtype AmbiguityInfo_List is AmbiguityInfo_Container.Vector;
 
    --
    -- Constructs a new instance of the _org.antlr.v4.runtime.atn.AmbiguityInfo_ class with the

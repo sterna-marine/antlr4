@@ -21,7 +21,7 @@ extension Character {
 
     -- public
     procedure Initialize (Self : in out …; integerLiteral value: IntegerLiteralType) {
-        self := Character (UnicodeScalar (value)!);
+        self := Character (Value (UnicodeScalar (value)));
     end if;
     utf8Value : Ada.Interface.C.unsigned_short {;
         for s in UString (self).utf8 loop

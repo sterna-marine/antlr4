@@ -240,7 +240,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
       buf := @ & "digraph G {\n";
       buf := @ & "rankdir=LR;\n";
 
-      nodes := getAllContextNodes (context!);
+      nodes := getAllContextNodes (Value (context));
       -- closure
          function ">" (Lhs, Rhs : ) return True is
             (lhs > rhs);
@@ -443,8 +443,8 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                end if;
 
                atn : constant := recognizer.getATN;
-               s : constant ATNStates.State := atn.states.Element (stateNumber)!
-               ruleName : constant := recognizer.getRuleNames[s.ruleIndex!]
+               s : constant ATNStates.State := Value (atn.states.Element (stateNumber));
+               ruleName : constant := recognizer.getRuleNames.Element (Value (s.ruleIndex))
                localBuffer.append (ruleName);
             elsif p.getReturnState (index) /= PredictionContext.EMPTY_RETURN_STATE then
                if not p.Is_Empty then
@@ -457,7 +457,7 @@ package body ANTLR.Runtime.ATN.PredictionContexts is
                end if;
             end if;
             stateNumber := p.getReturnState (index);
-            p := p.getParent (index)!
+            p := Value (p.getParent (index));
             <<CONTINUE_OUTER>>
          end loop;
          localBuffer := @ & ']';
