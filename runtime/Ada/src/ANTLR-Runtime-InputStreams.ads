@@ -20,7 +20,7 @@ package ANTLR.Runtime.InputStreams is
    --
    -- public
 
-   type ANTLRInputStream is new Ada.Finalize.Controlled and CharStream with
+   type ANTLRInputStream is new Ada.Finalization.Controlled and CharStream with
    record
       --
       -- The data being scanned

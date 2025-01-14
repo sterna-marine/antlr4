@@ -259,7 +259,7 @@ package body ANTLR.Runtime.UnbufferedCharStream is
    -- UnicodeScalarStreamIterator --
    -- --------------------------- --
 
-   type UnicodeScalarStreamIterator is new Ada.Finalize.Controlled -- and IteratorProtocol
+   type UnicodeScalarStreamIterator is new Ada.Finalization.Controlled -- and IteratorProtocol
    with record
       -- private
       streamIterator : Unsigned_8StreamIterator;

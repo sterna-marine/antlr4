@@ -1,6 +1,6 @@
 -- €
 
-with Ada.Finalize;
+with Ada.Finalization;
 with ANTLR.Runtime.CharStream_Protocol;
 with ANTLR.Runtime.InputStream;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
@@ -198,7 +198,7 @@ package ANTLR.Runtime.UnbufferedCharStream is
    subtype IndexingIterator is IndexingIterator_ArraySlice;
 
    -- fileprivate 
-   type Unsigned_8StreamIterator is new Ada.Finalize.Controlled -- and  IteratorProtocol
+   type Unsigned_8StreamIterator is new Ada.Finalization.Controlled -- and  IteratorProtocol
    with record
       -- private
       stream : constant InputStream;
@@ -219,7 +219,7 @@ package ANTLR.Runtime.UnbufferedCharStream is
    -- UnicodeScalarStreamIterator --
    -- --------------------------- --
    -- fileprivate
-   type UnicodeScalarStreamIterator is new Ada.Finalize.Controlled -- and IteratorProtocol
+   type UnicodeScalarStreamIterator is new Ada.Finalization.Controlled -- and IteratorProtocol
    with record
       -- private
       streamIterator : Unsigned_8StreamIterator;
