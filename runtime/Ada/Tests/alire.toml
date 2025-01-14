@@ -9,24 +9,19 @@ licenses = "Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = ["lexer", "parser", "grammar", "tests"]
 
-executables = [
-    "TokenStreamRewriterTests",
-    "TokenStreamTests",
-    "VisitorTests"]
-
-[[depends-on]]
-antlr4_runtime = "*"
-sterdevttestunit = ">=3.9.0"
-
+executables = ["Tests"]
 
 [build-profiles]
-antlr4_runtime = "Validation"
-sterdevttestunit = "Release"
+adafdevttestunit = "Release"
+# antlr4_runtime = "Validation"
 
+[[depends-on]]
+# antlr4_runtime = "*"
+adafdevttestunit = ">=3.9.0"
 
 [[pins]]
-antlr4_runtime = { path='..' }
-sterdevttestunit = { path='../../../../sterdevttestunit' }
+# antlr4_runtime = { path='..' }
+adafdevttestunit = { path='../../../../AdaLib/adafdevttestunit' }
 
 [configuration.variables]
 Trace_Level = {type = "Enum", values = ["Info", "Details", "Debug"], default = "Info"}
@@ -48,6 +43,7 @@ Development.Compile_Checks =  "Warnings"
 # Development.Contracts = "Yes" 
 Development.style_checks = [
       "-gnatyB",   # Check Boolean operators
+      "-gnatyC",   # Check comments
       "-gnaty-d",  # Disable check no DOS line terminators present
       "-gnatye",   # Check end/exit labels
       "-gnatyf",   # No form feeds or vertical tabs
@@ -55,7 +51,7 @@ Development.style_checks = [
       "-gnatyM132",# Check maximum line length
       "-gnatyO",   # Check that overriding subprograms are explicitly marked as such
       "-gnatyS",   # Check no statements after THEN/ELSE
-      "-gnatyx"    # Check extra parentheses
+      "-gnatyx"   # Check extra parentheses
 ]
 
 Validation.Optimization = "Performance" 

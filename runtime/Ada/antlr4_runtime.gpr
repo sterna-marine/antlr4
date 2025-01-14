@@ -1,32 +1,15 @@
-with "config/antlr4_config.gpr";
-project antlr4_runtime is
+--  -------------------------------------------------------------
+--  SPDX-Creator: "William J. Franck" <william@sterna.dev>
+--  -------------------------------------------------------------
+--  Initial creation date : 20yy-MM-DD
+--  -------------------------------------------------------------
+aggregate project ANTLR4_Runtime is
 
-   for Source_Dirs use ("src/**", "config/",
-                        "lib/AdacTextCharUnic/src/**",
-                        "lib/Adaf/src/**",
-                        "lib/AdafCrypMurmHash3/src/**",
-                        "lib/AdafCrypUuid/src/**",
-                        "lib/AdafCrypt/src/**",
-                        "lib/AdafFramAop/src/**",
-                        "lib/AdafTextUstr/src/**",
-                        "lib/AdafUtil/src/**",
-                        "lib/AdafUtilOptl/src/**",
-                        "lib/Ster/src/**");
-   for Object_Dir use "build/" & Antlr4_Config.Build_Profile & "/obj";
-   for Exec_Dir use "build/" & Antlr4_Config.Build_Profile & "/bin";
-   for Create_Missing_Dirs use "True";
-   for Main use ("main.adb");
-
-   package Compiler is
-      for Default_Switches ("Ada") use Antlr4_Config.Ada_Compiler_Switches;
-   end Compiler;
-
-   package Binder is
-      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
-   end Binder;
-
-   package Install is
-      for Artifacts (".") use ("build/share");
-   end Install;
-
-end antlr4_runtime;
+   for Project_Path use (
+         "bld");
+   for Project_Files use (
+         "bld/ANTLR4_Runtime-lib.gpr");
+      -- "bld/ANTLR4_Runtime-examples.gpr",
+      -- "bld/ANTLR4_Runtime-lib-tests.gpr");
+  
+end ANTLR4_Runtime;
