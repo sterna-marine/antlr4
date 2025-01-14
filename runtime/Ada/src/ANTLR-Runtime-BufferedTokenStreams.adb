@@ -1,10 +1,11 @@
 -- €
 
-with Aspect;
 with Ada.Wide_Wide_Text_IO;
+with AdaForge.Framework.Aspect;
 
 use Ada;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.BufferedTokenStreams is
 
@@ -60,7 +61,7 @@ package body ANTLR.Runtime.BufferedTokenStreams is
    function sync (This : BufferedTokenStream; i : Integer) return Boolean is
    begin
       pragma assert (i >= 0, "Expected: i>=0");
-      n : constant := i -  This.tokens.Length + 1; -- how many more elements we need?
+      n : constant Integer := i -  This.tokens.Length + 1; -- how many more elements we need?
       if Is_Active (Aspect.DEBUG) then
          Wide_Wide_Text_IO.Put_Line ("sync (" & i'Image & ") needs " & n'Image);
       end if;

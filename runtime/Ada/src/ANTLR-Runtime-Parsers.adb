@@ -4,13 +4,14 @@ with Ada.Wide_Wide_Text_IO;
 with ANTLR.Runtime.ATN.ParseInfos;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
 with ANTLR.Runtime.Simulators.Parsers.Profilings;
-with Aspect;
+with AdaForge.Framework.Aspect;
 
 use Ada;
 use ANTLR.Runtime.ATN.ParseInfos;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
 use ANTLR.Runtime.Simulators.Parsers.Profilings;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.Parsers is
 
@@ -125,7 +126,6 @@ package body ANTLR.Runtime.Parsers is
                Value (This.ctx).addErrorNode (createErrorNode (parent => Value (This.ctx), t => t));
          end if;
       end if;
-
       return t;
    end matchWildcard;
 
@@ -138,7 +138,7 @@ package body ANTLR.Runtime.Parsers is
    begin
       if trimParseTrees then
          if This.getTrimParseTree then
-               exit;
+            exit;
          end if;
          addParseListener (TrimToSizeListener.INSTANCE);
       else
@@ -149,7 +149,7 @@ package body ANTLR.Runtime.Parsers is
    function getTrimParseTree (This : Parser) return Boolean is
       function Closure (Param_0 : <>) is
       begin
-         $Param_0 === TrimToSizeListener.INSTANCE;
+         Param_0 === TrimToSizeListener.INSTANCE;
       end Closure;
    begin
       return (not This.getParseListeners.filter (Closure'Access).Is_Empty);
@@ -160,7 +160,7 @@ package body ANTLR.Runtime.Parsers is
       if Is_Valid (parseListeners) then
          return This.parseListeners;
       else
-         return  ParseTreeListener.Container.Empty_Vector;
+         return ParseTreeListener.Container.Empty_Vector;
       end if;
    end getParseListeners;
 
@@ -200,8 +200,8 @@ package body ANTLR.Runtime.Parsers is
    begin
       if Is_Valid (parseListeners) and then Is_Valid (ctx) then
          for listener: ParseTreeListener in parseListeners loop
-               listener.enterEveryRule (ctx);
-               This.ctx.enterRule (listener);
+            listener.enterEveryRule (ctx);
+            This.ctx.enterRule (listener);
          end loop;
       end if;
    end triggerEnterRuleEvent;
@@ -211,8 +211,8 @@ package body ANTLR.Runtime.Parsers is
       -- reverse order walk of listeners
       if Is_Valid (This.parseListeners) or Is_Valid (This.ctx) then
          for listener of This.parseListeners.reversed loop
-               This.ctx.exitRule (listener);
-               listener.exitEveryRule (This.ctx);
+            This.ctx.exitRule (listener);
+            listener.exitEveryRule (This.ctx);
          end loop;
       end if;
    end triggerExitRuleEvent;
@@ -267,7 +267,8 @@ package body ANTLR.Runtime.Parsers is
                return compileParseTreePattern (pattern, patternRuleIndex, lexer);
          end if;
       end if;
-      raise ANTLRError.unsupportedOperation with "Parser can't discover a lexer to use";
+      raise ANTLRError.unsupportedOperation
+         with "Parser can't discover a lexer to use";
    end compileParseTreePattern;
 
    procedure compileParseTreePattern (This : Parser;
@@ -333,27 +334,25 @@ package body ANTLR.Runtime.Parsers is
       if not Is_Valid (This.ctx) then
          return o;
       else
-
-         hasListener := Is_Valid (This.parseListeners) and then not Value (This.parseListeners).Is_Empty
-
+         hasListener := Is_Valid (This.parseListeners) and then not Value (This.parseListeners).Is_Empty;
          if This.buildParseTrees or else hasListener then
             if This.errHandler.inErrorRecoveryMode (self) then
-                  node : constant := createErrorNode (parent => This.ctx, t => o);
-                  This.ctx.addErrorNode (node);
-                  if This.parseListeners : constant := This.parseListeners then
-                     for listener of This.parseListeners loop
-                        listener.visitErrorNode (node);
-                     end loop;
-                  end if;
+               node : constant := createErrorNode (parent => This.ctx, t => o);
+               This.ctx.addErrorNode (node);
+               if This.parseListeners : constant := This.parseListeners then
+                  for listener of This.parseListeners loop
+                     listener.visitErrorNode (node);
+                  end loop;
+               end if;
             else
-                  node := createTerminalNode (parent => This.ctx, t => o); -- constant
-                  This.ctx.addChild (node);
-                  parseListeners : constant := This.parseListeners;
-                  if Is_Valid (parseListeners) then
-                     for listener of parseListeners loop
-                        listener.visitTerminal (node);
-                     end loop;
-                  end if;
+               node := createTerminalNode (parent => This.ctx, t => o); -- constant
+               This.ctx.addChild (node);
+               parseListeners : constant := This.parseListeners;
+               if Is_Valid (parseListeners) then
+                  for listener of parseListeners loop
+                     listener.visitTerminal (node);
+                  end loop;
+               end if;
             end if;
          end if;
          return o;
@@ -406,8 +405,8 @@ package body ANTLR.Runtime.Parsers is
       if This.buildParseTrees and then Value (This.ctx) !== localctx then
          parent : constant ParserRuleContext := ParserRuleContext (ctx?.parent);
          if Is_Valid (parent) then
-               parent.removeLastChild;
-               parent.addChild (localctx);
+            parent.removeLastChild;
+            parent.addChild (localctx);
          end if;
       end if;
       This.ctx := localctx
@@ -512,60 +511,56 @@ package body ANTLR.Runtime.Parsers is
       This.ctx := ctx;
    end setContext;
 
--- public class
--- procedure getAmbiguousParseTrees (This : Parser;
---                                   originalParser : Parser;
---                                   ambiguityInfo : AmbiguityInfo;
---                                   startRuleIndex : Integer)
---                                   return Array<ParserRuleContext>  
---    -- RecognitionException
---    trees : array (<>) of ParserRuleContext := Array<ParserRuleContext>;
---    saveTokenInputPosition : Integer := originalParser.getTokenStream.index;
--- begin
---    -- Create a new parser interpreter to parse the ambiguous subphrase
---    parser : ParserInterpreter;
---    if ( originalParser is ParserInterpreter ) then
---       parser := ParserInterpreter ( ParserInterpreter (originalParser));
---    else {
---       serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN);
---       deserialized : ATN := This.ATNDeserializer.deserialize (serializedAtn);
---       parser := ParserInterpreter (originalParser.getGrammarFileName,
---                                    originalParser.getVocabulary,
---                                     originalParser.getRuleNames ,
---                                    deserialized,
---                                    originalParser.getTokenStream);
---     end if;
---
---     -- Make sure that we don't get any error messages from using this temporary parser
---     parser.removeErrorListeners;
---     parser.removeParseListeners;
---     Value (parser.getInterpreter).setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
---
---     -- get ambig trees
---     alt : Integer := ambiguityInfo.ambigAlts.firstSetBit;
---     while  alt>=0  loop
---        -- re-parse entire input for all ambiguous alternatives
---        -- (don't have to do first as it's been parsed, but do again for simplicity
---        --  using this temp parser.);
---        parser.reset;
---        parser.getTokenStream.seek (0); -- rewind the input all the way for re-parsing
---        parser.overrideDecision := ambiguityInfo.decision;
---        parser.overrideDecisionInputIndex := ambiguityInfo.startIndex;
---        parser.overrideDecisionAlt := alt;
---        t : ParserRuleContext := parser.parse (startRuleIndex);
---        ambigSubTree : ParserRuleContext :=
---           Trees.getRootOfSubtreeEnclosingRegion (t, ambiguityInfo.startIndex, ambiguityInfo.stopIndex)!;
---        trees.append (ambigSubTree);
---        alt := ambiguityInfo.ambigAlts.nextSetBit (alt+1);
---     end loop;
---
---     DEFER:
---        begin
---           originalParser.getTokenStream.seek (saveTokenInputPosition);
---        end DEFER;
---
---     return trees;
--- end getAmbiguousParseTrees;
+   --  public class
+   --  procedure getAmbiguousParseTrees (This : Parser;
+   --                                    originalParser : Parser;
+   --                                    ambiguityInfo : AmbiguityInfo;
+   --                                    startRuleIndex : Integer)
+   --                                    return ParserRuleContext_List  
+   --     -- RecognitionException
+   --     trees : ParserRuleContext_List;
+   --     saveTokenInputPosition : Integer := originalParser.getTokenStream.index;
+   --  begin
+   --     -- Create a new parser interpreter to parse the ambiguous subphrase
+   --     parser : ParserInterpreter;
+   --     if originalParser'Tag = ParserInterpreter,Tag then
+   --        parser := ParserInterpreter (ParserInterpreter (originalParser));
+   --     else
+   --        serializedAtn : Character_List := ATNSerializer.getSerializedAsChars (originalParser.getATN);
+   --        deserialized : ATN := This.ATNDeserializer.deserialize (serializedAtn);
+   --        parser := ParserInterpreter (originalParser.getGrammarFileName,
+   --                                     originalParser.getVocabulary,
+   --                                     originalParser.getRuleNames ,
+   --                                     deserialized,
+   --                                     originalParser.getTokenStream);
+   --     end if;
+   --     -- Make sure that we don't get any error messages from using this temporary parser
+   --     parser.removeErrorListeners;
+   --     parser.removeParseListeners;
+   --     Value (parser.getInterpreter).setPredictionMode (PredictionModes.LL_EXACT_AMBIG_DETECTION);
+   --     -- get ambig trees
+   --     alt : Integer := ambiguityInfo.ambigAlts.firstSetBit;
+   --     while  alt >= 0  loop
+   --        -- re-parse entire input for all ambiguous alternatives
+   --        -- (don't have to do first as it's been parsed, but do again for simplicity
+   --        -- using this temp parser.);
+   --        parser.reset;
+   --        parser.getTokenStream.seek (0); -- rewind the input all the way for re-parsing
+   --        parser.overrideDecision := ambiguityInfo.decision;
+   --        parser.overrideDecisionInputIndex := ambiguityInfo.startIndex;
+   --        parser.overrideDecisionAlt := alt;
+   --        t : ParserRuleContext := parser.parse (startRuleIndex);
+   --        ambigSubTree : ParserRuleContext :=
+   --           Trees.getRootOfSubtreeEnclosingRegion (t, ambiguityInfo.startIndex, ambiguityInfo.stopIndex)!;
+   --        trees.append (ambigSubTree);
+   --        alt := ambiguityInfo.ambigAlts.nextSetBit (alt+1);
+   --     end loop;
+   --     DEFER:
+   --        begin
+   --           originalParser.getTokenStream.seek (saveTokenInputPosition);
+   --        end DEFER;
+   --     return trees;
+   --  end getAmbiguousParseTrees;
 
    function isExpectedToken (This : Parser; symbol : Integer) return Boolean is
       atn : constant := This.getInterpreter.atn;
@@ -623,9 +618,9 @@ package body ANTLR.Runtime.Parsers is
          -- compute what follows who invoked us
          ruleIndex : constant := pWrap.getRuleIndex;
          if ruleIndex < 0 then
-               stack.append ("n/a");
+            stack.append ("n/a");
          else
-               stack.append (ruleNames.Element (ruleIndex));
+            stack.append (ruleNames.Element (ruleIndex));
          end if;
          p := pWrap.parent;
          pWrap := p; --FIXME
@@ -701,9 +696,9 @@ package body ANTLR.Runtime.Parsers is
       else
          tracer : constant := This.tracer;
          if Is_Valid (tracer) then
-               removeParseListener (tracer);
+            removeParseListener (tracer);
          else
-               This.tracer := TraceListener (This);
+            This.tracer := TraceListener (This);
          end if;
          addParseListener (Value (This.tracer));
       end if;

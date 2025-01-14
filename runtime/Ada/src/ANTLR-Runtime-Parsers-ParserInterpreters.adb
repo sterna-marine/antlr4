@@ -130,15 +130,14 @@ package body ANTLR.Runtime.Parsers.ParserInterpreters is
       transition : constant := p.transition (altNum - 1);
       case transition.getSerializationType is
       when Transition.EPSILON =>
-         if statesNeedingLeftRecursionContext.get (p.stateNumber) and;
-                  not (transition.target is LoopEndState) {
+         if statesNeedingLeftRecursionContext.get (p.stateNumber)
+         and then not transition.target'Tag = LoopEndState'Tag then
                -- We are at the start of a left recursive rule's ( .. )* loop
                -- but it's not the exit branch of loop.
-               ctx : constant InterpreterRuleContext := InterpreterRuleContext (;
-               Value (This.parentContextStack.last).0, --peek;
-                     Value (This.parentContextStack.last).1, --peek;
-
-                     Value (This.ctx).getRuleIndex);
+               ctx : constant InterpreterRuleContext := Initialize (
+                     parent              => Value (This.parentContextStack.last).0, --peek;
+                     invokingStateNumber => Value (This.parentContextStack.last).1, --peek;
+                     ruleIndex           => Value (This.ctx).getRuleIndex);
                pushNewRecursionContext (ctx, atn.ruleToStartState.Element (Value (p.ruleIndex)).stateNumber, Value (This.ctx).getRuleIndex);
          end if;
 

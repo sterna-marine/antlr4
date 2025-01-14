@@ -1,5 +1,6 @@
 with Ada.Strings.Wide_Wide_Unbounded;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use Ada.Strings.Wide_Wide_Unbounded;
 

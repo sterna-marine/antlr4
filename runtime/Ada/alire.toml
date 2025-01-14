@@ -11,8 +11,23 @@ tags = ["lexer", "parser", "runtine", "grammar"]
 
 executables = ["main"]
 
-# [build-profiles]
-# antlr4_runtime = "Validation"
+[[depends-on]]
+adactextcharunic = "*"
+adafcrypmurmhash3 = "*"
+adafcrypuuid = "*"
+adafdevttestunit = "*"
+adafframaop = "*"
+adaftextustr = "*"
+adafutiloptl = "*"
+
+[[pins]]
+adactextcharunic = { path='../../AdaLib/adactextcharunic' }
+adafcrypmurmhash3 = { path='../../AdaLib/adafcrypmurmhash3' }
+adafcrypuuid = { path='../../AdaLib/adafcrypuuid' }
+adafdevttestunit = { path='../../AdaLib/adafdevttestunit' }
+adafframaop = { path='../../AdaLib/adafframaop' }
+adaftextustr = { path='../../AdaLib/adaftextustr' }
+adafutiloptl = { path='../../AdaLib/adafutiloptl' }
 
 [configuration.variables]
 Trace_Level = {type = "Enum", values = ["Info", "Details", "Debug"], default = "Info"}
@@ -20,6 +35,9 @@ Trace_Level = {type = "Enum", values = ["Info", "Details", "Debug"], default = "
 [configuration]
 auto_gpr_with = false
 output_dir = "./bld"
+
+# [build-profiles]
+# antlr4_runtime = "Validation"
 
 [build-switches]
 "*".Ada_Version = "Ada2022"

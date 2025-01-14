@@ -88,7 +88,7 @@ package body ANTLR.Runtime.DFA is
       function "<" (Left, Right : DFAState) return Boolean
          is (Left.stateNumber < Right.stateNumber);
 
-       package body DFAState_Sorting is new DFAState.Container.Generic_Sorting ('<');
+       package DFAState_Sorting is new DFAState.Container.Generic_Sorting ('<');
 
    begin
       DFAState_Sorting.Sort (result);

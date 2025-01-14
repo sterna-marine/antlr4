@@ -11,7 +11,8 @@ with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Recognizer;
 with Interfaces;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use Ada;
 use ANTLR.Runtime.ATN.PredictionContexts.ArrayPredictionContexts;
@@ -20,7 +21,7 @@ use ANTLR.Runtime.Misc.DoubleKeyMap;
 use ANTLR.Runtime.RuleContexts;
 use ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 use ANTLR.Runtime.Recognizer;
-use Option;
+
 
 package ANTLR.Runtime.ATN.PredictionContexts is
 
@@ -95,7 +96,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    -- -------------------------- --
    -- Optional_PredictionContext --
    -- -------------------------- --
-   package Option_PredictionContext is new Option (PredictionContext);
+   package Option_PredictionContext is new AdaForge.Util.Optionals (PredictionContext);
    subtype Optional_PredictionContext is Option_PredictionContext.Optional; -- renames
 
    -- -------------------------------------- --
@@ -246,7 +247,7 @@ package ANTLR.Runtime.ATN.PredictionContexts is
    package Recognizers_T is new Recognizers (T);
    subtype Recognizer_T is Recognizers_T.Recognizer;
 
-   package Option_Recognizer_T is new Option (Recognizer_T);
+   package Option_Recognizer_T is new AdaForge.Util.Optionals (Recognizer_T);
    subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
 
    -- public

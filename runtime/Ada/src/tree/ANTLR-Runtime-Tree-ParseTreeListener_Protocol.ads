@@ -1,6 +1,7 @@
 -- €
 
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 with Ada.Containers.Vectors;
 
 package ANTLR.Runtime.Tree.ParseTreeListener_Protocol is

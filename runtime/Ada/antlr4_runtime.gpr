@@ -1,7 +1,17 @@
 with "config/antlr4_config.gpr";
 project antlr4_runtime is
 
-   for Source_Dirs use ("src/**", "config/");
+   for Source_Dirs use ("src/**", "config/",
+                        "lib/AdacTextCharUnic/src/**",
+                        "lib/Adaf/src/**",
+                        "lib/AdafCrypMurmHash3/src/**",
+                        "lib/AdafCrypUuid/src/**",
+                        "lib/AdafCrypt/src/**",
+                        "lib/AdafFramAop/src/**",
+                        "lib/AdafTextUstr/src/**",
+                        "lib/AdafUtil/src/**",
+                        "lib/AdafUtilOptl/src/**",
+                        "lib/Ster/src/**");
    for Object_Dir use "build/" & Antlr4_Config.Build_Profile & "/obj";
    for Exec_Dir use "build/" & Antlr4_Config.Build_Profile & "/bin";
    for Create_Missing_Dirs use "True";

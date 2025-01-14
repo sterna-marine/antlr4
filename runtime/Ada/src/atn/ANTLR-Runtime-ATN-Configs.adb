@@ -1,5 +1,7 @@
 -- €
 
+with AdaForge.Crypto.MuRMuR_Hash3;
+
 package body ANTLR.Runtime.ATN.Configs is
 
    function MurMur3_Hash (Key : Key_Type) return Hash_Type is
@@ -8,8 +10,9 @@ package body ANTLR.Runtime.ATN.Configs is
    end MurMur3_Hash;
 
    function Hash (Key : ATNConfig) return Ada.Container.Hash_Type;
+      package ATNConfig_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (ATNConfig);
    begin
-      return 0; --TOFIX
+      return ATNConfig_Crypto.Hash_32 (Key);
    end Hash;
 
    procedure Initialize (Self : in out ATNConfig;

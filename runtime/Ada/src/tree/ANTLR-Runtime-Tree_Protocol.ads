@@ -11,7 +11,7 @@ package ANTLR.Runtime.Tree_Protocol is
    -- public
    type Tree is interface;
 
-   package Option_Tree is new Option (Tree);
+   package Option_Tree is new AdaForge.Util.Optionals (Tree);
    subtype Optional_Tree is Option_Tree.Optional;
 
    function "=" (Left, Right : Tree) return Boolean;

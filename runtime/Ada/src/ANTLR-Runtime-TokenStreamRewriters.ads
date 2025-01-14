@@ -10,7 +10,8 @@ with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.TokenSource_Protocol;
 with ANTLR.Runtime.TokenStream_Protocol;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use Ada;
 use ANTLR.Runtime.Misc.Intervals;
@@ -134,19 +135,18 @@ package ANTLR.Runtime.TokenStreamRewriters is
 
    function "=" (Left, Right : RewriteOperation) return Boolean;
 
-   function Hash_Integer (Key : Integer) return Ada.Containers.Hash_Type;
    function Equivalent_Keys (Left, Right : Integer) return Boolean
       is (Hash_Integer (Left) = Hash_Integer (Right));
 
    package RewriteOperation_Container is new Ada.Containers.Hashed_Maps (
       Key_Type => Integer,
       Element_Type => RewriteOperation,
-      Hash => Hash_Integer,
+      Hash => ANTLR.Runtime.Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
    subtype RewriteOperation_Map is RewriteOperation_Container.Map;
 
-   package Option_RewriteOperation is new Option (RewriteOperation);
+   package Option_RewriteOperation is new AdaForge.Util.Optionals (RewriteOperation);
    subtype Optional_RewriteOperation is Option_RewriteOperation.Optional;
    function "=" (Left, Right : Optional_RewriteOperation) return Boolean;
 

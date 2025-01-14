@@ -99,16 +99,13 @@ package ANTLR.Runtime.Recognizer is
    -- public
    function getTokenTypeMap (This : Recognizer) return TokenID_Map;
 
-
-   function Hash (Key : UString) return Ada.Containers.Hash_Type;
-
    function Equivalent_Keys (Left, Right : UString) return Boolean
       is (Hash (Left) = Hash (Right)); --TOFIX
 
    package Rules_Dictionary is new Ada.Containers.Hashed_Maps (
       Key_Type => UString,
       Element_Type => Integer,
-      Hash => Hash,
+      Hash => ANTLR.Runtime.Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
    subtype Rules_Map is Rules_Dictionary.Map;

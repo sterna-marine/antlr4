@@ -10,7 +10,7 @@ use ANTLR.Runtime.IntStream_Protocol.Extensions;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
 use ANTLR.Runtime.Misc.Intervals;
 
-package body ANTLR.Runtime.InputStreams is
+package ANTLR.Runtime.InputStreams is
    --
    -- Vacuum all input from a _java.io.Reader_/_java.io.InputStream_ and then treat it
    -- like a `char[]` buffer. Can also pass in a _String_ or
@@ -20,7 +20,7 @@ package body ANTLR.Runtime.InputStreams is
    --
    -- public
 
-   type ANTLRInputStream is Ada.Finalize.Controlled and CharStream with
+   type ANTLRInputStream is new Ada.Finalize.Controlled and CharStream with
    record
       --
       -- The data being scanned

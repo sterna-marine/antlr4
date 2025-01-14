@@ -8,7 +8,8 @@ with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.RuleContexts;
 with ANTLR.Runtime.Tree.ParseTreeVisitors;
 with ANTLR.Runtime.Tree.SyntaxTree_Protocol;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.Parsers;
 use ANTLR.Runtime.RuleContexts;
@@ -35,15 +36,13 @@ package ANTLR.Runtime.Tree.ParseTree_Protocol is
       "=" => "=");
    subtype ParseTree_List is ParseTree_Container.Vector;
 
-   function Hash (Key : UString) return Ada.Containers.Hash_Type;
-
    function Equivalent_Keys (Left, Right : Key_Type)
       is (Hash (Left) = Hash (Right));
 
    package ParseTree_Dictonary is new Ada.Containers.Hashed_Map (
       Key_Type => UString,
       Element_Type => ParseTree,
-      Hash => Hash,
+      Hash => ANTLR.Runtime.Hash,
       Equivalent_Keys => Equivalent_Keys,
       "=" => "=");
    subtype ParseTree_MultiMap is ParseTree_Dictonary.Map;
@@ -55,7 +54,7 @@ package ANTLR.Runtime.Tree.ParseTree_Protocol is
    generic
       type T is private;
       package ParseTreeVisitor_T is new ParseTreeVisitor (T);
-      package Option_T is new Option (T);
+      package Option_T is new AdaForge.Util.Optionals (T);
       subtype Optional_T is Option_T.Optional;
    function accept (This : ParseTree; visitor : ParseTreeVisitor_T) return Optional_T is abstract;
 

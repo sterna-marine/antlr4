@@ -1,20 +1,25 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
+with AdaForge.Framework.Aspect;
 
 use Ada;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.ATN.CommonUtil is
 
    procedure log (message : UString;
-                  file : UString := "#file";
-                  This_function : UString := "#function";
+                  file : UString := "#file"; --TOFIX
+                  This_function : UString := "#function"; --TOFIX
                   lineNum : Integer := 0) is
-      -- #if DEBUG
-      Wide_Wide_Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last & ", FUNC: " & This_function & ", LINE: " & lineNum'Image & ", MESSAGE: " & message);
-      --   #else
-      -- do nothing
-      --   #endif
+   begin
+      if Is_Active (Aspect.DEBUG) then
+         Wide_Wide_Text_IO.Put_Line ("FILE: " & URL (fileURLWithPath => file).pathComponents.last  --TOFIX
+                                 & ", FUNC: " & This_function
+                                 & ", LINE: " & lineNum'Image
+                                 & ", MESSAGE: " & message);
+      end if;
    end log;
 
    function toLong (data : Character_List; offset : Integer) return Integer_64 is --TOFIX

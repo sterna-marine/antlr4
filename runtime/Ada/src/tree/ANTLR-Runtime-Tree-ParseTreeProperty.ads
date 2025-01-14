@@ -2,14 +2,15 @@
 
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 generic
    type V is private;
    function "=" (Left, Right : V) return Boolean;
 package ANTLR.Runtime.Tree.ParseTreeProperty is
 
-   package Option_V is new Option (V);
+   package Option_V is new AdaForge.Util.Optionals (V);
    subtype Optional_V is Option_V.Optional;
 
    function Hash (Key : ObjectIdentifier) return Ada.Containers.Hash_Type;

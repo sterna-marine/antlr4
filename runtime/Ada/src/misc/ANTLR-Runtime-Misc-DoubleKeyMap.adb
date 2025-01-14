@@ -1,10 +1,13 @@
 -- €
 
+with AdaForge.Crypto.MuRMuR_Hash3;
+
 package body ANTLR.Runtime.Misc.DoubleKeyMap is
 
    function Hash2 (Key : Key2) return Ada.Containers.Hash_Type is
+      package Key2_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (Key2);
    begin
-      return 0; --TOFIX;
+      return Key2_Crypto.Hash_32 (Key2);
    end Hash2;
 
    function Equivalent_Keys2 (Left, Right : Key2) return Boolean is
@@ -20,8 +23,9 @@ package body ANTLR.Runtime.Misc.DoubleKeyMap is
 
 
    function Hash1 (Key : Key1) return Ada.Containers.Hash_Type is
+      package Key1_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (Key1);
    begin
-      return 0; --TOFIX;
+      return Key2_Crypto.Hash_32 (Key1);
    end Hash1;
 
    function Equivalent_Keys1 (Left, Right : Key1) return Boolean is

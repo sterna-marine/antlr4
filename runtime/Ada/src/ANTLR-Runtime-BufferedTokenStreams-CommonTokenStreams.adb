@@ -1,5 +1,12 @@
 -- €
 
+with AdaForge.Framework.Aspect;
+with Ada.Wide_Wide_Text_IO;
+
+use Ada;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
+
 package ANTLR.Runtime.BufferedTokenStreams.CommonTokenStreams is
 
    overriding
@@ -45,7 +52,9 @@ package ANTLR.Runtime.BufferedTokenStreams.CommonTokenStreams is
                 k : Integer)
                 return Optional_Token is
    begin
-      -- Ada.Wide_Wide_Text_IO.Put_Line ("enter LT (" & k'Image & ')');
+      if Is_Active (Aspect.DEBUG) then
+         Ada.Wide_Wide_Text_IO.Put_Line ("enter LT (" & k'Image & ')');
+      end if;
       This.lazyInit;
       if k = 0 then
          return (Valid => False);

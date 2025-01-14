@@ -189,7 +189,7 @@ package ANTLR.Runtime.ATN.Configs is
    subtype Recognizer_T is Recognizers_T.Recognizer;
 
    -- Optional_Recognizer_T --
-   package Option_Recognizer_T is new Option (Recognizer_T);  --TOFIX
+   package Option_Recognizer_T is new AdaForge.Util.Optionals (Recognizer_T);  --TOFIX
    subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
 
    -- public

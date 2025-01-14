@@ -1,10 +1,13 @@
 -- €
 
+with AdaForge.Crypto.MuRMuR_Hash3;
+
 package body ANTLR.Runtime.Tree.ParseTreeProperty is
 
    function Hash (Key : ObjectIdentifier) return Ada.Containers.Hash_Type is
+      package ObjectIdentifier_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (ObjectIdentifier);
    begin
-      return 0; --TOFIX
+      return ObjectIdentifier_Crypto.Hash_32 (Key);
    end Hash;
 
    overriding

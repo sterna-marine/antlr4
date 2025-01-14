@@ -36,7 +36,7 @@ package ANTLR.Runtime.ATN.States.DecisionStates is
    -- ---------------------- --
    -- Optional_DecisionState --
    -- ---------------------- --
-   package Option_DecisionState is new Option (DecisionState);
+   package Option_DecisionState is new AdaForge.Util.Optionals (DecisionState);
    subtype Optional_DecisionState is Option_DecisionState.Optional; -- renames
 
 end ANTLR.Runtime.ATN.States.DecisionStates;

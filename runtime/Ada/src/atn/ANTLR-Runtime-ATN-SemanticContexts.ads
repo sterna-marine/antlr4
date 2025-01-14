@@ -5,7 +5,8 @@ with Ada.Containers.Vectors;
 with Ada.Finalization;
 with Ada.Strings;
 with ANTLR.Runtime.RuleContexts;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.RuleContexts;
 
@@ -103,7 +104,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    -- ---------------------- --
    -- Option_SemanticContext --
    -- ---------------------- --
-   package Option_SemanticContext is new Option (SemanticContext);
+   package Option_SemanticContext is new AdaForge.Util.Optionals (SemanticContext);
    subtype Optional_SemanticContext is Option_SemanticContext.Optional;
 
    function "=" (Left, Right : Optional_SemanticContext) return Boolean
@@ -306,7 +307,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    subtype And_Opnds is SemanticContext_List; -- constant
    --TOFIX opnds : Set_Of_SemanticContexts;
 
-   package Option_And_Opnds is new Option (And_Opnds);
+   package Option_And_Opnds is new AdaForge.Util.Optionals (And_Opnds);
    subtype Optional_And_Opnds is Option_And_Opnds.Optional;
 
    -- public
@@ -344,7 +345,7 @@ package ANTLR.Runtime.ATN.SemanticContexts is
    subtype Or_Opnds is SemanticContext_List; -- constant
    --TOFIX opnds : Set_Of_SemanticContexts;
 
-   package Option_Or_Opnds is new Option (Or_Opnds);
+   package Option_Or_Opnds is new AdaForge.Util.Optionals (Or_Opnds);
    subtype Optional_Or_Opnds is Option_Or_Opnds.Optional;
 
    -- public

@@ -76,7 +76,7 @@ package body ANTLR.Runtime.BaseErrorListener.DiagnosticErrorListeners is
       end if;
 
       ruleName : constant UString := ruleNames.Element (ruleIndex);
-      --if (ruleName = (Valid => False) or else ruleName.Is_Empty) {
+      --  if not Is_Valid (ruleName) or else ruleName.Is_Empty then
       if ruleName.Is_Empty then
          return UString (decision);
       else

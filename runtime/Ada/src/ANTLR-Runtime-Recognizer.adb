@@ -1,10 +1,11 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
-with Aspect;
+with AdaForge.Framework.Aspect;
 
 use Ada;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 with ANTLR.Runtime.Token_Protocol;
 
@@ -82,21 +83,27 @@ package body ANTLR.Runtime.Recognizer is
 
    procedure addErrorListener (This : Recognizer; listener : ANTLRErrorListener) is
    begin
-      This._listeners.append (listener);
+      This.listeners.append (listener);
    end addErrorListener;
 
    procedure removeErrorListener (This : Recognizer; listener : ANTLRErrorListener) is
-      procedure Closure (Param_0 : <>) is
+
+      function Filter (Position : Cursor) return Boolean is
       begin
-         Param_0 !== listener;
-      end Closure;
+         return listener /= Element (Cursor);
+      end Filter;
+
    begin
-      This._listeners := This._listeners.filter) {Closure'Access};
+      This.listeners := This.listeners.Iterate
+      for Some_Listener of This.listeners loop
+
+      end loop;
+
    end removeErrorListener;
 
    procedure removeErrorListeners (This : Recognizer) is
    begin
-      This._listeners.removeAll;
+      This.listeners.removeAll;
    end removeErrorListeners;
 
    procedure action (This : Recognizer;

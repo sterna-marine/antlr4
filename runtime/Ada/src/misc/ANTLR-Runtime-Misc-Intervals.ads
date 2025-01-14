@@ -16,7 +16,7 @@ package ANTLR.Runtime.Misc.Intervals is
       B : Integer;
    end record;
 
-   package Option_Interval is new Option (Interval);
+   package Option_Interval is new AdaForge.Util.Optionals (Interval);
    subtype Optional_Interval is Option_Interval.Optional; -- renames
 
    function "=" (Left, Right : Interval) return Boolean;

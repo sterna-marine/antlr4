@@ -1,9 +1,10 @@
 -- €
 
 with Ada.Finalization;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
-use Option;
+
 
 generic
    type T is private;
@@ -25,7 +26,7 @@ package ANTLR.Runtime.Tree.ParseTreeVisitors is
    type Class is access all Object;
    type Class_Wide is access all Object'Class;
 
-   package Option_ParseTreeVisitor_T is new Option (T);
+   package Option_ParseTreeVisitor_T is new AdaForge.Util.Optionals (T);
    subtype Optional_ParseTreeVisitor_T is Option_ParseTreeVisitor_T.Optional; -- renames
 
    -- public

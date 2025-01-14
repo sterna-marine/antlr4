@@ -30,7 +30,7 @@ package ANTLR.Runtime.Misc.DoubleKeyMap is
       Equivalent_Keys => Equivalent_Keys2,
       "=" => Equal2);
    subtype Map2 is Dictionary_2.Map;
-   package Option_Map2 is new Option (Map2);
+   package Option_Map2 is new AdaForge.Util.Optionals (Map2);
    subtype Optional_Map2 is Option_Map2.Optional;
 
    function Hash1 (Key : Key1) return Ada.Containers.Hash_Type;
@@ -50,7 +50,7 @@ package ANTLR.Runtime.Misc.DoubleKeyMap is
    -- --------------------- --
    -- Optional_DoubleKeyMap --
    -- --------------------- --
-   package Option_DoubleKeyMap is new Option (DoubleKey_Dictionary.Map);
+   package Option_DoubleKeyMap is new AdaForge.Util.Optionals (DoubleKey_Dictionary.Map);
    subtype Optional_DoubleKeyMap is Option_DoubleKeyMap.Optional;
 
    -- @discardableResult

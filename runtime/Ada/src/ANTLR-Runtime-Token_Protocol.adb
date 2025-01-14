@@ -1,12 +1,15 @@
 -- €
 
+with AdaForge.Crypto.MuRMuR_Hash3;
+
 package body ANTLR.Runtime.Token_Protocol is
 
    visited : Boolean; --TOFIX Multi-process ?
 
    function Hash (Element : Token_Kind) return Ada.Containers.Hash_Type is
+      package Token_Kind_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (Token_Kind);
    begin
-      return 0; --TOFIX
+      return Token_Kind_Crypto.Hash_32 (Element);
    end Hash;
 
    -- public
@@ -29,8 +32,9 @@ package body ANTLR.Runtime.Token_Protocol is
    end set;
 
    function Hash (Key : Token_String) return Hashed_Token is
+      package Token_Kind_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (Token_String);
    begin
-      return 0; --TOFIX
+      return Token_String_Crypto.Hash_32 (Key);
    end Hash;
 
    function Equivalent_Keys (Left, Right : Token_String) is

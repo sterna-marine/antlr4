@@ -1,5 +1,7 @@
 -- €
 
+with AdaForge.Crypto.MuRMuR_Hash3;
+
 package body ANTLR.Runtime.ATN.SemanticContexts is
 
    -- --------------- --
@@ -13,8 +15,9 @@ package body ANTLR.Runtime.ATN.SemanticContexts is
 
 
    function Hash (Element : SemanticContext) return Ada.Containers.Hash_Type is
+      package SemanticContext_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (SemanticContext);
    begin
-      return 0; --TOFIX
+      return SemanticContext_Crypto.Hash_32 (Element);
    end Hash;
 
    function Equivalent_Elements (Left, Right : SemanticContext) return Boolean is

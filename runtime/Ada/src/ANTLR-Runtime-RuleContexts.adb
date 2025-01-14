@@ -1,10 +1,11 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
-with Aspect;
+with AdaForge.Framework.Aspect;
 
 use Ada;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.RuleContexts is
 
@@ -73,7 +74,7 @@ package body ANTLR.Runtime.RuleContexts is
       generic 
          type T is private;
          package ParseTreeVisitors_T is new ParseTreeVisitors (T);
-         package Option_T is new Option (T);
+         package Option_T is new AdaForge.Util.Optionals (T);
          subtype Optional_T is Option_T.Optional;
       function accept_T (visitor : ParseTreeVisitors_T.ParseTreeVisitor) return Optional_T 
          is (visitor.visitChildren (This));
@@ -106,7 +107,7 @@ package body ANTLR.Runtime.RuleContexts is
       generic 
          type T is private;
          package ParseTreeVisitors_T is new ParseTreeVisitors (T);
-         package Option_T is new Option (T);
+         package Option_T is new AdaForge.Util.Optionals (T);
          subtype Optional_T is Option_T.Optional;
       function toString_T (recog : Recognizer_T) return UString
          is (toString (recog, ParserRuleContexts.EMPTY));
@@ -120,7 +121,7 @@ package body ANTLR.Runtime.RuleContexts is
       generic 
          type T is private;
          package Recognizers_T is new Recognizers (T);
-         package Option_Recognizer_T is new Option (Recognizers_T.Recognizer);
+         package Option_Recognizer_T is new AdaForge.Util.Optionals (Recognizers_T.Recognizer);
          subtype Optional_Recognizer_T is Option_Recognizer_T.Optional;
       function toString_T (recog : Optional_Recognizer_T, stop : RuleContext) return UString is
          ruleNames : constant := recog?.getRuleNames;

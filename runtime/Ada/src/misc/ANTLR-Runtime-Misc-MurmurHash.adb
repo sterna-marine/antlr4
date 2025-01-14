@@ -1,10 +1,12 @@
 -- €
 
 with Ada.Wide_Wide_Text_IO;
-with Aspect;
+with AdaForge.Crypto.MuRMuR_Hash3;
+with AdaForge.Framework.Aspect;
 
 use Ada;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 --
 -- https:--en.wikipedia.org/wiki/MurmurHash

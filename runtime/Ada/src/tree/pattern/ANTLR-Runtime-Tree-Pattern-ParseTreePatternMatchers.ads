@@ -11,7 +11,6 @@ with ANTLR.Runtime.Token_Protocol;
 with ANTLR.Runtime.Tree.Pattern.Chunks;
 with ANTLR.Runtime.Tree.Pattern.ParseTree_Protocol;
 with ANTLR.Runtime.Tree.Pattern.ParseTreePatterns;
-with Aspect;
 
 use Ada;
 use ANTLR.Runtime;
@@ -24,7 +23,6 @@ use ANTLR.Runtime.Tree.Pattern.Chunks;
 use ANTLR.Runtime.Tree.Pattern.ParseTree_Protocol;
 use ANTLR.Runtime.Tree.Pattern.ParseTreePatterns;
 use ANTLR.Runtime.Token_Protocol;
-use Aspect;
 
 package ANTLR.Runtime.Tree.Pattern.ParseTreePatternMatchers is
 

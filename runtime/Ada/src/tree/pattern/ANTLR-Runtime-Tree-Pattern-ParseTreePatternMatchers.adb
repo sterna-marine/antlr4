@@ -1,5 +1,10 @@
 -- €
 
+with AdaForge.Framework.Aspect;
+
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
+
 package body ANTLR.Runtime.Tree.Pattern.ParseTreePatternMatchers is
 
    procedure Initialize (Self : in out ParseTreePatternMatcher;

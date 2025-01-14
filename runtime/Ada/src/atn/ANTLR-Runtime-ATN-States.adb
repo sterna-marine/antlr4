@@ -2,16 +2,19 @@
 
 with Ada.Containers;
 with Ada.Wide_Wide_Text_IO;
-with Aspect;
+with AdaForge.Crypto.MuRMuR_Hash3;
+with AdaForge.Framework.Aspect;
 
 use Ada;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.ATN.States is
 
    function Hash (Element : ATNState) return Ada.Containers.Hash_Type is
+      package ATNState_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (ATNState);
    begin
-      return 0; --TOFIX
+      return ATNState_Crypto.Hash_32 (Element);
    end Hash;
 
    function Equivalent_Elements (Left, Right : ATNState) return Boolean is

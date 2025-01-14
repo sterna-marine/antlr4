@@ -4,7 +4,7 @@ generic
    type T is <>;
 package ANTLR.Runtime.Tree.ParseTreeVisitors.AbstractParseTreeVisitors is
 
-   package Option_T is new Option (T);
+   package Option_T is new AdaForge.Util.Optionals (T);
    subtype Optional_T is Option_T.Optional;
 
    -- open

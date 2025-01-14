@@ -6,7 +6,8 @@ with Ada.Strings;
 with ANTLR.Runtime.Misc.Integer_Set_Protocol;
 with ANTLR.Runtime.Misc.Intervals;
 with ANTLR.Runtime.Lexers;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.Misc;
 use ANTLR.Runtime.Misc.Integer_Set_Protocol;
@@ -54,7 +55,7 @@ package ANTLR.Runtime.Misc.IntervalSets is
       "=" => "=");
    subtype IntervalSet_List is IntervalSet_Container.Vector;
 
-   package Option_IntervalSet is new Option (IntervalSet);
+   package Option_IntervalSet is new AdaForge.Util.Optionals (IntervalSet);
    subtype Optional_IntervalSet is Option_IntervalSet.Optional; -- renames
 
    -- public static

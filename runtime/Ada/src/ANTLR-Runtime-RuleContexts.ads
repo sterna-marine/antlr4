@@ -9,7 +9,8 @@ with ANTLR.Runtime.RuleContexts.ParserRuleContexts;
 with ANTLR.Runtime.Parsers;
 with ANTLR.Runtime.Tree.ParseTreeVisitors;
 with ANTLR.Runtime.Tree.RuleNode_Protocol;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
@@ -90,7 +91,7 @@ package ANTLR.Runtime.RuleContexts is
       invokingState : State := INVALID_STATE_NUMBER;
    end record;
 
-   package Option_RuleContext is new Option (RuleContext);
+   package Option_RuleContext is new AdaForge.Util.Optionals (RuleContext);
    subtype Optional_RuleContext is Option_RuleContext.Optional;
 
    -- public

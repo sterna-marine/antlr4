@@ -1,5 +1,11 @@
 -- €
 
+with AdaForge.Framework.Aspect;
+with Ada.Wide_Wide_Text_IO;
+
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
+
 package body ANTLR.Runtime.ATN.PredictionContext.SingletonPredictionContext is
 
    procedure Initialize (Self : SingletonPredictionContext;

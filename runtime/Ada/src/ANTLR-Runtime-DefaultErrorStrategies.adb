@@ -2,10 +2,11 @@
 
 with Ada.Finalization;
 with Ada.Wide_Wide_Text_IO;
-with Aspect;
+with AdaForge.Framework.Aspect;
 
 use Ada;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.DefaultErrorStrategies is
 

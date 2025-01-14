@@ -3,12 +3,13 @@
 with Ada.Wide_Wide_Text_IO;
 with ANTLR.Runtime.DFA;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
-with Aspect;
+with AdaForge.Framework.Aspect;
 
 use Ada;
 use ANTLR.Runtime.DFA;
 use ANTLR.Runtime.Misc.Exceptions.Errors;
-use Aspect;
+use AdaForge.Framework;
+use AdaForge.Framework.Aspect;
 
 package body ANTLR.Runtime.ATN.Simulators.LexerSimulators is
 

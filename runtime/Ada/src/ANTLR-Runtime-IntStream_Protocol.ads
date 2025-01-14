@@ -1,6 +1,7 @@
 -- €
 
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 package ANTLR.Runtime.IntStream_Protocol is
 
@@ -21,7 +22,7 @@ package ANTLR.Runtime.IntStream_Protocol is
    -- public
    type IntStream is interface;
 
-   package Option_IntStream is new Option (IntStream);
+   package Option_IntStream is new AdaForge.Util.Optionals (IntStream);
    subtype Optional_IntStream is Option_IntStream.Optional;
 
    --

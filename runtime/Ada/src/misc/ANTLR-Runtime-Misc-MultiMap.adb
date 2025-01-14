@@ -2,6 +2,7 @@
 
 with Ada.Containers;
 with Ada.Containers.Hashed_Maps;
+with AdaForge.Crypto.MuRMuR_Hash3;
 
 generic
    type Key_Type is private;
@@ -48,7 +49,12 @@ package ANTLR.Runtime.Misc.MultiMaps is
       is Mapping.Length;
 
    private
-      function Hash (Key : Key_Type) return Ada.Containers.Hash_Type;
+      function Hash (Key : Key_Type) return Ada.Containers.Hash_Type is
+         package Key_Type_Crypto is new AdaForge.Crypto.MuRMuR_Hash3 (Key_Type);
+         begin
+            return Key_Type_Crypto.Hash_32 (Key);
+         end Hash;
+
       function Equivalent_Keys (Left, Right : Key_Type) return Boolean;
       function "=" (Left, Right : Element_Type) return Boolean;
 

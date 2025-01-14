@@ -1,6 +1,7 @@
 -- €
 
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.States;
@@ -15,7 +16,7 @@ package ANTLR.Runtime.ATN.States.DecisionStates.PlusLoopbackStates is
    -- public final
    type PlusLoopbackState is new DecisionState with null record;
 
-   package Option_PlusLoopbackState is new Option (PlusLoopbackState);
+   package Option_PlusLoopbackState is new AdaForge.Util.Optionals (PlusLoopbackState);
    subtype Optional_PlusLoopbackState is Option_PlusLoopbackState.Optional; -- renames
 
    overriding

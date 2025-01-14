@@ -40,7 +40,7 @@ package ANTLR.Runtime.ATN.LexerActionExecutors is
    -- public
    procedure hash (This : LexerActionExecutor; hasher: in out Hasher);
 
-   package Option_LexerActionExecutor is new Option (LexerActionExecutor);
+   package Option_LexerActionExecutor is new AdaForge.Util.Optionals (LexerActionExecutor);
    subtype Optional_LexerActionExecutor is Option_ILexerActionExecutor.Optional; -- renames
 
    --

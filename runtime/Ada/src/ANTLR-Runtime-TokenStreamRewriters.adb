@@ -1,5 +1,6 @@
 -- €
 
+with AdaForge.Crypto.MuRMuR_Hash3;
 with ANTLR.Runtime.Misc.Exceptions.Errors;
 
 use ANTLR.Runtime.Misc.Exceptions.Errors;
@@ -9,11 +10,6 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    -- ---------------- --
    -- RewriteOperation --
    -- ---------------- --
-
-   function Hash_Integer (Key : Integer) return Ada.Containers.Hash_Type is
-   begin
-      return Ada.Containers.Hash_Type (Key); --TOFIX
-   end Hash_Integer;
 
    function "=" (Left, Right : RewriteOperation) return Boolean
       is (Left = Right); --TOFIX
@@ -124,11 +120,6 @@ package body ANTLR.Runtime.TokenStreamRewriters is
    -- --------------------- --
    -- RewriteOperationArray --
    -- --------------------- --
-
-   function Hash_UString (Key : UString) return Ada.Containers.Hash_Type issue
-   begin
-      return 0; --TOFIX
-   end Hash_UString;
 
    function "=" (Left, Right : RewriteOperationArray) return Boolean is
    begin

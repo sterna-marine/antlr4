@@ -2,7 +2,8 @@
 
 with ANTLR.Runtime.ATN.ParseInfos;
 with ANTLR.Runtime.Vocabularies;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.ParseInfos;
@@ -13,7 +14,7 @@ package ANTLR.Runtime.Recognizer_Protocol is
 -- public
    type RecognizerProtocol is interface;
 
-   package Option_RecognizerProtocol is new Option (RecognizerProtocol);
+   package Option_RecognizerProtocol is new AdaForge.Util.Optionals (RecognizerProtocol);
    subtype Optional_RecognizerProtocol is Option_RecognizerProtocol.Optional;
 
    --

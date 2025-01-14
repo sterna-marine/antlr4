@@ -1,7 +1,8 @@
 with "config/tests_config.gpr";
 project tests is
 
-   for Source_Dirs use ("src/**", "config/");
+   for Source_Dirs use ("src/**", "config/",
+                        "lib/AdafDevtTestUnit/src/**");
    for Object_Dir use "../bld/" & Tests_Config.Build_Profile & "/obj";
    for Exec_Dir use "../bld/" & Tests_Config.Build_Profile & "/bin";
    for Create_Missing_Dirs use "True";

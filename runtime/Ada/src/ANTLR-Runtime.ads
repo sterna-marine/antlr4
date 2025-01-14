@@ -3,7 +3,8 @@
 with Ada.Containers;
 with Ada.Containers.Vectors;
 with Ada.Containers.Hashed_Sets;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use Ada.Containers;
 
@@ -23,6 +24,14 @@ package ANTLR.Runtime is
    function To_Unbounded_UString (Source : in Wide_Wide_String) return Unbounded_Wide_Wide_String
       renames Ada.Strings.Wide_Wide_Unbounded.To_Unbounded_Wide_Wide_String;
 
+   function Hash (Key : UString) return Ada.Containers.Hash_Type;
+
+   -- ---------------- --
+   -- Optional_UString --
+   -- ---------------- --
+   package Option_UString is new AdaForge.Util.Optionals (UString);
+   subtype Optional_UString is Option_UString.Optional;
+
    -- ------------ --
    -- UString_List --
    -- ------------ --
@@ -30,18 +39,23 @@ package ANTLR.Runtime is
       (Index_Type => Natural, Element_Type => UString, "=" => "=");
    subtype UString_List is UString_Container.Vector;
 
+   -- ------- --
+   -- Integer --
+   -- ------- --
+   function Hash (Key : Integer) return Ada.Containers.Hash_Type;
+
+   -- ---------------- --
+   -- Optional_Integer --
+   -- ---------------- --
+   package Option_Integer is new AdaForge.Util.Optionals (Integer);
+   subtype Optional_Integer is Option_Integer.Optional; -- renames
+
    -- ------------ --
    -- Integer_List --
    -- ------------ --
    package Integer_Container is new Ada.Containers.Vectors 
       (Index_Type => Natural, Element_Type => Integer, "=" => "=");
    subtype Integer_List is Integer_Container.Vector;
-
-   -- ---------------- --
-   -- Optional_UString --
-   -- ---------------- --
-   package Option_UString is new Option (UString);
-   subtype Optional_UString is Option_UString.Optional;
 
    -- --------------- --
    -- Set_of_Integers --
@@ -56,16 +70,10 @@ package ANTLR.Runtime is
       "="                 => "=");
    subtype Set_of_Integers is Integer_Sets.Set;
 
-   -- ---------------- --
-   -- Optional_Integer --
-   -- ---------------- --
-   package Option_Integer is new Option (Integer);
-   subtype Optional_Integer is Option_Integer.Optional; -- renames
-
    -- ------------------------ --
    -- Set_of_Optional_Integers --
    -- ------------------------ --
-   package Option_Integers is new Option (Set_of_Integers);
+   package Option_Integers is new AdaForge.Util.Optionals (Set_of_Integers);
    subtype Set_of_Optional_Integers is Option_Integers.Optional;
 
 end ANTLR.Runtime;

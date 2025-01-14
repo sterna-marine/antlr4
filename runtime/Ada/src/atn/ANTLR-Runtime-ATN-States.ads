@@ -7,7 +7,8 @@ with Ada.Strings;
 with ANTLR.Runtime.ATN.States;
 with ANTLR.Runtime.ATN.Transitions;
 with ANTLR.Runtime.Misc.IntervalSets;
-with Option;
+with AdaForge.Utils.Optionals;
+use AdaForge.Utils;
 
 use ANTLR.Runtime.ATN;
 use ANTLR.Runtime.ATN.Transitions;
@@ -117,7 +118,7 @@ package ANTLR.Runtime.ATN.States is
    subtype State_List is State_Container.Vector;
 
    -- Optionals
-   package Option_State is new Option (State);
+   package Option_State is new AdaForge.Util.Optionals (State);
    subtype Optional_State is Option_State.Optional; -- renames
 
    -- public
@@ -163,7 +164,7 @@ package ANTLR.Runtime.ATN.States is
    subtype ATNState_List is ATNState_Container.Vector;
 
    -- Optionals
-   package Option_ATNState is new Option (ATNState);
+   package Option_ATNState is new AdaForge.Util.Optionals (ATNState);
    subtype Optional_ATNState is Option_ATNState.Optional; -- renames
 
    package Optional_ATNState_Container is new Ada.Containers.Vectors (

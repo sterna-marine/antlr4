@@ -15,7 +15,7 @@ package ANTLR.Runtime.Misc.Integer_Set_Protocol is
    -- public
    type Integer_Set is interface;
 
-   package Optiona_Integer_Set is new Option (Integer_Set);
+   package Optiona_Integer_Set is new AdaForge.Util.Optionals (Integer_Set);
    subtype Optional_Integer_Set is Option_Integer_Set.Optional;
 
    --
