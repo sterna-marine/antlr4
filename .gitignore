@@ -13,7 +13,7 @@ typings/
 # Ant build folders
 build/
 dist/
-lib/
+/lib
 user.build.properties
 
 # MacOSX files
