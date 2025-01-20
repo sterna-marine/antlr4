@@ -15,7 +15,7 @@ executables = ["main"]
 adactextcharunic = "*"
 adafcrypmurmhash3 = "*"
 adafcrypuuid = "*"
-adafdevttestunit = "*"
+antlr4_runtime = "*"
 adafframaop = "*"
 adaftextustr = "*"
 adafutiloptl = "*"
@@ -24,7 +24,7 @@ adafutiloptl = "*"
 adactextcharunic = { path='../../AdaLib/adactextcharunic' }
 adafcrypmurmhash3 = { path='../../AdaLib/adafcrypmurmhash3' }
 adafcrypuuid = { path='../../AdaLib/adafcrypuuid' }
-adafdevttestunit = { path='../../AdaLib/adafdevttestunit' }
+antlr4_runtime = { path='../../AdaLib/antlr4_runtime' }
 adafframaop = { path='../../AdaLib/adafframaop' }
 adaftextustr = { path='../../AdaLib/adaftextustr' }
 adafutiloptl = { path='../../AdaLib/adafutiloptl' }

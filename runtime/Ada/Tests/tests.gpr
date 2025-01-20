@@ -1,32 +1,13 @@
-with "../bld/tests_config.gpr";
-with "../bld/antlr4_runtime_config.gpr";
-with "../bld/antlr4_runtime-lib.gpr";
+--  -------------------------------------------------------------
+--  SPDX-Creator: name_of_author (name_of_author@domain.ext)
+--  -------------------------------------------------------------
+--  Initial creation date : 20yy-MM-DD
+--  -------------------------------------------------------------
+aggregate project Tests is
 
-project Tests is
+   for Project_Path use (
+         "../bld");
+   for Project_Files use (
+         "../bld/antlr4_runtime-lib-tests.gpr");
 
-   Machine_Target :=  external ("CPUTYPE", "x86_64") & "_" & external ("OSTYPE", "os");
-   Build_Profile : Tests_Config.Build_Profile_Kind := external ("PROFILE", tests_config.Build_Profile);
-   Build_Dir := "../build/" & Machine_Target & "/" & Build_Profile;
-
-   type OS_Kind is ("windows", "unix", "macos");
-   OS : OS_Kind := External ("UnitTest_OS", "unix");
-   for Source_Dirs use ("src/**", "../bld/", "generated/**",
-                        "../lib/AdafDevtTestUnit/src/**");
-   for Object_Dir use "../bld/" & Tests_Config.Build_Profile & "/obj";
-   for Exec_Dir use "../bld/" & Tests_Config.Build_Profile & "/bin";
-   for Create_Missing_Dirs use "True";
-   for Main use ("Tests.adb");
-
-   package Compiler is
-      for Default_Switches ("Ada") use Tests_Config.Ada_Compiler_Switches;
-   end Compiler;
-
-   package Binder is
-      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
-   end Binder;
-
-   package Install is
-      for Artifacts (".") use ("share");
-   end Install;
-
-end tests;
+end Tests;

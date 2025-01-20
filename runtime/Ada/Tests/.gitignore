@@ -1,8 +1,5 @@
-/obj/
-/bin/
 /alire/
+/bin/
+/build/
 /config/
 /obj/
-/bin/
-/alire/
-/config/
